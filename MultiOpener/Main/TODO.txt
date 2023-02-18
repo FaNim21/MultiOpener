@@ -1,0 +1,4 @@
+﻿========================================================
+==================== KONCPETY ==========================
+========================================================
+- Zrobic zeby program autouruchamial programy z listy ktorych procesy nie sa jeszcze uruchomione
