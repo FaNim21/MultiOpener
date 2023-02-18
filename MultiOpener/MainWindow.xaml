@@ -119,12 +119,23 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
+            <!--LISTA-->
             <Grid Grid.Column="0">
                 <ListView x:Name="itemList">
-
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <EventSetter Event="MouseMove" Handler="TextBlockMouseMove"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Description}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                 </ListView>
             </Grid>
 
+            <!--CONFIGURATOR-->
             <Grid Grid.Column="1">
 
                 <!--

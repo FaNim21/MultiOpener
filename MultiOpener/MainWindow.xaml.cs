@@ -26,6 +26,16 @@ namespace MultiOpener
         private void UpdateButtonClick(object sender, RoutedEventArgs e)
         {
             //MessageBox.Show("POGCHAMPIK");
+
+            itemList.Items.Add("asd");
+            itemList.Items.Add("asd");
+        }
+        private void TextBlockMouseMove(object sender, MouseEventArgs e)
+        {
+            if(e.LeftButton == MouseButtonState.Pressed && sender is FrameworkElement frameworkElement)
+            {
+                DragDrop.DoDragDrop(frameworkElement, new DataObject(DataFormats.Serializable, frameworkElement.DataContext), DragDropEffects.Move);
+            }
         }
 
         #region Header
