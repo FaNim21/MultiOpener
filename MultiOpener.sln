@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiOpener", "MultiOpener\MultiOpener.csproj", "{73B17237-AB87-4E0A-A6EA-AF91B62E8B84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiOpenerRun", "MultiOpenerRun\MultiOpenerRun.csproj", "{2D02F8CD-59A1-469B-889A-1CCC108A3068}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiOpenerRun", "MultiOpenerRun\MultiOpenerRun.csproj", "{2D02F8CD-59A1-469B-889A-1CCC108A3068}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

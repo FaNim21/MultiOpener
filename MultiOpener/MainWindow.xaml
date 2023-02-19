@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MultiOpener"
+        xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         WindowStyle="None"
@@ -63,6 +63,17 @@
                 </Button.Template>
             </Button>
 
+            <local:ButtonTaskbar Width="15"
+                                 Height="15"
+                                 HorizontalAlignment="Right"
+                                 Grid.Column="3"
+                                 Margin="0 0 5 0"
+                                 />
+            <!--
+            CHCE TU ZROBIC TEMPLATKE GUZIKA OGARNAC TO W PELNI
+            -->
+            
+            <!--
             <Button Name="ExitButton"
                     Content="X"
                     Click="ExitButtonClick"
@@ -95,8 +106,10 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>
+            -->
         </Grid>
 
+        
         <!--LEWY SEGMENT-->
         <Grid Grid.Row="1"
               Grid.Column="0">
