@@ -20,7 +20,7 @@ namespace MultiOpener.Components.Buttons
         }
 
         //NIE DZIALA TO
-        public static readonly DependencyProperty ContextTextProperty = DependencyProperty.Register("ContentText", typeof(string), typeof(string), new PropertyMetadata(""));
+        public static readonly DependencyProperty ContextTextProperty = DependencyProperty.Register("ContentText", typeof(string), typeof(ButtonTaskbar), new PropertyMetadata(""));
 
         public event RoutedEventHandler Click;
 
