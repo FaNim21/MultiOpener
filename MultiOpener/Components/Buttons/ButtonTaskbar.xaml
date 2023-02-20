@@ -8,7 +8,6 @@
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Button Name="button"
             Click="buttonClick"
-            FontSize="10"
             FontWeight="Medium"
             Foreground="White"
             Content="{Binding ContentText}">

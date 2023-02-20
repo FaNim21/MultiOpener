@@ -5,15 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Width="800" Height="450"
         WindowStyle="None"
         ResizeMode="NoResize"
-        Background="#424547">
+        Background="#383A3C">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition/>
@@ -38,7 +34,7 @@
                                  Margin="0 0 25 0"
                                  ContentText="-"
                                  Click="MinimizeButtonsClick"/>
-            
+
             <local:ButtonTaskbar x:Name="ExitButton"
                                  Width="15"
                                  Height="15"
@@ -47,55 +43,86 @@
                                  Margin="0 0 5 0"
                                  ContentText="X"
                                  Click="ExitButtonClick"/>
+
+            <local:ButtonTaskbar x:Name="StartButton"
+                                 Width="80"
+                                 Height="15"
+                                 HorizontalAlignment="Left"
+                                 Grid.Column="0"
+                                 Margin="10 0 0 0"
+                                 ContentText="Start"
+                                 Click="ExitButtonClick"/>
+
+            <local:ButtonTaskbar x:Name="SettingsButton"
+                                 Width="80"
+                                 Height="15"
+                                 FontSize="10"
+                                 HorizontalAlignment="Left"
+                                 Grid.Column="0"
+                                 Margin="100,0,0,0"
+                                 ContentText="Settings"
+                                 Click="ExitButtonClick"/>
         </Grid>
 
+        <!--START-->
+        <Grid>
+            
+        </Grid>
         
-        <!--LEWY SEGMENT-->
-        <Grid Grid.Row="1"
+        <!--SETTINGS-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!--LEWA-->
+            <Grid Grid.Row="1"
               Grid.Column="0">
 
-        </Grid>
+            </Grid>
 
-        <Line X1="400" Y1="425"
+            <Line X1="400" Y1="425"
               X2="400" Y2="0"
               Grid.Row="1"
               Grid.ColumnSpan="2"
               Stroke="#000D14"
               StrokeThickness="3"/>
 
-        <!--PRAWY SEGMENT-->
-        <Grid Grid.Row="1"
+            <!--PRAWA-->
+            <Grid Grid.Row="1"
               Grid.Column="1">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-            <!--LISTA-->
-            <Grid Grid.Column="0">
-                <ListView x:Name="itemList">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <EventSetter Event="MouseMove" Handler="TextBlockMouseMove"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Description}"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
+                <!--LISTA-->
+                <Grid Grid.Column="0">
+                    <ListView x:Name="itemList"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <EventSetter Event="MouseMove" Handler="TextBlockMouseMove"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Description}"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
 
-            <!--CONFIGURATOR-->
-            <Grid Grid.Column="1">
+                <!--CONFIGURATOR-->
+                <Grid Grid.Column="1">
 
-                <!--
+                    <!--
             <TextBox TextWrapping="Wrap" Text="TextBox" Width="120" Height="18"/>
             -->
 
-                <local:ButtonTaskbar x:Name="UpdateButton"
+                    <local:ButtonTaskbar x:Name="UpdateButton"
                                      Width="125"
                                      Height="25"
                                      HorizontalAlignment="Center"
@@ -105,7 +132,9 @@
                                      Margin="0 0 0 20"
                                      ContentText="Update"
                                      Click="UpdateButtonClick"/>
+                </Grid>
             </Grid>
         </Grid>
+       
     </Grid>
 </Window>
