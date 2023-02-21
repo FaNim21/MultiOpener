@@ -1,10 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-
 namespace MultiOpener.Components.Buttons
 {
-    public partial class ButtonTaskbar : UserControl
+    public partial class ButtonNormal : UserControl
     {
         public string ContentText
         {
@@ -19,11 +18,11 @@ namespace MultiOpener.Components.Buttons
         }
 
         //NIE DZIALA TO
-        public static readonly DependencyProperty ContextTextProperty = DependencyProperty.Register("ContentText", typeof(string), typeof(ButtonTaskbar), new PropertyMetadata(""));
+        public static readonly DependencyProperty ContextTextProperty = DependencyProperty.Register("ContentText", typeof(string), typeof(ButtonNormal), new PropertyMetadata(""));
 
         public event RoutedEventHandler Click;
 
-        public ButtonTaskbar()
+        public ButtonNormal()
         {
             InitializeComponent();
         }

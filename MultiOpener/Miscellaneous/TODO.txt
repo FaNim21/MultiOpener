@@ -6,3 +6,10 @@
 - C:\Games\MultiMC\MultiMC.exe -l "1.16 speedrun instance 4" - komenda do odpalania instancji
 - Zrobic run napewno na zasadzie programu okienkowego ktory bedzie zapamietywac odpalone programy jako instancje
 - I Ogarnac to albo w jednym exe albo we dwoch
+
+
+========== WAZNE ============
+- Dostosowac layout z uwzglednianiem alignementu do przyszlych zmian i nie zostawiac tego na sztywnym marginesiu przy przesuwaniu elementu myszka
+- Pierwsze co to zrobic ViewList odrazu z elemntami(funkcjonalnosc i strona wizualna)
+- Ogarnac wzor jsona i samej listy do przechowywania segmentow z programami do uruchamiania
+- itp itd
