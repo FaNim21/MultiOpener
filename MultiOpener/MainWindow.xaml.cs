@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiOpener.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,22 +21,10 @@ namespace MultiOpener
         public MainWindow()
         {
             InitializeComponent();
-        }
+            DataContext = new MainViewModel(this);
 
-
-        private void UpdateButtonClick(object sender, RoutedEventArgs e)
-        {
-            //MessageBox.Show("POGCHAMPIK");
-
-            itemList.Items.Add("asd");
-            itemList.Items.Add("asd");
-        }
-        private void TextBlockMouseMove(object sender, MouseEventArgs e)
-        {
-            if(e.LeftButton == MouseButtonState.Pressed && sender is FrameworkElement frameworkElement)
-            {
-                DragDrop.DoDragDrop(frameworkElement, new DataObject(DataFormats.Serializable, frameworkElement.DataContext), DragDropEffects.Move);
-            }
+            //tymczasowo do testow
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         #region Header

@@ -4,15 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
+        xmlns:viewmodels="clr-namespace:MultiOpener.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Width="800" Height="450"
+        Title="MainWindow"
+        Width="800"
+        Height="450"
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="#383A3C">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
-            <RowDefinition/>
+            <RowDefinition Height="25" />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <!--HEADER-->
@@ -20,10 +24,10 @@
               Grid.ColumnSpan="3"
               MouseDown="HeaderMouseDown">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
             <local:ButtonTaskbar x:Name="MinimizeButtons"
@@ -34,7 +38,7 @@
                                  Grid.Column="3"
                                  Margin="0 0 30 0"
                                  ContentText="-"
-                                 Click="MinimizeButtonsClick"/>
+                                 Click="MinimizeButtonsClick" />
 
             <local:ButtonTaskbar x:Name="ExitButton"
                                  Width="30"
@@ -43,7 +47,7 @@
                                  HorizontalAlignment="Right"
                                  Grid.Column="3"
                                  ContentText="X"
-                                 Click="ExitButtonClick"/>
+                                 Click="ExitButtonClick" />
 
             <local:ButtonTaskbarChoose x:Name="StartButton"
                                        Width="80"
@@ -52,7 +56,8 @@
                                        Grid.Column="0"
                                        Margin="5,5,100,0"
                                        ContentText="Start"
-                                       Click="UpdateButtonClick"/>
+                                       ChangeCommand="{Binding UpdateViewCommand}"
+                                       CommandParameter="Start" />
 
             <local:ButtonTaskbarChoose x:Name="SettingsButton"
                                        Width="80"
@@ -61,147 +66,11 @@
                                        Grid.Column="0"
                                        Margin="100,5,5,0"
                                        ContentText="Settings"
-                                       Click="UpdateButtonClick"/>
+                                       ChangeCommand="{Binding UpdateViewCommand}"
+                                       CommandParameter="Settings" />
         </Grid>
 
-        <!--START-->
-        <Grid>
-
-        </Grid>
-
-        <!--SETTINGS-->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <!--LEWA-->
-            <Grid Grid.Row="1"
-              Grid.Column="0">
-
-                <Label Content="Application path:" 
-                       Foreground="White"
-                       Height="28"
-                       FontSize="16"
-                       VerticalAlignment="Top"
-                       Margin="10,19,263,0"/>
-                <TextBox TextWrapping="Wrap"
-                         Height="20" 
-                         Background="#9E9E9E"
-                         VerticalAlignment="Top"
-                         Margin="10,47,40,0"/>
-
-                <CheckBox Foreground="White" IsChecked="True" Width="100" Height="15" Margin="10,86,290,324">Delay after</CheckBox>
-                <TextBox TextWrapping="Wrap"
-                         Height="20" 
-                         Background="#9E9E9E"
-                         VerticalAlignment="Top"
-                         Margin="10,106,290,0"/>
-                <Label Content="(1000 - 1 sec)" 
-                       Foreground="White"
-                       Height="36"
-                       FontSize="16"
-                       VerticalAlignment="Top"
-                       Margin="110,98,183,0"/>
-
-            </Grid>
-
-            <Line X1="400" Y1="425"
-              X2="400" Y2="0"
-              Grid.Row="1"
-              Grid.ColumnSpan="2"
-              Stroke="#000D14"
-              StrokeThickness="3"/>
-
-            <!--PRAWA-->
-            <Grid Grid.Row="1"
-              Grid.Column="1">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-
-                <!--LISTA-->
-                <Grid Grid.Column="0">
-                    <ListView x:Name="itemList"
-                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                              Background="#424242"
-                              BorderThickness="0">
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <EventSetter Event="MouseMove" Handler="TextBlockMouseMove"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Description}"/>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </Grid>
-
-                <!--CONFIGURATOR-->
-                <Grid Grid.Column="1">
-
-                    <Label Content="Open option name:" 
-                           Foreground="White"
-                           Width="120"
-                           Height="25"
-                           FontSize="12"
-                           VerticalAlignment="Top"
-                           Margin="20,14,140,0"/>
-                    <TextBox Name="AddNameField" 
-                             TextWrapping="Wrap" 
-                             Text="Wall" 
-                             Width="120" 
-                             Height="20" 
-                             Background="#9E9E9E"
-                             VerticalAlignment="Top"
-                             Margin="20,36,140,0"/>
-
-                    <!--COMBO BOXA TRZEBA BEDZIE ODDZIELNIE ZMODYFIKOWAC WIZUALNIE-->
-                    <Label Content="Type:" 
-                           Foreground="White"
-                           Width="120"
-                           Height="25"
-                           FontSize="12"
-                           VerticalAlignment="Top"
-                           Margin="150,14,10,0"/>
-                    <ComboBox x:Name="typeOptionComboBox"
-                              HorizontalAlignment="Left" 
-                              Margin="150,36,0,0" 
-                              VerticalAlignment="Top" 
-                              Width="120"
-                              Height="20"
-                              Background="#313131">
-                        <ComboBoxItem IsSelected="True">Normal</ComboBoxItem>
-                    </ComboBox>
-
-                    <local:ButtonNormal x:Name="UpdateButton"
-                                     Width="125"
-                                     Height="25"
-                                     HorizontalAlignment="Center"
-                                     VerticalAlignment="Bottom"
-                                     FontSize="16"
-                                     Grid.Column="3"
-                                     Margin="0 0 0 20"
-                                     ContentText="Update"
-                                     Click="UpdateButtonClick"/>
-
-                    <local:ButtonNormal x:Name="AddItemTolistViewButton"
-                                     Width="120"
-                                     Height="25"
-                                     HorizontalAlignment="Left"
-                                     VerticalAlignment="Top"
-                                     FontSize="16"
-                                     Margin="20,65,0,0"
-                                     ContentText="Add"
-                                     Click="UpdateButtonClick"/>
-                </Grid>
-            </Grid>
-        </Grid>
-
+        <ContentControl Grid.Row="1"
+                        Content="{Binding SelectedViewModel}" />
     </Grid>
 </Window>
