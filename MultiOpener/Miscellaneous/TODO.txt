@@ -5,7 +5,7 @@
 - Zrobic zeby program uruchamial programy z listy ktorych procesy nie sa jeszcze uruchomione
 - C:\Games\MultiMC\MultiMC.exe -l "1.16 speedrun instance 4" - komenda do odpalania instancji
 - Zrobic run napewno na zasadzie programu okienkowego ktory bedzie zapamietywac odpalone programy jako instancje
-- I Ogarnac to albo w jednym exe albo we dwoch
+- Type powinien byc w lewej czesci konfiguratora i miec opcje zmiany konfiguracji na inny typ bez nie potrzebnego wpisywania typowch parametrow jak sciezka pliku na nowo
 
 
 ========== WAZNE ============

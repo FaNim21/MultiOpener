@@ -27,17 +27,17 @@ namespace MultiOpener.Views
 
         private void SaveCurrentOpenButtonClick(object sender, RoutedEventArgs e)
         {
-
+            //TODO: Aktualizowac element z listy po indexie
         }
 
         private void SaveButtonClick(object sender, RoutedEventArgs e)
         {
-            
+            //TODO: Zapisac cala liste do pliku json
         }
 
         private void LoadButtonClick(object sender, RoutedEventArgs e)
         {
-
+            //TODO: Wczytac json do listy
         }
     }
 }
