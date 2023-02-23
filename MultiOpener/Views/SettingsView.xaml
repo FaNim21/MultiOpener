@@ -10,13 +10,34 @@
              Background="#383A3C">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
+            <ColumnDefinition Width="500" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
         <!--LEWA-->
         <Grid Grid.Row="1"
               Grid.Column="0">
+
+            <!--COMBO BOXA TRZEBA BEDZIE ODDZIELNIE ZMODYFIKOWAC WIZUALNIE-->
+            <!--
+            <Label Content="Type:"
+                   Foreground="White"
+                   Width="120"
+                   Height="25"
+                   FontSize="12"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Margin="0 20 0 0" />
+            <ComboBox x:Name="typeOptionComboBox"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Top"
+                      Width="120"
+                      Height="20"
+                      Background="#313131"
+                      Margin="0 45 0 0">
+                <ComboBoxItem IsSelected="True">Normal</ComboBoxItem>
+            </ComboBox>
+            -->
 
             <Label Content="Application path:"
                    Foreground="White"
@@ -28,7 +49,7 @@
                    Margin="0 20 0 0" />
 
             <TextBox x:Name="AppDirectoryPathField"
-                     TextWrapping="Wrap"
+                     TextWrapping="NoWrap"
                      Width="350"
                      Height="20"
                      Background="#9E9E9E"
@@ -72,9 +93,9 @@
                                 Click="SaveCurrentOpenButtonClick" />
         </Grid>
 
-        <Line X1="400"
+        <Line X1="500"
               Y1="425"
-              X2="400"
+              X2="500"
               Y2="0"
               Grid.Row="1"
               Grid.ColumnSpan="2"
@@ -95,12 +116,17 @@
                 <ListView x:Name="itemList"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           Background="#424242"
-                          BorderThickness="0">
+                          BorderThickness="0"
+                          AllowDrop="True"
+                          DragLeave="ItemListDragLeave"
+                          DragOver="ItemListDragOver">
 
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <EventSetter Event="MouseMove"
                                          Handler="TextBlockMouseMove" />
+                            <EventSetter Event="DragOver"
+                                         Handler="TextBlockDragOver" />
                         </Style>
                     </ListView.ItemContainerStyle>
 
@@ -120,90 +146,52 @@
 
             <!--CONFIGURATOR-->
             <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+                <Label Content="Open option name:"
+                       Foreground="White"
+                       Width="120"
+                       Height="25"
+                       FontSize="12"
+                       VerticalAlignment="Top"
+                       Margin="0 20 0 0" />
+                <TextBox Name="AddNameField"
+                         TextWrapping="Wrap"
+                         Text="Wall"
+                         Width="120"
+                         Height="20"
+                         Background="#9E9E9E"
+                         VerticalAlignment="Top"
+                         Margin="0 45 0 0" />
+                <local:ButtonNormal x:Name="AddItemTolistViewButton"
+                                    Width="120"
+                                    Height="25"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    FontSize="16"
+                                    Margin="0 75 0 0"
+                                    ContentText="Add"
+                                    Click="AddNewOpenItem" />
 
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+                <local:ButtonNormal x:Name="UpdateButton"
+                                    Width="125"
+                                    Height="25"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    FontSize="16"
+                                    Grid.Column="3"
+                                    Margin="0 0 0 20"
+                                    ContentText="Save"
+                                    Click="SaveButtonClick" />
 
-                    <Grid Grid.Column="0"
-                          HorizontalAlignment="Center">
-                        <Label Content="Open option name:"
-                               Foreground="White"
-                               Width="120"
-                               Height="25"
-                               FontSize="12"
-                               VerticalAlignment="Top"
-                               Margin="0 20 0 0" />
-                        <TextBox Name="AddNameField"
-                                 TextWrapping="Wrap"
-                                 Text="Wall"
-                                 Width="120"
-                                 Height="20"
-                                 Background="#9E9E9E"
-                                 VerticalAlignment="Top"
-                                 Margin="0 45 0 0" />
-                        <local:ButtonNormal x:Name="AddItemTolistViewButton"
-                                            Width="120"
-                                            Height="25"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            FontSize="16"
-                                            Margin="0 75 0 0"
-                                            ContentText="Add"
-                                            Click="AddNewOpenItem" />
-                    </Grid>
-
-                    <Grid Grid.Column="1">
-                        <!--COMBO BOXA TRZEBA BEDZIE ODDZIELNIE ZMODYFIKOWAC WIZUALNIE-->
-                        <Label Content="Type:"
-                               Foreground="White"
-                               Width="120"
-                               Height="25"
-                               FontSize="12"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Top"
-                               Margin="0 20 0 0" />
-                        <ComboBox x:Name="typeOptionComboBox"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Top"
-                                  Width="120"
-                                  Height="20"
-                                  Background="#313131"
-                                  Margin="0 45 0 0">
-                            <ComboBoxItem IsSelected="True">Normal</ComboBoxItem>
-                        </ComboBox>
-                    </Grid>
-                </Grid>
-
-                <Grid Grid.Row="1">
-                    <local:ButtonNormal x:Name="UpdateButton"
-                                        Width="125"
-                                        Height="25"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        FontSize="16"
-                                        Grid.Column="3"
-                                        Margin="0 0 0 20"
-                                        ContentText="Save"
-                                        Click="SaveButtonClick" />
-
-                    <local:ButtonNormal x:Name="LoadButton"
-                                        Width="125"
-                                        Height="25"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        FontSize="16"
-                                        Grid.Column="3"
-                                        Margin="0 0 0 60"
-                                        ContentText="Load"
-                                        Click="LoadButtonClick" />
-                </Grid>
+                <local:ButtonNormal x:Name="LoadButton"
+                                    Width="125"
+                                    Height="25"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    FontSize="16"
+                                    Grid.Column="3"
+                                    Margin="0 0 0 60"
+                                    ContentText="Load"
+                                    Click="LoadButtonClick" />
             </Grid>
         </Grid>
     </Grid>
