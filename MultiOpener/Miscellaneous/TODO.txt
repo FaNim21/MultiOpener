@@ -6,10 +6,11 @@
 - C:\Games\MultiMC\MultiMC.exe -l "1.16 speedrun instance 4" - komenda do odpalania instancji
 - Zrobic run napewno na zasadzie programu okienkowego ktory bedzie zapamietywac odpalone programy jako instancje
 - Type powinien byc w lewej czesci konfiguratora i miec opcje zmiany konfiguracji na inny typ bez nie potrzebnego wpisywania typowch parametrow jak sciezka pliku na nowo
+- Pamietac o blokowaniu edycji obecnie odpalonego preseta z racji braku powiazan juz z pozniejszymi aplikacjami ktore bedziemy chcieli zamknac
 
 
 ========== WAZNE ============
 - Dostosowac layout z uwzglednianiem alignementu do przyszlych zmian i nie zostawiac tego na sztywnym marginesiu przy przesuwaniu elementu myszka
 - Pierwsze co to zrobic ViewList odrazu z elemntami(funkcjonalnosc i strona wizualna)
 - Ogarnac wzor jsona i samej listy do przechowywania segmentow z programami do uruchamiania
-- itp itd
+- Disposing or keeping persistent data for views - narazie nic sie nie dzieje zmiany sa w pamieci ale i tak po zmianie okien ich nie widac

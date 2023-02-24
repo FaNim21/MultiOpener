@@ -2,20 +2,27 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using MultiOpener.ListView;
 
 namespace MultiOpener.Views
 {
     public partial class SettingsView : UserControl
     {
+        public MainWindow MainWindow { get; set; }
+
         public SettingsView()
         {
             InitializeComponent();
+
+            MainWindow = (MainWindow)Application.Current.MainWindow;
         }
 
         private void AddNewOpenItem(object sender, RoutedEventArgs e)
         {
-            itemList.Items.Add(new OpenListItem(AddNameField.Text));
+            var newOpen = new OpenItem(AddNameField.Text);
+            itemList.Items.Add(newOpen);
+
+            /*newOpen.PathExe
+            MainWindow.AddItem();*/
         }
 
         private void SaveCurrentOpenButtonClick(object sender, RoutedEventArgs e)
@@ -71,6 +78,16 @@ namespace MultiOpener.Views
                     TodoItemRemovedCommand?.Execute(null);
                 }
             }*/
+        }
+
+        private void OnItemListClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = sender as ListViewItem;
+            if (item != null && item.IsSelected)
+            {
+                //TODO: Ustawic tutaj caly lewy panel pod to zeby zmieniac wartosci dla tego kliknietego itemu
+                MessageBox.Show("ELOOO");
+            }
         }
     }
 }

@@ -123,10 +123,14 @@
 
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
+                            <Setter Property="Background"
+                                    Value="#313131"/>
                             <EventSetter Event="MouseMove"
                                          Handler="TextBlockMouseMove" />
                             <EventSetter Event="DragOver"
                                          Handler="TextBlockDragOver" />
+                            <EventSetter Event="MouseDoubleClick"
+                                         Handler="OnItemListClick" />
                         </Style>
                     </ListView.ItemContainerStyle>
 
@@ -134,7 +138,6 @@
                         <DataTemplate>
                             <Grid Width="120"
                                   Height="20"
-                                  Background="#313131"
                                   HorizontalAlignment="Center">
                                 <TextBlock HorizontalAlignment="Center"
                                            Text="{Binding Name}" />
@@ -144,7 +147,7 @@
                 </ListView>
             </Grid>
 
-            <!--CONFIGURATOR-->
+            <!--PANEL BOCZNY-->
             <Grid Grid.Column="1">
                 <Label Content="Open option name:"
                        Foreground="White"
@@ -182,6 +185,7 @@
                                     ContentText="Save"
                                     Click="SaveButtonClick" />
 
+                <!--
                 <local:ButtonNormal x:Name="LoadButton"
                                     Width="125"
                                     Height="25"
@@ -192,6 +196,7 @@
                                     Margin="0 0 0 60"
                                     ContentText="Load"
                                     Click="LoadButtonClick" />
+                -->
             </Grid>
         </Grid>
     </Grid>

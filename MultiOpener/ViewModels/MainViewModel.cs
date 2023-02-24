@@ -1,18 +1,18 @@
 ﻿using MultiOpener.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels
 {
-    class MainViewModel : BaseViewModel
+    public class MainViewModel : BaseViewModel
     {
-        private BaseViewModel? _selectedViewModel;
+        public MainWindow MainWindow { get; set; }
 
-        public BaseViewModel SelectedViewModel
+        public SettingsViewModel Settings { get; } = new SettingsViewModel();
+        public StartViewModel Start { get; } = new StartViewModel();
+
+        private BaseViewModel? _selectedViewModel;
+        public BaseViewModel? SelectedViewModel
         {
             get { return _selectedViewModel; }
             set
@@ -26,7 +26,9 @@ namespace MultiOpener.ViewModels
 
         public MainViewModel(MainWindow mainWindow)
         {
-            UpdateViewCommand = new UpdateViewCommand(this, mainWindow);
+            MainWindow = mainWindow;
+
+            UpdateViewCommand = new UpdateViewCommand(this);
             UpdateViewCommand.Execute("Start");
         }
     }

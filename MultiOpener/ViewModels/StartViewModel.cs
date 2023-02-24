@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MultiOpener.ViewModels
+﻿namespace MultiOpener.ViewModels
 {
-    class StartViewModel : BaseViewModel
+    public class StartViewModel : BaseViewModel
     {
     }
 }

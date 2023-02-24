@@ -5,9 +5,13 @@ namespace MultiOpener.Views
 {
     public partial class StartView : UserControl
     {
+        public MainWindow MainWindow { get; set; }
+
         public StartView()
         {
             InitializeComponent();
+
+            MainWindow = (MainWindow)Application.Current.MainWindow;
         }
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
