@@ -1,16 +1,15 @@
 ﻿<Application x:Class="MultiOpener.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MultiOpener"
              xmlns:viewModels="clr-namespace:MultiOpener.ViewModels"
-        xmlns:views="clr-namespace:MultiOpener.Views"
+             xmlns:views="clr-namespace:MultiOpener.Views"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
-            <views:SettingsView/>
+            <views:SettingsView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:StartViewModel}">
-            <views:StartView/>
+            <views:StartView />
         </DataTemplate>
     </Application.Resources>
 </Application>

@@ -1,7 +1,11 @@
-﻿using System.Windows;
+﻿using System.Text.Json;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
+using System.IO;
+using System.Reflection;
+using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace MultiOpener.Views
 {
@@ -9,37 +13,79 @@ namespace MultiOpener.Views
     {
         public MainWindow MainWindow { get; set; }
 
+        public OpenItem? currentChosen;
+
+        private const string _saveFileName = "settings.json";
+        private static string _directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
+
         public SettingsView()
         {
             InitializeComponent();
 
             MainWindow = (MainWindow)Application.Current.MainWindow;
+            DataContext = MainWindow;
+
+            LeftPanel.Visibility = Visibility.Hidden;
+
+            //TYMCZASOWO TU JEST LADOWANIE
+            if (MainWindow.Opens != null && !MainWindow.Opens.Any())
+            {
+                _directoryPath = "C:\\Users\\Filip\\Desktop\\test\\" + _saveFileName;
+
+                if (!File.Exists(_directoryPath))
+                    return;
+
+                string text = File.ReadAllText(_directoryPath) ?? "";
+                if (string.IsNullOrEmpty(text)) 
+                    return;
+
+                var data = JsonSerializer.Deserialize<ObservableCollection<OpenItem>>(text);
+                MainWindow.Opens = new ObservableCollection<OpenItem>(data?? new ObservableCollection<OpenItem>());
+            }
         }
 
         private void AddNewOpenItem(object sender, RoutedEventArgs e)
         {
             var newOpen = new OpenItem(AddNameField.Text);
-            itemList.Items.Add(newOpen);
 
-            /*newOpen.PathExe
-            MainWindow.AddItem();*/
+            MainWindow.AddItem(newOpen);
+            AddNameField.Text = "";
+        }
+
+        private void RemoveCurrentOpenButtonClick(object sender, RoutedEventArgs e)
+        {
+            LeftPanel.Visibility = Visibility.Hidden;
+            MainWindow.RemoveItem(currentChosen);
         }
 
         private void SaveCurrentOpenButtonClick(object sender, RoutedEventArgs e)
         {
-            //TODO: Aktualizowac element z listy po indexie
+            int n = MainWindow.Opens.Count;
+            for (int i = 0; i < n; i++)
+            {
+                var open = MainWindow.Opens[i];
+                if (open == currentChosen)
+                {
+                    open.PathExe = AppDirectoryPathField.Text;
+                    open.IsDelayAfter = delayCheckBox.IsChecked.Value;
+                    open.DelayAfter = int.Parse(delayTimeField.Text);
+
+                }
+            }
         }
 
         private void SaveButtonClick(object sender, RoutedEventArgs e)
         {
-            //TODO: Zapisac cala liste do pliku json
+            var data = JsonSerializer.Serialize(MainWindow.Opens);
+            //TODO: PAMIETAC O TYM ZEBY PRZYWROCIC SCIEZKE DO PLIKU
+            _directoryPath = "C:\\Users\\Filip\\Desktop\\test\\" + _saveFileName;
+            File.WriteAllText(_directoryPath, data);
         }
 
         private void LoadButtonClick(object sender, RoutedEventArgs e)
         {
-            //TODO: Wczytac json do listy
+            //TODO: --FUTURE-- Wczytac json do listy
         }
-
 
         private void TextBlockMouseMove(object sender, MouseEventArgs e)
         {
@@ -53,31 +99,11 @@ namespace MultiOpener.Views
         {
             if (sender is FrameworkElement element)
             {
-                /*TargetTodoItem = element.DataContext;
-                InsertedTodoItem = e.Data.GetData(DataFormats.Serializable);
+                var targetedItem = (OpenItem)element.DataContext;
+                var insertedItem = (OpenItem)e.Data.GetData(DataFormats.Serializable);
 
-                TodoItemInsertedCommand?.Execute(null);*/
+                MainWindow.InsertItem(insertedItem, targetedItem);
             }
-        }
-
-        private void ItemListDragOver(object sender, DragEventArgs e)
-        {
-            object todoItem = e.Data.GetData(DataFormats.Serializable);
-            //itemList.Items.Add(new OpenListItem(todoItem.ToString()));
-        }
-
-        private void ItemListDragLeave(object sender, DragEventArgs e)
-        {
-            /*HitTestResult result = VisualTreeHelper.HitTest(lvItems, e.GetPosition(lvItems));
-
-            if (result == null)
-            {
-                if (TodoItemRemovedCommand?.CanExecute(null) ?? false)
-                {
-                    RemovedTodoItem = e.Data.GetData(DataFormats.Serializable);
-                    TodoItemRemovedCommand?.Execute(null);
-                }
-            }*/
         }
 
         private void OnItemListClick(object sender, MouseButtonEventArgs e)
@@ -85,8 +111,15 @@ namespace MultiOpener.Views
             var item = sender as ListViewItem;
             if (item != null && item.IsSelected)
             {
-                //TODO: Ustawic tutaj caly lewy panel pod to zeby zmieniac wartosci dla tego kliknietego itemu
-                MessageBox.Show("ELOOO");
+                currentChosen = (OpenItem)item.DataContext;
+
+                if(LeftPanel.Visibility == Visibility.Hidden)
+                    LeftPanel.Visibility = Visibility.Visible;
+
+                NameLabel.Content = currentChosen.Name;
+                AppDirectoryPathField.Text = currentChosen.PathExe;
+                delayCheckBox.IsChecked = currentChosen.IsDelayAfter;
+                delayTimeField.Text = currentChosen.DelayAfter.ToString();
             }
         }
     }

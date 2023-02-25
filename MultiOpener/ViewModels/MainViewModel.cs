@@ -1,5 +1,4 @@
 ﻿using MultiOpener.Commands;
-using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels
@@ -8,8 +7,8 @@ namespace MultiOpener.ViewModels
     {
         public MainWindow MainWindow { get; set; }
 
-        public SettingsViewModel Settings { get; } = new SettingsViewModel();
-        public StartViewModel Start { get; } = new StartViewModel();
+        public readonly SettingsViewModel settings;
+        public readonly StartViewModel start;
 
         private BaseViewModel? _selectedViewModel;
         public BaseViewModel? SelectedViewModel
@@ -27,6 +26,9 @@ namespace MultiOpener.ViewModels
         public MainViewModel(MainWindow mainWindow)
         {
             MainWindow = mainWindow;
+
+            settings = new SettingsViewModel();
+            start = new StartViewModel();
 
             UpdateViewCommand = new UpdateViewCommand(this);
             UpdateViewCommand.Execute("Start");

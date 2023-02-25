@@ -1,6 +1,5 @@
 ﻿using MultiOpener.ViewModels;
 using System;
-using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.Commands
@@ -25,9 +24,14 @@ namespace MultiOpener.Commands
             viewModel.MainWindow.EnableDisableChoosenHeadButton(result);
 
             if (result.Equals("Start"))
-                viewModel.SelectedViewModel = viewModel.Start;
+            {
+                //TODO: Tu tez bedzie wazne zeby przy zmianie na start sprawdzac czy lsity sie roznia i zeby robic to w dwie strony
+                viewModel.SelectedViewModel = viewModel.start;
+            }
             else if (result.Equals("Settings"))
-                viewModel.SelectedViewModel = viewModel.Settings;
+            {
+                viewModel.SelectedViewModel = viewModel.settings;
+            }
         }
     }
 }

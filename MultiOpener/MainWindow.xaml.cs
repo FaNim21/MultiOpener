@@ -1,5 +1,6 @@
 ﻿using MultiOpener.ViewModels;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Input;
 
@@ -12,24 +13,28 @@ namespace MultiOpener
         public bool IsDelayAfter { get; set; }
         public int DelayAfter { get; set; }
 
-        public OpenItem(string name = "", string pathExe = "", bool isDelayAfter = false, int delay = 0)
+        [JsonConstructor]
+        public OpenItem(string Name = "", string PathExe = "", bool IsDelayAfter = false, int DelayAfter = 0)
         {
-            Name = name;
-            PathExe = pathExe;
-            IsDelayAfter = isDelayAfter;
-            DelayAfter = delay;
+            this.Name = Name;
+            this.PathExe = PathExe;
+            this.IsDelayAfter = IsDelayAfter;
+            this.DelayAfter = DelayAfter;
         }
     }
 
     public partial class MainWindow : Window
     {
-        public List<OpenItem> opens = new();
+        public ObservableCollection<OpenItem> Opens { get; set; }
+
+        public  MainViewModel MainViewModel { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-
-            DataContext = new MainViewModel(this);
+            Opens = new ObservableCollection<OpenItem>();
+            MainViewModel = new MainViewModel(this);
+            DataContext = MainViewModel;
 
             //tymczasowo do testow
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -37,7 +42,23 @@ namespace MultiOpener
 
         public void AddItem(OpenItem item)
         {
-            opens.Add(item);
+            Opens.Add(item);
+        }
+        public void RemoveItem(OpenItem item)
+        {
+            Opens.Remove(item);
+        }
+
+        public void InsertItem(OpenItem insertedItem, OpenItem targetItem)
+        {
+            if (insertedItem == targetItem)
+                return;
+
+            int oldIndex = Opens.IndexOf(insertedItem);
+            int nextIndex = Opens.IndexOf(targetItem);
+
+            if (oldIndex != -1 && nextIndex != -1)
+                Opens.Move(oldIndex, nextIndex);
         }
 
         public void EnableDisableChoosenHeadButton(string option)
