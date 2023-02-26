@@ -24,7 +24,7 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
                             Margin="50 100 0 0"
-                            ContentText="OPEN"
+                            ContentText="CLOSE"
                             Click="CloseButton_Click"
                             FontSize="20" />
     </Grid>

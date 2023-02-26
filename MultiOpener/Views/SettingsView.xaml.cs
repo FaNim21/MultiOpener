@@ -36,11 +36,11 @@ namespace MultiOpener.Views
                     return;
 
                 string text = File.ReadAllText(_directoryPath) ?? "";
-                if (string.IsNullOrEmpty(text)) 
+                if (string.IsNullOrEmpty(text))
                     return;
 
                 var data = JsonSerializer.Deserialize<ObservableCollection<OpenItem>>(text);
-                MainWindow.Opens = new ObservableCollection<OpenItem>(data?? new ObservableCollection<OpenItem>());
+                MainWindow.Opens = new ObservableCollection<OpenItem>(data ?? new ObservableCollection<OpenItem>());
             }
         }
 
@@ -55,7 +55,8 @@ namespace MultiOpener.Views
         private void RemoveCurrentOpenButtonClick(object sender, RoutedEventArgs e)
         {
             LeftPanel.Visibility = Visibility.Hidden;
-            MainWindow.RemoveItem(currentChosen);
+            if(currentChosen != null)
+                MainWindow.RemoveItem(currentChosen);
         }
 
         private void SaveCurrentOpenButtonClick(object sender, RoutedEventArgs e)
@@ -113,7 +114,7 @@ namespace MultiOpener.Views
             {
                 currentChosen = (OpenItem)item.DataContext;
 
-                if(LeftPanel.Visibility == Visibility.Hidden)
+                if (LeftPanel.Visibility == Visibility.Hidden)
                     LeftPanel.Visibility = Visibility.Visible;
 
                 NameLabel.Content = currentChosen.Name;

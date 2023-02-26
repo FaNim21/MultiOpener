@@ -1,7 +1,10 @@
 ﻿using MultiOpener.ViewModels;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace MultiOpener
@@ -26,6 +29,7 @@ namespace MultiOpener
     public partial class MainWindow : Window
     {
         public ObservableCollection<OpenItem> Opens { get; set; }
+        public List<Process> openedProcess = new();
 
         public  MainViewModel MainViewModel { get; set; }
 

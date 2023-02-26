@@ -4,7 +4,6 @@
 - narazie program zrobic pod speedruny minecrafta
 - Zrobic zeby program uruchamial programy z listy ktorych procesy nie sa jeszcze uruchomione
 - C:\Games\MultiMC\MultiMC.exe -l "1.16 speedrun instance 4" - komenda do odpalania instancji
-- Zrobic run napewno na zasadzie programu okienkowego ktory bedzie zapamietywac odpalone programy jako instancje
 - Type powinien byc w lewej czesci konfiguratora i miec opcje zmiany konfiguracji na inny typ bez nie potrzebnego wpisywania typowch parametrow jak sciezka pliku na nowo
 - Pamietac o blokowaniu edycji obecnie odpalonego preseta z racji braku powiazan juz z pozniejszymi aplikacjami ktore bedziemy chcieli zamknac
 
