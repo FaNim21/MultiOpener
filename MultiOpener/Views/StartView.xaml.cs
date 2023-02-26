@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,10 +20,10 @@ namespace MultiOpener.Views
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
             //TODO: Wrzucic do watku cala liste i odpalajac ja sprawdzac czy dayn program juz nie istnieje najprosciej przez zapisywanie procesu do zmiennej czyli na przyszlosc pamietac zeby zabezpieczyc resetowanie programu czy cos albo przez zapamietywanie numeru procesu
-            int length = MainWindow.Opens.Count;
+            int length = MainWindow.MainViewModel.settings.Opens.Count;
             for (int i = 0; i < length; i++)
             {
-                var current = MainWindow.Opens[i];
+                var current = MainWindow.MainViewModel.settings.Opens[i];
                 if (string.IsNullOrEmpty(current.PathExe))
                     continue;
 

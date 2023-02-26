@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MultiOpener.Components.Buttons
 {
@@ -7,27 +8,29 @@ namespace MultiOpener.Components.Buttons
     {
         public string ContentText
         {
-            get
-            {
-                return (string)GetValue(ContextTextProperty);
-            }
-            set
-            {
-                SetValue(ContextTextProperty, value);
-            }
+            get { return (string)GetValue(ContextTextProperty); }
+            set { SetValue(ContextTextProperty, value); }
         }
 
-        //NIE DZIALA TO
         public static readonly DependencyProperty ContextTextProperty = DependencyProperty.Register("ContentText", typeof(string), typeof(ButtonNormal), new PropertyMetadata(""));
 
-        public event RoutedEventHandler Click;
+        public ICommand OnCommand
+        {
+            get { return (ICommand)GetValue(OnCommandProperty); }
+            set { SetValue(OnCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty OnCommandProperty = DependencyProperty.Register("OnCommand", typeof(ICommand), typeof(ButtonNormal), new PropertyMetadata(null));
+
+        public event RoutedEventHandler? Click;
+
 
         public ButtonNormal()
         {
             InitializeComponent();
         }
 
-        private void buttonClick(object sender, RoutedEventArgs e)
+        private void ButtonClick(object sender, RoutedEventArgs e)
         {
             Click?.Invoke(sender, e);
         }

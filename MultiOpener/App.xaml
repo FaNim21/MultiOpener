@@ -3,13 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:MultiOpener.ViewModels"
              xmlns:views="clr-namespace:MultiOpener.Views"
+             xmlns:converters="clr-namespace:MultiOpener.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
-            <views:SettingsView />
+            <views:SettingsView OnListItemClickCommand="{Binding OnItemClickCommand}"
+                                TextBlockDragOverCommand="{Binding InsertItemToOpenCommand}" />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:StartViewModel}">
             <views:StartView />
         </DataTemplate>
+
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
+                                              TrueValue="Visible"
+                                              FalseValue="Hidden" />
     </Application.Resources>
 </Application>
