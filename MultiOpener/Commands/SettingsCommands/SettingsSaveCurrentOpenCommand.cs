@@ -18,7 +18,11 @@ namespace MultiOpener.Commands.SettingsCommands
                 var open = Settings.Opens[i];
                 if (open == Settings.currentChosen)
                 {
-                    open.PathExe = Settings.ApplicationPathField ?? "";
+                    string appPath = Settings.ApplicationPathField ?? "";
+                    while (appPath[0] == '\u202A')
+                        appPath = appPath.Substring(1);
+
+                    open.PathExe = appPath;
                     open.IsDelayAfter = Settings.IsUsingDelayAfter;
                     open.DelayAfter = int.Parse(Settings.DelayTimeField ?? "0");
                 }

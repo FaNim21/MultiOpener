@@ -17,7 +17,7 @@ namespace MultiOpener.ViewModels
 
         private const string _saveFileName = "settings.json";
         //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
-        public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\test\\" + _saveFileName;
+        public readonly string directoryPath = "C:\\Users\\filip\\Desktop\\Test\\" + _saveFileName;
 
         private bool _leftPanelGridVisibility;
         public bool LeftPanelGridVisibility

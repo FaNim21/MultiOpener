@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace MultiOpener.Views
 {
@@ -30,20 +33,23 @@ namespace MultiOpener.Views
                 try
                 {
                     //TODO: --PROBLEM-- TU BEDZIE PROBLEM Z LINUX'EM I MOZLIWE ZE Z MAC'IEM
-                    string[] splits = current.PathExe.Split('\\');
+                    string path = current.PathExe;
+                    string[] splits = path.Split('\\');
                     string executable = splits[^1];
-                    string path = current.PathExe.Remove(current.PathExe.Length - (executable.Length + 1));
+                    string pathDir = path.Remove(path.Length - (executable.Length + 1));
 
-                    ProcessStartInfo processStartInfo = new(executable)
+                    ProcessStartInfo processStartInfo = new()
                     {
-                        WorkingDirectory = path,
+                        WorkingDirectory = pathDir,
+                        FileName = executable,
                         UseShellExecute = true
                     };
+
                     Process? process = Process.Start(processStartInfo);
                     if (process != null)
                         MainWindow.openedProcess.Add(process);
                 }
-                catch(Exception ex)
+                catch (Win32Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
                 }
