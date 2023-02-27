@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Input;
-using System.Windows;
 using MultiOpener.Commands.SettingsCommands;
 
 namespace MultiOpener.ViewModels
@@ -28,6 +27,9 @@ namespace MultiOpener.ViewModels
                 if (_chooseTypeBox != value)
                 {
                     //TODO: Tu bedzie sie zmieniac view dla lewego panelu
+                    //ZROBIC bazowy view model dla lewego panelu z wyborem typu Open i dac z niego typowe dane typu delay before i after i applicationPath
+                    //i z niego dziedziczyc kolejne typy wspieranych Open
+                    //a przelaczanie itp itd zrobic tak samo jak jest w MainViewModel tylko ze wtedy ten obecny view model bedzie bazowym dla typow edycji Open
                     _chooseTypeBox = value;
                     OnPropertyChanged(nameof(ChooseTypeBox));
                 }
