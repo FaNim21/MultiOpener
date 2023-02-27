@@ -17,7 +17,22 @@ namespace MultiOpener.ViewModels
 
         private const string _saveFileName = "settings.json";
         //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
-        public readonly string directoryPath = "C:\\Users\\filip\\Desktop\\Test\\" + _saveFileName;
+        public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\" + _saveFileName;
+
+        private OpenType _chooseTypeBox;
+        public OpenType ChooseTypeBox
+        {
+            get { return _chooseTypeBox; }
+            set
+            {
+                if (_chooseTypeBox != value)
+                {
+                    //TODO: Tu bedzie sie zmieniac view dla lewego panelu
+                    _chooseTypeBox = value;
+                    OnPropertyChanged(nameof(ChooseTypeBox));
+                }
+            }
+        }
 
         private bool _leftPanelGridVisibility;
         public bool LeftPanelGridVisibility
@@ -63,14 +78,24 @@ namespace MultiOpener.ViewModels
             }
         }
 
-        private string? _delatTimeField;
-        public string? DelayTimeField
+        private string? _delayAfterTimeField;
+        public string? DelayAfterTimeField
         {
-            get { return _delatTimeField; }
+            get { return _delayAfterTimeField; }
             set
             {
-                _delatTimeField = value;
-                OnPropertyChanged(nameof(DelayTimeField));
+                _delayAfterTimeField = value;
+                OnPropertyChanged(nameof(DelayAfterTimeField));
+            }
+        }
+        private string? _delayBeforeTimeField;
+        public string? DelayBeforeTimeField
+        {
+            get { return _delayBeforeTimeField; }
+            set
+            {
+                _delayBeforeTimeField = value;
+                OnPropertyChanged(nameof(DelayBeforeTimeField));
             }
         }
 
@@ -106,11 +131,11 @@ namespace MultiOpener.ViewModels
 
             LeftPanelGridVisibility = false;
 
-            LoadButtonClick();
+            LoadOpenList();
         }
 
         //ICommand
-        private void LoadButtonClick()
+        private void LoadOpenList()
         {
             //TODO: --FUTURE-- Wczytac wybrany json do listy
             if (Opens != null && !Opens.Any())
@@ -135,9 +160,10 @@ namespace MultiOpener.ViewModels
                 LeftPanelGridVisibility = true;
 
             OpenNameLabel = currentChosen.Name;
+            ChooseTypeBox = currentChosen.Type;
             ApplicationPathField = currentChosen.PathExe;
-            IsUsingDelayAfter = currentChosen.IsDelayAfter;
-            DelayTimeField = currentChosen.DelayAfter.ToString();
+            DelayBeforeTimeField = currentChosen.DelayBefore.ToString();
+            DelayAfterTimeField = currentChosen.DelayAfter.ToString();
         }
 
         public void AddItem(OpenItem item)

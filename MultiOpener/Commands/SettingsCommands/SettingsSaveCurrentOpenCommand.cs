@@ -19,12 +19,14 @@ namespace MultiOpener.Commands.SettingsCommands
                 if (open == Settings.currentChosen)
                 {
                     string appPath = Settings.ApplicationPathField ?? "";
-                    while (appPath[0] == '\u202A')
-                        appPath = appPath.Substring(1);
+                    if(!string.IsNullOrEmpty(appPath))
+                        while (appPath[0] == '\u202A')
+                            appPath = appPath.Substring(1);
 
                     open.PathExe = appPath;
-                    open.IsDelayAfter = Settings.IsUsingDelayAfter;
-                    open.DelayAfter = int.Parse(Settings.DelayTimeField ?? "0");
+                    open.Type = Settings.ChooseTypeBox;
+                    open.DelayBefore = int.Parse(Settings.DelayBeforeTimeField ?? "0");
+                    open.DelayAfter = int.Parse(Settings.DelayAfterTimeField ?? "0");
                 }
             }
         }

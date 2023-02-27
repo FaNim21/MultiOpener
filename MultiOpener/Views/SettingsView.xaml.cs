@@ -13,20 +13,14 @@ namespace MultiOpener.Views
             get { return (ICommand)GetValue(OnListItemClickCommandProperty); }
             set { SetValue(OnListItemClickCommandProperty, value); }
         }
-
-        public static readonly DependencyProperty OnListItemClickCommandProperty =
-            DependencyProperty.Register("OnListItemClickCommand", typeof(ICommand), typeof(SettingsView), new PropertyMetadata(null));
-
-
+        public static readonly DependencyProperty OnListItemClickCommandProperty = DependencyProperty.Register("OnListItemClickCommand", typeof(ICommand), typeof(SettingsView), new PropertyMetadata(null));
 
         public ICommand TextBlockDragOverCommand
         {
             get { return (ICommand)GetValue(TextBlockDragOverCommandProperty); }
             set { SetValue(TextBlockDragOverCommandProperty, value); }
         }
-
-        public static readonly DependencyProperty TextBlockDragOverCommandProperty =
-            DependencyProperty.Register("TextBlockDragOverCommand", typeof(ICommand), typeof(SettingsView), new PropertyMetadata(null));
+        public static readonly DependencyProperty TextBlockDragOverCommandProperty = DependencyProperty.Register("TextBlockDragOverCommand", typeof(ICommand), typeof(SettingsView), new PropertyMetadata(null));
 
 
         public SettingsView()
@@ -47,7 +41,6 @@ namespace MultiOpener.Views
                 DragDrop.DoDragDrop(frameworkElement, new DataObject(DataFormats.Serializable, frameworkElement.DataContext), DragDropEffects.Move);
             }
         }
-
         private void OnItemListClick(object sender, MouseButtonEventArgs e)
         {
             var item = sender as ListViewItem;
@@ -56,7 +49,6 @@ namespace MultiOpener.Views
                 OnListItemClickCommand?.Execute((OpenItem)item.DataContext);    
             }
         }
-
         private void TextBlockDragOver(object sender, DragEventArgs e)
         {
             if (sender is FrameworkElement element)
