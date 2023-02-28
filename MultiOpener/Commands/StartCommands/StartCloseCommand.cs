@@ -14,12 +14,25 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
-            int length = MainWindow.openedProcess.Count;
-            for (int i = 0; i < length; i++)
+            if (MainWindow.openedProcess.Count == 0 || MainWindow.openedProcess == null || Start == null) return;
+
+            if (MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                int length = MainWindow.openedProcess.Count;
+                for (int i = 0; i < length; i++)
+                {
+                    var current = MainWindow.openedProcess[i];
+                    current.Kill();
+                }
+            }
+
+            int length2 = MainWindow.openedProcess.Count;
+            for (int i = 0; i < length2; i++)
             {
                 var current = MainWindow.openedProcess[i];
-                current.Kill();
+                MessageBox.Show((current == null).ToString());
             }
+            Start.OpenButtonEnabled = true;
         }
     }
 }

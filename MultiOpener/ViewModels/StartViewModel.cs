@@ -8,6 +8,17 @@ namespace MultiOpener.ViewModels
         public ICommand OpenCommand { get; set; }
         public ICommand CloseCommand { get; set; }
 
+        private bool _openButtonEnabled = true;
+        public bool OpenButtonEnabled
+        {
+            get { return _openButtonEnabled; }
+            set
+            {
+                _openButtonEnabled = value;
+                OnPropertyChanged(nameof(OpenButtonEnabled));
+            }
+        }
+
 
         public StartViewModel()
         {

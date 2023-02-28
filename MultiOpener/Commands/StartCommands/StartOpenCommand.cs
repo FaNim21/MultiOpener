@@ -1,6 +1,8 @@
 ﻿using MultiOpener.ViewModels;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 
 namespace MultiOpener.Commands.StartCommands
@@ -16,6 +18,14 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
+            //TODO: -- INFO/FUTURE -- Temporary blockade preventing too much opennings for future with chaning preset feature
+            if (MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0)
+                return;
+            if (Start == null)
+                return;
+
+            Start.OpenButtonEnabled = false;
+
             //TODO: Wrzucic do watku cala liste i odpalajac ja sprawdzac czy dayn program juz nie istnieje najprosciej przez zapisywanie procesu do zmiennej czyli na przyszlosc pamietac zeby zabezpieczyc resetowanie programu czy cos albo przez zapamietywanie numeru procesu
             int length = MainWindow.MainViewModel.settings.Opens.Count;
             for (int i = 0; i < length; i++)
@@ -41,7 +51,11 @@ namespace MultiOpener.Commands.StartCommands
 
                     Process? process = Process.Start(processStartInfo);
                     if (process != null)
+                    {
+                        process.EnableRaisingEvents = true;
+                        process.Exited += ProcessExited;
                         MainWindow.openedProcess.Add(process);
+                    }
                 }
                 catch (Win32Exception ex)
                 {
@@ -71,6 +85,14 @@ namespace MultiOpener.Commands.StartCommands
                 };
                 Process.Start(processStartInfo);
             }*/
+        }
+
+        //TODO: Pomyslec o tym w przyszlosci co do wykrywania zamknietej aplikacji i aktualizowania panelu informacyjnego pod sekwencje w menu start itp itd
+        //tez fakt zeby usprawnic wtedy jakos wlaczanie ponownie tych aplikacji zamknietych czy cos
+        public void ProcessExited(object sender, EventArgs e)
+        {
+            if (sender is Process process)
+                MainWindow.openedProcess.Remove(process);
         }
     }
 }

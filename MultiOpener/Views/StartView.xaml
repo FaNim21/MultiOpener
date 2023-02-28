@@ -18,6 +18,7 @@
                             VerticalAlignment="Top"
                             Margin="50 50 0 0"
                             ContentText="OPEN"
+                            IsEnabled="{Binding OpenButtonEnabled}"
                             OnCommand="{Binding OpenCommand}"
                             FontSize="20" />
         <local:ButtonNormal x:Name="CloseButton"

@@ -15,11 +15,25 @@
             Command="{Binding OnCommand, ElementName=NormalButton}">
         <Button.Style>
             <Style TargetType="Button">
-                <Setter Property="Background" Value="#17191A"/>
-                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Background"
+                        Value="#17191A" />
+                <Setter Property="Cursor"
+                        Value="Hand" />
                 <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="#27292B"/>
+                    <Trigger Property="IsMouseOver"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="#1b1d1f" />
+                    </Trigger>
+                    <Trigger Property="IsPressed"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="#27292B" />
+                    </Trigger>
+                    <Trigger Property="IsEnabled"
+                             Value="False">
+                        <Setter Property="Background"
+                                Value="#4a4747" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -28,7 +42,8 @@
         <Button.Template>
             <ControlTemplate TargetType="Button">
                 <Border Background="{TemplateBinding Background}">
-                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <ContentPresenter VerticalAlignment="Center"
+                                      HorizontalAlignment="Center" />
                 </Border>
             </ControlTemplate>
         </Button.Template>
