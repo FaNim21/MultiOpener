@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Windows.Input;
 using MultiOpener.Commands.SettingsCommands;
+using System.Reflection;
 
 namespace MultiOpener.ViewModels
 {
@@ -15,7 +16,7 @@ namespace MultiOpener.ViewModels
         public OpenItem? currentChosen;
 
         private const string _saveFileName = "settings.json";
-        //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
+        //public readonly string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
         public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\" + _saveFileName;
 
         private OpenType _chooseTypeBox;

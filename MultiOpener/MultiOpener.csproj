@@ -5,6 +5,24 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <Version>0.1.0</Version>
+    <Authors>FaNim</Authors>
+    <Description>Application to open as many as want apps using one button mainly designed for minecraft speedrun community</Description>
+    <Copyright>Copyright© 2023</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/FaNim21/MultiOpener</RepositoryUrl>
+    <NeutralLanguage>en-001</NeutralLanguage>
+    <Title>Multi Opener</Title>
+    <PackageId>FaNimMultiOpener</PackageId>
+    <Company>FaNim</Company>
+    <Product>MultiOpener</Product>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
