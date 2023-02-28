@@ -16,7 +16,7 @@ namespace MultiOpener.ViewModels
 
         private const string _saveFileName = "settings.json";
         //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
-        public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\" + _saveFileName;
+        public readonly string directoryPath = "C:\\Users\\filip\\Desktop\\Test\\" + _saveFileName;
 
         private OpenType _chooseTypeBox;
         public OpenType ChooseTypeBox
