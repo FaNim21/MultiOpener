@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
+             xmlns:local="clr-namespace:MultiOpener.Components.Buttons" 
+             xmlns:viewmodels="clr-namespace:MultiOpener.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:StartViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -16,7 +18,7 @@
                             VerticalAlignment="Top"
                             Margin="50 50 0 0"
                             ContentText="OPEN"
-                            Click="OpenButton_Click"
+                            OnCommand="{Binding OpenCommand}"
                             FontSize="20" />
         <local:ButtonNormal x:Name="CloseButton"
                             Width="100"
@@ -25,7 +27,7 @@
                             VerticalAlignment="Top"
                             Margin="50 100 0 0"
                             ContentText="CLOSE"
-                            Click="CloseButton_Click"
+                            OnCommand="{Binding CloseCommand}"
                             FontSize="20" />
     </Grid>
 </UserControl>

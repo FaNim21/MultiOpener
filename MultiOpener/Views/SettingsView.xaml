@@ -150,6 +150,7 @@
                        Margin="200 15 0 0" />
             </Grid>
 
+            <!--TUTAJ BEDZIE ZMIENIAC SIE WIZJA OPCJI KONFIGURACJI-->
             <Grid Grid.Row="1">
                 <Label Content="Application path:"
                        Foreground="White"

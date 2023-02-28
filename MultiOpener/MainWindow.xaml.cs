@@ -6,7 +6,6 @@ using System.Windows.Input;
 
 namespace MultiOpener
 {
-
     public partial class MainWindow : Window
     {
         public List<Process> openedProcess = new();
