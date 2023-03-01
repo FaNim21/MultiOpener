@@ -91,6 +91,7 @@ namespace MultiOpener.Commands.StartCommands
         //tez fakt zeby usprawnic wtedy jakos wlaczanie ponownie tych aplikacji zamknietych czy cos
         public void ProcessExited(object sender, EventArgs e)
         {
+            //TOOD: uwgzlednic to ze podczas funkcji Close tez wywoluje ProcessExited
             if (sender is Process process)
                 MainWindow.openedProcess.Remove(process);
         }

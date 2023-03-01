@@ -6,6 +6,8 @@ using System.Text.Json;
 using System.Windows.Input;
 using MultiOpener.Commands.SettingsCommands;
 using System.Reflection;
+using System.Windows;
+using MultiOpener.ViewModels.Settings;
 
 namespace MultiOpener.ViewModels
 {
@@ -19,6 +21,17 @@ namespace MultiOpener.ViewModels
         //public readonly string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
         public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\" + _saveFileName;
 
+        private BaseViewModel? _selectedOpenTypeViewModel;
+        public BaseViewModel? SelectedOpenTypeViewModel
+        {
+            get { return _selectedOpenTypeViewModel; }
+            set
+            {
+                _selectedOpenTypeViewModel = value;
+                OnPropertyChanged(nameof(SelectedOpenTypeViewModel));
+            }
+        }
+
         private OpenType _chooseTypeBox;
         public OpenType ChooseTypeBox
         {
@@ -27,6 +40,17 @@ namespace MultiOpener.ViewModels
             {
                 if (_chooseTypeBox != value)
                 {
+                    switch (value)
+                    {
+                        case OpenType.Normal:
+                            SelectedOpenTypeViewModel = new OpenTypeViewModelBase();
+                            break;
+                        case OpenType.InstancesMultiMC:
+                            //TODO: Zrobic w domu te view modele i view dla kazdej opcji
+                            SelectedOpenTypeViewModel = new OpenTypeViewModelBase();
+                            break;
+                    }
+                    MessageBox.Show(value.ToString());
                     //TODO: Tu bedzie sie zmieniac view dla lewego panelu
                     //ZROBIC bazowy view model dla lewego panelu z wyborem typu Open i dac z niego typowe dane typu delay before i after i applicationPath
                     //i z niego dziedziczyc kolejne typy wspieranych Open

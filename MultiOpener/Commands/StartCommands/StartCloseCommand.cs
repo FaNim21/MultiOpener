@@ -26,12 +26,6 @@ namespace MultiOpener.Commands.StartCommands
                 }
             }
 
-            int length2 = MainWindow.openedProcess.Count;
-            for (int i = 0; i < length2; i++)
-            {
-                var current = MainWindow.openedProcess[i];
-                MessageBox.Show((current == null).ToString());
-            }
             Start.OpenButtonEnabled = true;
         }
     }
