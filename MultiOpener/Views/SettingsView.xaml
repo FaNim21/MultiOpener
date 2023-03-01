@@ -110,7 +110,7 @@
               Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
-                <RowDefinition Height="300"/>
+                <RowDefinition />
                 <RowDefinition Height="70" />
             </Grid.RowDefinitions>
 
@@ -150,71 +150,8 @@
                        Margin="200 15 0 0" />
             </Grid>
 
-            <!--TUTAJ BEDZIE ZMIENIAC SIE WIZJA OPCJI KONFIGURACJI-->
-            <Grid Grid.Row="1">
-                <Label Content="Application path:"
-                       Foreground="White"
-                       Width="350"
-                       Height="31"
-                       FontSize="16"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Top"
-                       Margin="0 0 0 0" />
-                <TextBox x:Name="AppDirectoryPathField"
-                         TextWrapping="NoWrap"
-                         Width="350"
-                         Height="20"
-                         Text="{Binding ApplicationPathField}"
-                         Background="#9E9E9E"
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Top"
-                         Margin="0 30 0 0" />
-
-                <Label Content="Delays (1000 - 1 sec):"
-                       Foreground="White"
-                       Width="350"
-                       Height="31"
-                       FontSize="16"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Top"
-                       Margin="0 60 0 0" />
-
-                <TextBox x:Name="delayBeforeTimeField"
-                         TextWrapping="Wrap"
-                         Width="80"
-                         Height="20"
-                         Text="{Binding DelayBeforeTimeField}"
-                         PreviewTextInput="NumberValidationTextBox"
-                         Background="#9E9E9E"
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Top"
-                         Margin="0 90 270 0" />
-                <Label Content="Before"
-                       Foreground="White"
-                       Height="30"
-                       FontSize="16"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Top"
-                       Margin="0 84 132 0" />
-
-                <TextBox x:Name="delayAfterTimeField"
-                         TextWrapping="Wrap"
-                         Width="80"
-                         Height="20"
-                         Text="{Binding DelayAfterTimeField}"
-                         PreviewTextInput="NumberValidationTextBox"
-                         Background="#9E9E9E"
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Top"
-                         Margin="0 115 270 0" />
-                <Label Content="After"
-                       Foreground="White"
-                       Height="30"
-                       FontSize="16"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Top"
-                       Margin="0 109 140 0" />
-            </Grid>
+            <ContentControl Grid.Row="1"
+                            Content="{Binding SelectedOpenTypeViewModel}" />
 
             <Grid Grid.Row="2">
                 <local:ButtonNormal x:Name="UpdateCurrentOpenButton"

@@ -1,4 +1,5 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.ListView;
+using MultiOpener.ViewModels;
 using System.IO;
 using System.Text.Json;
 
@@ -14,7 +15,12 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null) return;
 
-            var data = JsonSerializer.Serialize(Settings.Opens);
+            JsonSerializerOptions options = new()
+            {
+                WriteIndented = true,
+            };
+
+            var data = JsonSerializer.Serialize<object>(Settings.Opens, options);
             File.WriteAllText(Settings.directoryPath, data);
         }
     }

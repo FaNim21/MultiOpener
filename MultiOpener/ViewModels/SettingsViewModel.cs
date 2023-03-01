@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Windows.Input;
 using MultiOpener.Commands.SettingsCommands;
-using System.Reflection;
-using System.Windows;
 using MultiOpener.ViewModels.Settings;
 
 namespace MultiOpener.ViewModels
@@ -21,8 +19,8 @@ namespace MultiOpener.ViewModels
         //public readonly string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
         public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\" + _saveFileName;
 
-        private BaseViewModel? _selectedOpenTypeViewModel;
-        public BaseViewModel? SelectedOpenTypeViewModel
+        private OpenTypeViewModelBase? _selectedOpenTypeViewModel;
+        public OpenTypeViewModelBase? SelectedOpenTypeViewModel
         {
             get { return _selectedOpenTypeViewModel; }
             set
@@ -38,19 +36,33 @@ namespace MultiOpener.ViewModels
             get { return _chooseTypeBox; }
             set
             {
-                if (_chooseTypeBox != value)
+                if (_chooseTypeBox != value && currentChosen != null)
                 {
+                    int index = -1;
+                    for (int i = 0; i < Opens.Count; i++)
+                    {
+                        if (currentChosen.Name.Equals(Opens[i].Name))
+                        {
+                            index = i;
+                            break;
+                        }
+                    }
+                    var openItem = Opens[index];
+
                     switch (value)
                     {
+                        //TODO: Naprawic problem ze zlym przezucaniem zmiennych itp itd
                         case OpenType.Normal:
-                            SelectedOpenTypeViewModel = new OpenTypeViewModelBase();
+                            Opens[index] = new OpenItem(openItem.Name, openItem.PathExe, openItem.DelayBefore, openItem.DelayAfter, openItem.Type);
+                            SelectedOpenTypeViewModel = new SettingsOpenNormalModelView();
                             break;
                         case OpenType.InstancesMultiMC:
-                            //TODO: Zrobic w domu te view modele i view dla kazdej opcji
-                            SelectedOpenTypeViewModel = new OpenTypeViewModelBase();
+                            Opens[index] = new OpenInstance(openItem.Name, openItem.PathExe, openItem.DelayBefore, openItem.DelayAfter, openItem.Type);
+                            SelectedOpenTypeViewModel = new SettingsOpenInstancesModelView();
                             break;
                     }
-                    MessageBox.Show(value.ToString());
+                    SelectedOpenTypeViewModel?.UpdatePanelField(currentChosen);
+
                     //TODO: Tu bedzie sie zmieniac view dla lewego panelu
                     //ZROBIC bazowy view model dla lewego panelu z wyborem typu Open i dac z niego typowe dane typu delay before i after i applicationPath
                     //i z niego dziedziczyc kolejne typy wspieranych Open
@@ -72,17 +84,6 @@ namespace MultiOpener.ViewModels
             }
         }
 
-        private bool _isUsingDelayAfter;
-        public bool IsUsingDelayAfter
-        {
-            get { return _isUsingDelayAfter; }
-            set
-            {
-                _isUsingDelayAfter = value;
-                OnPropertyChanged(nameof(IsUsingDelayAfter));
-            }
-        }
-
         private string? _addNameField;
         public string? AddNameField
         {
@@ -91,38 +92,6 @@ namespace MultiOpener.ViewModels
             {
                 _addNameField = value;
                 OnPropertyChanged(nameof(AddNameField));
-            }
-        }
-
-        private string? _applicationPathField;
-        public string? ApplicationPathField
-        {
-            get { return _applicationPathField; }
-            set
-            {
-                _applicationPathField = value;
-                OnPropertyChanged(nameof(ApplicationPathField));
-            }
-        }
-
-        private string? _delayAfterTimeField;
-        public string? DelayAfterTimeField
-        {
-            get { return _delayAfterTimeField; }
-            set
-            {
-                _delayAfterTimeField = value;
-                OnPropertyChanged(nameof(DelayAfterTimeField));
-            }
-        }
-        private string? _delayBeforeTimeField;
-        public string? DelayBeforeTimeField
-        {
-            get { return _delayBeforeTimeField; }
-            set
-            {
-                _delayBeforeTimeField = value;
-                OnPropertyChanged(nameof(DelayBeforeTimeField));
             }
         }
 
@@ -186,11 +155,12 @@ namespace MultiOpener.ViewModels
             if (!LeftPanelGridVisibility)
                 LeftPanelGridVisibility = true;
 
-            OpenNameLabel = currentChosen.Name;
             ChooseTypeBox = currentChosen.Type;
-            ApplicationPathField = currentChosen.PathExe;
-            DelayBeforeTimeField = currentChosen.DelayBefore.ToString();
-            DelayAfterTimeField = currentChosen.DelayAfter.ToString();
+            OpenNameLabel = currentChosen.Name;
+
+            //if (SelectedOpenTypeViewModel == null) return;
+
+            //SelectedOpenTypeViewModel.UpdatePanelField(currentChosen);
         }
 
         public void AddItem(OpenItem item)

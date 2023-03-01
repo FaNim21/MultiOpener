@@ -2,7 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:MultiOpener.ViewModels"
+             xmlns:settingsViewModels="clr-namespace:MultiOpener.ViewModels.Settings"
              xmlns:views="clr-namespace:MultiOpener.Views"
+             xmlns:settingsViews="clr-namespace:MultiOpener.Views.SettingsOpens"
              xmlns:converters="clr-namespace:MultiOpener.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
@@ -12,6 +14,12 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:StartViewModel}">
             <views:StartView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type settingsViewModels:SettingsOpenNormalModelView}">
+            <settingsViews:SettingsOpenNormalView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type settingsViewModels:SettingsOpenInstancesModelView}">
+            <settingsViews:SettingsOpenInstancesView/>
         </DataTemplate>
 
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"

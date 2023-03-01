@@ -10,9 +10,15 @@ namespace MultiOpener.Commands.SettingsCommands
         public override void Execute(object? parameter)
         {
             if (Settings == null) return;
-
             if (string.IsNullOrEmpty(Settings.AddNameField))
                 return;
+
+            for (int i = 0; i < Settings.Opens.Count; i++)
+            {
+                var item = Settings.Opens[i];
+                if (item.Name == Settings.AddNameField)
+                    return;
+            }
 
             var newOpen = new OpenItem(Settings.AddNameField);
 

@@ -11,6 +11,8 @@ namespace MultiOpener.ListView
         InstancesMultiMC,
     }
 
+    [JsonDerivedType(typeof(OpenItem), typeDiscriminator: "base")]
+    [JsonDerivedType(typeof(OpenInstance), typeDiscriminator: "instances")]
     public class OpenItem
     {
         public OpenType Type { get; set; }
@@ -30,6 +32,23 @@ namespace MultiOpener.ListView
             this.DelayBefore = DelayBefore;
             this.DelayAfter = DelayAfter;
             this.Type = Type;
+        }
+    }
+
+    public class OpenInstance : OpenItem
+    {
+        public int Quantity { get; set; }
+        public string[]? Names { get; set; }
+
+
+        [JsonConstructor]
+        public OpenInstance(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, int Quantity = 0, string[]? Names = null) : base(Name, PathExe, DelayBefore, DelayAfter, Type)
+        {
+            this.Quantity = Quantity;
+            if (Names == null)
+                this.Names = new string[Quantity];
+            else
+                this.Names = Names;
         }
     }
 }
