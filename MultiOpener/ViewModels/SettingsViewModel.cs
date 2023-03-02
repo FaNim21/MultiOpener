@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Windows.Input;
 using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.ViewModels.Settings;
+using System;
 
 namespace MultiOpener.ViewModels
 {
@@ -36,40 +37,17 @@ namespace MultiOpener.ViewModels
             get { return _chooseTypeBox; }
             set
             {
-                if (_chooseTypeBox != value && currentChosen != null)
+                if ((_chooseTypeBox != value && currentChosen != null) || SelectedOpenTypeViewModel == null)
                 {
-                    int index = -1;
-                    for (int i = 0; i < Opens.Count; i++)
-                    {
-                        if (currentChosen.Name.Equals(Opens[i].Name))
-                        {
-                            index = i;
-                            break;
-                        }
-                    }
-                    var openItem = Opens[index];
-
                     switch (value)
                     {
-                        //TODO: Naprawic problem ze zlym przezucaniem zmiennych itp itd
-                        case OpenType.Normal:
-                            Opens[index] = new OpenItem(openItem.Name, openItem.PathExe, openItem.DelayBefore, openItem.DelayAfter, openItem.Type);
-                            SelectedOpenTypeViewModel = new SettingsOpenNormalModelView();
-                            break;
-                        case OpenType.InstancesMultiMC:
-                            Opens[index] = new OpenInstance(openItem.Name, openItem.PathExe, openItem.DelayBefore, openItem.DelayAfter, openItem.Type);
-                            SelectedOpenTypeViewModel = new SettingsOpenInstancesModelView();
-                            break;
+                        case OpenType.Normal: SelectedOpenTypeViewModel = new SettingsOpenNormalModelView(); break;
+                        case OpenType.InstancesMultiMC: SelectedOpenTypeViewModel = new SettingsOpenInstancesModelView(); break;
                     }
-                    SelectedOpenTypeViewModel?.UpdatePanelField(currentChosen);
-
-                    //TODO: Tu bedzie sie zmieniac view dla lewego panelu
-                    //ZROBIC bazowy view model dla lewego panelu z wyborem typu Open i dac z niego typowe dane typu delay before i after i applicationPath
-                    //i z niego dziedziczyc kolejne typy wspieranych Open
-                    //a przelaczanie itp itd zrobic tak samo jak jest w MainViewModel tylko ze wtedy ten obecny view model bedzie bazowym dla typow edycji Open
                     _chooseTypeBox = value;
                     OnPropertyChanged(nameof(ChooseTypeBox));
                 }
+                SelectedOpenTypeViewModel?.UpdatePanelField(currentChosen);
             }
         }
 
@@ -170,6 +148,17 @@ namespace MultiOpener.ViewModels
         public void RemoveItem(OpenItem item)
         {
             Opens.Remove(item);
+        }
+
+        public Type GetSelectedOpenType()
+        {
+            if (SelectedOpenTypeViewModel != null)
+            {
+                if (SelectedOpenTypeViewModel.GetType() == typeof(SettingsOpenInstancesModelView))
+                    return typeof(OpenInstance);
+            }
+
+            return typeof(OpenItem);
         }
     }
 }

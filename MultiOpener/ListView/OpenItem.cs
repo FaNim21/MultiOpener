@@ -33,6 +33,15 @@ namespace MultiOpener.ListView
             this.DelayAfter = DelayAfter;
             this.Type = Type;
         }
+
+        public OpenItem(OpenItem item)
+        {
+            Name = item.Name;
+            PathExe = item.PathExe;
+            DelayBefore = item.DelayBefore;
+            DelayAfter = item.DelayAfter;
+            Type = item.Type;
+        }
     }
 
     public class OpenInstance : OpenItem
@@ -49,6 +58,15 @@ namespace MultiOpener.ListView
                 this.Names = new string[Quantity];
             else
                 this.Names = Names;
+        }
+
+        public OpenInstance(OpenInstance instance) : base(instance)
+        {
+            Quantity = instance.Quantity;
+            if (Names == null)
+                Names = new string[instance.Quantity];
+            else
+                Names = instance.Names;
         }
     }
 }
