@@ -4,9 +4,6 @@ using System.Windows.Input;
 
 namespace MultiOpener.Views.SettingsOpens
 {
-    /// <summary>
-    /// Logika interakcji dla klasy SettingsOpenInstancesView.xaml
-    /// </summary>
     public partial class SettingsOpenInstancesView : UserControl
     {
         public SettingsOpenInstancesView()

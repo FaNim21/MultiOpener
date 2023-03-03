@@ -1,4 +1,7 @@
-﻿using MultiOpener.ListView;
+﻿using MultiOpener.Commands.SettingsCommands.InstancesConfig;
+using MultiOpener.ListView;
+using System.Windows;
+using System.Windows.Input;
 
 namespace MultiOpener.ViewModels.Settings
 {
@@ -15,10 +18,12 @@ namespace MultiOpener.ViewModels.Settings
             }
         }
 
+        public ICommand SettingsInstanceOpenSetupCommand;
 
         public SettingsOpenInstancesModelView()
         {
-
+            var settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
+            SettingsInstanceOpenSetupCommand = new SettingsInstanceOpenSetupCommand(settings);
         }
 
         public override void UpdatePanelField(OpenItem currentChosen)
