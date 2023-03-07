@@ -1,9 +1,13 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.ListView;
+using MultiOpener.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace MultiOpener.Commands.StartCommands
 {
@@ -16,7 +20,7 @@ namespace MultiOpener.Commands.StartCommands
             MainWindow = (MainWindow)Application.Current.MainWindow;
         }
 
-        public override void Execute(object? parameter)
+        public override async void Execute(object? parameter)
         {
             //TODO: -- INFO/FUTURE -- Temporary blockade preventing too much opennings for future with chaning preset feature
             if (MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0)
@@ -34,66 +38,76 @@ namespace MultiOpener.Commands.StartCommands
                 if (string.IsNullOrEmpty(current.PathExe))
                     continue;
 
-                try
+                if (current.Type == OpenType.InstancesMultiMC)
                 {
-                    //TODO: --PROBLEM-- TU BEDZIE PROBLEM Z LINUX'EM I MOZLIWE ZE Z MAC'IEM
-                    string path = current.PathExe;
-                    string[] splits = path.Split('\\');
-                    string executable = splits[^1];
-                    string pathDir = path.Remove(path.Length - (executable.Length + 1));
-
-                    ProcessStartInfo processStartInfo = new()
+                    OpenMultiMcInstances((OpenInstance)current);
+                }
+                else
+                {
+                    try
                     {
-                        WorkingDirectory = pathDir,
-                        FileName = executable,
-                        UseShellExecute = true
-                    };
+                        Thread.Sleep(current.DelayBefore);
+                        //TODO: --PROBLEM-- TU BEDZIE PROBLEM Z LINUX'EM I MOZLIWE ZE Z MAC'IEM
+                        string path = current.PathExe;
+                        string[] splits = path.Split('\\');
+                        string executable = splits[^1];
+                        string pathDir = path.Remove(path.Length - (executable.Length + 1));
 
-                    Process? process = Process.Start(processStartInfo);
-                    if (process != null)
+                        ProcessStartInfo processStartInfo = new()
+                        {
+                            WorkingDirectory = pathDir,
+                            FileName = executable,
+                            UseShellExecute = true
+                        };
+
+                        Process? process = Process.Start(processStartInfo);
+                        if (process != null)
+                        {
+                            process.EnableRaisingEvents = true;
+                            process.Exited += Start.ProcessExited;
+                            MainWindow.openedProcess.Add(process);
+                        }
+                        Thread.Sleep(current.DelayAfter);
+                    }
+                    catch (Win32Exception ex)
                     {
-                        process.EnableRaisingEvents = true;
-                        process.Exited += ProcessExited;
-                        MainWindow.openedProcess.Add(process);
+                        MessageBox.Show(ex.ToString());
                     }
                 }
-                catch (Win32Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
             }
+        }
 
-            //TEMPLATKA STARTOWANIA INSTANCJI PIERWSZY MINECRAFT POTRZEBUJE MINIMUM 5 SEKUND NA TO ZEBY MOC RESZTE ODPALIC
-            /*ProcessStartInfo processStartInfo = new("C:\\Games\\MultiMC\\MultiMC.exe", "-l \"1.16 speedrun instance 1\"")
+        //TEMPLATKA STARTOWANIA INSTANCJI PIERWSZY MINECRAFT POTRZEBUJE MINIMUM 5 SEKUND NA TO ZEBY MOC RESZTE ODPALIC
+        private void OpenMultiMcInstances(OpenInstance open)
+        {
+            try
             {
-                UseShellExecute = true
-            };
-            var proc = Process.Start(processStartInfo);
-            *//*while (proc.Responding)
-            {
-                Thread.Sleep(100);
-                proc.Refresh();
-            }*//*
-            //Process.Start(processStartInfo);
-            //Thread.Sleep(5000);
-
-            for (int i = 1; i < 4; i++)
-            {
-                processStartInfo = new("C:\\Games\\MultiMC\\MultiMC.exe", $"-l \"1.16 speedrun instance {i + 1}\"")
+                Thread.Sleep(open.DelayBefore);
+                ProcessStartInfo processStartInfo = new(open.PathExe, $"-l \"{open.Names[0]}\"")
                 {
                     UseShellExecute = true
                 };
-                Process.Start(processStartInfo);
-            }*/
-        }
+                Process? process = Process.Start(processStartInfo);
+                if (process != null)
+                {
+                    process.EnableRaisingEvents = true;
+                    process.Exited += Start.ProcessExited;
+                    MainWindow.openedProcess.Add(process);
+                }
+                Thread.Sleep(10000);
 
-        //TODO: Pomyslec o tym w przyszlosci co do wykrywania zamknietej aplikacji i aktualizowania panelu informacyjnego pod sekwencje w menu start itp itd
-        //tez fakt zeby usprawnic wtedy jakos wlaczanie ponownie tych aplikacji zamknietych czy cos
-        public void ProcessExited(object sender, EventArgs e)
-        {
-            //TOOD: uwgzlednic to ze podczas funkcji Close tez wywoluje ProcessExited
-            if (sender is Process process)
-                MainWindow.openedProcess.Remove(process);
+                for (int i = 1; i < open.Names.Count; i++)
+                {
+                    processStartInfo = new(open.PathExe, $"-l \"{open.Names[i]}\"") { UseShellExecute = true };
+                    Process.Start(processStartInfo);
+                    Thread.Sleep(open.DelayBetweenInstances);
+                }
+                Thread.Sleep(open.DelayAfter);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
     }
 }

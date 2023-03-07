@@ -1,12 +1,14 @@
 ﻿using MultiOpener.Commands.SettingsCommands.InstancesConfig;
 using MultiOpener.ListView;
-using System.Windows;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels.Settings
 {
     public class SettingsOpenInstancesModelView : OpenTypeViewModelBase
     {
+        public ObservableCollection<string> instanceNames = new();
+
         private int _quantity;
         public int Quantity
         {
@@ -18,12 +20,23 @@ namespace MultiOpener.ViewModels.Settings
             }
         }
 
-        public ICommand SettingsInstanceOpenSetupCommand;
+        private int _delayBetweenInstances;
+        public int DelayBetweenInstances
+        {
+            get { return _delayBetweenInstances; }
+            set
+            {
+                _delayBetweenInstances = value;
+                OnPropertyChanged(nameof(DelayBetweenInstances));
+            }
+        }
+
+        public ICommand SettingsInstanceOpenSetupCommand { get; set; }
+
 
         public SettingsOpenInstancesModelView()
         {
-            var settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
-            SettingsInstanceOpenSetupCommand = new SettingsInstanceOpenSetupCommand(settings);
+            SettingsInstanceOpenSetupCommand = new SettingsInstanceOpenSetupCommand(this);
         }
 
         public override void UpdatePanelField(OpenItem currentChosen)
@@ -33,6 +46,8 @@ namespace MultiOpener.ViewModels.Settings
             if (currentChosen is OpenInstance instance)
             {
                 Quantity = instance.Quantity;
+                instanceNames = instance.Names;
+                DelayBetweenInstances = instance.DelayBetweenInstances;
             }
         }
     }

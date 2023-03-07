@@ -7,6 +7,7 @@ using System.Windows.Input;
 using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.ViewModels.Settings;
 using System;
+using System.Reflection;
 
 namespace MultiOpener.ViewModels
 {
@@ -135,10 +136,6 @@ namespace MultiOpener.ViewModels
 
             ChooseTypeBox = currentChosen.Type;
             OpenNameLabel = currentChosen.Name;
-
-            //if (SelectedOpenTypeViewModel == null) return;
-
-            //SelectedOpenTypeViewModel.UpdatePanelField(currentChosen);
         }
 
         public void AddItem(OpenItem item)

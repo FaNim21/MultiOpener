@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace MultiOpener.ListView
@@ -47,26 +48,29 @@ namespace MultiOpener.ListView
     public class OpenInstance : OpenItem
     {
         public int Quantity { get; set; }
-        public string[]? Names { get; set; }
+        public int DelayBetweenInstances { get; set; }
+        public ObservableCollection<string> Names { get; set; }
 
 
         [JsonConstructor]
-        public OpenInstance(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, int Quantity = 0, string[]? Names = null) : base(Name, PathExe, DelayBefore, DelayAfter, Type)
+        public OpenInstance(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, int Quantity = 0, ObservableCollection<string> Names = null, int DelayBetweenInstances = 0) : base(Name, PathExe, DelayBefore, DelayAfter, Type)
         {
             this.Quantity = Quantity;
             if (Names == null)
-                this.Names = new string[Quantity];
+                this.Names = new ObservableCollection<string>();
             else
                 this.Names = Names;
+            this.DelayBetweenInstances = DelayBetweenInstances;
         }
 
         public OpenInstance(OpenInstance instance) : base(instance)
         {
             Quantity = instance.Quantity;
             if (Names == null)
-                Names = new string[instance.Quantity];
+                Names = new ObservableCollection<string>();
             else
                 Names = instance.Names;
+            DelayBetweenInstances = instance.DelayBetweenInstances;
         }
     }
 }

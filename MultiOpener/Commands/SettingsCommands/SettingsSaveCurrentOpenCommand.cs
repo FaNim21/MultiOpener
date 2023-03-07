@@ -36,6 +36,8 @@ namespace MultiOpener.Commands.SettingsCommands
                     {
                         OpenInstance instance = (OpenInstance)Settings.Opens[i];
                         instance.Quantity = ((SettingsOpenInstancesModelView)Settings.SelectedOpenTypeViewModel).Quantity;
+                        instance.Names = ((SettingsOpenInstancesModelView)Settings.SelectedOpenTypeViewModel).instanceNames;
+                        instance.DelayBetweenInstances = ((SettingsOpenInstancesModelView)Settings.SelectedOpenTypeViewModel).DelayBetweenInstances;
                     }
 
                     string appPath = Settings.SelectedOpenTypeViewModel.ApplicationPathField ?? "";

@@ -1,4 +1,8 @@
 ﻿using MultiOpener.ViewModels;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 
 namespace MultiOpener.Commands.StartCommands
@@ -21,11 +25,34 @@ namespace MultiOpener.Commands.StartCommands
                 int length = MainWindow.openedProcess.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    var current = MainWindow.openedProcess[i];
-                    current.Kill();
+                    try
+                    {
+                        var current = MainWindow.openedProcess[i];
+                        current.Exited -= Start.ProcessExited;
+
+                        Trace.WriteLine(current.ProcessName + " -- " + current.Id + " -- " + current.MainWindowTitle + " -- " + current.StartInfo.FileName);
+                        if (current.MainModule != null)
+                            Trace.WriteLine(current.MainModule.ModuleName + " -- " + current.MainModule.FileName);
+
+                        if (current.ProcessName.ToLower().StartsWith("autohotkey"))
+                        {
+                            Process[] processes = Process.GetProcessesByName("AutoHotkey");
+                            for (int j = 0; j < processes.Length; j++)
+                            {
+                                processes[j].Kill();
+                            }
+                        }
+                        else
+                            current.Kill(true);
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine(e.ToString());
+                    }
                 }
             }
 
+            MainWindow.openedProcess = new();
             Start.OpenButtonEnabled = true;
         }
     }

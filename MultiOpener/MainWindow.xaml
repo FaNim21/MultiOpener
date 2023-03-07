@@ -8,10 +8,11 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
         x:Name="window"
-        Title="MainWindow"
+        Closed="OnClosed"
         Width="800"
         Height="450"
         WindowStyle="None"
+        Title="MultiOpener"
         ResizeMode="NoResize"
         Background="#383A3C">
     <Grid>

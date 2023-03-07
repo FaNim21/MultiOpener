@@ -3,14 +3,43 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MultiOpener.Windows"
+        xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
         mc:Ignorable="d"
         Title="WindowOpenInstancesSetup" 
         Width="400"
         Height="200"
+        WindowStyle="None"
         ResizeMode="NoResize"
         Background="#383A3C">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
+        <!--HEADER-->
+        <Grid Background="#000D14"
+              Grid.Row="0"
+              MouseDown="HeaderMouseDown">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <local:ButtonTaskbar x:Name="ExitButton"
+                                 Width="30"
+                                 Height="25"
+                                 FontSize="20"
+                                 HorizontalAlignment="Right"
+                                 Grid.Column="3"
+                                 ContentText="X"
+                                 Click="ExitButtonClick" />
+        </Grid>
+
+        <ContentControl x:Name="ContentCanvas" Grid.Row="1">
+            
+        </ContentControl>
     </Grid>
 </Window>

@@ -16,5 +16,15 @@ namespace MultiOpener.Views.SettingsOpens
             Regex regex = new("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+
+        private void InstanceNumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsValid(((TextBox)sender).Text + e.Text);
+        }
+
+        public static bool IsValid(string str)
+        {
+            return int.TryParse(str, out int i) && i >= 1 && i <= 32;
+        }
     }
 }

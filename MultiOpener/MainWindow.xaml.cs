@@ -1,4 +1,5 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Properties;
+using MultiOpener.ViewModels;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -18,8 +19,14 @@ namespace MultiOpener
             MainViewModel = new MainViewModel(this);
             DataContext = MainViewModel;
 
-            //tymczasowo do testow
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            if (Settings.Default.MainWindowLeft == -1 && Settings.Default.MainWindowTop == -1)
+                WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            else
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual;
+                Left = Settings.Default.MainWindowLeft;
+                Top = Settings.Default.MainWindowTop;
+            }
         }
 
         public void EnableDisableChoosenHeadButton(string option)
@@ -36,5 +43,13 @@ namespace MultiOpener
         }
         private void MinimizeButtonsClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
         private void ExitButtonClick(object sender, RoutedEventArgs e) => Close();
+
+        private void OnClosed(object sender, System.EventArgs e)
+        {
+            Settings.Default.MainWindowLeft = Left;
+            Settings.Default.MainWindowTop = Top;
+
+            Settings.Default.Save();
+        }
     }
 }
