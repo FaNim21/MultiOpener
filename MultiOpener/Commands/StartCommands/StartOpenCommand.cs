@@ -5,9 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 
 namespace MultiOpener.Commands.StartCommands
 {
@@ -20,9 +18,9 @@ namespace MultiOpener.Commands.StartCommands
             MainWindow = (MainWindow)Application.Current.MainWindow;
         }
 
-        public override async void Execute(object? parameter)
+        public override void Execute(object? parameter)
         {
-            //TODO: -- INFO/FUTURE -- Temporary blockade preventing too much opennings for future with chaning preset feature
+            //TODO: -- INFO/FUTURE -- Temporary blockade preventing too much opennings for future with changing preset feature
             if (MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0)
                 return;
             if (Start == null)
@@ -31,6 +29,14 @@ namespace MultiOpener.Commands.StartCommands
             Start.OpenButtonEnabled = false;
 
             //TODO: Wrzucic do watku cala liste i odpalajac ja sprawdzac czy dayn program juz nie istnieje najprosciej przez zapisywanie procesu do zmiennej czyli na przyszlosc pamietac zeby zabezpieczyc resetowanie programu czy cos albo przez zapamietywanie numeru procesu
+            //TODO: Zabezpieczyc klikanie czekego kolwiek w programie typu wylaczanie go opcja zamkniecia watku, zeby nie musiec czekac do konca odpalenia wszystkiego i tez fakt zeby podczas odpalania nie zamykac procesow trzeba to zablokowac
+            Thread thread = new(new ThreadStart(OpenProgramsList));
+            thread.Start();
+            //OpenProgramsList();
+        }
+
+        public void OpenProgramsList()
+        {
             int length = MainWindow.MainViewModel.settings.Opens.Count;
             for (int i = 0; i < length; i++)
             {
@@ -77,7 +83,6 @@ namespace MultiOpener.Commands.StartCommands
             }
         }
 
-        //TEMPLATKA STARTOWANIA INSTANCJI PIERWSZY MINECRAFT POTRZEBUJE MINIMUM 5 SEKUND NA TO ZEBY MOC RESZTE ODPALIC
         private void OpenMultiMcInstances(OpenInstance open)
         {
             try
