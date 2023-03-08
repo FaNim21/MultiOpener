@@ -28,6 +28,10 @@ namespace MultiOpener.Commands.StartCommands
 
             Start.OpenButtonEnabled = false;
 
+            //TODO: Tworzenie nowego okna jak przy setupie instacncji z loading barem utrzymujacym wszystkie informacje zawarte o odpalanych programach
+            //Dajac mozliwosc zatrzymania procesu otwierania jako jedyna opcja wyjscia z tego okna
+            //TODO: Odrazu zrobic na widoku modelu start rozpiske w kolumnie procesow uruchomionych z prawej sttrony
+
             //TODO: Wrzucic do watku cala liste i odpalajac ja sprawdzac czy dayn program juz nie istnieje najprosciej przez zapisywanie procesu do zmiennej czyli na przyszlosc pamietac zeby zabezpieczyc resetowanie programu czy cos albo przez zapamietywanie numeru procesu
             //TODO: Zabezpieczyc klikanie czekego kolwiek w programie typu wylaczanie go opcja zamkniecia watku, zeby nie musiec czekac do konca odpalenia wszystkiego i tez fakt zeby podczas odpalania nie zamykac procesow trzeba to zablokowac
             Thread thread = new(new ThreadStart(OpenProgramsList));

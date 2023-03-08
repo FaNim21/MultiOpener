@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
         mc:Ignorable="d"
-        Title="WindowOpenInstancesSetup" 
+        Title="Instances setup" 
         Width="400"
         Height="200"
         WindowStyle="None"
