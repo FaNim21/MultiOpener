@@ -28,8 +28,18 @@
                  Background="#9E9E9E"
                  HorizontalAlignment="Center"
                  VerticalAlignment="Top"
+                 IsReadOnly="True"
                  Margin="0 30 0 0" />
-
+        <local:ButtonNormal x:Name="SetAppPath"
+                            Width="40"
+                            Height="20"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            FontSize="14"
+                            ContentText="SET"
+                            Margin="0 30 30 0"
+                            OnCommand="{Binding SettingsSetDirectoryPathCommand}"/>
+        
         <Label Content="Delays (1000 - 1 sec):"
                Foreground="White"
                Width="350"

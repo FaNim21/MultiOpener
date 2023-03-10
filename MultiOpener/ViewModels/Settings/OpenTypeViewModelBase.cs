@@ -1,4 +1,6 @@
-﻿using MultiOpener.ListView;
+﻿using MultiOpener.Commands.SettingsCommands;
+using MultiOpener.ListView;
+using System.Windows.Input;
 
 namespace MultiOpener.ViewModels.Settings
 {
@@ -35,6 +37,14 @@ namespace MultiOpener.ViewModels.Settings
                 _delayBeforeTimeField = value;
                 OnPropertyChanged(nameof(DelayBeforeTimeField));
             }
+        }
+
+        public ICommand SettingsSetDirectoryPathCommand { get; set; }
+
+
+        public OpenTypeViewModelBase()
+        {
+            SettingsSetDirectoryPathCommand = new SettingsSetDirectoryPathCommand(this);
         }
 
         public virtual void UpdatePanelField(OpenItem currentChosen)
