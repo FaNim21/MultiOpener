@@ -1,10 +1,13 @@
 ﻿using MultiOpener.ListView;
 using MultiOpener.ViewModels;
+using MultiOpener.Windows;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MultiOpener.Commands.StartCommands
@@ -12,6 +15,13 @@ namespace MultiOpener.Commands.StartCommands
     public class StartOpenCommand : StartCommandBase
     {
         public MainWindow MainWindow { get; set; }
+
+        public OpenningProcessLoadingWindow loadingProcesses;
+        public Vector2 windowPosition;
+
+        public CancellationTokenSource source = new();
+        public CancellationToken token;
+
 
         public StartOpenCommand(StartViewModel startViewModel) : base(startViewModel)
         {
@@ -28,56 +38,69 @@ namespace MultiOpener.Commands.StartCommands
 
             Start.OpenButtonEnabled = false;
 
-            //TODO: Tworzenie nowego okna jak przy setupie instacncji z loading barem utrzymujacym wszystkie informacje zawarte o odpalanych programach
-            //Dajac mozliwosc zatrzymania procesu otwierania jako jedyna opcja wyjscia z tego okna
             //TODO: Odrazu zrobic na widoku modelu start rozpiske w kolumnie procesow uruchomionych z prawej sttrony
-
             //TODO: Wrzucic do watku cala liste i odpalajac ja sprawdzac czy dayn program juz nie istnieje najprosciej przez zapisywanie procesu do zmiennej czyli na przyszlosc pamietac zeby zabezpieczyc resetowanie programu czy cos albo przez zapamietywanie numeru procesu
-            //TODO: Zabezpieczyc klikanie czekego kolwiek w programie typu wylaczanie go opcja zamkniecia watku, zeby nie musiec czekac do konca odpalenia wszystkiego i tez fakt zeby podczas odpalania nie zamykac procesow trzeba to zablokowac
-            Thread thread = new(new ThreadStart(OpenProgramsList));
-            thread.Start();
-            //OpenProgramsList();
+
+            MainWindow.Hide();
+            windowPosition.X = (float)(MainWindow.Left + (MainWindow.Width / 2));
+            windowPosition.Y = (float)(MainWindow.Top + (MainWindow.Height / 2));
+
+            source = new();
+            token = source.Token;
+            Task task = Task.Run(OpenProgramsList, token);
         }
 
-        public void OpenProgramsList()
+        public async Task OpenProgramsList()
         {
             int length = MainWindow.MainViewModel.settings.Opens.Count;
+            string infoText = "";
+
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                loadingProcesses = new(this, windowPosition.X, windowPosition.Y);
+                loadingProcesses.Show();
+                loadingProcesses.progress.Maximum = length;
+            });
+
             for (int i = 0; i < length; i++)
             {
                 var current = MainWindow.MainViewModel.settings.Opens[i];
                 if (string.IsNullOrEmpty(current.PathExe))
                     continue;
 
-                if (current.Type == OpenType.InstancesMultiMC)
+                if (source.IsCancellationRequested)
+                    break;
+
+                Application.Current.Dispatcher.Invoke(delegate
                 {
-                    OpenMultiMcInstances((OpenInstance)current);
-                }
+                    infoText = $"({i + 1}/{length}) Openning {current.Name}...";
+                    loadingProcesses.SetText(infoText);
+                    loadingProcesses.progress.Value++;
+                });
+
+                if (current.Type == OpenType.InstancesMultiMC)
+                    await OpenMultiMcInstances((OpenInstance)current, infoText);
                 else
                 {
                     try
                     {
-                        Thread.Sleep(current.DelayBefore);
+                        await Task.Delay(current.DelayBefore);
                         //TODO: --PROBLEM-- TU BEDZIE PROBLEM Z LINUX'EM I MOZLIWE ZE Z MAC'IEM
                         string path = current.PathExe;
                         string[] splits = path.Split('\\');
                         string executable = splits[^1];
                         string pathDir = path.Remove(path.Length - (executable.Length + 1));
 
-                        ProcessStartInfo processStartInfo = new()
-                        {
-                            WorkingDirectory = pathDir,
-                            FileName = executable,
-                            UseShellExecute = true
-                        };
-
+                        ProcessStartInfo processStartInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
                         Process? process = Process.Start(processStartInfo);
+
                         if (process != null)
                         {
                             process.EnableRaisingEvents = true;
                             process.Exited += Start.ProcessExited;
                             MainWindow.openedProcess.Add(process);
                         }
-                        Thread.Sleep(current.DelayAfter);
+                        await Task.Delay(current.DelayAfter);
                     }
                     catch (Win32Exception ex)
                     {
@@ -85,33 +108,49 @@ namespace MultiOpener.Commands.StartCommands
                     }
                 }
             }
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                loadingProcesses.Close();
+                MainWindow.Show();
+            });
         }
 
-        private void OpenMultiMcInstances(OpenInstance open)
+        private async Task OpenMultiMcInstances(OpenInstance open, string infoText = "")
         {
             try
             {
-                Thread.Sleep(open.DelayBefore);
-                ProcessStartInfo processStartInfo = new(open.PathExe, $"-l \"{open.Names[0]}\"")
-                {
-                    UseShellExecute = true
-                };
+                await Task.Delay(open.DelayBefore);
+                ProcessStartInfo processStartInfo = new(open.PathExe, $"-l \"{open.Names[0]}\"") { UseShellExecute = true };
                 Process? process = Process.Start(processStartInfo);
+
+                Application.Current.Dispatcher.Invoke(delegate
+                {
+                    loadingProcesses.SetText($"{infoText} -- Instance (1/{open.Names.Count})");
+                });
+
                 if (process != null)
                 {
                     process.EnableRaisingEvents = true;
                     process.Exited += Start.ProcessExited;
                     MainWindow.openedProcess.Add(process);
                 }
-                Thread.Sleep(10000);
+                await Task.Delay(10000);
 
                 for (int i = 1; i < open.Names.Count; i++)
                 {
+                    if (source.IsCancellationRequested)
+                        return;
+
+                    Application.Current.Dispatcher.Invoke(delegate
+                    {
+                        loadingProcesses.SetText($"{infoText} -- Instance ({i + 1}/{open.Names.Count})");
+                    });
+
                     processStartInfo = new(open.PathExe, $"-l \"{open.Names[i]}\"") { UseShellExecute = true };
                     Process.Start(processStartInfo);
-                    Thread.Sleep(open.DelayBetweenInstances);
+                    await Task.Delay(open.DelayBetweenInstances);
                 }
-                Thread.Sleep(open.DelayAfter);
+                await Task.Delay(open.DelayAfter);
             }
             catch (Exception e)
             {

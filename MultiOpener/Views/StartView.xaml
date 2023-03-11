@@ -11,6 +11,11 @@
              d:DesignWidth="800"
              Background="#383A3C">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
         <local:ButtonNormal x:Name="OpenButton"
                             Width="100"
                             Height="35"
@@ -31,17 +36,24 @@
                             OnCommand="{Binding CloseCommand}"
                             FontSize="20" />
 
-        <Label Content="v0.2.3"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Bottom" />
+        <!--<ComboBox Width="150"
+                  Height="25" />
+        -->
 
-        <Label Content="Made by FaNim"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Bottom" />
+        <Grid Grid.Row="1">
+            <Label Content="v0.2.4"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Bottom" />
 
-        <TextBlock TextWrapping="WrapWithOverflow"
-                   Margin="225,62,322,315">
-    For now one added AutoHotkey script to settings will cause on close every AutoHotkey to shut down due to TheWall script resetting issues
-        </TextBlock>
+            <Label Content="Made by FaNim"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom" />
+
+            <TextBlock TextWrapping="WrapWithOverflow">
+                Notes:<LineBreak />
+                - For now one added AutoHotkey script to settings will cause on close every AutoHotkey to shut down due to TheWall script resetting issues <LineBreak />
+                -
+            </TextBlock>
+        </Grid>
     </Grid>
 </UserControl>
