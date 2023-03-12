@@ -49,7 +49,7 @@
                    HorizontalAlignment="Right"
                    VerticalAlignment="Bottom" />
 
-            <TextBlock TextWrapping="WrapWithOverflow">
+            <TextBlock TextWrapping="WrapWithOverflow" Margin="10 0 10 0">
                 Notes:<LineBreak />
                 - For now one added AutoHotkey script to settings will cause on close every AutoHotkey to shut down due to TheWall script resetting issues <LineBreak />
                 -
