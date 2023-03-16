@@ -3,10 +3,15 @@
 ========================================================
 - narazie program zrobic pod speedruny minecrafta
 - Zrobic zeby program uruchamial programy z listy ktorych procesy nie sa jeszcze uruchomione
-- C:\Games\MultiMC\MultiMC.exe -l "1.16 speedrun instance 4" - przykladowa komenda do odpalania instancji
 - Type powinien byc w lewej czesci konfiguratora i miec opcje zmiany konfiguracji na inny typ bez nie potrzebnego wpisywania typowch parametrow jak sciezka pliku na nowo
-- Pamietac o blokowaniu edycji obecnie odpalonego preseta z racji braku powiazan juz z pozniejszymi aplikacjami ktore bedziemy chcieli zamknac
 
 
 ========== WAZNE ============
 - Ogarnac pattern do zapisywania json na opcje uwzglednienia zmian w typie Open
+- Zrobic guzik do folderu z presetami, ktore sa w miejscu exe'ca 
+
+========== DO WIELU PRESETOW ===========
+- W starcie tylko pokazywac jaki preset jest zaladowany
+- defaultowo zaladowac ostatnio zaladowany w poprzedniej sesji programu preset
+- wszystkie aspekty ladowania i zapisywania dac w Settings
+- ladowanie presetow za posrednictwem ComboBoxa i najlepiej do tego zrobic folder gdzie sa wszystkie presety
