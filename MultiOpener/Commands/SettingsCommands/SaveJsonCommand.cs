@@ -1,5 +1,4 @@
-﻿using MultiOpener.ListView;
-using MultiOpener.ViewModels;
+﻿using MultiOpener.ViewModels;
 using System.IO;
 using System.Text.Json;
 
@@ -20,8 +19,11 @@ namespace MultiOpener.Commands.SettingsCommands
                 WriteIndented = true,
             };
 
+            //TODO: kod pod tym todo bedzie nalezal do spelnionych jezeli uda sie zapisac preset pod taka nazwa
+            Settings.PresetName = Settings.SaveNameField;
+
             var data = JsonSerializer.Serialize<object>(Settings.Opens, options);
-            File.WriteAllText(Settings.directoryPath, data);
+            File.WriteAllText(Settings.directoryPath + Settings.SaveNameField + ".json", data);
         }
     }
 }

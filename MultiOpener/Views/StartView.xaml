@@ -13,40 +13,42 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
 
-        <local:ButtonNormal x:Name="OpenButton"
-                            Width="100"
-                            Height="35"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Margin="50 50 0 0"
-                            ContentText="OPEN"
-                            IsEnabled="{Binding OpenButtonEnabled}"
-                            OnCommand="{Binding OpenCommand}"
-                            FontSize="20" />
-        <local:ButtonNormal x:Name="CloseButton"
-                            Width="100"
-                            Height="35"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Margin="50 100 0 0"
-                            ContentText="CLOSE"
-                            OnCommand="{Binding CloseCommand}"
-                            FontSize="20" />
+        <Grid Grid.Row="0">
+            <Label x:Name="PresetNameLabel" 
+                   Content="{Binding PresetNameLabel}"
+                   Foreground="White"
+                   FontSize="16"
+                   Height="30"
+                   VerticalAlignment="top"
+                   HorizontalContentAlignment="Center"/>
 
-        <!--<ComboBox Width="150"
-                  Height="25" />
-        -->
+            <local:ButtonNormal x:Name="OpenButton"
+                                Width="100"
+                                Height="35"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Margin="50 50 0 0"
+                                ContentText="OPEN"
+                                IsEnabled="{Binding OpenButtonEnabled}"
+                                OnCommand="{Binding OpenCommand}"
+                                FontSize="20" />
+            <local:ButtonNormal x:Name="CloseButton"
+                                Width="100"
+                                Height="35"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Margin="50 100 0 0"
+                                ContentText="CLOSE"
+                                OnCommand="{Binding CloseCommand}"
+                                FontSize="20" />
+        </Grid>
 
         <Grid Grid.Row="1">
-            <Label Content="v0.2.4"
+            <Label Content="v0.3.0&#xA;Made by FaNim"
                    HorizontalAlignment="Left"
-                   VerticalAlignment="Bottom" />
-
-            <Label Content="Made by FaNim"
-                   HorizontalAlignment="Right"
                    VerticalAlignment="Bottom" />
 
             <TextBlock TextWrapping="WrapWithOverflow" Margin="10 0 10 0">

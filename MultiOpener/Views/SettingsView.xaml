@@ -295,10 +295,10 @@
                                         Grid.Column="3"
                                         Margin="0 60 0 0"
                                         ContentText="Load"
-                                        OnCommand ="{Binding LoadButtonClick}" />
+                                        OnCommand ="{Binding SettingsLoadChosenPresetCommand}" />
 
 
-                    <Label Content="save name:"
+                    <Label Content="Save name:"
                            Foreground="White"
                            Width="120"
                            Height="25"
@@ -306,10 +306,10 @@
                            VerticalAlignment="Bottom"
                            HorizontalContentAlignment="Center"
                            Margin="0 0 0 75" />
-                    <TextBox Name="SavNameField"
+                    <TextBox Name="SaveNameField"
                              TextWrapping="NoWrap"
                              MaxLength="12"
-                             Text="{Binding AddNameField}"
+                             Text="{Binding SaveNameField}"
                              ScrollViewer.VerticalScrollBarVisibility="Disabled"
                              Width="120"
                              Height="20"

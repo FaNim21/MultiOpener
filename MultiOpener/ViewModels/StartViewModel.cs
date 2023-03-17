@@ -20,6 +20,16 @@ namespace MultiOpener.ViewModels
             }
         }
 
+        private string? _presetNameLabel;
+        public string? PresetNameLabel
+        {
+            get { return _presetNameLabel; }
+            set
+            {
+                _presetNameLabel = value;
+                OnPropertyChanged(nameof(PresetNameLabel));
+            }
+        }
 
         public StartViewModel()
         {

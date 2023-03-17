@@ -8,6 +8,7 @@ using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.ViewModels.Settings;
 using System;
 using System.Reflection;
+using System.Windows;
 
 namespace MultiOpener.ViewModels
 {
@@ -15,11 +16,21 @@ namespace MultiOpener.ViewModels
     {
         public ObservableCollection<OpenItem> Opens { get; set; }
 
+        private string? _presetName;
+        public string? PresetName
+        {
+            get { return _presetName; }
+            set
+            {
+                _presetName = value;
+                ((MainWindow)Application.Current.MainWindow).MainViewModel.start.PresetNameLabel = "Current preset: " + value;
+            }
+        }
+
         public OpenItem? CurrentChosen { get; set; }
 
-        private const string _saveFileName = "settings.json";
         //public readonly string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
-        public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\" + _saveFileName;
+        public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\";
 
         private OpenTypeViewModelBase? _selectedOpenTypeViewModel;
         public OpenTypeViewModelBase? SelectedOpenTypeViewModel
@@ -74,6 +85,17 @@ namespace MultiOpener.ViewModels
             }
         }
 
+        private string? _saveNameField;
+        public string? SaveNameField
+        {
+            get { return _saveNameField; }
+            set
+            {
+                _saveNameField = value;
+                OnPropertyChanged(nameof(SaveNameField));
+            }
+        }
+
         private string? _openNameLabel;
         public string? OpenNameLabel
         {
@@ -91,6 +113,7 @@ namespace MultiOpener.ViewModels
         public ICommand SaveJsonCommand { get; set; }
         public ICommand InsertItemToOpenCommand { get; set; }
         public ICommand OnItemClickCommand { get; set; }
+        public ICommand SettingsLoadChosenPresetCommand { get; set; }
 
 
         public SettingsViewModel()
@@ -103,6 +126,7 @@ namespace MultiOpener.ViewModels
             SaveJsonCommand = new SaveJsonCommand(this);
             InsertItemToOpenCommand = new InsertItemToOpenCommand(this);
             OnItemClickCommand = new SettingsOnItemListClickCommand(this);
+            SettingsLoadChosenPresetCommand = new SettingsLoadChosenPresetCommand(this);
 
             LeftPanelGridVisibility = false;
 
@@ -112,6 +136,7 @@ namespace MultiOpener.ViewModels
         //ICommand
         private void LoadOpenList()
         {
+            //TODO: Ladowac z ostatniej sesji odpalony preset
             //TODO: --FUTURE-- Wczytac wybrany json do listy
             if (Opens != null && !Opens.Any())
             {
