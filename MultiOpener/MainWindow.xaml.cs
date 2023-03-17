@@ -27,6 +27,8 @@ namespace MultiOpener
                 Left = Settings.Default.MainWindowLeft;
                 Top = Settings.Default.MainWindowTop;
             }
+
+            MainViewModel.settings.PresetName = Settings.Default.LastOpenedPresetName;
         }
 
         public void EnableDisableChoosenHeadButton(string option)
@@ -48,6 +50,7 @@ namespace MultiOpener
         {
             Settings.Default.MainWindowLeft = Left;
             Settings.Default.MainWindowTop = Top;
+            Settings.Default.LastOpenedPresetName = MainViewModel.settings.PresetName;
 
             Settings.Default.Save();
         }

@@ -232,7 +232,7 @@
             <!--PANEL BOCZNY-->
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
+                    <RowDefinition Height="130"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
@@ -273,30 +273,49 @@
                       StrokeThickness="2" />
 
                 <Grid Grid.Row="1">
-                    <ComboBox x:Name="ChoosenPresetToLoad"
-                              Style="{StaticResource ComboBoxTest2}"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Top"
-                              ItemsSource="{Binding Path=ChooseTypeBox, Converter={converters:EnumToCollectionConverter}, Mode=OneTime}"
-                              SelectedValuePath="Value"
-                              DisplayMemberPath="Description"
-                              SelectedValue="{Binding Path=ChooseTypeBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              Width="120"
-                              Height="20"
-                              Margin="0 30 0 0">
-                    </ComboBox>
-
-                    <local:ButtonNormal x:Name="LoadButton"
+                    <local:ButtonNormal x:Name="DeleteCurrentOpenPreset"
                                         Width="120"
                                         Height="25"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         FontSize="16"
                                         Grid.Column="3"
-                                        Margin="0 60 0 0"
-                                        ContentText="Load"
-                                        OnCommand ="{Binding SettingsLoadChosenPresetCommand}" />
+                                        Margin="0 40 0 0"
+                                        ContentText="Delete Preset"
+                                        OnCommand="{Binding RemovePresetCommand}" />
+                    
+                    <local:ButtonNormal x:Name="OpenPresetFolerButton"
+                                        Width="120"
+                                        Height="25"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        FontSize="16"
+                                        Grid.Column="3"
+                                        Margin="0 80 0 0"
+                                        ContentText="Open Folder"
+                                        OnCommand="{Binding OpenPresetsFolderCommand}" />
 
+                    <ComboBox x:Name="ChoosenPresetToLoad"
+                              Style="{StaticResource ComboBoxTest2}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              ItemsSource="{Binding Presets}"
+                              DisplayMemberPath="Name"
+                              Width="120"
+                              Height="20"
+                              Margin="0 0 0 15">
+                    </ComboBox>
+
+                    <local:ButtonNormal x:Name="LoadButton"
+                                        Width="120"
+                                        Height="25"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="16"
+                                        Grid.Column="3"
+                                        Margin="0 50 0 0"
+                                        ContentText="Load"
+                                        OnCommand ="{Binding LoadChosenPresetCommand}" />
 
                     <Label Content="Save name:"
                            Foreground="White"

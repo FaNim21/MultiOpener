@@ -10,8 +10,9 @@
 - Ogarnac pattern do zapisywania json na opcje uwzglednienia zmian w typie Open
 - Zrobic guzik do folderu z presetami, ktore sa w miejscu exe'ca 
 
-========== DO WIELU PRESETOW ===========
+========== DO WIELU PRESETOW UPDATE 0.3.0 ===========
 - W starcie tylko pokazywac jaki preset jest zaladowany
 - defaultowo zaladowac ostatnio zaladowany w poprzedniej sesji programu preset
 - wszystkie aspekty ladowania i zapisywania dac w Settings
 - ladowanie presetow za posrednictwem ComboBoxa i najlepiej do tego zrobic folder gdzie sa wszystkie presety
+- zrobic automatyczne zapisywanie (sam fakt zeby usunac guzik save open i zastapic to automatycznym zapisywaniem w trakcie przechodzenia miedzy open'ami, lub wychodzenia z Settings a sam Save guzik sluzy do tego zeby zapisac do pliku JSON caly preset)

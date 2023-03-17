@@ -117,6 +117,8 @@ namespace MultiOpener.Commands.StartCommands
 
         private async Task OpenMultiMcInstances(OpenInstance open, string infoText = "")
         {
+            //TODO: Zrobic support na kontrole kazdej instancji oddzielnie, a nie przez tylko glowny proces multimc
+
             try
             {
                 await Task.Delay(open.DelayBefore);

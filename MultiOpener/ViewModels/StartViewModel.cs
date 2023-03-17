@@ -35,6 +35,8 @@ namespace MultiOpener.ViewModels
         {
             OpenCommand = new StartOpenCommand(this);
             CloseCommand = new StartCloseCommand(this);
+
+            PresetNameLabel = "Empty preset";
         }
 
         //TODO: Pomyslec o tym w przyszlosci co do wykrywania zamknietej aplikacji i aktualizowania panelu informacyjnego pod sekwencje w menu start itp itd

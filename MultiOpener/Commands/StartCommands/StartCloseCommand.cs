@@ -1,8 +1,6 @@
 ﻿using MultiOpener.ViewModels;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Reflection;
 using System.Windows;
 
 namespace MultiOpener.Commands.StartCommands

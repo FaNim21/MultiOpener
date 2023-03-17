@@ -14,16 +14,15 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null) return;
 
-            JsonSerializerOptions options = new()
-            {
-                WriteIndented = true,
-            };
+            if (string.IsNullOrEmpty(Settings.SaveNameField))
+                return;
 
             //TODO: kod pod tym todo bedzie nalezal do spelnionych jezeli uda sie zapisac preset pod taka nazwa
             Settings.PresetName = Settings.SaveNameField;
 
+            JsonSerializerOptions options = new() { WriteIndented = true, };
             var data = JsonSerializer.Serialize<object>(Settings.Opens, options);
-            File.WriteAllText(Settings.directoryPath + Settings.SaveNameField + ".json", data);
+            File.WriteAllText(Settings.directoryPath + "\\" + Settings.SaveNameField + ".json", data);
         }
     }
 }

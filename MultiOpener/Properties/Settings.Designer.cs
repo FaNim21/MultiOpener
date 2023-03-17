@@ -46,5 +46,17 @@ namespace MultiOpener.Properties {
                 this["MainWindowTop"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastOpenedPresetName {
+            get {
+                return ((string)(this["LastOpenedPresetName"]));
+            }
+            set {
+                this["LastOpenedPresetName"] = value;
+            }
+        }
     }
 }

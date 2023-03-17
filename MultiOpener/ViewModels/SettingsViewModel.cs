@@ -9,12 +9,15 @@ using MultiOpener.ViewModels.Settings;
 using System;
 using System.Reflection;
 using System.Windows;
+using MultiOpener.Items;
+using MultiOpener.Commands;
 
 namespace MultiOpener.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
         public ObservableCollection<OpenItem> Opens { get; set; }
+        public ObservableCollection<LoadedPresetItem> Presets { get; set; } = new ObservableCollection<LoadedPresetItem>() { new("set"), new("elo"), new("xdd")};
 
         private string? _presetName;
         public string? PresetName
@@ -29,8 +32,8 @@ namespace MultiOpener.ViewModels
 
         public OpenItem? CurrentChosen { get; set; }
 
-        //public readonly string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
-        public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\";
+        //public readonly string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Presets" ?? "C:\\Presets";   //Tymczasowo
+        public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\Presets";
 
         private OpenTypeViewModelBase? _selectedOpenTypeViewModel;
         public OpenTypeViewModelBase? SelectedOpenTypeViewModel
@@ -113,7 +116,9 @@ namespace MultiOpener.ViewModels
         public ICommand SaveJsonCommand { get; set; }
         public ICommand InsertItemToOpenCommand { get; set; }
         public ICommand OnItemClickCommand { get; set; }
-        public ICommand SettingsLoadChosenPresetCommand { get; set; }
+        public ICommand LoadChosenPresetCommand { get; set; }
+        public ICommand OpenPresetsFolderCommand { get; set; }
+        public ICommand RemovePresetCommand { get; set; }
 
 
         public SettingsViewModel()
@@ -126,11 +131,19 @@ namespace MultiOpener.ViewModels
             SaveJsonCommand = new SaveJsonCommand(this);
             InsertItemToOpenCommand = new InsertItemToOpenCommand(this);
             OnItemClickCommand = new SettingsOnItemListClickCommand(this);
-            SettingsLoadChosenPresetCommand = new SettingsLoadChosenPresetCommand(this);
+            LoadChosenPresetCommand = new SettingsLoadChosenPresetCommand(this);
+            OpenPresetsFolderCommand = new SettingsOpenPresetsFolderCommand(this);
+            RemovePresetCommand = new SettingsRemovePresetCommand(this);
 
             LeftPanelGridVisibility = false;
 
-            LoadOpenList();
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+
+            if (!string.IsNullOrEmpty(PresetName))
+            {
+                //TODO: ladowac zapisany ostatnio preset
+            }
         }
 
         //ICommand
