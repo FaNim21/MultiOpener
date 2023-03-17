@@ -11,8 +11,8 @@ namespace MultiOpener.Commands.SettingsCommands
             if (Settings == null) return;
 
             Settings.LeftPanelGridVisibility = false;
-            if (Settings.currentChosen != null)
-                Settings.RemoveItem(Settings.currentChosen);
+            if (Settings.CurrentChosen != null)
+                Settings.RemoveItem(Settings.CurrentChosen);
         }
     }
 }

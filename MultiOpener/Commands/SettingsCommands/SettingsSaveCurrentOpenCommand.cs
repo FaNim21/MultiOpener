@@ -13,13 +13,13 @@ namespace MultiOpener.Commands.SettingsCommands
 
         public override void Execute(object? parameter)
         {
-            if (Settings == null || Settings.currentChosen == null || Settings.SelectedOpenTypeViewModel == null) return;
+            if (Settings == null || Settings.CurrentChosen == null || Settings.SelectedOpenTypeViewModel == null) return;
 
             int n = Settings.Opens.Count;
             for (int i = 0; i < n; i++)
             {
                 var open = Settings.Opens[i];
-                if (open.Name.Equals(Settings.currentChosen.Name))
+                if (open.Name.Equals(Settings.CurrentChosen.Name))
                 {
                     Type selected = Settings.GetSelectedOpenType();
                     if (open.GetType() != Settings.GetSelectedOpenType())
@@ -50,7 +50,7 @@ namespace MultiOpener.Commands.SettingsCommands
                     open.DelayBefore = int.Parse(Settings.SelectedOpenTypeViewModel.DelayBeforeTimeField ?? "0");
                     open.DelayAfter = int.Parse(Settings.SelectedOpenTypeViewModel.DelayAfterTimeField ?? "0");
 
-                    Settings.currentChosen = open;
+                    Settings.CurrentChosen = open;
                     break;
                 }
             }

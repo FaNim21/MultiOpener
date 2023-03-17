@@ -15,7 +15,7 @@ namespace MultiOpener.ViewModels
     {
         public ObservableCollection<OpenItem> Opens { get; set; }
 
-        public OpenItem? currentChosen;
+        public OpenItem? CurrentChosen { get; set; }
 
         private const string _saveFileName = "settings.json";
         //public readonly string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + _saveFileName ?? "C:\\" + _saveFileName;   //Tymczasowo
@@ -38,7 +38,7 @@ namespace MultiOpener.ViewModels
             get { return _chooseTypeBox; }
             set
             {
-                if ((_chooseTypeBox != value && currentChosen != null) || SelectedOpenTypeViewModel == null)
+                if ((_chooseTypeBox != value && CurrentChosen != null) || SelectedOpenTypeViewModel == null)
                 {
                     switch (value)
                     {
@@ -48,7 +48,7 @@ namespace MultiOpener.ViewModels
                     _chooseTypeBox = value;
                     OnPropertyChanged(nameof(ChooseTypeBox));
                 }
-                SelectedOpenTypeViewModel?.UpdatePanelField(currentChosen);
+                SelectedOpenTypeViewModel?.UpdatePanelField(CurrentChosen);
             }
         }
 
@@ -129,13 +129,13 @@ namespace MultiOpener.ViewModels
 
         public void UpdateLeftPanelInfo()
         {
-            if (currentChosen == null) return;
+            if (CurrentChosen == null) return;
 
             if (!LeftPanelGridVisibility)
                 LeftPanelGridVisibility = true;
 
-            ChooseTypeBox = currentChosen.Type;
-            OpenNameLabel = currentChosen.Name;
+            ChooseTypeBox = CurrentChosen.Type;
+            OpenNameLabel = CurrentChosen.Name;
         }
 
         public void AddItem(OpenItem item)

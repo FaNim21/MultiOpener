@@ -13,7 +13,7 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null || parameter == null) return;
 
-            Settings.currentChosen = (OpenItem)parameter;
+            Settings.CurrentChosen = (OpenItem)parameter;
             Settings.UpdateLeftPanelInfo();
         }
     }

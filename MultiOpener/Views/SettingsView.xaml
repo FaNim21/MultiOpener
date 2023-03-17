@@ -201,7 +201,8 @@
                           Background="#424242"
                           BorderThickness="0"
                           AllowDrop="True"
-                          ItemsSource="{Binding Opens}">
+                          ItemsSource="{Binding Opens}"
+                          SelectedItem="{Binding CurrentChosen}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Background"
