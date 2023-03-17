@@ -231,56 +231,103 @@
 
             <!--PANEL BOCZNY-->
             <Grid Grid.Column="1">
-                <Label Content="Open option name:"
-                       Foreground="White"
-                       Width="120"
-                       Height="25"
-                       FontSize="12"
-                       VerticalAlignment="Top"
-                       Margin="0 20 0 0" />
-                <TextBox Name="AddNameField"
-                         TextWrapping="NoWrap"
-                         MaxLength="12"
-                         Text="{Binding AddNameField}"
-                         ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                         Width="120"
-                         Height="20"
-                         Background="#9E9E9E"
-                         VerticalAlignment="Top"
-                         Margin="0 45 0 0" />
-                
-                <local:ButtonNormal x:Name="AddItemTolistViewButton"
-                                    Width="120"
-                                    Height="25"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    FontSize="16"
-                                    Margin="0 75 0 0"
-                                    ContentText="Add"
-                                    OnCommand="{Binding AddNewOpenItemCommand}" />
-                <local:ButtonNormal x:Name="UpdateButton"
-                                    Width="125"
-                                    Height="25"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Bottom"
-                                    FontSize="16"
-                                    Grid.Column="3"
-                                    Margin="0 0 0 20"
-                                    ContentText="Save"
-                                    OnCommand="{Binding SaveJsonCommand}" />
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-                <!--
-                <local:ButtonNormal x:Name="LoadButton"
-                                    Width="125"
-                                    Height="25"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Bottom"
-                                    FontSize="16"
-                                    Grid.Column="3"
-                                    Margin="0 0 0 60"
-                                    ContentText="Load"
-                                    OnCommand ="{Binding LoadButtonClick}" />
-                -->
+                <Grid Grid.Row="0">
+                    <Label Content="Open option name:"
+                           Foreground="White"
+                           Width="120"
+                           Height="25"
+                           FontSize="12"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Center"
+                           Margin="0 20 0 0" />
+                    <TextBox Name="AddNameField"
+                             TextWrapping="NoWrap"
+                             MaxLength="12"
+                             Text="{Binding AddNameField}"
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                             Width="120"
+                             Height="20"
+                             Background="#9E9E9E"
+                             VerticalAlignment="Top"
+                             Margin="0 45 0 0" />
+
+                    <local:ButtonNormal x:Name="AddItemTolistViewButton"
+                                        Width="120"
+                                        Height="25"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        FontSize="16"
+                                        Margin="0 75 0 0"
+                                        ContentText="Add"
+                                        OnCommand="{Binding AddNewOpenItemCommand}" />
+                </Grid>
+
+                <Line X1="180"
+                      Grid.Row="1"
+                      Stroke="#000D14"
+                      StrokeThickness="2" />
+
+                <Grid Grid.Row="1">
+                    <ComboBox x:Name="ChoosenPresetToLoad"
+                              Style="{StaticResource ComboBoxTest2}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Top"
+                              ItemsSource="{Binding Path=ChooseTypeBox, Converter={converters:EnumToCollectionConverter}, Mode=OneTime}"
+                              SelectedValuePath="Value"
+                              DisplayMemberPath="Description"
+                              SelectedValue="{Binding Path=ChooseTypeBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Width="120"
+                              Height="20"
+                              Margin="0 30 0 0">
+                    </ComboBox>
+
+                    <local:ButtonNormal x:Name="LoadButton"
+                                        Width="120"
+                                        Height="25"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        FontSize="16"
+                                        Grid.Column="3"
+                                        Margin="0 60 0 0"
+                                        ContentText="Load"
+                                        OnCommand ="{Binding LoadButtonClick}" />
+
+
+                    <Label Content="save name:"
+                           Foreground="White"
+                           Width="120"
+                           Height="25"
+                           FontSize="12"
+                           VerticalAlignment="Bottom"
+                           HorizontalContentAlignment="Center"
+                           Margin="0 0 0 75" />
+                    <TextBox Name="SavNameField"
+                             TextWrapping="NoWrap"
+                             MaxLength="12"
+                             Text="{Binding AddNameField}"
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                             Width="120"
+                             Height="20"
+                             Background="#9E9E9E"
+                             VerticalAlignment="Bottom"
+                             Margin="0 0 0 55" />
+
+                    <local:ButtonNormal x:Name="UpdateButton"
+                                        Width="120"
+                                        Height="25"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Bottom"
+                                        FontSize="16"
+                                        Grid.Column="3"
+                                        Margin="0 0 0 20"
+                                        ContentText="Save"
+                                        OnCommand="{Binding SaveJsonCommand}" />
+                </Grid>
             </Grid>
         </Grid>
     </Grid>
