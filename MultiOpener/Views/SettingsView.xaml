@@ -300,6 +300,7 @@
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
                               ItemsSource="{Binding Presets}"
+                              SelectedItem="{Binding CurrentLoadedChosen}"
                               DisplayMemberPath="Name"
                               Width="120"
                               Height="20"

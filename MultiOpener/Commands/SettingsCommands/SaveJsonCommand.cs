@@ -25,9 +25,8 @@ namespace MultiOpener.Commands.SettingsCommands
             {
                 foreach (var item in files)
                 {
-                    string[] splits = item.Split('\\');
-                    string finalName = splits[^1];
-                    if (finalName.ToLower().Equals(saveName.ToLower() + ".json"))
+                    string finalName = Path.GetFileNameWithoutExtension(item);
+                    if (finalName.ToLower().Equals(saveName.ToLower()))
                         if (MessageBox.Show($"Are you sure that you wanna overwrite {finalName}?", $"Overwriting warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                             return;
                 }
@@ -35,7 +34,7 @@ namespace MultiOpener.Commands.SettingsCommands
                 Settings.PresetName = saveName;
             }
 
-            //TODO: Aktualizowanie comboboxa z nowym zapisanym plikiem
+            Settings.UpdatePresetsComboBox();
 
             JsonSerializerOptions options = new() { WriteIndented = true, };
             var data = JsonSerializer.Serialize<object>(Settings.Opens, options);

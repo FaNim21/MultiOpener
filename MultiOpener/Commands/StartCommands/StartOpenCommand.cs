@@ -4,6 +4,7 @@ using MultiOpener.Windows;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
@@ -85,11 +86,8 @@ namespace MultiOpener.Commands.StartCommands
                     try
                     {
                         await Task.Delay(current.DelayBefore);
-                        //TODO: --PROBLEM-- TU BEDZIE PROBLEM Z LINUX'EM I MOZLIWE ZE Z MAC'IEM
-                        string path = current.PathExe;
-                        string[] splits = path.Split('\\');
-                        string executable = splits[^1];
-                        string pathDir = path.Remove(path.Length - (executable.Length + 1));
+                        string executable = Path.GetFileName(current.PathExe);
+                        string pathDir = Path.GetDirectoryName(current.PathExe) ?? "";
 
                         ProcessStartInfo processStartInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
                         Process? process = Process.Start(processStartInfo);

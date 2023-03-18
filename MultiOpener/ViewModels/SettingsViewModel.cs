@@ -11,13 +11,28 @@ using System.Reflection;
 using System.Windows;
 using MultiOpener.Items;
 using MultiOpener.Commands;
+using Microsoft.Win32;
 
 namespace MultiOpener.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
         public ObservableCollection<OpenItem> Opens { get; set; }
-        public ObservableCollection<LoadedPresetItem> Presets { get; set; } = new ObservableCollection<LoadedPresetItem>() { new("set"), new("elo"), new("xdd") };
+        public ObservableCollection<LoadedPresetItem> Presets { get; set; }
+
+        public OpenItem? CurrentChosen { get; set; }
+        public LoadedPresetItem? CurrentLoadedChosen { get; set; }
+
+        private OpenTypeViewModelBase? _selectedOpenTypeViewModel;
+        public OpenTypeViewModelBase? SelectedOpenTypeViewModel
+        {
+            get { return _selectedOpenTypeViewModel; }
+            set
+            {
+                _selectedOpenTypeViewModel = value;
+                OnPropertyChanged(nameof(SelectedOpenTypeViewModel));
+            }
+        }
 
         private string? _presetName;
         public string? PresetName
@@ -31,22 +46,6 @@ namespace MultiOpener.ViewModels
                 if (!string.IsNullOrEmpty(value))
                     output = "Current preset: " + value;
                 ((MainWindow)Application.Current.MainWindow).MainViewModel.start.PresetNameLabel = output;
-            }
-        }
-
-        public OpenItem? CurrentChosen { get; set; }
-
-        //public readonly string directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Presets" ?? "C:\\Presets";   //Tymczasowo
-        public readonly string directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\Presets";
-
-        private OpenTypeViewModelBase? _selectedOpenTypeViewModel;
-        public OpenTypeViewModelBase? SelectedOpenTypeViewModel
-        {
-            get { return _selectedOpenTypeViewModel; }
-            set
-            {
-                _selectedOpenTypeViewModel = value;
-                OnPropertyChanged(nameof(SelectedOpenTypeViewModel));
             }
         }
 
@@ -124,9 +123,17 @@ namespace MultiOpener.ViewModels
         public ICommand OpenPresetsFolderCommand { get; set; }
         public ICommand RemovePresetCommand { get; set; }
 
+        public readonly string directoryPath;
+
 
         public SettingsViewModel()
         {
+#if DEBUG
+            directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\Presets";
+#else
+            directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Presets" ?? "C:\\Presets";
+#endif
+
             Opens = new ObservableCollection<OpenItem>();
 
             AddNewOpenItemCommand = new SettingsAddNewOpenItemCommand(this);
@@ -144,9 +151,7 @@ namespace MultiOpener.ViewModels
             if (!Directory.Exists(directoryPath))
                 Directory.CreateDirectory(directoryPath);
 
-
-            //TODO: Wczytac wybrany json do listy
-
+            UpdatePresetsComboBox();
         }
 
         public void LoadStartUPPreset(string loadedPresetName)
@@ -157,7 +162,19 @@ namespace MultiOpener.ViewModels
                 PresetName = string.Empty;
         }
 
-        private void LoadOpenList(string presetName)
+        public void UpdatePresetsComboBox()
+        {
+            //TODO: Optimize it? by adding and removing or changing names in it
+            Presets = new ObservableCollection<LoadedPresetItem>();
+            var files = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly);
+            for (int i = 0; i < files.Length; i++)
+            {
+                var fileName = Path.GetFileName(files[i]);
+                Presets.Add(new LoadedPresetItem(fileName));
+            }
+        }
+
+        public void LoadOpenList(string presetName)
         {
             if (Opens != null && !Opens.Any())
             {

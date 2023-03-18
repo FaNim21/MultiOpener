@@ -11,8 +11,21 @@ namespace MultiOpener.Commands.SettingsCommands
 
         public override void Execute(object? parameter)
         {
+            if (Settings == null) return;
+
             //TODO: Zbieranie nazwy pliku do odpalenia z comboboxa i ladowanie calej listy
-            MessageBox.Show("Ladowanie presetu");
+            if(Settings.CurrentLoadedChosen != null && string.IsNullOrEmpty(Settings.CurrentLoadedChosen.Name))
+            {
+                if (string.IsNullOrEmpty(Settings.PresetName))
+                    Settings.LoadOpenList(Settings.CurrentLoadedChosen.Name);
+                else
+                {
+                    if(MessageBox.Show($"","", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    {
+
+                    }
+                }
+            }
 
             //ladowanie PresetName na koncu
         }
