@@ -1,6 +1,7 @@
 ﻿using MultiOpener.ViewModels;
 using System.IO;
 using System.Text.Json;
+using System.Windows;
 
 namespace MultiOpener.Commands.SettingsCommands
 {
@@ -14,15 +15,31 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null) return;
 
-            if (string.IsNullOrEmpty(Settings.SaveNameField))
+            string saveName = Settings.SaveNameField ?? "";
+            if (string.IsNullOrEmpty(saveName))
                 return;
 
-            //TODO: kod pod tym todo bedzie nalezal do spelnionych jezeli uda sie zapisac preset pod taka nazwa
-            Settings.PresetName = Settings.SaveNameField;
+            var files = Directory.GetFiles(Settings.directoryPath, "*.json", SearchOption.TopDirectoryOnly);
+
+            if (saveName != Settings.PresetName)
+            {
+                foreach (var item in files)
+                {
+                    string[] splits = item.Split('\\');
+                    string finalName = splits[^1];
+                    if (finalName.ToLower().Equals(saveName.ToLower() + ".json"))
+                        if (MessageBox.Show($"Are you sure that you wanna overwrite {finalName}?", $"Overwriting warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                            return;
+                }
+
+                Settings.PresetName = saveName;
+            }
+
+            //TODO: Aktualizowanie comboboxa z nowym zapisanym plikiem
 
             JsonSerializerOptions options = new() { WriteIndented = true, };
             var data = JsonSerializer.Serialize<object>(Settings.Opens, options);
-            File.WriteAllText(Settings.directoryPath + "\\" + Settings.SaveNameField + ".json", data);
+            File.WriteAllText(Settings.directoryPath + "\\" + saveName + ".json", data);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace MultiOpener.Commands
         {
             if(MessageBox.Show("Are you sure?", "Deleting currently opened preset!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                MessageBox.Show("Usuwanie obecnie otwartego presetu");
+                MessageBox.Show("Usuwanie obecnie otwartego presetu JESZCZE NIE GOTOWE");
             }
         }
     }

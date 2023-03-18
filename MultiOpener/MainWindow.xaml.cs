@@ -28,7 +28,7 @@ namespace MultiOpener
                 Top = Settings.Default.MainWindowTop;
             }
 
-            MainViewModel.settings.PresetName = Settings.Default.LastOpenedPresetName;
+            MainViewModel.settings.LoadStartUPPreset(Settings.Default.LastOpenedPresetName);
         }
 
         public void EnableDisableChoosenHeadButton(string option)

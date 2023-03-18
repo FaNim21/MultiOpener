@@ -17,7 +17,7 @@ namespace MultiOpener.ViewModels
     public class SettingsViewModel : BaseViewModel
     {
         public ObservableCollection<OpenItem> Opens { get; set; }
-        public ObservableCollection<LoadedPresetItem> Presets { get; set; } = new ObservableCollection<LoadedPresetItem>() { new("set"), new("elo"), new("xdd")};
+        public ObservableCollection<LoadedPresetItem> Presets { get; set; } = new ObservableCollection<LoadedPresetItem>() { new("set"), new("elo"), new("xdd") };
 
         private string? _presetName;
         public string? PresetName
@@ -26,7 +26,11 @@ namespace MultiOpener.ViewModels
             set
             {
                 _presetName = value;
-                ((MainWindow)Application.Current.MainWindow).MainViewModel.start.PresetNameLabel = "Current preset: " + value;
+
+                string output = "Empty preset";
+                if (!string.IsNullOrEmpty(value))
+                    output = "Current preset: " + value;
+                ((MainWindow)Application.Current.MainWindow).MainViewModel.start.PresetNameLabel = output;
             }
         }
 
@@ -140,28 +144,36 @@ namespace MultiOpener.ViewModels
             if (!Directory.Exists(directoryPath))
                 Directory.CreateDirectory(directoryPath);
 
-            if (!string.IsNullOrEmpty(PresetName))
-            {
-                //TODO: ladowac zapisany ostatnio preset
-            }
+
+            //TODO: Wczytac wybrany json do listy
+
         }
 
-        //ICommand
-        private void LoadOpenList()
+        public void LoadStartUPPreset(string loadedPresetName)
         {
-            //TODO: Ladowac z ostatniej sesji odpalony preset
-            //TODO: --FUTURE-- Wczytac wybrany json do listy
+            if (File.Exists(directoryPath + "\\" + loadedPresetName + ".json"))
+                LoadOpenList(loadedPresetName);
+            else
+                PresetName = string.Empty;
+        }
+
+        private void LoadOpenList(string presetName)
+        {
             if (Opens != null && !Opens.Any())
             {
-                if (!File.Exists(directoryPath))
+                string presetToLoad = directoryPath + "\\" + presetName + ".json";
+
+                if (!File.Exists(presetToLoad))
                     return;
 
-                string text = File.ReadAllText(directoryPath) ?? "";
+                string text = File.ReadAllText(presetToLoad) ?? "";
                 if (string.IsNullOrEmpty(text))
                     return;
 
                 var data = JsonSerializer.Deserialize<ObservableCollection<OpenItem>>(text);
                 Opens = new ObservableCollection<OpenItem>(data ?? new ObservableCollection<OpenItem>());
+
+                PresetName = presetName;
             }
         }
 
