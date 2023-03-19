@@ -54,6 +54,7 @@
             <TextBlock TextWrapping="WrapWithOverflow" Margin="10 0 10 0">
                 Notes:<LineBreak />
                 - For now one added AutoHotkey script to settings will cause on close every AutoHotkey to shut down due to TheWall script resetting issues <LineBreak />
+                - The saved presets are in the Presets folder where you placed the exe file<LineBreak />
                 - Names for instances needs to be as names from folder instances to that instance because of MultiMc command to openning that instances <LineBreak />
                 - 
             </TextBlock>

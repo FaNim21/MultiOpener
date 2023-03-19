@@ -31,13 +31,11 @@ namespace MultiOpener.Commands.SettingsCommands
                             return;
                 }
             }
-
-            //TODO: ZTESTOWAC TO TRZEBA
             if (!string.IsNullOrEmpty(Settings.PresetName))
             {
                 if (!saveName.Equals(Settings.PresetName, System.StringComparison.CurrentCultureIgnoreCase))
                 {
-                    MessageBoxResult result = MessageBox.Show($"Do you want save your preset to new file?\nYes - It will create new file with your preset\nNo - It will change name of your current preset and file", $"Detected different names!", MessageBoxButton.YesNoCancel, MessageBoxImage.Information);
+                    MessageBoxResult result = MessageBox.Show($"Do you want save your preset to new file?\nYes - It will create new file with your preset or overwrite the existing one\nNo - It will change name of your current preset and file", $"Detected different names!", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                     if (result == MessageBoxResult.Yes)
                     {
                         //empty

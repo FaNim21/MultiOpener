@@ -273,6 +273,17 @@
                       StrokeThickness="2" />
 
                 <Grid Grid.Row="1">
+                    <local:ButtonNormal x:Name="CreateNewPreset"
+                                        Width="120"
+                                        Height="25"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        FontSize="16"
+                                        Grid.Column="3"
+                                        Margin="0 20 0 0"
+                                        ContentText="Create New"
+                                        OnCommand="{Binding CreateNewPresetCommand}" />
+                    
                     <local:ButtonNormal x:Name="DeleteCurrentOpenPreset"
                                         Width="120"
                                         Height="25"
@@ -280,7 +291,7 @@
                                         VerticalAlignment="Top"
                                         FontSize="16"
                                         Grid.Column="3"
-                                        Margin="0 40 0 0"
+                                        Margin="0 60 0 0"
                                         ContentText="Delete Preset"
                                         OnCommand="{Binding RemovePresetCommand}" />
                     
@@ -291,7 +302,7 @@
                                         VerticalAlignment="Top"
                                         FontSize="16"
                                         Grid.Column="3"
-                                        Margin="0 80 0 0"
+                                        Margin="0 100 0 0"
                                         ContentText="Open Folder"
                                         OnCommand="{Binding OpenPresetsFolderCommand}" />
 

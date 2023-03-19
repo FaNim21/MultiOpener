@@ -9,8 +9,6 @@ using System;
 using System.Reflection;
 using System.Windows;
 using MultiOpener.Items;
-using MultiOpener.Commands;
-using System.Windows.Data;
 
 namespace MultiOpener.ViewModels
 {
@@ -121,6 +119,7 @@ namespace MultiOpener.ViewModels
         public ICommand LoadChosenPresetCommand { get; set; }
         public ICommand OpenPresetsFolderCommand { get; set; }
         public ICommand RemovePresetCommand { get; set; }
+        public ICommand CreateNewPresetCommand { get; set; }
 
         public readonly string directoryPath;
 
@@ -144,6 +143,7 @@ namespace MultiOpener.ViewModels
             LoadChosenPresetCommand = new SettingsLoadChosenPresetCommand(this);
             OpenPresetsFolderCommand = new SettingsOpenPresetsFolderCommand(this);
             RemovePresetCommand = new SettingsRemovePresetCommand(this);
+            CreateNewPresetCommand = new SettingsCreateNewPresetCommand(this);
 
             LeftPanelGridVisibility = false;
 
@@ -201,8 +201,6 @@ namespace MultiOpener.ViewModels
 
         public void RemoveCurrentOpenPreset()
         {
-            Opens = new ObservableCollection<OpenItem>();
-
             if(!string.IsNullOrEmpty(PresetName))
             {
                 var files = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly);
@@ -214,13 +212,20 @@ namespace MultiOpener.ViewModels
                 }
             }
 
+            CreateEmptyPreset();
+
+            UpdatePresetsComboBox();
+        }
+
+        public void CreateEmptyPreset()
+        {
+            Opens = new ObservableCollection<OpenItem>();
+
             PresetName = string.Empty;
             SaveNameField = string.Empty;
 
             LeftPanelGridVisibility = false;
             OnPropertyChanged(nameof(Opens));
-
-            UpdatePresetsComboBox();
         }
 
         public void UpdateLeftPanelInfo()
