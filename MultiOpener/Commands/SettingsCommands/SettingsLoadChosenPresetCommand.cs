@@ -14,20 +14,18 @@ namespace MultiOpener.Commands.SettingsCommands
             if (Settings == null) return;
 
             //TODO: Zbieranie nazwy pliku do odpalenia z comboboxa i ladowanie calej listy
-            if(Settings.CurrentLoadedChosen != null && string.IsNullOrEmpty(Settings.CurrentLoadedChosen.Name))
+            if(Settings.CurrentLoadedChosen != null && !string.IsNullOrEmpty(Settings.CurrentLoadedChosen.Name))
             {
                 if (string.IsNullOrEmpty(Settings.PresetName))
                     Settings.LoadOpenList(Settings.CurrentLoadedChosen.Name);
                 else
                 {
-                    if(MessageBox.Show($"","", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    if(MessageBox.Show($"Are you sure you want to that load preset?\nYou might not saved previous!","Loading Preset", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
-
+                        Settings.LoadOpenList(Settings.CurrentLoadedChosen.Name);
                     }
                 }
             }
-
-            //ladowanie PresetName na koncu
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using MultiOpener.ListView;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Windows.Input;
 using MultiOpener.Commands.SettingsCommands;
@@ -11,7 +10,7 @@ using System.Reflection;
 using System.Windows;
 using MultiOpener.Items;
 using MultiOpener.Commands;
-using Microsoft.Win32;
+using System.Windows.Data;
 
 namespace MultiOpener.ViewModels
 {
@@ -157,7 +156,7 @@ namespace MultiOpener.ViewModels
         public void LoadStartUPPreset(string loadedPresetName)
         {
             if (File.Exists(directoryPath + "\\" + loadedPresetName + ".json"))
-                LoadOpenList(loadedPresetName);
+                LoadOpenList(loadedPresetName + ".json");
             else
                 PresetName = string.Empty;
         }
@@ -172,13 +171,14 @@ namespace MultiOpener.ViewModels
                 var fileName = Path.GetFileName(files[i]);
                 Presets.Add(new LoadedPresetItem(fileName));
             }
+            OnPropertyChanged(nameof(Presets));
         }
 
         public void LoadOpenList(string presetName)
         {
-            if (Opens != null && !Opens.Any())
+            if (!string.IsNullOrEmpty(presetName))
             {
-                string presetToLoad = directoryPath + "\\" + presetName + ".json";
+                string presetToLoad = directoryPath + "\\" + presetName;
 
                 if (!File.Exists(presetToLoad))
                     return;
@@ -190,8 +190,37 @@ namespace MultiOpener.ViewModels
                 var data = JsonSerializer.Deserialize<ObservableCollection<OpenItem>>(text);
                 Opens = new ObservableCollection<OpenItem>(data ?? new ObservableCollection<OpenItem>());
 
-                PresetName = presetName;
+                string loadedName = Path.GetFileNameWithoutExtension(presetName);
+                PresetName = loadedName;
+                SaveNameField = loadedName;
+
+                LeftPanelGridVisibility = false;
+                OnPropertyChanged(nameof(Opens));
             }
+        }
+
+        public void RemoveCurrentOpenPreset()
+        {
+            Opens = new ObservableCollection<OpenItem>();
+
+            if(!string.IsNullOrEmpty(PresetName))
+            {
+                var files = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly);
+                for (int i = 0; i < files.Length; i++)
+                {
+                    string name = Path.GetFileNameWithoutExtension(files[i]);
+                    if(name.ToLower().Equals(PresetName.ToLower()))
+                        File.Delete(files[i]);
+                }
+            }
+
+            PresetName = string.Empty;
+            SaveNameField = string.Empty;
+
+            LeftPanelGridVisibility = false;
+            OnPropertyChanged(nameof(Opens));
+
+            UpdatePresetsComboBox();
         }
 
         public void UpdateLeftPanelInfo()
