@@ -126,11 +126,12 @@ namespace MultiOpener.ViewModels
 
         public SettingsViewModel()
         {
-#if DEBUG
+/*#if DEBUG
             directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\Presets";
 #else
             directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Presets" ?? "C:\\Presets";
-#endif
+#endif*/
+            directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MultiOpener", "Presets");
 
             Opens = new ObservableCollection<OpenItem>();
 
@@ -201,13 +202,13 @@ namespace MultiOpener.ViewModels
 
         public void RemoveCurrentOpenPreset()
         {
-            if(!string.IsNullOrEmpty(PresetName))
+            if (!string.IsNullOrEmpty(PresetName))
             {
                 var files = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly);
                 for (int i = 0; i < files.Length; i++)
                 {
                     string name = Path.GetFileNameWithoutExtension(files[i]);
-                    if(name.ToLower().Equals(PresetName.ToLower()))
+                    if (name.ToLower().Equals(PresetName.ToLower()))
                         File.Delete(files[i]);
                 }
             }

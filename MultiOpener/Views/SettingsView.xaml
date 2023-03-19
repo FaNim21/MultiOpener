@@ -280,7 +280,7 @@
                                         VerticalAlignment="Top"
                                         FontSize="16"
                                         Grid.Column="3"
-                                        Margin="0 20 0 0"
+                                        Margin="0 10 0 0"
                                         ContentText="Create New"
                                         OnCommand="{Binding CreateNewPresetCommand}" />
                     
@@ -291,7 +291,7 @@
                                         VerticalAlignment="Top"
                                         FontSize="16"
                                         Grid.Column="3"
-                                        Margin="0 60 0 0"
+                                        Margin="0 50 0 0"
                                         ContentText="Delete Preset"
                                         OnCommand="{Binding RemovePresetCommand}" />
                     
@@ -302,7 +302,7 @@
                                         VerticalAlignment="Top"
                                         FontSize="16"
                                         Grid.Column="3"
-                                        Margin="0 100 0 0"
+                                        Margin="0 90 0 0"
                                         ContentText="Open Folder"
                                         OnCommand="{Binding OpenPresetsFolderCommand}" />
 
