@@ -2,17 +2,16 @@
 ==================== KONCPETY ==========================
 ========================================================
 - narazie program zrobic pod speedruny minecrafta
-- Zrobic zeby program uruchamial programy z listy ktorych procesy nie sa jeszcze uruchomione
-- Type powinien byc w lewej czesci konfiguratora i miec opcje zmiany konfiguracji na inny typ bez nie potrzebnego wpisywania typowch parametrow jak sciezka pliku na nowo
+- (TO ZALEZY JAK DALEJ TA APKA POJDZIE) Zrobic zeby program uruchamial programy z listy ktorych procesy nie sa jeszcze uruchomione
 
 
 ========== WAZNE ============
-- Ogarnac pattern do zapisywania json na opcje uwzglednienia zmian w typie Open
-- Zrobic guzik do folderu z presetami, ktore sa w miejscu exe'ca 
+-
+
 
 ========== DO WIELU PRESETOW UPDATE 0.3.0 ===========
-- W starcie tylko pokazywac jaki preset jest zaladowany
-- defaultowo zaladowac ostatnio zaladowany w poprzedniej sesji programu preset
-- wszystkie aspekty ladowania i zapisywania dac w Settings
-- ladowanie presetow za posrednictwem ComboBoxa i najlepiej do tego zrobic folder gdzie sa wszystkie presety
 - zrobic automatyczne zapisywanie (sam fakt zeby usunac guzik save open i zastapic to automatycznym zapisywaniem w trakcie przechodzenia miedzy open'ami, lub wychodzenia z Settings a sam Save guzik sluzy do tego zeby zapisac do pliku JSON caly preset)
+
+
+========== DODATKOWE INFO ===========
+- Zeby dodawac kolejne typy 'Open' trzeba uzupelnic SettingsViewModel GetType na samym dole i dodac odwolanie w SaveCurrentOpen

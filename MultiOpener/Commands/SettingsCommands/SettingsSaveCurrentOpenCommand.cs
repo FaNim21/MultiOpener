@@ -13,6 +13,7 @@ namespace MultiOpener.Commands.SettingsCommands
 
         public override void Execute(object? parameter)
         {
+            //TODO: Wcisnac to do metody w viewmodelu settings i zautomatyzowac zapisywanie uwzgledniajac zmiane 'Open', klikanie Save i przechodzenie z settings na start menu itp
             if (Settings == null || Settings.CurrentChosen == null || Settings.SelectedOpenTypeViewModel == null) return;
 
             int n = Settings.Opens.Count;
@@ -41,10 +42,6 @@ namespace MultiOpener.Commands.SettingsCommands
                     }
 
                     string appPath = Settings.SelectedOpenTypeViewModel.ApplicationPathField ?? "";
-                    if (!string.IsNullOrEmpty(appPath))
-                        while (appPath[0] == '\u202A')
-                            appPath = appPath.Substring(1);
-
                     open.PathExe = appPath;
                     open.Type = Settings.ChooseTypeBox;
                     open.DelayBefore = int.Parse(Settings.SelectedOpenTypeViewModel.DelayBeforeTimeField ?? "0");

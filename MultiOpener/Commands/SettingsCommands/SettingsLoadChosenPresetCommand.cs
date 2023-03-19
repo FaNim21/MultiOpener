@@ -14,7 +14,6 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null) return;
 
-            //TODO: Zbieranie nazwy pliku do odpalenia z comboboxa i ladowanie calej listy
             if(Settings.CurrentLoadedChosen != null && !string.IsNullOrEmpty(Settings.CurrentLoadedChosen.Name))
             {
                 if (Path.GetFileNameWithoutExtension(Settings.CurrentLoadedChosen.Name).Equals(Settings.PresetName))
