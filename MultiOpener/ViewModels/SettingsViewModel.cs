@@ -10,6 +10,8 @@ using System.Reflection;
 using System.Windows;
 using MultiOpener.Items;
 using MultiOpener.Utils;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace MultiOpener.ViewModels
 {
@@ -168,7 +170,7 @@ namespace MultiOpener.ViewModels
                 var fileName = Path.GetFileName(files[i]);
                 var loadedPresetitem = new LoadedPresetItem(fileName);
                 Presets.Add(loadedPresetitem);
-                
+
                 if (!string.IsNullOrEmpty(selected) && fileName.Equals(selected))
                 {
                     CurrentLoadedChosen = loadedPresetitem;

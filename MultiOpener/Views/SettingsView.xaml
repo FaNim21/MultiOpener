@@ -211,7 +211,7 @@
                                          Handler="TextBlockMouseMove" />
                             <EventSetter Event="DragOver"
                                          Handler="TextBlockDragOver" />
-                            <EventSetter Event="MouseDoubleClick"
+                            <EventSetter Event="PreviewMouseLeftButtonDown"
                                          Handler="OnItemListClick" />
                         </Style>
                     </ListView.ItemContainerStyle>

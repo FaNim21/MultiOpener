@@ -44,8 +44,9 @@ namespace MultiOpener.Views
         private void OnItemListClick(object sender, MouseButtonEventArgs e)
         {
             var item = sender as ListViewItem;
-            if (item != null && item.IsSelected)
+            if (item != null)
             {
+                Keyboard.Focus((IInputElement)sender);
                 OnListItemClickCommand?.Execute((OpenItem)item.DataContext);    
             }
         }

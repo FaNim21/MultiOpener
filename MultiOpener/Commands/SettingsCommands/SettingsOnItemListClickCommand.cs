@@ -1,5 +1,6 @@
 ﻿using MultiOpener.ListView;
 using MultiOpener.ViewModels;
+using System.Windows.Input;
 
 namespace MultiOpener.Commands.SettingsCommands
 {
@@ -12,8 +13,8 @@ namespace MultiOpener.Commands.SettingsCommands
         public override void Execute(object? parameter)
         {
             if (Settings == null || parameter == null) return;
+            if ((OpenItem)parameter == Settings.CurrentChosen) return;
 
-            //TODO: Ogarnac czemu nazwy sie zmieniaja, ale wczytuja sie zle Open jak sie save'uje ostatnio odpalony open i zarazem zmienia na nowy w liscie
             Settings.SaveCurrentOpenCommand.Execute(null);
 
             Settings.CurrentChosen = (OpenItem)parameter;

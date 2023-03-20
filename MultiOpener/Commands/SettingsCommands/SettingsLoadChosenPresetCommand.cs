@@ -21,9 +21,9 @@ namespace MultiOpener.Commands.SettingsCommands
 
             if (Settings.CurrentLoadedChosen != null && !string.IsNullOrEmpty(Settings.CurrentLoadedChosen.Name))
             {
-                string fileName = Helper.GetFileNameWithoutExtension(Settings.CurrentLoadedChosen.Name);
+                /*string fileName = Helper.GetFileNameWithoutExtension(Settings.CurrentLoadedChosen.Name);
                 if (fileName.Equals(Settings.PresetName))
-                    return;
+                    return;*/
 
                 if (string.IsNullOrEmpty(Settings.PresetName))
                     Settings.LoadOpenList(Settings.CurrentLoadedChosen.Name);

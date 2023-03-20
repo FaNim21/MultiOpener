@@ -115,6 +115,7 @@ namespace MultiOpener.Commands.StartCommands
             //TODO: Zrobic support na kontrole kazdej instancji oddzielnie, a nie przez tylko glowny proces multimc
 
             //TODO: Uwzglednic ladowanie instancji do progress bara
+            //TODO: Zrobic focus na main window po skonczeniu liczenia
             try
             {
                 await Task.Delay(open.DelayBefore);
