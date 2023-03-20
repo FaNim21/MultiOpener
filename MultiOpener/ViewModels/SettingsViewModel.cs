@@ -9,6 +9,7 @@ using System;
 using System.Reflection;
 using System.Windows;
 using MultiOpener.Items;
+using MultiOpener.Utils;
 
 namespace MultiOpener.ViewModels
 {
@@ -126,11 +127,6 @@ namespace MultiOpener.ViewModels
 
         public SettingsViewModel()
         {
-/*#if DEBUG
-            directoryPath = "C:\\Users\\Filip\\Desktop\\Test\\Presets";
-#else
-            directoryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Presets" ?? "C:\\Presets";
-#endif*/
             directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MultiOpener", "Presets");
 
             Opens = new ObservableCollection<OpenItem>();
@@ -162,7 +158,7 @@ namespace MultiOpener.ViewModels
                 PresetName = string.Empty;
         }
 
-        public void UpdatePresetsComboBox()
+        public void UpdatePresetsComboBox(string selected = "")
         {
             //TODO: Optimize it? by adding and removing or changing names in it
             Presets = new ObservableCollection<LoadedPresetItem>();
@@ -170,8 +166,16 @@ namespace MultiOpener.ViewModels
             for (int i = 0; i < files.Length; i++)
             {
                 var fileName = Path.GetFileName(files[i]);
-                Presets.Add(new LoadedPresetItem(fileName));
+                var loadedPresetitem = new LoadedPresetItem(fileName);
+                Presets.Add(loadedPresetitem);
+                
+                if (!string.IsNullOrEmpty(selected) && fileName.Equals(selected))
+                {
+                    CurrentLoadedChosen = loadedPresetitem;
+                    OnPropertyChanged(nameof(CurrentLoadedChosen));
+                }
             }
+
             OnPropertyChanged(nameof(Presets));
         }
 
@@ -191,7 +195,7 @@ namespace MultiOpener.ViewModels
                 var data = JsonSerializer.Deserialize<ObservableCollection<OpenItem>>(text);
                 Opens = new ObservableCollection<OpenItem>(data ?? new ObservableCollection<OpenItem>());
 
-                string loadedName = Path.GetFileNameWithoutExtension(presetName);
+                string loadedName = Helper.GetFileNameWithoutExtension(presetName);
                 PresetName = loadedName;
                 SaveNameField = loadedName;
 
@@ -207,7 +211,7 @@ namespace MultiOpener.ViewModels
                 var files = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly);
                 for (int i = 0; i < files.Length; i++)
                 {
-                    string name = Path.GetFileNameWithoutExtension(files[i]);
+                    string name = Helper.GetFileNameWithoutExtension(files[i]);
                     if (name.ToLower().Equals(PresetName.ToLower()))
                         File.Delete(files[i]);
                 }

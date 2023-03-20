@@ -1,4 +1,5 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Utils;
+using MultiOpener.ViewModels;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -15,7 +16,7 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null) return;
 
-            string saveName = Path.GetFileNameWithoutExtension(Settings.SaveNameField) ?? "";
+            string saveName = Helper.GetFileNameWithoutExtension(Settings.SaveNameField);
             if (string.IsNullOrEmpty(saveName))
                 return;
 
@@ -25,13 +26,13 @@ namespace MultiOpener.Commands.SettingsCommands
             {
                 foreach (var item in files)
                 {
-                    string finalName = Path.GetFileNameWithoutExtension(item);
+                    string finalName = Helper.GetFileNameWithoutExtension(item);
                     if (finalName.ToLower().Equals(saveName.ToLower()))
                         if (MessageBox.Show($"Are you sure that you wanna overwrite {finalName}?", $"Overwriting warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                             return;
                 }
             }
-            if (!string.IsNullOrEmpty(Settings.PresetName))
+            if (!string.IsNullOrEmpty(Settings.PresetName) && !Settings.PresetName.Equals(Settings.SaveNameField))
             {
                 if (!saveName.Equals(Settings.PresetName, System.StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -55,7 +56,7 @@ namespace MultiOpener.Commands.SettingsCommands
             var data = JsonSerializer.Serialize<object>(Settings.Opens, options);
             File.WriteAllText(Settings.directoryPath + "\\" + saveName + ".json", data);
 
-            Settings.UpdatePresetsComboBox();
+            Settings.UpdatePresetsComboBox(saveName + ".json");
         }
     }
 }

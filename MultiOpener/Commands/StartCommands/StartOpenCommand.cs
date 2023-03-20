@@ -31,10 +31,7 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
-            //TODO: -- INFO/FUTURE -- Temporary blockade preventing too much opennings for future with changing preset feature
-            if (MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0)
-                return;
-            if (Start == null)
+            if ((MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null)
                 return;
 
             Start.OpenButtonEnabled = false;
@@ -117,6 +114,7 @@ namespace MultiOpener.Commands.StartCommands
         {
             //TODO: Zrobic support na kontrole kazdej instancji oddzielnie, a nie przez tylko glowny proces multimc
 
+            //TODO: Uwzglednic ladowanie instancji do progress bara
             try
             {
                 await Task.Delay(open.DelayBefore);
