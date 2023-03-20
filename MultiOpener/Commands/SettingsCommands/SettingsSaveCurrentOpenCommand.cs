@@ -13,7 +13,6 @@ namespace MultiOpener.Commands.SettingsCommands
 
         public override void Execute(object? parameter)
         {
-            //TODO: Wcisnac to do metody w viewmodelu settings i zautomatyzowac zapisywanie uwzgledniajac zmiane 'Open', klikanie Save i przechodzenie z settings na start menu itp
             if (Settings == null || Settings.CurrentChosen == null || Settings.SelectedOpenTypeViewModel == null) return;
 
             int n = Settings.Opens.Count;

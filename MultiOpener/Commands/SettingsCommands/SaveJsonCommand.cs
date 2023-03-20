@@ -16,6 +16,8 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null) return;
 
+            Settings.SaveCurrentOpenCommand.Execute(null);
+
             string saveName = Helper.GetFileNameWithoutExtension(Settings.SaveNameField);
             if (string.IsNullOrEmpty(saveName))
                 return;

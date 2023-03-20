@@ -22,7 +22,10 @@ namespace MultiOpener.Commands
             viewModel.MainWindow.EnableDisableChoosenHeadButton(result);
 
             if (result.Equals("Start"))
+            {
+                viewModel.settings?.SaveCurrentOpenCommand.Execute(null);
                 viewModel.SelectedViewModel = viewModel.start;
+            }
             else if (result.Equals("Settings"))
                 viewModel.SelectedViewModel = viewModel.settings;
         }
