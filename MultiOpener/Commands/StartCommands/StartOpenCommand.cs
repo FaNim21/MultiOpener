@@ -31,8 +31,8 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
-            if ((MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null)
-                return;
+            if ((MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null) return;
+            if (MainWindow.MainViewModel.settings.Opens == null || !MainWindow.MainViewModel.settings.Opens.Any()) return;
 
             Start.OpenButtonEnabled = false;
 
@@ -50,12 +50,20 @@ namespace MultiOpener.Commands.StartCommands
 
         public async Task OpenProgramsList()
         {
-            int length = MainWindow.MainViewModel.settings.Opens.Count;
+            int length = 0;
+            for (int i = 0; i < MainWindow.MainViewModel.settings.Opens.Count; i++)
+            {
+                var current = MainWindow.MainViewModel.settings.Opens[i];
+                if (current.GetType() == typeof(OpenInstance))
+                    length += ((OpenInstance)current).Quantity;
+                else if (current.GetType() == typeof(OpenItem))
+                    length++;
+            }
             string infoText = "";
 
             Application.Current.Dispatcher.Invoke(delegate
             {
-                loadingProcesses = new(this, windowPosition.X, windowPosition.Y);
+                loadingProcesses = new(this, windowPosition.X, windowPosition.Y) { Owner = MainWindow };
                 loadingProcesses.Show();
                 loadingProcesses.progress.Maximum = length;
             });
@@ -113,9 +121,6 @@ namespace MultiOpener.Commands.StartCommands
         private async Task OpenMultiMcInstances(OpenInstance open, string infoText = "")
         {
             //TODO: Zrobic support na kontrole kazdej instancji oddzielnie, a nie przez tylko glowny proces multimc
-
-            //TODO: Uwzglednic ladowanie instancji do progress bara
-            //TODO: Zrobic focus na main window po skonczeniu liczenia
             try
             {
                 await Task.Delay(open.DelayBefore);
@@ -143,6 +148,7 @@ namespace MultiOpener.Commands.StartCommands
                     Application.Current.Dispatcher.Invoke(delegate
                     {
                         loadingProcesses.SetText($"{infoText} -- Instance ({i + 1}/{open.Names.Count})");
+                        loadingProcesses.progress.Value++;
                     });
 
                     processStartInfo = new(open.PathExe, $"-l \"{open.Names[i]}\"") { UseShellExecute = true };

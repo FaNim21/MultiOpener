@@ -8,7 +8,8 @@ namespace MultiOpener.Commands.SettingsCommands.InstancesConfig
     {
         public SettingsOpenInstancesModelView settingsOpenInstancesModelView;
 
-        public SettingsInstanceOpenSetupCommand(SettingsOpenInstancesModelView settingsOpenInstancesModelView) {
+        public SettingsInstanceOpenSetupCommand(SettingsOpenInstancesModelView settingsOpenInstancesModelView)
+        {
             this.settingsOpenInstancesModelView = settingsOpenInstancesModelView;
         }
 
@@ -23,7 +24,7 @@ namespace MultiOpener.Commands.SettingsCommands.InstancesConfig
             double leftPosition = mainWindow.Left + (mainWindow.Width / 2);
             double topPosition = mainWindow.Top + (mainWindow.Height / 2);
 
-            WindowOpenInstancesSetup instanceSetup = new(settingsOpenInstancesModelView, leftPosition, topPosition);
+            WindowOpenInstancesSetup instanceSetup = new(settingsOpenInstancesModelView, leftPosition, topPosition) { Owner = mainWindow };
             instanceSetup.Show();
         }
     }

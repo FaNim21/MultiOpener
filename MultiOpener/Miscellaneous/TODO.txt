@@ -10,7 +10,8 @@
 
 
 ========== DO WIELU PRESETOW UPDATE 0.3.0 ===========
-- zrobic automatyczne zapisywanie (sam fakt zeby usunac guzik save open i zastapic to automatycznym zapisywaniem w trakcie przechodzenia miedzy open'ami, lub wychodzenia z Settings a sam Save guzik sluzy do tego zeby zapisac do pliku JSON caly preset)
+- Zamiast Save Open, ktorego juz nie ma dac guzik clear na resetowanie wszystkich field'ow
+- naprawic hiperłącze do Released na githubie
 
 
 ========== DODATKOWE INFO ===========

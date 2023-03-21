@@ -13,17 +13,17 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="150" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <Label x:Name="PresetNameLabel" 
+            <Label x:Name="PresetNameLabel"
                    Content="{Binding PresetNameLabel}"
                    Foreground="White"
                    FontSize="18"
                    Height="40"
                    VerticalAlignment="top"
-                   HorizontalContentAlignment="Center"/>
+                   HorizontalContentAlignment="Center" />
 
             <local:ButtonNormal x:Name="OpenButton"
                                 Width="100"
@@ -51,24 +51,26 @@
                    HorizontalAlignment="Left"
                    VerticalAlignment="Bottom" />
 
-            <Label HorizontalAlignment="Right"
-                   VerticalAlignment="Bottom">
+            <TextBlock HorizontalAlignment="Right"
+                       VerticalAlignment="Bottom"
+                       Margin="3">
                 <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/releases"
                            RequestNavigate="Hyperlink_RequestNavigate">
                     Check For Update etc here
                 </Hyperlink>
-            </Label>
+            </TextBlock>
 
-            <TextBlock TextWrapping="WrapWithOverflow" Margin="10 0 10 0">
+            <TextBlock TextWrapping="WrapWithOverflow"
+                       Margin="10 0 10 0">
                 Notes:<LineBreak />
                 - For now one added AutoHotkey script to settings will cause on close every AutoHotkey to shut down due to TheWall script resetting issues <LineBreak />
                 - The saved presets are in the Presets folder where you placed the exe file<LineBreak />
                 - Names for instances needs to be as names from folder instances to that instance because of MultiMc command to openning that instances <LineBreak />
                 - You can drag items in vertical list in settings to change order of opening them <LineBreak />
-                - 
+                -
             </TextBlock>
-            
-            
+
+
         </Grid>
     </Grid>
 </UserControl>

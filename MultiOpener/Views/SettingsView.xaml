@@ -154,7 +154,7 @@
                             Content="{Binding SelectedOpenTypeViewModel}" />
 
             <Grid Grid.Row="2">
-                <!--<local:ButtonNormal x:Name="UpdateCurrentOpenButton"
+                <local:ButtonNormal x:Name="ClearCurrentOpenButton"
                                     Width="125"
                                     Height="25"
                                     HorizontalAlignment="Center"
@@ -162,8 +162,8 @@
                                     FontSize="16"
                                     Grid.Column="3"
                                     Margin="0 0 200 20"
-                                    ContentText="Save Open"
-                                    OnCommand="{Binding SaveCurrentOpenCommand}" />-->
+                                    ContentText="Clear Open"
+                                    OnCommand="" />
 
                 <local:ButtonNormal x:Name="RemoveCurrentOpenButton"
                                     Width="125"
