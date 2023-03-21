@@ -28,7 +28,6 @@ namespace MultiOpener
                 Top = Settings.Default.MainWindowTop;
             }
 
-            Topmost = true;
             MainViewModel.settings.LoadStartUPPreset(Settings.Default.LastOpenedPresetName);
         }
 
@@ -54,6 +53,13 @@ namespace MultiOpener
             Settings.Default.LastOpenedPresetName = MainViewModel.settings.PresetName;
 
             Settings.Default.Save();
+        }
+
+        public void OnShow()
+        {
+            Show();
+            Topmost = true;
+            Topmost = false;
         }
     }
 }

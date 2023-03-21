@@ -113,7 +113,7 @@ namespace MultiOpener.Commands.StartCommands
             Application.Current.Dispatcher.Invoke(delegate
             {
                 loadingProcesses.Close();
-                MainWindow.Show();
+                MainWindow.OnShow();
             });
         }
 

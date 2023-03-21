@@ -54,7 +54,7 @@ namespace MultiOpener.Windows
 
         protected override void OnClosed(EventArgs e)
         {
-            Application.Current.MainWindow.Show();
+            ((MainWindow)Application.Current.MainWindow).OnShow();
 
             if(TextBoxes.Count == openInstancesModelView.instanceNames.Count)
                 for (int i = 0; i < openInstancesModelView.instanceNames.Count; i++)
