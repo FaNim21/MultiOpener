@@ -50,5 +50,13 @@ namespace MultiOpener.ViewModels.Settings
                 DelayBetweenInstances = instance.DelayBetweenInstances;
             }
         }
+
+        public override void Clear()
+        {
+            base.Clear();
+
+            Quantity = 0;
+            DelayBetweenInstances = 0;
+        }
     }
 }

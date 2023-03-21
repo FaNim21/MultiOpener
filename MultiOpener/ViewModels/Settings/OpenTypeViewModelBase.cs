@@ -53,5 +53,12 @@ namespace MultiOpener.ViewModels.Settings
             DelayBeforeTimeField = currentChosen.DelayBefore.ToString();
             DelayAfterTimeField = currentChosen.DelayAfter.ToString();
         }
+
+        public virtual void Clear()
+        {
+            ApplicationPathField = "";
+            DelayBeforeTimeField = "0";
+            DelayAfterTimeField = "0";
+        }
     }
 }

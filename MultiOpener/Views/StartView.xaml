@@ -46,19 +46,11 @@
                                 FontSize="20" />
         </Grid>
 
+
         <Grid Grid.Row="1">
             <Label Content="v0.3.0&#xA;Made by FaNim"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Bottom" />
-
-            <TextBlock HorizontalAlignment="Right"
-                       VerticalAlignment="Bottom"
-                       Margin="3">
-                <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/releases"
-                           RequestNavigate="Hyperlink_RequestNavigate">
-                    Check For Update etc here
-                </Hyperlink>
-            </TextBlock>
 
             <TextBlock TextWrapping="WrapWithOverflow"
                        Margin="10 0 10 0">
@@ -70,7 +62,14 @@
                 -
             </TextBlock>
 
-
+            <TextBlock HorizontalAlignment="Right"
+                       VerticalAlignment="Bottom"
+                       Margin="3">
+                    <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/releases"
+                               RequestNavigate="Hyperlink_RequestNavigate">
+                        Check For Update etc here
+                    </Hyperlink>
+            </TextBlock>
         </Grid>
     </Grid>
 </UserControl>

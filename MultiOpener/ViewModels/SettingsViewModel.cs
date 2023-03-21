@@ -55,8 +55,19 @@ namespace MultiOpener.ViewModels
             get { return _chooseTypeBox; }
             set
             {
-                if ((_chooseTypeBox != value && CurrentChosen != null) || SelectedOpenTypeViewModel == null)
+                if (CurrentChosen != null || SelectedOpenTypeViewModel == null)
                 {
+                    //Blocking to make more than one OpenInstance
+                    if (value == OpenType.InstancesMultiMC)
+                    {
+                        for (int i = 0; i < Opens.Count; i++)
+                        {
+                            var current = Opens[i];
+                            if (current.GetType().IsEquivalentTo(typeof(OpenInstance)) && CurrentChosen != current)
+                                return;
+                        }
+                    }
+
                     switch (value)
                     {
                         case OpenType.Normal: SelectedOpenTypeViewModel = new SettingsOpenNormalModelView(); break;
@@ -123,6 +134,7 @@ namespace MultiOpener.ViewModels
         public ICommand OpenPresetsFolderCommand { get; set; }
         public ICommand RemovePresetCommand { get; set; }
         public ICommand CreateNewPresetCommand { get; set; }
+        public ICommand ClearCurrentOpenCommand { get; set; }
 
         public readonly string directoryPath;
 
@@ -143,6 +155,7 @@ namespace MultiOpener.ViewModels
             OpenPresetsFolderCommand = new SettingsOpenPresetsFolderCommand(this);
             RemovePresetCommand = new SettingsRemovePresetCommand(this);
             CreateNewPresetCommand = new SettingsCreateNewPresetCommand(this);
+            ClearCurrentOpenCommand = new SettingsClearCurrentOpenCommand(this);
 
             LeftPanelGridVisibility = false;
 

@@ -10,10 +10,7 @@
 
 
 ========== DO WIELU PRESETOW UPDATE 0.3.0 ===========
-- Zamiast Save Open, ktorego juz nie ma dac guzik clear na resetowanie wszystkich field'ow
-- naprawic hiperłącze do Released na githubie
-- zablokowac mozliwosc robienia wiecej niz jednego OpenInstances
-
+- chyba wszystko?
 
 ========== DODATKOWE INFO ===========
 - Zeby dodawac kolejne typy 'Open' trzeba uzupelnic SettingsViewModel GetType na samym dole i dodac odwolanie w SaveCurrentOpen
