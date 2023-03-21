@@ -50,14 +50,13 @@ namespace MultiOpener.Commands.StartCommands
 
         public async Task OpenProgramsList()
         {
-            int length = 0;
-            for (int i = 0; i < MainWindow.MainViewModel.settings.Opens.Count; i++)
+            int length = MainWindow.MainViewModel.settings.Opens.Count;
+            int progressLength = length;
+            for (int i = 0; i < length; i++)
             {
                 var current = MainWindow.MainViewModel.settings.Opens[i];
                 if (current.GetType() == typeof(OpenInstance))
-                    length += ((OpenInstance)current).Quantity;
-                else if (current.GetType() == typeof(OpenItem))
-                    length++;
+                    progressLength += ((OpenInstance)current).Quantity;
             }
             string infoText = "";
 
@@ -65,7 +64,7 @@ namespace MultiOpener.Commands.StartCommands
             {
                 loadingProcesses = new(this, windowPosition.X, windowPosition.Y) { Owner = MainWindow };
                 loadingProcesses.Show();
-                loadingProcesses.progress.Maximum = length;
+                loadingProcesses.progress.Maximum = progressLength;
             });
 
             for (int i = 0; i < length; i++)

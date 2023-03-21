@@ -12,6 +12,9 @@
 ========== DO WIELU PRESETOW UPDATE 0.3.0 ===========
 - Zamiast Save Open, ktorego juz nie ma dac guzik clear na resetowanie wszystkich field'ow
 - naprawic hiperłącze do Released na githubie
+- zmienic Topmost zeby byl tylko na topie po pokazaniu sie, a nie caly czas
+- zablokowac mozliwosc robienia wiecej niz jednego OpenInstances
+- naprawic loadingProcess window poniewaz lenght, powienien byc na dlugosc wszystkich Opens, a sam progress bar powinien miec ta dlugosc fixed czyli z instancjami itp itd
 
 
 ========== DODATKOWE INFO ===========
