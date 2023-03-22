@@ -6,12 +6,9 @@ using System.Windows.Input;
 using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.ViewModels.Settings;
 using System;
-using System.Reflection;
 using System.Windows;
 using MultiOpener.Items;
 using MultiOpener.Utils;
-using System.ComponentModel;
-using System.Diagnostics;
 
 namespace MultiOpener.ViewModels
 {
