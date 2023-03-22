@@ -10,6 +10,9 @@
 
 
 ========== DO WIELU PRESETOW UPDATE 0.3.0 ===========
+- Zmniejszyc lenghtProgress o 1 zeby ostatni odpalany program byl na pasku 100%
+- Dodac IKONKE
+- Zrobic tutorial na README
 - chyba wszystko?
 
 ========== DODATKOWE INFO ===========
