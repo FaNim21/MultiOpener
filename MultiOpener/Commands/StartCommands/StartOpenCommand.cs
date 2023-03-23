@@ -51,7 +51,7 @@ namespace MultiOpener.Commands.StartCommands
         public async Task OpenProgramsList()
         {
             int length = MainWindow.MainViewModel.settings.Opens.Count;
-            int progressLength = length;
+            int progressLength = length - 1;
             for (int i = 0; i < length; i++)
             {
                 var current = MainWindow.MainViewModel.settings.Opens[i];

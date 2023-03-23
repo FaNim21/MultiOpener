@@ -9,11 +9,20 @@
 -
 
 
-========== DO WIELU PRESETOW UPDATE 0.3.0 ===========
+========== 0.3.0 DO WIELU PRESETOW UPDATE ===========
 - Zmniejszyc lenghtProgress o 1 zeby ostatni odpalany program byl na pasku 100%
 - Dodac IKONKE
 - Zrobic tutorial na README
 - chyba wszystko?
+
+
+========== 0.4.0 ============
+- Menu podgladu odpalonych programow w menu Start
+
+
+========== 0.5.0 ============
+- IDK
+
 
 ========== DODATKOWE INFO ===========
 - Zeby dodawac kolejne typy 'Open' trzeba uzupelnic SettingsViewModel GetType na samym dole i dodac odwolanie w SaveCurrentOpen
