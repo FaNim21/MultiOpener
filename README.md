@@ -14,23 +14,25 @@ Here are options that you have in MultiOpener at the moment:
 ## How to use it?
 
 Tu zrobic krotki tutorial oparty o pare screenow najwzniejszych pokazujacych podstawowe uzycie dodawania Open, wybierania typu i zapisywania tego
+TUTORIAL
+
+Opis sekwencje
 
 
 ## Find a bug?
 
-Tu ogarnac zeby bledy wrzucac do issues albo robic pull requesty czy cos
+If you find an issue or you think that something could work better or different please submit an issue using the issues tab above or catch me on discord!
 
 
 ## Known issues (Work in progress)
 
 * Using The Wall autohotkey and pressing 'Reset this script' button cause to lose process for MultiOpener like you would just close it so as small fix if you have eyezoom added
 and when you close your preset it will close all processes for AuthoHothey
-* 
 
 
 ## Features planned to future!
 
 * Support for reset tracker (so you can preview your last session and overall stats)
 * Layout in Start menu to view what programs are opened and giving option for each to reset and control it
-* etc etc
-
+* Better control of opening one preset on another and closing them
+* And more
