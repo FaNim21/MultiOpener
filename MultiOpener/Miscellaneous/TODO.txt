@@ -6,7 +6,7 @@
 
 
 ========== WAZNE ============
--
+- Zrobic wlasny MessageBox z opcja ze jak ztrigeruje sie ten popup to zeby cale okno bylo z tym popupem OnTop
 
 
 ========== 0.3.0 DO WIELU PRESETOW UPDATE ===========

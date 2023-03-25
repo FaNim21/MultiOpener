@@ -11,67 +11,58 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="#383A3C"
-        Topmost="True">
+        Topmost="True"
+        MouseDown="HeaderMouseDown">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="25" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-
-        <!--HEADER-->
-        <Grid Background="#000D14"
-              Grid.Row="0"
-              MouseDown="HeaderMouseDown">
-        </Grid>
-
-        <Grid Grid.Row="1">
-            <Label x:Name="InfoText"
-                   Content="Info co sie teraz odpala"
-                   Height="35"
-                   VerticalAlignment="Top"
-                   HorizontalContentAlignment="Center"
-                   VerticalContentAlignment="Center"
-                   FontWeight="Medium"
-                   FontSize="14" />
-            <ProgressBar x:Name="progress"
-                         Height="30"
-                         VerticalAlignment="Center"
-                         Foreground="#FF387944"
-                         Minimum="0" />
-            <Button x:Name="Button"
-                    Height="25"
-                    Width="80"
-                    Content="Cancel"
-                    VerticalAlignment="Bottom"
-                    Margin="0 0 0 5"
-                    Foreground="White"
-                    Click="CancelButton">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background"
-                                Value="#17191A" />
-                        <Setter Property="Cursor"
-                                Value="Hand" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver"
-                                     Value="True">
-                                <Setter Property="Background"
-                                        Value="#1b1d1f" />
-                            </Trigger>
-                            <Trigger Property="IsPressed"
-                                     Value="True">
-                                <Setter Property="Background"
-                                        Value="#27292B" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled"
-                                     Value="False">
-                                <Setter Property="Background"
-                                        Value="#4a4747" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-        </Grid>
+        <Label x:Name="InfoText"
+               Content="Info co sie teraz odpala"
+               Height="47"
+               VerticalAlignment="Top"
+               Foreground="#76bbf4"
+               HorizontalContentAlignment="Center"
+               VerticalContentAlignment="Center"
+               FontWeight="Medium"
+               FontSize="14" />
+        <ProgressBar x:Name="progress"
+                     Height="30"
+                     VerticalAlignment="Center"
+                     Background="#7d8187"
+                     Foreground="#FF387944"
+                     BorderThickness="0"
+                     Minimum="0" />
+        <Button x:Name="Button"
+                Height="25"
+                Width="80"
+                Content="Cancel"
+                VerticalAlignment="Bottom"
+                Margin="0 0 0 10"
+                Foreground="White"
+                Click="CancelButton">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background"
+                            Value="#17191A" />
+                    <Setter Property="Cursor"
+                            Value="Hand" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="#1b1d1f" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="#27292B" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="#4a4747" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </Window>
