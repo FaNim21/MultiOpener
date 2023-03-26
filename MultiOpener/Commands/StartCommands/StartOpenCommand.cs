@@ -31,6 +31,8 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
+            if (string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName)) return;
+
             if ((MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null) return;
             if (MainWindow.MainViewModel.settings.Opens == null || !MainWindow.MainViewModel.settings.Opens.Any()) return;
 
