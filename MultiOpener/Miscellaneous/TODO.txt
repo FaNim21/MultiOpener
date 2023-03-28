@@ -7,6 +7,9 @@
 
 ========== WAZNE ============
 - Zrobic wlasny MessageBox z opcja ze jak ztrigeruje sie ten popup to zeby cale okno bylo z tym popupem OnTop
+- Do odpalania instancji zrobic specjalna klase na kazda instancje zeby zapisywac najwazniejsze parametry i ogolnie info plus zrobic specjalne okno do ewentualnego resetowania instancji pojedynczo
+- Wykrywac czy dana instancja czy program przestaly odpowiadac i do tego najlepiej zmiast przechowywac poprostu procesy danych programow to lepiej zrobic konkretne klasy do typu odpalanego programu jak dalem wyzej
+
 
 
 ========== 0.3.0 DO WIELU PRESETOW UPDATE ===========
