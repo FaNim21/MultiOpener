@@ -16,7 +16,14 @@ Here are main features that you have in MultiOpener at the moment:
 Tu zrobic krotki tutorial oparty o pare screenow najwzniejszych pokazujacych podstawowe uzycie dodawania Open, wybierania typu i zapisywania tego
 TUTORIAL
 
-When openning MultiOpener for the first time you will have your
+* When openning MultiOpener for the first time you will have to make your first preset so to do it go to wettings in left up side of main window
+* Then on the right side of settings you have section to add programs to open so you name what you want to make and then add it to your preset
+* After that you need to click on that created open and then you need to set most important thing named path to that program
+* then you can set delays to make your program open with setting timing
+* if you want to make open instances from minecraft multimc launcher you need to set combo box in left up to instances(MultiMC)
+* After that you need to set number of instances and set up their name from folder sides of multimc
+* as last thing for instances i want you to set delay between instances at least to 3000 in really good computers and minimum 10000 on worst pc's when you open 4 instances or something like that
+* at the end of creating your whole preset and when you add as much as you need programs to open you need to name your preset int right down side and just save it to fild by pressing button save
 
 
 ## Find a bug?
