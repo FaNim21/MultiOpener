@@ -130,7 +130,7 @@ namespace MultiOpener.Commands.StartCommands
 
                 Application.Current.Dispatcher.Invoke(delegate
                 {
-                    loadingProcesses.SetText($"{infoText} -- Instance (1/{open.Names.Count})");
+                    loadingProcesses.SetText($"{infoText} -- Instance (1/{open.Quantity})");
                 });
 
                 if (process != null)
@@ -139,21 +139,24 @@ namespace MultiOpener.Commands.StartCommands
                     process.Exited += Start.ProcessExited;
                     MainWindow.openedProcess.Add(process);
                 }
+
                 await Task.Delay(10000);
 
-                for (int i = 1; i < open.Names.Count; i++)
+                for (int i = 1; i < open.Quantity; i++)
                 {
                     if (source.IsCancellationRequested)
                         return;
 
                     Application.Current.Dispatcher.Invoke(delegate
                     {
-                        loadingProcesses.SetText($"{infoText} -- Instance ({i + 1}/{open.Names.Count})");
+                        loadingProcesses.SetText($"{infoText} -- Instance ({i + 1}/{open.Quantity})");
                         loadingProcesses.progress.Value++;
                     });
 
-                    processStartInfo = new(open.PathExe, $"-l \"{open.Names[i]}\"") { UseShellExecute = true };
-                    Process.Start(processStartInfo);
+                    processStartInfo = new(open.PathExe, $"-l \"{open.Names[i]}\"") { UseShellExecute = false, RedirectStandardInput = true, RedirectStandardOutput = true };
+                    Process? proc = Process.Start(processStartInfo);
+                    MainWindow.openedProcess.Add(proc);
+
                     await Task.Delay(open.DelayBetweenInstances);
                 }
                 await Task.Delay(open.DelayAfter);

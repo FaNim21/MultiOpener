@@ -44,6 +44,10 @@
                                 ContentText="CLOSE"
                                 OnCommand="{Binding CloseCommand}"
                                 FontSize="20" />
+
+            <Button Width="100"
+                    Height="30"
+                    Click="Button_Click"/>
         </Grid>
 
 
