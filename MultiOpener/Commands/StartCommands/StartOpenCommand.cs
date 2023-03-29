@@ -124,8 +124,8 @@ namespace MultiOpener.Commands.StartCommands
             //TODO: Zrobic support na kontrole kazdej instancji oddzielnie, a nie przez tylko glowny proces multimc
             try
             {
-                await Task.Delay(open.DelayBefore);
-                ProcessStartInfo processStartInfo = new(open.PathExe, $"-l \"{open.Names[0]}\"") { UseShellExecute = true };
+/*                await Task.Delay(open.DelayBefore);
+                ProcessStartInfo processStartInfo = new(open.PathExe, $"--launch \"{open.Names[0]}\"") { UseShellExecute = true };
                 Process? process = Process.Start(processStartInfo);
 
                 Application.Current.Dispatcher.Invoke(delegate
@@ -138,9 +138,9 @@ namespace MultiOpener.Commands.StartCommands
                     process.EnableRaisingEvents = true;
                     process.Exited += Start.ProcessExited;
                     MainWindow.openedProcess.Add(process);
-                }
+                }*/
 
-                await Task.Delay(10000);
+                //await Task.Delay(10000);
 
                 for (int i = 1; i < open.Quantity; i++)
                 {
@@ -153,8 +153,11 @@ namespace MultiOpener.Commands.StartCommands
                         loadingProcesses.progress.Value++;
                     });
 
-                    processStartInfo = new(open.PathExe, $"-l \"{open.Names[i]}\"") { UseShellExecute = false, RedirectStandardInput = true, RedirectStandardOutput = true };
+                    ProcessStartInfo processStartInfo = new(open.PathExe, $"--launch \"{open.Names[i]}\"") { UseShellExecute = false, RedirectStandardInput = true, RedirectStandardOutput = true };
                     Process? proc = Process.Start(processStartInfo);
+
+                    //tu dodac nowa logike
+
                     MainWindow.openedProcess.Add(proc);
 
                     await Task.Delay(open.DelayBetweenInstances);
