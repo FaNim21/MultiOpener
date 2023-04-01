@@ -1,24 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MultiOpener.Utils
 {
-/*    public class Win32
-    {
-        [DllImport("user32")]
-        private static extern Int32 GetWindowThreadProcessId(Int32 hWnd, out Int32 lpdwProcessId);
-
-        public static Int32 GetWindowProcessID(Int32 hwnd)
-        {
-            Int32 pid = 1;
-            GetWindowThreadProcessId(hwnd, out pid);
-            return pid;
-        }
-    }*/
-
     public class WinStruct
     {
         public string WinTitle { get; set; }

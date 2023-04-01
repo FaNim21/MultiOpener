@@ -16,7 +16,12 @@
     <PackageId>FaNimMultiOpener</PackageId>
     <Company>FaNim</Company>
     <Product>MultiOpener</Product>
+    <ApplicationIcon>MO_icon_V1_Slim.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="MO_icon_V1_Slim.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\README.md">
