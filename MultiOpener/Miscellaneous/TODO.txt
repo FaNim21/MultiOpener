@@ -3,6 +3,7 @@
 ========================================================
 - narazie program zrobic pod speedruny minecrafta
 - (TO ZALEZY JAK DALEJ TA APKA POJDZIE) Zrobic zeby program uruchamial programy z listy ktorych procesy nie sa jeszcze uruchomione
+- Zrobic ewentualnie opcje clearowania sciezki do pliku jako opcje ominiecia tego open przy otwieraniu dla pozniejszej edycji albo pod testy zeby zostawic konfiguracje danego open bez jego usuwania
 
 
 ========== WAZNE ============

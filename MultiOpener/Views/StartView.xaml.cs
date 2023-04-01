@@ -27,6 +27,10 @@ namespace MultiOpener.Views
             }
         }
 
+
+        /// <summary>
+        /// TODO: -- REMOVE -- Do wywalenia po skonczeniu testowania rzeczy w hwnd
+        /// </summary>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Trace.WriteLine(((MainWindow)Application.Current.MainWindow).openedProcess.Count);

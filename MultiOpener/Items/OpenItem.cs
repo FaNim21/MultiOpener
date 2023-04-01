@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Text.Json.Serialization;
+using System.Windows;
 
 namespace MultiOpener.ListView
 {
@@ -43,6 +45,29 @@ namespace MultiOpener.ListView
             DelayAfter = item.DelayAfter;
             Type = item.Type;
         }
+
+        public virtual bool Validate()
+        {
+            if (!File.Exists(PathExe))
+            {
+                MessageBox.Show("You set a path to file that not exist", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                return true;
+            }
+
+            if (DelayAfter < 0 || DelayBefore < 0)
+            {
+                MessageBox.Show("You set delay lower than 0", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                return true;
+            }
+
+            if (DelayAfter > 999999 || DelayBefore > 99999)
+            {
+                MessageBox.Show("Your delay can't be higher than 99999", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return true;
+            }
+
+            return false;
+        }
     }
 
     public class OpenInstance : OpenItem
@@ -71,6 +96,43 @@ namespace MultiOpener.ListView
             else
                 Names = instance.Names;
             DelayBetweenInstances = instance.DelayBetweenInstances;
+        }
+
+        public override bool Validate()
+        {
+            if (!Path.GetFileName(PathExe).Equals("MultiMC.exe"))
+            {
+                MessageBox.Show("You set wrong path to MultiMC exe file", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                return true;
+            }
+
+            if (DelayBetweenInstances > 99999 || DelayBetweenInstances < 0)
+            {
+                MessageBox.Show("Delay between openning instances should be between 0 and 99999", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                return true;
+            }
+
+            if (Quantity > 32 || Quantity < 0)
+            {
+                MessageBox.Show("Amount of instances should be between 0 and 32", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                return true;
+            }
+
+            int amount = 0;
+            for (int i = 0; i < Names.Count; i++)
+            {
+                var current = Names[i];
+                if (string.IsNullOrEmpty(current))
+                    amount++;
+            }
+
+            if (amount > 0)
+            {
+                MessageBox.Show($"You didn't set names for {amount} instances", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                return true;
+            }
+
+            return base.Validate();
         }
     }
 }

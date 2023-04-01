@@ -18,7 +18,6 @@ namespace MultiOpener.Commands.StartCommands
         public MainWindow MainWindow { get; set; }
 
         public OpenningProcessLoadingWindow loadingProcesses;
-        public Vector2 windowPosition;
 
         public CancellationTokenSource source = new();
         public CancellationToken token;
@@ -36,14 +35,8 @@ namespace MultiOpener.Commands.StartCommands
             if ((MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null) return;
             if (MainWindow.MainViewModel.settings.Opens == null || !MainWindow.MainViewModel.settings.Opens.Any()) return;
 
-            Start.OpenButtonEnabled = false;
-
-            //TODO: Odrazu zrobic na widoku modelu start rozpiske w kolumnie procesow uruchomionych z prawej sttrony
-            //TODO: Wrzucic do watku cala liste i odpalajac ja sprawdzac czy dayn program juz nie istnieje najprosciej przez zapisywanie procesu do zmiennej czyli na przyszlosc pamietac zeby zabezpieczyc resetowanie programu czy cos albo przez zapamietywanie numeru procesu
-
-            MainWindow.Hide();
-            windowPosition.X = (float)(MainWindow.Left + (MainWindow.Width / 2));
-            windowPosition.Y = (float)(MainWindow.Top + (MainWindow.Height / 2));
+            //TODO: Zrobic nowy panel gdzie start bedzie mialo tylko open i po kliknieciu normalnie wyskakuje okno z progresem i po zaladowaniu odala sie specjalne okno do kontroli odpalonych aplikacji i do ich poprostu zamkniecia
+            //co spowoduje ze nie bedzie mozna sie bawic ustawieniami co w sumie jest na minus, ale nie chce i tak jednak robic feature do odpalania aplikacji uzupelniajach z innych presetow ewentualnie dac tylko multimc jako caly czas odpalone w tle
 
             source = new();
             token = source.Token;
@@ -54,9 +47,14 @@ namespace MultiOpener.Commands.StartCommands
         {
             int length = MainWindow.MainViewModel.settings.Opens.Count;
             int progressLength = length - 1;
+
+            //TODO: tu dac validowanie wszystkich sciezek aplikacji i w momencie zwalidowania typu instances odpalic multimc, albo ewentualnie zapisac ze pod jakim indeksem jest i po pelnej walidacji otworzyc
             for (int i = 0; i < length; i++)
             {
                 var current = MainWindow.MainViewModel.settings.Opens[i];
+                if (current.Validate())
+                    return;
+
                 if (current.GetType() == typeof(OpenInstance))
                     progressLength += ((OpenInstance)current).Quantity;
             }
@@ -64,10 +62,15 @@ namespace MultiOpener.Commands.StartCommands
 
             Application.Current.Dispatcher.Invoke(delegate
             {
-                loadingProcesses = new(this, windowPosition.X, windowPosition.Y) { Owner = MainWindow };
+                Start.OpenButtonEnabled = false;
+                MainWindow.Hide();
+                float windowPositionX = (float)(MainWindow.Left + (MainWindow.Width / 2));
+                float windowPositionY = (float)(MainWindow.Top + (MainWindow.Height / 2));
+                loadingProcesses = new(this, windowPositionX, windowPositionY) { Owner = MainWindow };
                 loadingProcesses.Show();
                 loadingProcesses.progress.Maximum = progressLength;
             });
+
 
             for (int i = 0; i < length; i++)
             {
@@ -122,9 +125,10 @@ namespace MultiOpener.Commands.StartCommands
         private async Task OpenMultiMcInstances(OpenInstance open, string infoText = "")
         {
             //TODO: Zrobic support na kontrole kazdej instancji oddzielnie, a nie przez tylko glowny proces multimc
+            //TODO: Zrobic oddzielne odpalania multimc na starcie, a pozniej kazda instancje po kolei bez juz delaya po pierwszej instancji najlepiej zeby sie odpalalo jako pierwsza apka z calej listy Opens
             try
             {
-/*                await Task.Delay(open.DelayBefore);
+                await Task.Delay(open.DelayBefore);
                 ProcessStartInfo processStartInfo = new(open.PathExe, $"--launch \"{open.Names[0]}\"") { UseShellExecute = true };
                 Process? process = Process.Start(processStartInfo);
 
@@ -138,9 +142,9 @@ namespace MultiOpener.Commands.StartCommands
                     process.EnableRaisingEvents = true;
                     process.Exited += Start.ProcessExited;
                     MainWindow.openedProcess.Add(process);
-                }*/
+                }
 
-                //await Task.Delay(10000);
+                await Task.Delay(10000);
 
                 for (int i = 1; i < open.Quantity; i++)
                 {
@@ -153,7 +157,7 @@ namespace MultiOpener.Commands.StartCommands
                         loadingProcesses.progress.Value++;
                     });
 
-                    ProcessStartInfo processStartInfo = new(open.PathExe, $"--launch \"{open.Names[i]}\"") { UseShellExecute = false, RedirectStandardInput = true, RedirectStandardOutput = true };
+                    processStartInfo = new(open.PathExe, $"--launch \"{open.Names[i]}\"") { UseShellExecute = false, RedirectStandardInput = true, RedirectStandardOutput = true };
                     Process? proc = Process.Start(processStartInfo);
 
                     //tu dodac nowa logike
