@@ -30,7 +30,7 @@ Finally, MultiOpener uses various file manipulation methods, such as the create 
 * You can also set delays for each program to open, and customize the timing as needed.
 * If you want to open instances from Minecraft MultiMC Launcher, you will need to set the combo box located in the top left corner to "Instances (MultiMC)".
 * Once you have done that, you can set the number of instances you want to open, and customize their names from the folder sides of MultiMC.
-* Lastly, I'd recommend if you're running multiple instances that you set the delay between each instance to at least 1000 for high-end PCs or at least 15,000 for low-end PCs.
+* Lastly, If you plan on running multiple instances, I recommend setting a delay between each instance to allow enough time to open Wall and detect all instances. For high-end PCs, a delay of at least 3000 is recommended, while low-end PCs may require a delay of at least 15,000, you'll have to try it yourself..
 * Once you have added all the programs and customized the settings as needed, you can name your preset in the bottom right corner and save it to a file by clicking the "Save" button.
 
 
