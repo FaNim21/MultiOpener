@@ -2,28 +2,36 @@
 
 ## QOL app to open programs for minecraft speedruners and not only.
 
-This project is for people who take a little time to run all the programs they need at the moment. After settings up your all programs that you need you can open and close them at any moment you want.
-Here are main features that you have in MultiOpener at the moment:
+MultiOpener is a time-saving solution for users who frequently run multiple programs simultaneously. With this program, you can easily set up all the programs you need and open and close them with ease.
+Here are the main features of MultiOpener:
 
-* Creating as many presets as you want and load them to use
-* Option to add MultiMC for openning your all minecraft instances for wall
-* Posibility to add any program as general control and give delays before and after it opens
-* Cancel when openning processes
+* You can create as many presets as you need and load them to use.
+* MultiOpener includes an option to add MultiMC for opening all your Minecraft instances at once.
+* You can add any program as a general control and set delays before and after it opens.
+* If needed, you can cancel the opening processes at any time.
+
+
+## Quick notes
+
+Please note that when opening MultiOpener, some users may see a Microsoft Defender SmartScreen popup warning them that the app is unrecognized. We would like to assure you that this is not a virus and that MultiOpener is a safe and legitimate application. If you encounter this warning, simply click on 'More info' and then 'Run anyway' to proceed with opening MultiOpener.
+
+MultiOpener is made using .NET C# 7.0, which means that in order to use the application, you will need to download the .NET Desktop Runtime once. You can download the required runtime from the official Microsoft website.
+
+Additionally, MultiOpener includes a feature to open and close multiple running applications. Please note that this feature is provided as-is and is to be used at your own risk. MultiOpener does not guarantee compatibility or stability with all running applications, and we are not responsible for any problems that may arise from the use of this feature.
+
+Finally, MultiOpener uses various file manipulation methods, such as the create method, to save your preset configurations. This is a normal and expected behavior of the application. MultiOpener does not access or modify any files outside of its own directory, and it does not collect or transmit any user data or information.
 
 
 ## How to use it?
 
-Tu zrobic krotki tutorial oparty o pare screenow najwzniejszych pokazujacych podstawowe uzycie dodawania Open, wybierania typu i zapisywania tego
-TUTORIAL
-
-* When openning MultiOpener for the first time you will have to make your first preset so to do it go to wettings in left up side of main window
-* Then on the right side of settings you have section to add programs to open so you name what you want to make and then add it to your preset
-* After that you need to click on that created open and then you need to set most important thing named path to that program
-* then you can set delays to make your program open with setting timing
-* if you want to make open instances from minecraft multimc launcher you need to set combo box in left up to instances(MultiMC)
-* After that you need to set number of instances and set up their name from folder sides of multimc
-* as last thing for instances i want you to set delay between instances at least to 3000 in really good computers and minimum 10000 on worst pc's when you open 4 instances or something like that
-* at the end of creating your whole preset and when you add as much as you need programs to open you need to name your preset int right down side and just save it to fild by pressing button save
+* To get started with MultiOpener, create your first preset by navigating to the "Settings" button located in the top left corner of the main window.
+* On the right side of the Settings menu, you will find a section where you can add programs to open. Enter a name for the program you want to add, and then add it to your preset.
+* Next, click on the program you just added, and make sure to set the most important thing, the path to that program.
+* You can also set delays for each program to open, and customize the timing as needed.
+* If you want to open instances from Minecraft MultiMC Launcher, you will need to set the combo box located in the top left corner to "Instances (MultiMC)".
+* Once you have done that, you can set the number of instances you want to open, and customize their names from the folder sides of MultiMC.
+* Lastly, I'd recommend if you're running multiple instances that you set the delay between each instance to at least 1000 for high-end PCs or at least 15,000 for low-end PCs.
+* Once you have added all the programs and customized the settings as needed, you can name your preset in the bottom right corner and save it to a file by clicking the "Save" button.
 
 
 ## Find a bug?
@@ -35,6 +43,7 @@ If you find an issue or you think that something could work better or different 
 
 * Using The Wall autohotkey and pressing 'Reset this script' button cause to lose process for MultiOpener like you would just close it so as small fix if you have eyezoom added
 and when you close your preset it will close all processes for AuthoHothey
+* There is a posibility that Julti wall will have issues with resetting when you opened instances using MultiOpener, but this is not fully tested for now
 
 
 ## Features planned to future!
