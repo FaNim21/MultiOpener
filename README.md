@@ -36,7 +36,7 @@ Finally, MultiOpener uses various file manipulation methods, such as the create 
 
 ## Find a bug?
 
-If you find an issue or you think that something could work better or different please submit an issue using the issues tab above or catch me on discord!
+If you find an issue or you think that something could work better or different please submit an issue using the issues tab above or catch me on discord! https://discord.gg/JuZ3XsfFwY
 
 
 ## Known issues (Work in progress)
