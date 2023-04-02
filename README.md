@@ -48,7 +48,6 @@ and when you close your preset it will close all processes for AuthoHothey
 
 ## Features planned to future!
 
-* Support for reset tracker (so you can preview your last session and overall stats)
-* Layout in Start menu to view what programs are opened and giving option for each to reset and control it
-* Better control of opening one preset on another and closing them
+* (if needed) Support for reset tracker (so you can preview your last session and overall stats)
+* Panel to view what programs are opened and giving option for each to reset and control it
 * And more
