@@ -56,7 +56,14 @@ namespace MultiOpener.Commands.StartCommands
                     return;
 
                 if (current.GetType() == typeof(OpenInstance))
+                {
+                    ProcessStartInfo startInfo = new(current.PathExe) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Hidden };
+                    Process? process = Process.Start(startInfo);
+                    if (process != null)
+                        MainWindow.openedProcess.Add(process);
+
                     progressLength += ((OpenInstance)current).Quantity;
+                }
             }
             string infoText = "";
 
@@ -125,29 +132,15 @@ namespace MultiOpener.Commands.StartCommands
         private async Task OpenMultiMcInstances(OpenInstance open, string infoText = "")
         {
             //TODO: Zrobic support na kontrole kazdej instancji oddzielnie, a nie przez tylko glowny proces multimc
-            //TODO: Zrobic oddzielne odpalania multimc na starcie, a pozniej kazda instancje po kolei bez juz delaya po pierwszej instancji najlepiej zeby sie odpalalo jako pierwsza apka z calej listy Opens
             try
             {
                 await Task.Delay(open.DelayBefore);
-                ProcessStartInfo processStartInfo = new(open.PathExe, $"--launch \"{open.Names[0]}\"") { UseShellExecute = true };
-                Process? process = Process.Start(processStartInfo);
 
-                Application.Current.Dispatcher.Invoke(delegate
+                ProcessStartInfo startInfo = new(open.PathExe) { UseShellExecute = true };
+                for (int i = 0; i < open.Quantity; i++)
                 {
-                    loadingProcesses.SetText($"{infoText} -- Instance (1/{open.Quantity})");
-                });
+                    await Task.Delay(i == 0 ? 0 : i == 1 ? 10000 : open.DelayBetweenInstances);
 
-                if (process != null)
-                {
-                    process.EnableRaisingEvents = true;
-                    process.Exited += Start.ProcessExited;
-                    MainWindow.openedProcess.Add(process);
-                }
-
-                await Task.Delay(10000);
-
-                for (int i = 1; i < open.Quantity; i++)
-                {
                     if (source.IsCancellationRequested)
                         return;
 
@@ -157,14 +150,9 @@ namespace MultiOpener.Commands.StartCommands
                         loadingProcesses.progress.Value++;
                     });
 
-                    processStartInfo = new(open.PathExe, $"--launch \"{open.Names[i]}\"") { UseShellExecute = false, RedirectStandardInput = true, RedirectStandardOutput = true };
-                    Process? proc = Process.Start(processStartInfo);
-
-                    //tu dodac nowa logike
-
-                    MainWindow.openedProcess.Add(proc);
-
-                    await Task.Delay(open.DelayBetweenInstances);
+                    startInfo.Arguments = $"--launch \"{open.Names[i]}\"";
+                    Process? proc = Process.Start(startInfo);
+                    //MainWindow.openedProcess.Add(proc); future
                 }
                 await Task.Delay(open.DelayAfter);
             }

@@ -50,19 +50,19 @@ namespace MultiOpener.ListView
         {
             if (!File.Exists(PathExe))
             {
-                MessageBox.Show("You set a path to file that not exist", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"You set a path to file that not exist in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
             }
 
             if (DelayAfter < 0 || DelayBefore < 0)
             {
-                MessageBox.Show("You set delay lower than 0", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"You set delay lower than 0 in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
             }
 
             if (DelayAfter > 999999 || DelayBefore > 99999)
             {
-                MessageBox.Show("Your delay can't be higher than 99999", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Your delay can't be higher than 99999 in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return true;
             }
 
@@ -102,19 +102,19 @@ namespace MultiOpener.ListView
         {
             if (!Path.GetFileName(PathExe).Equals("MultiMC.exe"))
             {
-                MessageBox.Show("You set wrong path to MultiMC exe file", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"You set wrong path to MultiMC exe file in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
             }
 
             if (DelayBetweenInstances > 99999 || DelayBetweenInstances < 0)
             {
-                MessageBox.Show("Delay between openning instances should be between 0 and 99999", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Delay between openning instances should be between 0 and 99999 in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
             }
 
             if (Quantity > 32 || Quantity < 0)
             {
-                MessageBox.Show("Amount of instances should be between 0 and 32", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Amount of instances should be between 0 and 32 in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
             }
 
@@ -128,7 +128,7 @@ namespace MultiOpener.ListView
 
             if (amount > 0)
             {
-                MessageBox.Show($"You didn't set names for {amount} instances", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"You didn't set names for {amount} instances in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
             }
 
