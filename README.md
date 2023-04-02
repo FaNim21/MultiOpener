@@ -1,6 +1,6 @@
 # MultiOpener
 
-## QOL app to open programs for minecraft speedruners and not only.
+## MultiOpener is a quality of life desktop application designed to assist Minecraft speedrunners and other users in opening multiple programs simultaneously with ease.
 
 MultiOpener is a time-saving solution for users who frequently run multiple programs simultaneously. With this program, you can easily set up all the programs you need and open and close them with ease.
 Here are the main features of MultiOpener:
