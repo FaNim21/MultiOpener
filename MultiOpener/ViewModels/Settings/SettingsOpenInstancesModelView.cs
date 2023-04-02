@@ -37,6 +37,8 @@ namespace MultiOpener.ViewModels.Settings
         public SettingsOpenInstancesModelView()
         {
             SettingsInstanceOpenSetupCommand = new SettingsInstanceOpenSetupCommand(this);
+
+            DelayBetweenInstances = 1000;
         }
 
         public override void UpdatePanelField(OpenItem currentChosen)
