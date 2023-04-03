@@ -16,11 +16,11 @@
     <PackageId>FaNimMultiOpener</PackageId>
     <Company>FaNim</Company>
     <Product>MultiOpener</Product>
-    <ApplicationIcon>MO_icon_NoCorners.ico</ApplicationIcon>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="MO_icon_NoCorners.ico" />
+    <Content Include="Icon.ico" />
   </ItemGroup>
 
   <ItemGroup>

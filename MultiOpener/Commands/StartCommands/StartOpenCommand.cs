@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -57,10 +56,17 @@ namespace MultiOpener.Commands.StartCommands
 
                 if (current.GetType() == typeof(OpenInstance))
                 {
-                    ProcessStartInfo startInfo = new(current.PathExe) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Hidden };
-                    Process? process = Process.Start(startInfo);
-                    if (process != null)
-                        MainWindow.openedProcess.Add(process);
+                    try
+                    {
+                        ProcessStartInfo startInfo = new(current.PathExe) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Hidden };
+                        Process? process = Process.Start(startInfo);
+                        if (process != null)
+                            MainWindow.openedProcess.Add(process);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.ToString());
+                    }
 
                     progressLength += ((OpenInstance)current).Quantity;
                 }
@@ -111,7 +117,6 @@ namespace MultiOpener.Commands.StartCommands
                         if (process != null)
                         {
                             process.EnableRaisingEvents = true;
-                            process.Exited += Start.ProcessExited;
                             MainWindow.openedProcess.Add(process);
                         }
                         await Task.Delay(current.DelayAfter);
@@ -122,6 +127,8 @@ namespace MultiOpener.Commands.StartCommands
                     }
                 }
             }
+
+            //TODO: Odrozniac czy zakonczono sukcesem czy tez przerwano
             Application.Current.Dispatcher.Invoke(delegate
             {
                 loadingProcesses.Close();
@@ -152,7 +159,6 @@ namespace MultiOpener.Commands.StartCommands
 
                     startInfo.Arguments = $"--launch \"{open.Names[i]}\"";
                     Process? proc = Process.Start(startInfo);
-                    //MainWindow.openedProcess.Add(proc); future
                 }
                 await Task.Delay(open.DelayAfter);
             }

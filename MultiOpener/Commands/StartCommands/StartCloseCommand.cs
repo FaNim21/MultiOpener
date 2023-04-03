@@ -26,7 +26,6 @@ namespace MultiOpener.Commands.StartCommands
                     try
                     {
                         var current = MainWindow.openedProcess[i];
-                        current.Exited -= Start.ProcessExited;
 
                         Trace.WriteLine(current.ProcessName + " -- " + current.Id + " -- " + current.MainWindowTitle + " -- " + current.StartInfo.FileName);
                         if (current.MainModule != null)
