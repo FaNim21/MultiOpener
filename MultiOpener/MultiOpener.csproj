@@ -49,4 +49,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Miscellaneous\Nowy folder\" />
+  </ItemGroup>
+
 </Project>

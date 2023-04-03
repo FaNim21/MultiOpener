@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
         mc:Ignorable="d"
-        Title="Instances setup" 
+        Title="Instances setup"
         Width="400"
         Height="200"
         WindowStyle="None"
@@ -38,8 +38,8 @@
                                  Click="ExitButtonClick" />
         </Grid>
 
-        <ContentControl x:Name="ContentCanvas" Grid.Row="1">
-            
+        <ContentControl x:Name="ContentCanvas"
+                        Grid.Row="1">
         </ContentControl>
     </Grid>
 </Window>

@@ -22,7 +22,8 @@
                HorizontalContentAlignment="Center"
                VerticalContentAlignment="Center"
                FontWeight="Medium"
-               FontSize="14" />
+               FontFamily="Dubai"
+               FontSize="15" />
         <ProgressBar x:Name="progress"
                      Height="30"
                      VerticalAlignment="Center"

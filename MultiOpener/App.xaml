@@ -19,7 +19,7 @@
             <settingsViews:SettingsOpenNormalView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type settingsViewModels:SettingsOpenInstancesModelView}">
-            <settingsViews:SettingsOpenInstancesView/>
+            <settingsViews:SettingsOpenInstancesView />
         </DataTemplate>
 
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"

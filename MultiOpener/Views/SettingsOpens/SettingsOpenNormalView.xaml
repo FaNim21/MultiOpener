@@ -10,7 +10,6 @@
              d:DesignHeight="300"
              d:DesignWidth="500"
              Background="#383A3C">
-
     <Grid>
         <Label Content="Application path:"
                Foreground="White"

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace MultiOpener.Windows
 {
@@ -17,7 +18,7 @@ namespace MultiOpener.Windows
         public ObservableCollection<TextBox> TextBoxes { get; set; } = new();
 
         private const int leftOffset = 0;
-        private const int topOffset = 20;
+        private const int topOffset = 20 + 30;
 
         public WindowOpenInstancesSetup(SettingsOpenInstancesModelView openInstancesModelView, double windowLeftPosition, double windowTopPosition)
         {
@@ -33,6 +34,20 @@ namespace MultiOpener.Windows
             Canvas canvas = new();
             CreateBoxes(canvas, columns, rows);
 
+            TextBox title = new()
+            {
+                Background = new SolidColorBrush(Colors.Transparent),
+                Text = "Folder names for minecraft instances",
+                FontSize = 17,
+                Foreground = new SolidColorBrush(Colors.White),
+                IsReadOnly = true,
+                FontFamily = new FontFamily("Dubai"),
+                BorderThickness = new Thickness(0)
+            };
+
+
+            canvas.Children.Add(title);
+
             if (openInstancesModelView.instanceNames != null && openInstancesModelView.instanceNames.Any() && openInstancesModelView.instanceNames.Count > 0)
             {
                 for (int i = 0; i < TextBoxes.Count; i++)
@@ -46,6 +61,9 @@ namespace MultiOpener.Windows
             Width = leftOffset + (125 * columns) + 5 + 30;
             Height = topOffset + (35 * (rows + 1));
 
+            Canvas.SetLeft(title, Width / 2 - 130);
+            Canvas.SetTop(title, 10);
+
             Left = windowLeftPosition - Width / 2;
             Top = windowTopPosition - Height / 2;
 
@@ -56,7 +74,7 @@ namespace MultiOpener.Windows
         {
             ((MainWindow)Application.Current.MainWindow).OnShow();
 
-            if(TextBoxes.Count == openInstancesModelView.instanceNames.Count)
+            if (TextBoxes.Count == openInstancesModelView.instanceNames.Count)
                 for (int i = 0; i < openInstancesModelView.instanceNames.Count; i++)
                     openInstancesModelView.instanceNames[i] = TextBoxes[i].Text;
             else
@@ -66,7 +84,7 @@ namespace MultiOpener.Windows
                     openInstancesModelView.instanceNames.Add(TextBoxes[i].Text);
             }
 
-                base.OnClosed(e);
+            base.OnClosed(e);
         }
 
         private void CreateBoxes(Canvas canvas, int columns, int rows)
@@ -80,11 +98,11 @@ namespace MultiOpener.Windows
                         return;
 
                     count++;
-                    Label label = new() { Content = count + ":", Width = 30, Height = 30, HorizontalContentAlignment = HorizontalAlignment.Right };
-                    Canvas.SetLeft(label, leftOffset + (125 * i));
+                    Label label = new() { Content = count + ":", Width = 30, Height = 30, HorizontalContentAlignment = HorizontalAlignment.Right, Foreground = new SolidColorBrush(Colors.White), FontWeight = FontWeights.Bold };
+                    Canvas.SetLeft(label, leftOffset + (125 * i + 3));
                     Canvas.SetTop(label, topOffset + (35 * j));
 
-                    TextBox box = new() { Width = 100, Height = 25 };
+                    TextBox box = new() { Width = 100, Height = 25, Background = new SolidColorBrush(Color.FromArgb(255, 158, 158, 158)), VerticalContentAlignment = VerticalAlignment.Center };
                     Canvas.SetLeft(box, leftOffset + (125 * i + 30));
                     Canvas.SetTop(box, topOffset + (35 * j));
 
