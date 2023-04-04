@@ -15,7 +15,7 @@ Here are the main features of MultiOpener:
 
 Please note that when opening MultiOpener, some users may see a Microsoft Defender SmartScreen popup warning them that the app is unrecognized. We would like to assure you that this is not a virus and that MultiOpener is a safe and legitimate application. If you encounter this warning, simply click on 'More info' and then 'Run anyway' to proceed with opening MultiOpener.
 
-MultiOpener is made using .NET C# 7.0, which means that in order to use the application, you will need to download the .NET Desktop Runtime once. You can download the required runtime from the official Microsoft website.
+MultiOpener is made using .NET C# 7.0, which means that in order to use the application, you will need to download the .NET Desktop Runtime once. It will popup after first open or you can download the required runtime from the official Microsoft website.
 
 Additionally, MultiOpener includes a feature to open and close multiple running applications. Please note that this feature is provided as-is and is to be used at your own risk. MultiOpener does not guarantee compatibility or stability with all running applications, and we are not responsible for any problems that may arise from the use of this feature.
 
@@ -50,4 +50,5 @@ and when you close your preset it will close all processes for AuthoHothey
 
 * (if needed) Support for reset tracker (so you can preview your last session and overall stats)
 * Panel to view what programs are opened and giving option for each to reset and control it
+* Option settings with keybinds and customizations etc
 * And more

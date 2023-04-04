@@ -13,15 +13,9 @@
 - pomysl zeby z racji jak najmniejszego uzycia ramu zrobic nowe okno do podgladu otwartych aplikacji jak juz ogarne te hwnd bo wtedy w tym oknie jedynie co bedzie to kontrola i info o odpalonych aplikacjach i tam dac opcje close i przy okazji bym zamknal opcje uruchamiania aplikacji z paru presetow na raz
 
 
-========== 0.3.0 DO WIELU PRESETOW UPDATE ===========
-- Zmniejszyc lenghtProgress o 1 zeby ostatni odpalany program byl na pasku 100%
-- Dodac IKONKE
-- Zrobic tutorial na README
-- chyba wszystko?
-
 
 ========== 0.4.0 ============
-- Podgladu odpalonych programow i kontrola nad nimi jako nowy panel po kliknieciu open
+- Podgladu odpalonych programow i kontrola nad nimi jako nowy panel w zakladce start po kliknieciu open do zdesignowania jeszcze jak to bedzie przedewszystkim wygladac
 
 
 ========== 0.5.0 ============
