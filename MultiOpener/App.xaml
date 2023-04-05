@@ -15,6 +15,9 @@
         <DataTemplate DataType="{x:Type viewModels:StartViewModel}">
             <views:StartView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:InformationViewModel}">
+            <views:InformationView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type settingsViewModels:SettingsOpenNormalModelView}">
             <settingsViews:SettingsOpenNormalView />
         </DataTemplate>

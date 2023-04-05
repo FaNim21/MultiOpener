@@ -23,13 +23,18 @@ namespace MultiOpener.Commands
 
             if (result.Equals("Start"))
             {
-                viewModel.settings?.SaveCurrentOpenCommand.Execute(null);
+                viewModel.settings?.SaveCurrentOpenCommand?.Execute(null);
                 viewModel.SelectedViewModel = viewModel.start;
             }
             else if (result.Equals("Settings"))
             {
                 viewModel.settings?.UpdatePresetsComboBox();
                 viewModel.SelectedViewModel = viewModel.settings;
+            }
+            else if (result.Equals("Informations"))
+            {
+                viewModel.settings?.SaveCurrentOpenCommand?.Execute(null);
+                viewModel.SelectedViewModel = viewModel.information;
             }
         }
     }

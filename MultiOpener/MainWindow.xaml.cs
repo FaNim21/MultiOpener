@@ -1,4 +1,5 @@
-﻿using MultiOpener.Properties;
+﻿using Microsoft.VisualBasic;
+using MultiOpener.Properties;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
@@ -82,8 +83,24 @@ namespace MultiOpener
         public void EnableDisableChoosenHeadButton(string option)
         {
             bool result = option.Equals("Start");
-            StartButton.IsEnabled = !result;
-            SettingsButton.IsEnabled = result;
+            if (option.Equals("Start"))
+            {
+                StartButton.IsEnabled = false;
+                SettingsButton.IsEnabled = true;
+                InformationsButton.IsEnabled = true;
+            }
+            else if (option.Equals("Settings"))
+            {
+                StartButton.IsEnabled = true;
+                SettingsButton.IsEnabled = false;
+                InformationsButton.IsEnabled = true;
+            }
+            else if (option.Equals("Informations"))
+            {
+                StartButton.IsEnabled = true;
+                SettingsButton.IsEnabled = true;
+                InformationsButton.IsEnabled = false;
+            }
         }
 
         private void HeaderMouseDown(object sender, MouseButtonEventArgs e)
