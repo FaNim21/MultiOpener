@@ -9,6 +9,17 @@ namespace MultiOpener.ViewModels
         public ICommand OpenCommand { get; set; }
         public ICommand CloseCommand { get; set; }
 
+        private string _openButtonName = "OPEN";
+        public string OpenButtonName
+        {
+            get { return _openButtonName; }
+            set
+            {
+                _openButtonName = value;
+                OnPropertyChanged(nameof(OpenButtonName));
+            }
+        }
+
         private bool _openButtonEnabled = true;
         public bool OpenButtonEnabled
         {
@@ -36,7 +47,12 @@ namespace MultiOpener.ViewModels
             OpenCommand = new StartOpenCommand(this);
             CloseCommand = new StartCloseCommand(this);
 
-            PresetNameLabel = "Empty preset";
+            UpdatePresetName();
+        }
+
+        public void UpdatePresetName(string name = "Empty preset")
+        {
+            PresetNameLabel = name;
         }
     }
 }

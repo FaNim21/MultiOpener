@@ -14,6 +14,8 @@ namespace MultiOpener.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
+        public MainViewModel MainViewModel { get; set; }
+
         public ObservableCollection<OpenItem> Opens { get; set; }
         public ObservableCollection<LoadedPresetItem> Presets { get; set; }
 
@@ -42,7 +44,8 @@ namespace MultiOpener.ViewModels
                 string output = "Empty preset";
                 if (!string.IsNullOrEmpty(value))
                     output = "Current preset: " + value;
-                ((MainWindow)Application.Current.MainWindow).MainViewModel.start.PresetNameLabel = output;
+
+                MainViewModel.start.UpdatePresetName(output);
             }
         }
 
@@ -136,11 +139,14 @@ namespace MultiOpener.ViewModels
         public readonly string directoryPath;
 
 
-        public SettingsViewModel()
+        public SettingsViewModel(MainViewModel mainViewModel)
         {
+            MainViewModel = mainViewModel;
+
             directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MultiOpener", "Presets");
 
             Opens = new ObservableCollection<OpenItem>();
+            Presets = new ObservableCollection<LoadedPresetItem>();
 
             AddNewOpenItemCommand = new SettingsAddNewOpenItemCommand(this);
             RemoveCurrentOpenCommand = new SettingsRemoveCurrentOpenCommand(this);
@@ -172,9 +178,8 @@ namespace MultiOpener.ViewModels
 
         public void UpdatePresetsComboBox(string selected = "")
         {
-            //TODO: Optimize it? by adding and removing or changing names in it
             Presets = new ObservableCollection<LoadedPresetItem>();
-            var files = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly);
+            var files = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
             for (int i = 0; i < files.Length; i++)
             {
                 var fileName = Path.GetFileName(files[i]);
@@ -230,7 +235,6 @@ namespace MultiOpener.ViewModels
             }
 
             CreateEmptyPreset();
-
             UpdatePresetsComboBox();
         }
 

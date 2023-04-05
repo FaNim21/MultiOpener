@@ -21,7 +21,6 @@ namespace MultiOpener.Commands.StartCommands
         public CancellationTokenSource source = new();
         public CancellationToken token;
 
-
         public StartOpenCommand(StartViewModel startViewModel) : base(startViewModel)
         {
             MainWindow = (MainWindow)Application.Current.MainWindow;
@@ -29,17 +28,30 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
-            if (string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName)) return;
+            if (Start == null) return;
 
-            if ((MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null) return;
-            if (MainWindow.MainViewModel.settings.Opens == null || !MainWindow.MainViewModel.settings.Opens.Any()) return;
+            if (Start.OpenButtonName.Equals("OPEN"))
+            {
+                if (string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName)) return;
 
-            //TODO: Zrobic nowy panel gdzie start bedzie mialo tylko open i po kliknieciu normalnie wyskakuje okno z progresem i po zaladowaniu odala sie specjalne okno do kontroli odpalonych aplikacji i do ich poprostu zamkniecia
-            //co spowoduje ze nie bedzie mozna sie bawic ustawieniami co w sumie jest na minus, ale nie chce i tak jednak robic feature do odpalania aplikacji uzupelniajach z innych presetow ewentualnie dac tylko multimc jako caly czas odpalone w tle
+                if ((MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null) return;
+                if (MainWindow.MainViewModel.settings.Opens == null || !MainWindow.MainViewModel.settings.Opens.Any()) return;
 
-            source = new();
-            token = source.Token;
-            Task task = Task.Run(OpenProgramsList, token);
+                Start.OpenButtonName = "CLOSE";
+                //Uwzglednic cancelowanie i bledy w validowaniu do zamiany guzika spowrotem na close
+
+
+                //TODO: Zrobic nowy panel gdzie start bedzie mialo tylko open i po kliknieciu normalnie wyskakuje okno z progresem i po zaladowaniu odala sie specjalne okno do kontroli odpalonych aplikacji i do ich poprostu zamkniecia
+                //co spowoduje ze nie bedzie mozna sie bawic ustawieniami co w sumie jest na minus, ale nie chce i tak jednak robic feature do odpalania aplikacji uzupelniajach z innych presetow ewentualnie dac tylko multimc jako caly czas odpalone w tle
+
+                source = new();
+                token = source.Token;
+                Task task = Task.Run(OpenProgramsList, token);
+            }
+            else
+            {
+                Start.CloseCommand.Execute(null);
+            }
         }
 
         public async Task OpenProgramsList()
@@ -128,7 +140,6 @@ namespace MultiOpener.Commands.StartCommands
                 }
             }
 
-            //TODO: Odrozniac czy zakonczono sukcesem czy tez przerwano
             Application.Current.Dispatcher.Invoke(delegate
             {
                 loadingProcesses.Close();

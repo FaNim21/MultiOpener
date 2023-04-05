@@ -34,9 +34,9 @@ Finally, MultiOpener uses various file manipulation methods, such as the create 
 * Once you have added all the programs and customized the settings as needed, you can name your preset in the bottom right corner and save it to a file by clicking the "Save" button.
 
 
-## Find a bug?
+## Find a bug or have a suggestion?
 
-If you find an issue or you think that something could work better or different please submit an issue using the issues tab above or catch me on discord! https://discord.gg/JuZ3XsfFwY
+If you find an issue or you think that something could work better, different, or the program could use something entirely new for benefiting the user experience, please feel free to submit an issue using the issues tab above or catch me on discord! https://discord.gg/JuZ3XsfFwY
 
 
 ## Known issues (Work in progress)
