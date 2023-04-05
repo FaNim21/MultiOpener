@@ -16,22 +16,37 @@ namespace MultiOpener
 
         public string? windowTitle;
 
-        //TODO: DO STESTOWANIA JESZCZE BO NIE CHCE USTALIC TEGO HWND
-        public void SetHwnd()
+        public bool SetHwnd()
         {
             IntPtr output = Win32.GetHwndFromHandle(handle);
 
-            if(output != IntPtr.Zero)
+            if (output != IntPtr.Zero)
+            {
                 hwnd = output;
+                UpdateTitle();
+                return true;
+            }
+            return false;
+        }
+
+        public void UpdateTitle()
+        {
+            if (hwnd == IntPtr.Zero) return;
+
+            string title = Win32.GetWindowTitle(hwnd);
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                windowTitle = title;
+            }
         }
     }
 
     public partial class MainWindow : Window
     {
-        public List<Process> openedProcess = new();
         public List<OpenedProcess> opened = new();
 
-        public  MainViewModel MainViewModel { get; set; }
+        public MainViewModel MainViewModel { get; set; }
 
         public MainWindow()
         {

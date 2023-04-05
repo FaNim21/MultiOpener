@@ -34,7 +34,7 @@ namespace MultiOpener.Commands.StartCommands
             {
                 if (string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName)) return;
 
-                if ((MainWindow.openedProcess.Any() && MainWindow.openedProcess.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null) return;
+                if ((MainWindow.opened.Any() && MainWindow.opened.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null) return;
                 if (MainWindow.MainViewModel.settings.Opens == null || !MainWindow.MainViewModel.settings.Opens.Any()) return;
 
                 Start.OpenButtonName = "CLOSE";
@@ -73,7 +73,11 @@ namespace MultiOpener.Commands.StartCommands
                         ProcessStartInfo startInfo = new(current.PathExe) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Hidden };
                         Process? process = Process.Start(startInfo);
                         if (process != null)
-                            MainWindow.openedProcess.Add(process);
+                        {
+                            OpenedProcess open = new();
+                            open.handle = process.Handle;
+                            MainWindow.opened.Add(open);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -128,10 +132,19 @@ namespace MultiOpener.Commands.StartCommands
                         if (process != null)
                         {
                             process.EnableRaisingEvents = true;
-                            MainWindow.openedProcess.Add(process);
+
+                            process.WaitForInputIdle();
 
                             OpenedProcess open = new();
                             open.handle = process.Handle;
+
+                            //TODO: stestowac definicje odpalania aplikacji konsolowych lub non-gui authotkey etc etc
+                            int errors = 0;
+                            while (!open.SetHwnd() && errors < 100)
+                            {
+                                await Task.Delay(200);
+                                errors++;
+                            }
                             MainWindow.opened.Add(open);
                         }
                         await Task.Delay(current.DelayAfter);
@@ -143,13 +156,21 @@ namespace MultiOpener.Commands.StartCommands
                 }
             }
 
-            await Task.Delay(5000);
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                infoText = $"Waiting for apps to open...";
+                loadingProcesses.SetText(infoText);
+            });
 
-            for (int i = 0; i < MainWindow.opened.Count; i++)
+            await Task.Delay(500);
+
+            //to trzeba dostosowac do odpalanych programow zeby sprawdzac czy wszystkiego programy maja okno ewentualnie?
+            //zeby nie ustalac statycznie delaya do ustalania hwnd
+            /*for (int i = 0; i < MainWindow.opened.Count; i++)
             {
                 var current = MainWindow.opened[i];
                 current.SetHwnd();
-            }
+            }*/
 
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -180,7 +201,13 @@ namespace MultiOpener.Commands.StartCommands
                     });
 
                     startInfo.Arguments = $"--launch \"{open.Names[i]}\"";
-                    Process? proc = Process.Start(startInfo);
+                    Process? process = Process.Start(startInfo);
+                    if(process != null)
+                    {
+                        OpenedProcess opened = new();
+                        opened.handle = process.Handle;
+                        MainWindow.opened.Add(opened);
+                    } 
                 }
                 await Task.Delay(open.DelayAfter);
             }
