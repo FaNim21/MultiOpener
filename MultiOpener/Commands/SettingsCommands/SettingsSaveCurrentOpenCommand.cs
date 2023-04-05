@@ -43,8 +43,16 @@ namespace MultiOpener.Commands.SettingsCommands
                     string appPath = Settings.SelectedOpenTypeViewModel.ApplicationPathField ?? "";
                     open.PathExe = appPath;
                     open.Type = Settings.ChooseTypeBox;
-                    open.DelayBefore = int.Parse(Settings.SelectedOpenTypeViewModel.DelayBeforeTimeField ?? "0");
-                    open.DelayAfter = int.Parse(Settings.SelectedOpenTypeViewModel.DelayAfterTimeField ?? "0");
+
+                    if (string.IsNullOrEmpty(Settings.SelectedOpenTypeViewModel.DelayBeforeTimeField))
+                        open.DelayBefore = 0;
+                    else
+                        open.DelayBefore = int.Parse(Settings.SelectedOpenTypeViewModel.DelayBeforeTimeField ?? "0");
+
+                    if (string.IsNullOrEmpty(Settings.SelectedOpenTypeViewModel.DelayAfterTimeField))
+                        open.DelayAfter = 0;
+                    else
+                        open.DelayAfter = int.Parse(Settings.SelectedOpenTypeViewModel.DelayAfterTimeField ?? "0");
 
                     Settings.CurrentChosen = open;
                     break;

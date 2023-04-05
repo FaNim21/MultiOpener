@@ -1,7 +1,4 @@
-﻿using MultiOpener.Utils;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -25,15 +22,6 @@ namespace MultiOpener.Views
                 };
                 Process.Start(processStart);
             }
-        }
-
-
-        /// <summary>
-        /// TODO: -- REMOVE -- Do wywalenia po skonczeniu testowania rzeczy w hwnd
-        /// </summary>
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Trace.WriteLine(((MainWindow)Application.Current.MainWindow).opened.Count);
         }
     }
 }

@@ -3,7 +3,6 @@ using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -11,39 +10,53 @@ namespace MultiOpener
 {
     public class OpenedProcess
     {
-        public IntPtr hwnd;
-        public IntPtr handle;
+        public IntPtr Hwnd { get; private set; }
+        public IntPtr Handle { get; private set; }
+        public string? WindowTitle { get; private set; }
 
-        public string? windowTitle;
 
+        public bool IsMinecraftInstance = false;
+
+
+        public void SetHwnd(IntPtr hwnd)
+        {
+            Hwnd = hwnd;
+        }
         public bool SetHwnd()
         {
-            IntPtr output = Win32.GetHwndFromHandle(handle);
+            IntPtr output = Win32.GetHwndFromHandle(Handle);
 
             if (output != IntPtr.Zero)
             {
-                hwnd = output;
+                Hwnd = output;
                 UpdateTitle();
                 return true;
             }
             return false;
         }
+        public void SetHandle(IntPtr handle)
+        {
+            Handle = handle;
+        }
 
         public void UpdateTitle()
         {
-            if (hwnd == IntPtr.Zero) return;
+            if (Hwnd == IntPtr.Zero) return;
 
-            string title = Win32.GetWindowTitle(hwnd);
+            string title = Win32.GetWindowTitle(Hwnd);
 
             if (!string.IsNullOrEmpty(title))
             {
-                windowTitle = title;
+                WindowTitle = title;
             }
         }
+
+        public bool HasWindow() => Handle != IntPtr.Zero;
     }
 
     public partial class MainWindow : Window
     {
+        public OpenedProcess MultiMC { get; set; }
         public List<OpenedProcess> opened = new();
 
         public MainViewModel MainViewModel { get; set; }
@@ -81,7 +94,7 @@ namespace MultiOpener
         private void MinimizeButtonsClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
         private void ExitButtonClick(object sender, RoutedEventArgs e) => Close();
 
-        private void OnClosed(object sender, System.EventArgs e)
+        private void OnClosed(object sender, EventArgs e)
         {
             Settings.Default.MainWindowLeft = Left;
             Settings.Default.MainWindowTop = Top;

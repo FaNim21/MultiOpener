@@ -2,7 +2,6 @@
 using MultiOpener.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 
 namespace MultiOpener.Commands.StartCommands
@@ -25,23 +24,35 @@ namespace MultiOpener.Commands.StartCommands
                 int length = MainWindow.opened.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    try
-                    {
-                        var current = MainWindow.opened[i];
+                    var current = MainWindow.opened[i];
 
-                        Process process = Win32.GetProcessByHandle(current.handle.ToInt32());
-                        process.Kill(true);
-                        process.WaitForExit();
-                    }
-                    catch (Exception e)
+                    if (current.Hwnd != IntPtr.Zero)
                     {
-                        MessageBox.Show(e.ToString());
+                        try
+                        {
+                            Win32.CloseProcessByHwnd(current.Hwnd);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show($"Cannot close {current.WindowTitle ?? ""} \n{e}");
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Win32.CloseProcessByHandle(current.Handle);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.ToString());
+                        }
                     }
                 }
-            }
 
-            MainWindow.opened = new List<OpenedProcess>();
-            Start.OpenButtonName = "OPEN";
+                MainWindow.opened = new List<OpenedProcess>();
+                Start.OpenButtonName = "OPEN";
+            }
         }
     }
 }

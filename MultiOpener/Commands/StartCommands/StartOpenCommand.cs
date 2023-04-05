@@ -1,7 +1,9 @@
 ﻿using MultiOpener.ListView;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using MultiOpener.Windows;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -38,7 +40,7 @@ namespace MultiOpener.Commands.StartCommands
                 if (MainWindow.MainViewModel.settings.Opens == null || !MainWindow.MainViewModel.settings.Opens.Any()) return;
 
                 Start.OpenButtonName = "CLOSE";
-                //Uwzglednic cancelowanie i bledy w validowaniu do zamiany guzika spowrotem na close
+                //TODO: Uwzglednic cancelowanie i bledy w validowaniu do zamiany guzika spowrotem na close
 
 
                 //TODO: Zrobic nowy panel gdzie start bedzie mialo tylko open i po kliknieciu normalnie wyskakuje okno z progresem i po zaladowaniu odala sie specjalne okno do kontroli odpalonych aplikacji i do ich poprostu zamkniecia
@@ -57,31 +59,39 @@ namespace MultiOpener.Commands.StartCommands
         public async Task OpenProgramsList()
         {
             int length = MainWindow.MainViewModel.settings.Opens.Count;
-            int progressLength = length - 1;
+            int progressLength = length;
 
-            //TODO: tu dac validowanie wszystkich sciezek aplikacji i w momencie zwalidowania typu instances odpalic multimc, albo ewentualnie zapisac ze pod jakim indeksem jest i po pelnej walidacji otworzyc
             for (int i = 0; i < length; i++)
             {
                 var current = MainWindow.MainViewModel.settings.Opens[i];
                 if (current.Validate())
+                {
+                    Application.Current.Dispatcher.Invoke(delegate
+                    {
+                        Start.OpenButtonName = "OPEN";
+                    });
                     return;
+                }
 
                 if (current.GetType() == typeof(OpenInstance))
                 {
-                    try
+                    if (MainWindow.MultiMC == null)
                     {
-                        ProcessStartInfo startInfo = new(current.PathExe) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Hidden };
-                        Process? process = Process.Start(startInfo);
-                        if (process != null)
+                        try
                         {
-                            OpenedProcess open = new();
-                            open.handle = process.Handle;
-                            MainWindow.opened.Add(open);
+                            ProcessStartInfo startInfo = new(current.PathExe) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Hidden };
+                            Process? process = Process.Start(startInfo);
+                            if (process != null)
+                            {
+                                OpenedProcess open = new();
+                                open.SetHandle(process.Handle);
+                                MainWindow.MultiMC = open;
+                            }
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(e.ToString());
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.ToString());
+                        }
                     }
 
                     progressLength += ((OpenInstance)current).Quantity;
@@ -98,7 +108,6 @@ namespace MultiOpener.Commands.StartCommands
                 loadingProcesses.Show();
                 loadingProcesses.progress.Maximum = progressLength;
             });
-
 
             for (int i = 0; i < length; i++)
             {
@@ -122,7 +131,7 @@ namespace MultiOpener.Commands.StartCommands
                 {
                     try
                     {
-                        await Task.Delay(current.DelayBefore);
+                        await Task.Delay(current.DelayBefore, token);
                         string executable = Path.GetFileName(current.PathExe);
                         string pathDir = Path.GetDirectoryName(current.PathExe) ?? "";
 
@@ -133,21 +142,21 @@ namespace MultiOpener.Commands.StartCommands
                         {
                             process.EnableRaisingEvents = true;
 
-                            process.WaitForInputIdle();
-
                             OpenedProcess open = new();
-                            open.handle = process.Handle;
+                            open.SetHandle(process.Handle);
 
-                            //TODO: stestowac definicje odpalania aplikacji konsolowych lub non-gui authotkey etc etc
                             int errors = 0;
-                            while (!open.SetHwnd() && errors < 100)
+                            while (!open.SetHwnd() && errors < 10)
                             {
+                                if (source.IsCancellationRequested)
+                                    break;
+
                                 await Task.Delay(200);
                                 errors++;
                             }
                             MainWindow.opened.Add(open);
                         }
-                        await Task.Delay(current.DelayAfter);
+                        await Task.Delay(current.DelayAfter, token);
                     }
                     catch (Win32Exception ex)
                     {
@@ -156,40 +165,33 @@ namespace MultiOpener.Commands.StartCommands
                 }
             }
 
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                infoText = $"Waiting for apps to open...";
-                loadingProcesses.SetText(infoText);
-            });
+            await Task.Delay(3000, token);
 
-            await Task.Delay(500);
-
-            //to trzeba dostosowac do odpalanych programow zeby sprawdzac czy wszystkiego programy maja okno ewentualnie?
-            //zeby nie ustalac statycznie delaya do ustalania hwnd
-            /*for (int i = 0; i < MainWindow.opened.Count; i++)
+            for (int i = 0; i < MainWindow.opened.Count; i++)
             {
                 var current = MainWindow.opened[i];
-                current.SetHwnd();
-            }*/
+                current.UpdateTitle();
+            }
 
             Application.Current.Dispatcher.Invoke(delegate
             {
                 loadingProcesses.Close();
                 MainWindow.OnShow();
+
             });
         }
 
         private async Task OpenMultiMcInstances(OpenInstance open, string infoText = "")
         {
-            //TODO: Zrobic support na kontrole kazdej instancji oddzielnie, a nie przez tylko glowny proces multimc
+            List<OpenedProcess> mcInstances = new();
             try
             {
-                await Task.Delay(open.DelayBefore);
+                await Task.Delay(open.DelayBefore, token);
 
-                ProcessStartInfo startInfo = new(open.PathExe) { UseShellExecute = true };
+                ProcessStartInfo startInfo = new(open.PathExe) { UseShellExecute = false };
                 for (int i = 0; i < open.Quantity; i++)
                 {
-                    await Task.Delay(i == 0 ? 0 : i == 1 ? 10000 : open.DelayBetweenInstances);
+                    await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : open.DelayBetweenInstances, token);
 
                     if (source.IsCancellationRequested)
                         return;
@@ -202,14 +204,39 @@ namespace MultiOpener.Commands.StartCommands
 
                     startInfo.Arguments = $"--launch \"{open.Names[i]}\"";
                     Process? process = Process.Start(startInfo);
-                    if(process != null)
+                    if (process != null)
                     {
+                        process.WaitForInputIdle();
+
                         OpenedProcess opened = new();
-                        opened.handle = process.Handle;
-                        MainWindow.opened.Add(opened);
-                    } 
+                        opened.SetHandle(process.Handle);
+                        opened.IsMinecraftInstance = true;
+                        mcInstances.Add(opened);
+                    }
                 }
-                await Task.Delay(open.DelayAfter);
+
+                Application.Current.Dispatcher.Invoke(delegate
+                {
+                    loadingProcesses.SetText($"{infoText} (loading datas)");
+                });
+
+                var instances = Win32.GetWindowsByTitlePattern("Minecraft");
+                do
+                {
+                    instances = Win32.GetWindowsByTitlePattern("Minecraft");
+                    await Task.Delay(750);
+                }
+                while (instances.Count != open.Quantity);
+
+                for (int i = 0; i < mcInstances.Count; i++)
+                {
+                    var current = mcInstances[i];
+                    current.SetHwnd(instances[i]);
+                    current.UpdateTitle();
+                    MainWindow.opened.Add(current);
+                }
+
+                await Task.Delay(open.DelayAfter, token);
             }
             catch (Exception e)
             {
