@@ -34,10 +34,10 @@ namespace MultiOpener.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Trace.WriteLine(((MainWindow)Application.Current.MainWindow).openedProcess.Count);
+            Trace.WriteLine(((MainWindow)Application.Current.MainWindow).opened.Count);
 
 
-
-            var minecrafts = new List<WinStruct>();
+            /*var minecrafts = new List<WinStruct>();
             var windows = Win32.GetWindows();
             for (int i = 0; i < windows.Count; i++)
             {
@@ -55,7 +55,7 @@ namespace MultiOpener.Views
                 var current = ((MainWindow)Application.Current.MainWindow).openedProcess[i];
 
                 //hwnds.Add(Win32.GetWindowHandle());
-            }
+            }*/
         }
     }
 }

@@ -87,7 +87,6 @@ namespace MultiOpener.Commands.StartCommands
 
             Application.Current.Dispatcher.Invoke(delegate
             {
-                Start.OpenButtonEnabled = false;
                 MainWindow.Hide();
                 float windowPositionX = (float)(MainWindow.Left + (MainWindow.Width / 2));
                 float windowPositionY = (float)(MainWindow.Top + (MainWindow.Height / 2));
@@ -130,6 +129,10 @@ namespace MultiOpener.Commands.StartCommands
                         {
                             process.EnableRaisingEvents = true;
                             MainWindow.openedProcess.Add(process);
+
+                            OpenedProcess open = new();
+                            open.handle = process.Handle;
+                            MainWindow.opened.Add(open);
                         }
                         await Task.Delay(current.DelayAfter);
                     }
@@ -138,6 +141,14 @@ namespace MultiOpener.Commands.StartCommands
                         MessageBox.Show(ex.ToString());
                     }
                 }
+            }
+
+            await Task.Delay(5000);
+
+            for (int i = 0; i < MainWindow.opened.Count; i++)
+            {
+                var current = MainWindow.opened[i];
+                current.SetHwnd();
             }
 
             Application.Current.Dispatcher.Invoke(delegate

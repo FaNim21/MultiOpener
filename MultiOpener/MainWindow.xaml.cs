@@ -1,5 +1,7 @@
 ﻿using MultiOpener.Properties;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -7,9 +9,27 @@ using System.Windows.Input;
 
 namespace MultiOpener
 {
+    public class OpenedProcess
+    {
+        public IntPtr hwnd;
+        public IntPtr handle;
+
+        public string? windowTitle;
+
+        //TODO: DO STESTOWANIA JESZCZE BO NIE CHCE USTALIC TEGO HWND
+        public void SetHwnd()
+        {
+            IntPtr output = Win32.GetHwndFromHandle(handle);
+
+            if(output != IntPtr.Zero)
+                hwnd = output;
+        }
+    }
+
     public partial class MainWindow : Window
     {
         public List<Process> openedProcess = new();
+        public List<OpenedProcess> opened = new();
 
         public  MainViewModel MainViewModel { get; set; }
 

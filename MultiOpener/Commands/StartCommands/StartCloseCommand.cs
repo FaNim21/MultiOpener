@@ -1,6 +1,9 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Utils;
+using MultiOpener.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 using System.Windows;
 
 namespace MultiOpener.Commands.StartCommands
@@ -20,14 +23,32 @@ namespace MultiOpener.Commands.StartCommands
 
             if (MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                int length = MainWindow.openedProcess.Count;
+                int length = MainWindow.opened.Count;
+                for (int i = 0; i < length; i++)
+                {
+                    try
+                    {
+                        var current = MainWindow.opened[i];
+
+                        Process process = Win32.GetProcessByHandle(current.handle.ToInt32());
+                        process.Kill(true);
+                        process.WaitForExit();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.ToString());
+                    }
+                }
+                MainWindow.opened = new List<OpenedProcess>();
+
+
+                /*int length = MainWindow.openedProcess.Count;
                 for (int i = 0; i < length; i++)
                 {
                     try
                     {
                         var current = MainWindow.openedProcess[i];
 
-                        Trace.WriteLine(current.ProcessName + " -- " + current.Id + " -- " + current.MainWindowTitle + " -- " + current.StartInfo.FileName);
                         if (current.MainModule != null)
                             Trace.WriteLine(current.MainModule.ModuleName + " -- " + current.MainModule.FileName);
 
@@ -37,20 +58,24 @@ namespace MultiOpener.Commands.StartCommands
                             for (int j = 0; j < processes.Length; j++)
                             {
                                 processes[j].Kill();
+                                processes[j].WaitForExit();
                             }
                         }
                         else
+                        {
                             current.Kill(true);
+                            current.WaitForExit();
+                        }
                     }
                     catch (Exception e)
                     {
                         Trace.WriteLine(e.ToString());
                     }
-                }
+                }*/
             }
 
             MainWindow.openedProcess = new();
-            Start.OpenButtonEnabled = true;
+            Start.OpenButtonName = "OPEN";
         }
     }
 }
