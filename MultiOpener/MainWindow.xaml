@@ -83,11 +83,20 @@
                                        ChangeCommand="{Binding UpdateViewCommand}"
                                        CommandParameter="Informations" />
 
-            <Label Content="MultiOpener v0.4.0 PREVIEW"
+            <Label Content="MultiOpener"
+                   FontWeight="Bold"
                    Grid.Column="3"
                    HorizontalAlignment="Left"
-                   Margin="0 -1 0 0"
+                   FontSize="14"
+                   Margin="-20 -2 0 0"
                    Foreground="LightCyan" />
+            <Label x:Name="labelVersion"
+                   FontWeight="Bold"
+                   Grid.Column="3"
+                   FontSize="10"
+                   HorizontalAlignment="Left"
+                   Margin="70 2 0 0"
+                   Foreground="LightCyan"  />
         </Grid>
 
         <!--BODY-->

@@ -57,7 +57,7 @@ namespace MultiOpener
 
     public partial class MainWindow : Window
     {
-        public OpenedProcess MultiMC { get; set; }
+        public OpenedProcess? MultiMC { get; set; }
         public List<OpenedProcess> opened = new();
 
         public MainViewModel MainViewModel { get; set; }
@@ -65,6 +65,8 @@ namespace MultiOpener
         public MainWindow()
         {
             InitializeComponent();
+            labelVersion.Content = Consts.Version;
+
             MainViewModel = new MainViewModel(this);
             DataContext = MainViewModel;
 
