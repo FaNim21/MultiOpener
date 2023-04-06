@@ -15,6 +15,54 @@
         Title="MultiOpener"
         ResizeMode="NoResize"
         Background="#383A3C">
+    <Window.Resources>
+        <ContextMenu x:Key="contextmenu" >
+            <MenuItem Header="close"
+                      Click="ExitButtonClick"
+                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+            <MenuItem Header="close2"
+                      Click="ExitButtonClick"
+                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+        </ContextMenu>
+
+        <Style TargetType="{x:Type ContextMenu}">
+            <Setter Property="SnapsToDevicePixels"
+                    Value="True" />
+            <Setter Property="OverridesDefaultStyle"
+                    Value="True" />
+            <Setter Property="Grid.IsSharedSizeScope"
+                    Value="true" />
+            <Setter Property="HasDropShadow"
+                    Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ContextMenu}">
+                        <Border x:Name="Border"
+                                Background="Gray"
+                                BorderThickness="1">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="Gray" />
+                            </Border.BorderBrush>
+                            <StackPanel IsItemsHost="True"
+                                        KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasDropShadow"
+                                     Value="true">
+                                <Setter TargetName="Border"
+                                        Property="Padding"
+                                        Value="0,3,0,3" />
+                                <Setter TargetName="Border"
+                                        Property="CornerRadius"
+                                        Value="2" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -59,7 +107,8 @@
                                        Margin="12 5 0 0"
                                        ContentText="Start"
                                        ChangeCommand="{Binding UpdateViewCommand}"
-                                       CommandParameter="Start" />
+                                       CommandParameter="Start"
+                                       ContextMenu="{StaticResource contextmenu}" />
 
             <local:ButtonTaskbarChoose x:Name="SettingsButton"
                                        Width="80"
@@ -96,7 +145,7 @@
                    FontSize="10"
                    HorizontalAlignment="Left"
                    Margin="70 2 0 0"
-                   Foreground="LightCyan"  />
+                   Foreground="LightCyan" />
         </Grid>
 
         <!--BODY-->
