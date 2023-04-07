@@ -1,4 +1,5 @@
-﻿using MultiOpener.Utils;
+﻿using MultiOpener.Items;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
 using System.Collections.Generic;

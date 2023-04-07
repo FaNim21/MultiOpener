@@ -76,7 +76,6 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400" />
                 <ColumnDefinition />
-                <ColumnDefinition Width="250" />
             </Grid.ColumnDefinitions>
 
             <local:ButtonTaskbar x:Name="MinimizeButtons"
@@ -137,14 +136,14 @@
                    Grid.Column="3"
                    HorizontalAlignment="Left"
                    FontSize="14"
-                   Margin="-20 -2 0 0"
+                   Margin="150 -2 0 0"
                    Foreground="LightCyan" />
             <Label x:Name="labelVersion"
                    FontWeight="Bold"
                    Grid.Column="3"
                    FontSize="10"
                    HorizontalAlignment="Left"
-                   Margin="70 2 0 0"
+                   Margin="240 2 0 0"
                    Foreground="LightCyan" />
         </Grid>
 

@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Utils;
 using System;
+using System.Diagnostics;
 
 namespace MultiOpener.Items
 {
@@ -9,15 +10,15 @@ namespace MultiOpener.Items
         public IntPtr Handle { get; private set; }
         public string? WindowTitle { get; private set; }
 
+        public ProcessStartInfo? ProcessStartInfo { get; private set; }
 
-        public bool IsMinecraftInstance = false;
-
-        //TODO: dodac informacje typu sciezka do odpalenia pliku jeszcze raz, i wiecej
+        public bool isMCInstance = false;
 
 
         public void SetHwnd(IntPtr hwnd)
         {
             Hwnd = hwnd;
+            UpdateTitle();
         }
         public bool SetHwnd()
         {
@@ -31,21 +32,31 @@ namespace MultiOpener.Items
             }
             return false;
         }
+
         public void SetHandle(IntPtr handle)
         {
             Handle = handle;
         }
 
+        public void SetStartInfo(ProcessStartInfo startInfo)
+        {
+            ProcessStartInfo = startInfo;
+        }
+
         public void UpdateTitle()
         {
+            if (!isMCInstance)
+            {
+                WindowTitle = ProcessStartInfo?.FileName;
+                return;
+            }
+
             if (Hwnd == IntPtr.Zero) return;
 
             string title = Win32.GetWindowTitle(Hwnd);
 
             if (!string.IsNullOrEmpty(title))
-            {
                 WindowTitle = title;
-            }
         }
 
         public bool HasWindow() => Handle != IntPtr.Zero;

@@ -1,4 +1,5 @@
-﻿using MultiOpener.ListView;
+﻿using MultiOpener.Items;
+using MultiOpener.ListView;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using MultiOpener.Windows;
@@ -140,6 +141,7 @@ namespace MultiOpener.Commands.StartCommands
                             process.EnableRaisingEvents = true;
 
                             OpenedProcess open = new();
+                            open.SetStartInfo(processStartInfo);
                             open.SetHandle(process.Handle);
 
                             int errors = 0;
@@ -162,6 +164,13 @@ namespace MultiOpener.Commands.StartCommands
                 }
             }
 
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                loadingProcesses.Close();
+                MainWindow.OnShow();
+            });
+
+            //TODO: TO prawdopodobnie nie bedzie potrzebne z racji manualnego odswiezania tytulow itp itd ewentualnie zrobic to po tajemnie po juz wylaczeniu okna loading
             await Task.Delay(3000, token);
 
             for (int i = 0; i < MainWindow.opened.Count; i++)
@@ -169,13 +178,6 @@ namespace MultiOpener.Commands.StartCommands
                 var current = MainWindow.opened[i];
                 current.UpdateTitle();
             }
-
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                loadingProcesses.Close();
-                MainWindow.OnShow();
-
-            });
         }
 
         private async Task OpenMultiMcInstances(OpenInstance open, string infoText = "")
@@ -185,7 +187,7 @@ namespace MultiOpener.Commands.StartCommands
             {
                 await Task.Delay(open.DelayBefore, token);
 
-                ProcessStartInfo startInfo = new(open.PathExe) { UseShellExecute = false };
+                ProcessStartInfo startInfo = new(open.PathExe) { UseShellExecute = false};
                 for (int i = 0; i < open.Quantity; i++)
                 {
                     await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : open.DelayBetweenInstances, token);
@@ -207,7 +209,8 @@ namespace MultiOpener.Commands.StartCommands
 
                         OpenedProcess opened = new();
                         opened.SetHandle(process.Handle);
-                        opened.IsMinecraftInstance = true;
+                        opened.SetStartInfo(startInfo);
+                        opened.isMCInstance = true;
                         mcInstances.Add(opened);
                     }
                 }
@@ -217,7 +220,7 @@ namespace MultiOpener.Commands.StartCommands
                     loadingProcesses.SetText($"{infoText} (loading datas)");
                 });
 
-                var instances = Win32.GetWindowsByTitlePattern("Minecraft");
+                List<IntPtr> instances;
                 do
                 {
                     instances = Win32.GetWindowsByTitlePattern("Minecraft");
@@ -229,11 +232,13 @@ namespace MultiOpener.Commands.StartCommands
                 {
                     var current = mcInstances[i];
                     current.SetHwnd(instances[i]);
-                    current.UpdateTitle();
                     MainWindow.opened.Add(current);
                 }
 
-                await Task.Delay(open.DelayAfter, token);
+                //TODO: CALY CZAS TRZEBA LEKKO OPOZNIC SEGMENT PO MINECRAFTACH DO TEGO ZEBY WYKRYWAC CZY MC JEST ODPALONY DO MAIN MENU ZEBY WALLE GO ZCZYTYWALY
+                int loadingIntro = 3000;
+
+                await Task.Delay(open.DelayAfter + loadingIntro, token);
             }
             catch (Exception e)
             {
