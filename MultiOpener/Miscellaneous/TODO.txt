@@ -1,6 +1,8 @@
 ﻿========================================================
 ==================== KONCPETY ==========================
 ========================================================
+
+========== OGOLNE ===========
 - narazie program zrobic pod speedruny minecrafta
 - (TO ZALEZY JAK DALEJ TA APKA POJDZIE) Zrobic zeby program uruchamial programy z listy ktorych procesy nie sa jeszcze uruchomione
 - Zrobic ewentualnie opcje clearowania sciezki do pliku jako opcje ominiecia tego open przy otwieraniu dla pozniejszej edycji albo pod testy zeby zostawic konfiguracje danego open bez jego usuwania
@@ -13,9 +15,14 @@
 - pomysl zeby z racji jak najmniejszego uzycia ramu zrobic nowe okno do podgladu otwartych aplikacji jak juz ogarne te hwnd bo wtedy w tym oknie jedynie co bedzie to kontrola i info o odpalonych aplikacjach i tam dac opcje close i przy okazji bym zamknal opcje uruchamiania aplikacji z paru presetow na raz
 
 
+========== MNIEJSZE FEATURE'Y ==========
+- dac checkbox'a 
+
+
 
 ========== 0.4.0 ============
 - Podgladu odpalonych programow i kontrola nad nimi jako nowy panel w zakladce start po kliknieciu open do zdesignowania jeszcze jak to bedzie przedewszystkim wygladac
+- zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
 -- patch notes
 - zreworkowano logike odpalania i zamykania programow
 - dodano panel do informacji zwiazanych z aplikacja
