@@ -14,7 +14,7 @@
         <ContextMenu x:Key="ContextMenuOpened">
             <MenuItem Header="Info"
                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
-            <MenuItem Header="Retart"
+            <MenuItem Header="Restart"
                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
             <MenuItem Header="Close"
                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
@@ -23,12 +23,14 @@
         <DataTemplate x:Key="itemsTemplate">
             <Border Width="150"
                     Height="50"
-                    CornerRadius="3,3,3,3"
-                    Margin="9,4,0,0"
-                    Padding="4,4,4,4"
+                    CornerRadius="3 3 3 3"
+                    Margin="5 5 0 0"
+                    Padding="4 4 4 4"
                     Background="#5b5e62"
                     ContextMenu="{StaticResource ContextMenuOpened}">
-                <Grid Width="150" Height="75" Margin="-5 -5 0 0">
+                <Grid Width="150"
+                      Height="75"
+                      Margin="-5 -5 0 0">
                     <WrapPanel Orientation="Horizontal"
                                HorizontalAlignment="Center">
                         <Label Content="{Binding WindowTitle}"
@@ -38,8 +40,8 @@
                     <WrapPanel Orientation="Horizontal"
                                HorizontalAlignment="Center">
                         <Label Height="25"
-                               Content="STATUS:  OPENED" 
-                               Margin="0 25"/>
+                               Content="STATUS:  OPENED"
+                               Margin="0 25" />
                     </WrapPanel>
                 </Grid>
             </Border>
@@ -70,10 +72,20 @@
                                 IsEnabled="{Binding OpenButtonEnabled}"
                                 OnCommand="{Binding OpenCommand}"
                                 FontSize="20" />
+
+            <local:ButtonNormal x:Name="RefreshTitlesbutton"
+                                Width="100"
+                                Height="35"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Margin="0 0 10 10"
+                                ContentText="Resfresh"
+                                OnCommand="{Binding RefreshOpenedCommand}"
+                                FontSize="20" />
         </Grid>
 
         <Grid Grid.Row="1">
-            <ItemsControl Width="760"
+            <ItemsControl Width="780"
                           Height="280"
                           ItemTemplate="{StaticResource itemsTemplate}"
                           ItemsSource="{Binding Opened}">

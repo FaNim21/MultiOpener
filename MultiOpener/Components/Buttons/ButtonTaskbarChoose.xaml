@@ -9,26 +9,26 @@
              d:DesignWidth="100">
     <Button Name="button"
             FontWeight="Medium"
-            Foreground="White"
+            Foreground="Black"
             Content="{Binding ContentText, ElementName=me}"
             Command="{Binding ChangeCommand, ElementName=me}"
             CommandParameter="{Binding CommandParameter, ElementName=me}">
         <Button.Style>
             <Style TargetType="Button">
                 <Setter Property="Background"
-                        Value="#1E2E37" />
+                        Value="#e1fbfc" />
                 <Setter Property="Cursor"
                         Value="Hand" />
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver"
                              Value="True">
                         <Setter Property="Background"
-                                Value="#293F4B" />
+                                Value="#b3c8c9" />
                     </Trigger>
                     <Trigger Property="IsEnabled"
                              Value="False">
                         <Setter Property="Background"
-                                Value="#6C6C6C" />
+                                Value="#73838d" />
                     </Trigger>
                 </Style.Triggers>
             </Style>

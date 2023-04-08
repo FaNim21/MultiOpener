@@ -15,16 +15,6 @@
         Title="MultiOpener"
         ResizeMode="NoResize"
         Background="#383A3C">
-    <Window.Resources>
-        <ContextMenu x:Key="contextmenu">
-            <MenuItem Header="close"
-                      Click="ExitButtonClick"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
-            <MenuItem Header="close2"
-                      Click="ExitButtonClick"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
-        </ContextMenu>
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -68,8 +58,7 @@
                                        Margin="12 5 0 0"
                                        ContentText="Start"
                                        ChangeCommand="{Binding UpdateViewCommand}"
-                                       CommandParameter="Start"
-                                       ContextMenu="{StaticResource contextmenu}" />
+                                       CommandParameter="Start"/>
 
             <local:ButtonTaskbarChoose x:Name="SettingsButton"
                                        Width="80"

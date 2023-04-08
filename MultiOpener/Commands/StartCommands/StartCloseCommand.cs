@@ -36,7 +36,7 @@ namespace MultiOpener.Commands.StartCommands
                         }
                         catch (Exception e)
                         {
-                            System.Windows.Forms.MessageBox.Show($"Cannot close {current.WindowTitle ?? ""} \n{e}");
+                            MessageBox.Show($"Cannot close {current.WindowTitle ?? ""} \n{e}");
                         }
                     }
                     else
@@ -47,7 +47,7 @@ namespace MultiOpener.Commands.StartCommands
                         }
                         catch (Exception e)
                         {
-                            System.Windows.Forms.MessageBox.Show(e.ToString());
+                            MessageBox.Show(e.ToString());
                         }
                     }
                 }

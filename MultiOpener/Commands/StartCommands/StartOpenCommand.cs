@@ -152,7 +152,7 @@ namespace MultiOpener.Commands.StartCommands
                                 if (source.IsCancellationRequested)
                                     break;
 
-                                await Task.Delay(200);
+                                await Task.Delay(250);
                                 errors++;
                             }
                             Application.Current.Dispatcher.Invoke(delegate

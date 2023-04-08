@@ -14,6 +14,7 @@ namespace MultiOpener.ViewModels
 
         public ICommand OpenCommand { get; set; }
         public ICommand CloseCommand { get; set; }
+        public ICommand RefreshOpenedCommand { get; set; }
 
         private string _openButtonName = "OPEN";
         public string OpenButtonName
@@ -52,6 +53,7 @@ namespace MultiOpener.ViewModels
         {
             OpenCommand = new StartOpenCommand(this);
             CloseCommand = new StartCloseCommand(this);
+            RefreshOpenedCommand = new StartRefreshOpenedCommand(this);
 
             Opened = new ObservableCollection<OpenedProcess>();
 
