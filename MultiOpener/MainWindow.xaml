@@ -16,7 +16,7 @@
         ResizeMode="NoResize"
         Background="#383A3C">
     <Window.Resources>
-        <ContextMenu x:Key="contextmenu" >
+        <ContextMenu x:Key="contextmenu">
             <MenuItem Header="close"
                       Click="ExitButtonClick"
                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
@@ -24,44 +24,6 @@
                       Click="ExitButtonClick"
                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
         </ContextMenu>
-
-        <Style TargetType="{x:Type ContextMenu}">
-            <Setter Property="SnapsToDevicePixels"
-                    Value="True" />
-            <Setter Property="OverridesDefaultStyle"
-                    Value="True" />
-            <Setter Property="Grid.IsSharedSizeScope"
-                    Value="true" />
-            <Setter Property="HasDropShadow"
-                    Value="True" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ContextMenu}">
-                        <Border x:Name="Border"
-                                Background="Gray"
-                                BorderThickness="1">
-                            <Border.BorderBrush>
-                                <SolidColorBrush Color="Gray" />
-                            </Border.BorderBrush>
-                            <StackPanel IsItemsHost="True"
-                                        KeyboardNavigation.DirectionalNavigation="Cycle" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="HasDropShadow"
-                                     Value="true">
-                                <Setter TargetName="Border"
-                                        Property="Padding"
-                                        Value="0,3,0,3" />
-                                <Setter TargetName="Border"
-                                        Property="CornerRadius"
-                                        Value="2" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -116,7 +78,7 @@
                                        Grid.Column="0"
                                        HorizontalAlignment="Left"
                                        Margin="107,5,5,0"
-                                       ContentText="Settings"
+                                       ContentText="Presets"
                                        ChangeCommand="{Binding UpdateViewCommand}"
                                        CommandParameter="Settings" />
 
@@ -128,6 +90,18 @@
                                        HorizontalAlignment="Left"
                                        Margin="202,5,5,0"
                                        ContentText="Information"
+                                       ChangeCommand="{Binding UpdateViewCommand}"
+                                       CommandParameter="Informations" />
+
+            <local:ButtonTaskbarChoose x:Name="OptionsButton"
+                                       Width="80"
+                                       Height="20"
+                                       FontSize="12"
+                                       Grid.Column="0"
+                                       HorizontalAlignment="Left"
+                                       Margin="297,5,5,0"
+                                       ContentText="Options"
+                                       Visibility="Hidden"
                                        ChangeCommand="{Binding UpdateViewCommand}"
                                        CommandParameter="Informations" />
 

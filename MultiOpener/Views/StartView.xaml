@@ -10,10 +10,45 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              Background="#383A3C">
+    <UserControl.Resources>
+        <ContextMenu x:Key="ContextMenuOpened">
+            <MenuItem Header="Info"
+                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+            <MenuItem Header="Retart"
+                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+            <MenuItem Header="Close"
+                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+        </ContextMenu>
+
+        <DataTemplate x:Key="itemsTemplate">
+            <Border Width="150"
+                    Height="50"
+                    CornerRadius="3,3,3,3"
+                    Margin="9,4,0,0"
+                    Padding="4,4,4,4"
+                    Background="#5b5e62"
+                    ContextMenu="{StaticResource ContextMenuOpened}">
+                <Grid Width="150" Height="75" Margin="-5 -5 0 0">
+                    <WrapPanel Orientation="Horizontal"
+                               HorizontalAlignment="Center">
+                        <Label Content="{Binding WindowTitle}"
+                               Height="25"
+                               Margin="0 0 0 0" />
+                    </WrapPanel>
+                    <WrapPanel Orientation="Horizontal"
+                               HorizontalAlignment="Center">
+                        <Label Height="25"
+                               Content="STATUS:  OPENED" 
+                               Margin="0 25"/>
+                    </WrapPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="130" />
             <RowDefinition />
-            <RowDefinition Height="150" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -37,9 +72,17 @@
                                 FontSize="20" />
         </Grid>
 
-
         <Grid Grid.Row="1">
-            <Label HorizontalAlignment="Center" FontSize="24">SOON THERE WILL BE PANELS TO CONTROL OPENED PROGRAMS</Label>
+            <ItemsControl Width="760"
+                          Height="280"
+                          ItemTemplate="{StaticResource itemsTemplate}"
+                          ItemsSource="{Binding Opened}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </Grid>
     </Grid>
 </UserControl>

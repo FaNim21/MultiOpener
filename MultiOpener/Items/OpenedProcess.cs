@@ -1,6 +1,7 @@
 ﻿using MultiOpener.Utils;
 using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace MultiOpener.Items
 {
@@ -47,7 +48,7 @@ namespace MultiOpener.Items
         {
             if (!isMCInstance)
             {
-                WindowTitle = ProcessStartInfo?.FileName;
+                WindowTitle = Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
                 return;
             }
 

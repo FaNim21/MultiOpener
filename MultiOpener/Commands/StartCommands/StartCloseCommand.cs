@@ -2,7 +2,7 @@
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace MultiOpener.Commands.StartCommands
@@ -18,14 +18,15 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
-            if (MainWindow.opened.Count == 0 || MainWindow.opened == null || Start == null) return;
+            ObservableCollection<OpenedProcess> opened = MainWindow.MainViewModel.start.Opened;
+            if (opened.Count == 0 || opened == null || Start == null) return;
 
             if (MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                int length = MainWindow.opened.Count;
+                int length = opened.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    var current = MainWindow.opened[i];
+                    var current = opened[i];
 
                     if (current.Hwnd != IntPtr.Zero)
                     {
@@ -35,7 +36,7 @@ namespace MultiOpener.Commands.StartCommands
                         }
                         catch (Exception e)
                         {
-                            MessageBox.Show($"Cannot close {current.WindowTitle ?? ""} \n{e}");
+                            System.Windows.Forms.MessageBox.Show($"Cannot close {current.WindowTitle ?? ""} \n{e}");
                         }
                     }
                     else
@@ -46,12 +47,13 @@ namespace MultiOpener.Commands.StartCommands
                         }
                         catch (Exception e)
                         {
-                            MessageBox.Show(e.ToString());
+                            System.Windows.Forms.MessageBox.Show(e.ToString());
                         }
                     }
                 }
 
-                MainWindow.opened = new List<OpenedProcess>();
+                opened.Clear();
+                MainWindow.MainViewModel.start.ClearOpened();
                 Start.OpenButtonName = "OPEN";
             }
         }

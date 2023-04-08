@@ -1,8 +1,6 @@
-﻿using MultiOpener.Items;
-using MultiOpener.Properties;
+﻿using MultiOpener.Properties;
 using MultiOpener.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 
@@ -10,9 +8,6 @@ namespace MultiOpener
 {
     public partial class MainWindow : Window
     {
-        public OpenedProcess? MultiMC { get; set; }
-        public List<OpenedProcess> opened = new();
-
         public MainViewModel MainViewModel { get; set; }
 
         public MainWindow()

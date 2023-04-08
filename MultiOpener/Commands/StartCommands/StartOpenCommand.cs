@@ -37,12 +37,14 @@ namespace MultiOpener.Commands.StartCommands
             {
                 if (string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName)) return;
 
-                if ((MainWindow.opened.Any() && MainWindow.opened.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null) return;
+                if ((MainWindow.MainViewModel.start.Opened.Any() && MainWindow.MainViewModel.start.Opened.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null) return;
                 if (MainWindow.MainViewModel.settings.Opens == null || !MainWindow.MainViewModel.settings.Opens.Any()) return;
 
                 Start.OpenButtonName = "CLOSE";
 
                 //TODO: Dac na starcie Panel z podgladem odpalonych aplikacji
+
+                //TODO: -- NAPRAWIC -- kwestie zatrzymywania czesto zawiesza to cale ladowanie, a jak zatrzymuje sie przy odpalaniu instancji to crashuje
 
                 source = new();
                 token = source.Token;
@@ -73,7 +75,7 @@ namespace MultiOpener.Commands.StartCommands
 
                 if (current.GetType() == typeof(OpenInstance))
                 {
-                    if (MainWindow.MultiMC == null)
+                    if (MainWindow.MainViewModel.start.MultiMC == null)
                     {
                         try
                         {
@@ -83,7 +85,7 @@ namespace MultiOpener.Commands.StartCommands
                             {
                                 OpenedProcess open = new();
                                 open.SetHandle(process.Handle);
-                                MainWindow.MultiMC = open;
+                                MainWindow.MainViewModel.start.MultiMC = open;
                             }
                         }
                         catch (Exception e)
@@ -153,7 +155,10 @@ namespace MultiOpener.Commands.StartCommands
                                 await Task.Delay(200);
                                 errors++;
                             }
-                            MainWindow.opened.Add(open);
+                            Application.Current.Dispatcher.Invoke(delegate
+                            {
+                                MainWindow.MainViewModel.start.AddOpened(open);
+                            });
                         }
                         await Task.Delay(current.DelayAfter, token);
                     }
@@ -173,9 +178,10 @@ namespace MultiOpener.Commands.StartCommands
             //TODO: TO prawdopodobnie nie bedzie potrzebne z racji manualnego odswiezania tytulow itp itd ewentualnie zrobic to po tajemnie po juz wylaczeniu okna loading
             await Task.Delay(3000, token);
 
-            for (int i = 0; i < MainWindow.opened.Count; i++)
+            int count = MainWindow.MainViewModel.start.Opened.Count;
+            for (int i = 0; i < count; i++)
             {
-                var current = MainWindow.opened[i];
+                var current = MainWindow.MainViewModel.start.Opened[i];
                 current.UpdateTitle();
             }
         }
@@ -187,7 +193,7 @@ namespace MultiOpener.Commands.StartCommands
             {
                 await Task.Delay(open.DelayBefore, token);
 
-                ProcessStartInfo startInfo = new(open.PathExe) { UseShellExecute = false};
+                ProcessStartInfo startInfo = new(open.PathExe) { UseShellExecute = false };
                 for (int i = 0; i < open.Quantity; i++)
                 {
                     await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : open.DelayBetweenInstances, token);
@@ -232,7 +238,10 @@ namespace MultiOpener.Commands.StartCommands
                 {
                     var current = mcInstances[i];
                     current.SetHwnd(instances[i]);
-                    MainWindow.opened.Add(current);
+                    Application.Current.Dispatcher.Invoke(delegate
+                    {
+                        MainWindow.MainViewModel.start.AddOpened(current);
+                    });
                 }
 
                 //TODO: CALY CZAS TRZEBA LEKKO OPOZNIC SEGMENT PO MINECRAFTACH DO TEGO ZEBY WYKRYWAC CZY MC JEST ODPALONY DO MAIN MENU ZEBY WALLE GO ZCZYTYWALY

@@ -6,7 +6,6 @@ using System.Windows.Input;
 using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.ViewModels.Settings;
 using System;
-using System.Windows;
 using MultiOpener.Items;
 using MultiOpener.Utils;
 

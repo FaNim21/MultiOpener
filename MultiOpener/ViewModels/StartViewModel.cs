@@ -1,11 +1,17 @@
 ﻿using MultiOpener.Commands.StartCommands;
-using System;
+using MultiOpener.Items;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels
 {
     public class StartViewModel : BaseViewModel
     {
+        public OpenedProcess? MultiMC { get; set; }
+        public ObservableCollection<OpenedProcess> Opened { get; set; }
+
+        //TODO: Ogarnac scroll vertical
+
         public ICommand OpenCommand { get; set; }
         public ICommand CloseCommand { get; set; }
 
@@ -47,12 +53,23 @@ namespace MultiOpener.ViewModels
             OpenCommand = new StartOpenCommand(this);
             CloseCommand = new StartCloseCommand(this);
 
+            Opened = new ObservableCollection<OpenedProcess>();
+
             UpdatePresetName();
         }
 
         public void UpdatePresetName(string name = "Empty preset")
         {
             PresetNameLabel = name;
+        }
+
+        public void AddOpened(OpenedProcess openedProcess)
+        {
+            Opened.Add(openedProcess);
+        }
+        public void ClearOpened()
+        {
+            Opened.Clear();
         }
     }
 }

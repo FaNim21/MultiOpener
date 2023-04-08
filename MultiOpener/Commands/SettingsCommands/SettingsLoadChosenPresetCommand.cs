@@ -14,7 +14,7 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null) return;
 
-            if (((MainWindow)Application.Current.MainWindow).opened.Any())
+            if (((MainWindow)Application.Current.MainWindow).MainViewModel.start.Opened.Any())
                 return;
 
             if (Settings.CurrentLoadedChosen != null && !string.IsNullOrEmpty(Settings.CurrentLoadedChosen.Name))
