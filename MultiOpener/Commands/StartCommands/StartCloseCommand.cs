@@ -19,7 +19,13 @@ namespace MultiOpener.Commands.StartCommands
         public override void Execute(object? parameter)
         {
             ObservableCollection<OpenedProcess> opened = MainWindow.MainViewModel.start.Opened;
-            if (opened.Count == 0 || opened == null || Start == null) return;
+
+            if (Start == null) return;
+            if (opened.Count == 0 || opened == null)
+            {
+                Start.OpenButtonName = "OPEN";
+                return;
+            }
 
             if (MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {

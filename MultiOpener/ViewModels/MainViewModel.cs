@@ -33,7 +33,7 @@ namespace MultiOpener.ViewModels
             start = new StartViewModel();
             information = new InformationViewModel();
 
-            //TODO: Dodac wiecej paneli typu changelog/Info(czyl caly teskt z panelu start plus credits i cos jeszcze), i panel options
+            //TODO: 9 Dodac wiecej paneli typu changelog/Info(czyl caly teskt z panelu start plus credits i cos jeszcze), i panel options
 
             UpdateViewCommand = new UpdateViewCommand(this);
             UpdateViewCommand.Execute("Start");

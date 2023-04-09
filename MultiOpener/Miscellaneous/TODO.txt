@@ -27,6 +27,7 @@
 - zreworkowano logike odpalania i zamykania programow
 - dodano panel do informacji zwiazanych z aplikacja
 - poprawiono ui
+- dodano panel z odpalonymi procesami z prestu z mozliwoscia kontroli w postaci wylaczania, resetowania i wyswietlana ogolnych informacji pojedynczo dla kazdego procesu
 
 
 ========== 0.5.0 ?? 1.0 ===========

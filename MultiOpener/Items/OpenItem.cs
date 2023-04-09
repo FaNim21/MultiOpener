@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MultiOpener.ListView
@@ -68,6 +69,11 @@ namespace MultiOpener.ListView
 
             return false;
         }
+
+        public virtual async Task Open()
+        {
+
+        }
     }
 
     public class OpenInstance : OpenItem
@@ -133,6 +139,11 @@ namespace MultiOpener.ListView
             }
 
             return base.Validate();
+        }
+
+        public override async Task Open()
+        {
+            
         }
     }
 }

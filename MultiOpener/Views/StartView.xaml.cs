@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace MultiOpener.Views
 {
@@ -7,6 +8,11 @@ namespace MultiOpener.Views
         public StartView()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(new Items.OpenedProcess());
         }
     }
 }

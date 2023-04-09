@@ -10,8 +10,6 @@ namespace MultiOpener.ViewModels
         public OpenedProcess? MultiMC { get; set; }
         public ObservableCollection<OpenedProcess> Opened { get; set; }
 
-        //TODO: Ogarnac scroll vertical
-
         public ICommand OpenCommand { get; set; }
         public ICommand CloseCommand { get; set; }
         public ICommand RefreshOpenedCommand { get; set; }

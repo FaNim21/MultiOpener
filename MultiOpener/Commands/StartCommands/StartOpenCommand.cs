@@ -42,9 +42,7 @@ namespace MultiOpener.Commands.StartCommands
 
                 Start.OpenButtonName = "CLOSE";
 
-                //TODO: Dac na starcie Panel z podgladem odpalonych aplikacji
-
-                //TODO: -- NAPRAWIC -- kwestie zatrzymywania czesto zawiesza to cale ladowanie, a jak zatrzymuje sie przy odpalaniu instancji to crashuje
+                //TODO: 1 -- NAPRAWIC -- kwestie zatrzymywania czesto zawiesza to cale ladowanie, a jak zatrzymuje sie przy odpalaniu instancji to crashuje
 
                 source = new();
                 token = source.Token;
@@ -131,7 +129,7 @@ namespace MultiOpener.Commands.StartCommands
                 {
                     try
                     {
-                        await Task.Delay(current.DelayBefore, token);
+                        await Task.Delay(current.DelayBefore);
                         string executable = Path.GetFileName(current.PathExe);
                         string pathDir = Path.GetDirectoryName(current.PathExe) ?? "";
 
@@ -160,7 +158,7 @@ namespace MultiOpener.Commands.StartCommands
                                 MainWindow.MainViewModel.start.AddOpened(open);
                             });
                         }
-                        await Task.Delay(current.DelayAfter, token);
+                        await Task.Delay(current.DelayAfter);
                     }
                     catch (Win32Exception ex)
                     {
@@ -175,15 +173,9 @@ namespace MultiOpener.Commands.StartCommands
                 MainWindow.OnShow();
             });
 
-            //TODO: TO prawdopodobnie nie bedzie potrzebne z racji manualnego odswiezania tytulow itp itd ewentualnie zrobic to po tajemnie po juz wylaczeniu okna loading
-            await Task.Delay(3000, token);
-
-            int count = MainWindow.MainViewModel.start.Opened.Count;
-            for (int i = 0; i < count; i++)
-            {
-                var current = MainWindow.MainViewModel.start.Opened[i];
-                current.UpdateTitle();
-            }
+            //to jest tymczasowo na automatyczne odswiezenie informacji po chwili od ich odpalenia
+            await Task.Delay(5000);
+            MainWindow.MainViewModel.start.RefreshOpenedCommand.Execute(null);
         }
 
         private async Task OpenMultiMcInstances(OpenInstance open, string infoText = "")
@@ -191,16 +183,18 @@ namespace MultiOpener.Commands.StartCommands
             List<OpenedProcess> mcInstances = new();
             try
             {
-                await Task.Delay(open.DelayBefore, token);
+                await Task.Delay(open.DelayBefore);
+                int count = 0;
 
                 ProcessStartInfo startInfo = new(open.PathExe) { UseShellExecute = false };
                 for (int i = 0; i < open.Quantity; i++)
                 {
-                    await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : open.DelayBetweenInstances, token);
+                    await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : open.DelayBetweenInstances);
 
                     if (source.IsCancellationRequested)
-                        return;
+                        break;
 
+                    count++;
                     Application.Current.Dispatcher.Invoke(delegate
                     {
                         loadingProcesses.SetText($"{infoText} -- Instance ({i + 1}/{open.Quantity})");
@@ -232,7 +226,7 @@ namespace MultiOpener.Commands.StartCommands
                     instances = Win32.GetWindowsByTitlePattern("Minecraft");
                     await Task.Delay(750);
                 }
-                while (instances.Count != open.Quantity);
+                while (instances.Count != count);
 
                 for (int i = 0; i < mcInstances.Count; i++)
                 {
@@ -244,10 +238,9 @@ namespace MultiOpener.Commands.StartCommands
                     });
                 }
 
-                //TODO: CALY CZAS TRZEBA LEKKO OPOZNIC SEGMENT PO MINECRAFTACH DO TEGO ZEBY WYKRYWAC CZY MC JEST ODPALONY DO MAIN MENU ZEBY WALLE GO ZCZYTYWALY
+                //TODO: 9 CALY CZAS TRZEBA LEKKO OPOZNIC SEGMENT PO MINECRAFTACH DO TEGO ZEBY WYKRYWAC CZY MC JEST ODPALONY DO MAIN MENU ZEBY WALLE GO ZCZYTYWALY
                 int loadingIntro = 3000;
-
-                await Task.Delay(open.DelayAfter + loadingIntro, token);
+                await Task.Delay(open.DelayAfter + loadingIntro);
             }
             catch (Exception e)
             {

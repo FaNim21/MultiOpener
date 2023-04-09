@@ -17,9 +17,8 @@ namespace MultiOpener.Commands.StartCommands
                 var current = Start.Opened[i];
 
                 current.UpdateTitle();
+                current.UpdateStatus();
             }
-
-            //TODO: Zrobic odswiezanie naglowkow dla kazdego itemu w opened bo nie zmienia sie tytul po odwswiezeniu w UI
         }
     }
 }
