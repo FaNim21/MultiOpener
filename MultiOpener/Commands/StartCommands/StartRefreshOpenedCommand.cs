@@ -16,6 +16,8 @@ namespace MultiOpener.Commands.StartCommands
             {
                 var current = Start.Opened[i];
 
+                //moze powodowac problemy samo ustawianie hwnd jezeli i tak dany process nie ma swojego okna
+                current.SetHwnd();
                 current.UpdateTitle();
                 current.UpdateStatus();
             }

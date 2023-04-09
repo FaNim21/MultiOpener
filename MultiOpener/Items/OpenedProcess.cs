@@ -1,11 +1,11 @@
 ﻿using MultiOpener.Commands.OpenedCommands;
-using MultiOpener.Commands.OpenedCommands;
-using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.Utils;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MultiOpener.Items
@@ -62,6 +62,8 @@ namespace MultiOpener.Items
         }
         public bool SetHwnd()
         {
+            if (Hwnd != IntPtr.Zero) return true;
+
             IntPtr output = Win32.GetHwndFromHandle(Handle);
 
             if (output != IntPtr.Zero)
@@ -121,5 +123,41 @@ namespace MultiOpener.Items
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public async Task QuickOpen()
+        {
+            if (ProcessStartInfo == null) return;
+
+            Process? process = Process.Start(ProcessStartInfo);
+
+            if (process != null)
+            {
+                SetHandle(process.Handle);
+
+                if (isMCInstance)
+                {
+                    //TODO: 1 ustawic hwnd dla odpalanej instancji na nowo
+                    //nie jestem pewien tego, poniewaz ciezko bedzie znalesc ta konkretna teraz odpalana instancje, nawet jezeli porownam wszystkie odpalone co sie nie sprwadzi napewno
+                    /*List<IntPtr> instances;
+                    do
+                    {
+                        instances = Win32.GetWindowsByTitlePattern("Minecraft");
+                        await Task.Delay(750);
+                    }
+                    while (instances.Count != 1);*/
+
+                    //ze znalezionego ustawic tu hwnd
+                    //current.SetHwnd(instances[i]);
+                }
+                else
+                {
+                    int errors = 0;
+                    while (!SetHwnd() && errors < 10)
+                    {
+                        await Task.Delay(250);
+                        errors++;
+                    }
+                }
+            }
+        }
     }
-}

@@ -27,6 +27,8 @@ namespace MultiOpener.Commands.StartCommands
                 return;
             }
 
+            //TODO: 3 Trzeba ogarnac zeby jak nie zamknie jakiegos procesu to zeby nie czyscilo calej listy
+
             if (MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 int length = opened.Count;

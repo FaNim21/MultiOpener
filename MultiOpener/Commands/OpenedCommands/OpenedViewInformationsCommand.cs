@@ -14,7 +14,7 @@ namespace MultiOpener.Commands.OpenedCommands
 
         public override void Execute(object? parameter)
         {
-            //TODO: Panel/Okno z wyswietlanymi informacjami jak id 
+            //TODO: 9 Panel/Okno z wyswietlanymi informacjami jak id 
 
             Trace.WriteLine($"{openedProcess.WindowTitle}");
         }
