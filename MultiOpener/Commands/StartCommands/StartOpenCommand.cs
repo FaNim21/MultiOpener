@@ -143,6 +143,7 @@ namespace MultiOpener.Commands.StartCommands
                             OpenedProcess open = new();
                             open.SetStartInfo(processStartInfo);
                             open.SetHandle(process.Handle);
+                            open.SetPath(current.PathExe);
 
                             int errors = 0;
                             while (!open.SetHwnd() && errors < 10)
@@ -210,6 +211,7 @@ namespace MultiOpener.Commands.StartCommands
                         OpenedProcess opened = new();
                         opened.SetHandle(process.Handle);
                         opened.SetStartInfo(startInfo);
+                        opened.SetPath(open.Names[i]);
                         opened.isMCInstance = true;
                         mcInstances.Add(opened);
                     }
@@ -223,7 +225,7 @@ namespace MultiOpener.Commands.StartCommands
                 List<IntPtr> instances;
                 do
                 {
-                    instances = Win32.GetWindowsByTitlePattern("Minecraft");
+                    instances = Win32.GetWindowsByTitlePattern("Minecraft*");
                     await Task.Delay(750);
                 }
                 while (instances.Count != count);
@@ -232,6 +234,12 @@ namespace MultiOpener.Commands.StartCommands
                 {
                     var current = mcInstances[i];
                     current.SetHwnd(instances[i]);
+                }
+
+                for (int i = mcInstances.Count - 1; i >= 0; i--)
+                {
+                    //polaczyc odwrotne wpisanie intancji do listy
+                    var current = mcInstances[i];
                     Application.Current.Dispatcher.Invoke(delegate
                     {
                         MainWindow.MainViewModel.start.AddOpened(current);

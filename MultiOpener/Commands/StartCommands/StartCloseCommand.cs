@@ -51,7 +51,8 @@ namespace MultiOpener.Commands.StartCommands
                     {
                         try
                         {
-                            Win32.CloseProcessByHandle(current.Handle);
+                            if (!current.isMCInstance)
+                                Win32.CloseProcessByHandle(current.Handle);
                         }
                         catch (Exception e)
                         {

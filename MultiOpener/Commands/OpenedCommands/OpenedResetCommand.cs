@@ -15,6 +15,8 @@ namespace MultiOpener.Commands.OpenedCommands
         public override void Execute(object? parameter)
         {
             Trace.WriteLine("Resetowanie");
+
+            //obczaic jak to w julti przekminil
         }
     }
 }

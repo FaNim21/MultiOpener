@@ -13,6 +13,7 @@
 - Do odpalania instancji zrobic specjalna klase na kazda instancje zeby zapisywac najwazniejsze parametry i ogolnie info plus zrobic specjalne okno do ewentualnego resetowania instancji pojedynczo
 - Wykrywac czy dana instancja czy program przestaly odpowiadac i do tego najlepiej zmiast przechowywac poprostu procesy danych programow to lepiej zrobic konkretne klasy do typu odpalanego programu jak dalem wyzej
 - pomysl zeby z racji jak najmniejszego uzycia ramu zrobic nowe okno do podgladu otwartych aplikacji jak juz ogarne te hwnd bo wtedy w tym oknie jedynie co bedzie to kontrola i info o odpalonych aplikacjach i tam dac opcje close i przy okazji bym zamknal opcje uruchamiania aplikacji z paru presetow na raz
+- Zrobic bardzo wolna petle po odpaleniu aplikacji zeby zczytywac czy jakas nie zostala zamknieta itp itd
 
 
 ========== MNIEJSZE FEATURE'Y ==========

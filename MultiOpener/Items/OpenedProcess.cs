@@ -1,11 +1,11 @@
 ﻿using MultiOpener.Commands.OpenedCommands;
 using MultiOpener.Utils;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.Items
@@ -14,6 +14,9 @@ namespace MultiOpener.Items
     {
         public IntPtr Hwnd { get; private set; }
         public IntPtr Handle { get; private set; }
+        public int Pid { get; private set; }
+
+        public string? Path { get; private set; }
 
         public ProcessStartInfo? ProcessStartInfo { get; private set; }
 
@@ -59,6 +62,7 @@ namespace MultiOpener.Items
         {
             Hwnd = hwnd;
             UpdateTitle();
+            SetPid();
         }
         public bool SetHwnd()
         {
@@ -70,6 +74,7 @@ namespace MultiOpener.Items
             {
                 Hwnd = output;
                 UpdateTitle();
+                SetPid();
                 return true;
             }
             return false;
@@ -78,6 +83,24 @@ namespace MultiOpener.Items
         public void SetHandle(IntPtr handle)
         {
             Handle = handle;
+        }
+        public void SetPid()
+        {
+            if (Hwnd != IntPtr.Zero)
+            {
+                int pid = (int)Win32.GetPidFromHwnd(Hwnd);
+                if (pid == 0)
+                    return;
+
+                if (Pid == 0 || isMCInstance)
+                    Pid = pid;
+            }
+        }
+
+        public void SetPath(string path)
+        {
+            if (!string.IsNullOrEmpty(path))
+                Path = path;
         }
 
         public void SetStartInfo(ProcessStartInfo startInfo)
@@ -90,7 +113,7 @@ namespace MultiOpener.Items
         public void UpdateTitle()
         {
             if (!isMCInstance)
-                WindowTitle = Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
+                WindowTitle = System.IO.Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
             else
             {
                 if (Hwnd == IntPtr.Zero) return;
@@ -136,7 +159,9 @@ namespace MultiOpener.Items
 
                 if (isMCInstance)
                 {
+                    MessageBox.Show("Refresh after instance will be fully opened");
                     //TODO: 1 ustawic hwnd dla odpalanej instancji na nowo
+                    //uzyc do tego rozpoznawania procesow po reszcie hwnd albo po pid
                     //nie jestem pewien tego, poniewaz ciezko bedzie znalesc ta konkretna teraz odpalana instancje, nawet jezeli porownam wszystkie odpalone co sie nie sprwadzi napewno
                     /*List<IntPtr> instances;
                     do
@@ -161,3 +186,4 @@ namespace MultiOpener.Items
             }
         }
     }
+}

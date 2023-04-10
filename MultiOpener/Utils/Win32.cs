@@ -53,11 +53,10 @@ namespace MultiOpener.Utils
             {
                 EnumWindows((IntPtr wnd, IntPtr param) =>
                 {
-                    uint thisProcessId;
-                    GetWindowThreadProcessId(wnd, out thisProcessId);
+                    GetWindowThreadProcessId(wnd, out uint thisProcessId);
                     if (thisProcessId == processId)
                     {
-                        StringBuilder sb = new StringBuilder(256);
+                        StringBuilder sb = new(256);
                         GetWindowText(wnd, sb, sb.Capacity);
                         if (sb.ToString().Contains(process.ProcessName))
                         {
@@ -70,28 +69,6 @@ namespace MultiOpener.Utils
             }
 
             return hwnd;
-        }
-        public static IntPtr GetHwndFromHandleDifferent(IntPtr handle)
-        {
-            GetWindowThreadProcessId(handle, out uint processId);
-
-            int id = GetMinecraftProcessID(handle);
-
-            IntPtr mainWindowHandle = IntPtr.Zero;
-            EnumWindows((hWnd, lParam) =>
-            {
-                GetWindowThreadProcessId(hWnd, out uint currentProcessId);
-
-                if (currentProcessId == id)
-                {
-                    mainWindowHandle = hWnd;
-                    return false;
-                }
-
-                return true;
-            }, IntPtr.Zero);
-
-            return mainWindowHandle;
         }
 
         public static Process GetProcessFromHandle(IntPtr handle)
@@ -138,12 +115,6 @@ namespace MultiOpener.Utils
             return 0;
         }
 
-        private const int WM_CLOSE = 0x10;
-        public static void CloseProcessByHwnd(IntPtr hWnd)
-        {
-            SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
-        }
-
         public static List<IntPtr> GetWindowsByTitlePattern(string titlePattern)
         {
             List<IntPtr> windows = new();
@@ -162,6 +133,11 @@ namespace MultiOpener.Utils
             return windows;
         }
 
+        private const int WM_CLOSE = 0x10;
+        public static void CloseProcessByHwnd(IntPtr hWnd)
+        {
+            SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+        }
         public static void CloseProcessByHandle(IntPtr handle)
         {
             uint id = GetProcessId(handle);
@@ -169,6 +145,12 @@ namespace MultiOpener.Utils
             if (process != null)
                 if (!process.CloseMainWindow())
                     process.Kill();
+        }
+
+        public static uint GetPidFromHwnd(IntPtr hwnd)
+        {
+            GetWindowThreadProcessId(hwnd, out uint processId);
+            return processId;
         }
     }
 }

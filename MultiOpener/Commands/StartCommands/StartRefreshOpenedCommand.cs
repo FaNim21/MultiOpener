@@ -1,4 +1,5 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Utils;
+using MultiOpener.ViewModels;
 
 namespace MultiOpener.Commands.StartCommands
 {
@@ -16,10 +17,13 @@ namespace MultiOpener.Commands.StartCommands
             {
                 var current = Start.Opened[i];
 
+                int pid = (int)Win32.GetPidFromHwnd(current.Hwnd);
+
                 //moze powodowac problemy samo ustawianie hwnd jezeli i tak dany process nie ma swojego okna
                 current.SetHwnd();
                 current.UpdateTitle();
                 current.UpdateStatus();
+                current.SetPid();
             }
         }
     }
