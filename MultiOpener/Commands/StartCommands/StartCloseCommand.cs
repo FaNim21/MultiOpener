@@ -3,6 +3,7 @@ using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MultiOpener.Commands.StartCommands
@@ -18,29 +19,30 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
-            ObservableCollection<OpenedProcess> opened = MainWindow.MainViewModel.start.Opened;
+            Task task = Task.Run(Close);
+        }
 
+        public async Task Close()
+        {
             if (Start == null) return;
-            if (opened.Count == 0 || opened == null)
+            if (MainWindow.MainViewModel.start.Opened.Count == 0 || MainWindow.MainViewModel.start.Opened == null)
             {
                 Start.OpenButtonName = "OPEN";
                 return;
             }
 
-            //TODO: 3 Trzeba ogarnac zeby jak nie zamknie jakiegos procesu to zeby nie czyscilo calej listy
-
             if (MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                int length = opened.Count;
-                for (int i = 0; i < length; i++)
+                for (int i = 0; i < MainWindow.MainViewModel.start.Opened.Count; i++)
                 {
-                    var current = opened[i];
+                    var current = MainWindow.MainViewModel.start.Opened[i];
+                    bool isSucceed = true;
 
                     if (current.Hwnd != IntPtr.Zero)
                     {
                         try
                         {
-                            Win32.CloseProcessByHwnd(current.Hwnd);
+                            isSucceed = await Win32.CloseProcessByHwnd(current.Hwnd);
                         }
                         catch (Exception e)
                         {
@@ -51,19 +53,26 @@ namespace MultiOpener.Commands.StartCommands
                     {
                         try
                         {
-                            if (!current.isMCInstance)
-                                Win32.CloseProcessByHandle(current.Handle);
+                            await Win32.CloseProcessByPid(current.Pid);
                         }
                         catch (Exception e)
                         {
                             MessageBox.Show(e.ToString());
                         }
                     }
+
+                    if (isSucceed || current.Hwnd == IntPtr.Zero)
+                    {
+                        Application.Current.Dispatcher.Invoke(delegate
+                        {
+                            MainWindow.MainViewModel.start.RemoveOpened(current);
+                            i--;
+                        });
+                    }
                 }
 
-                opened.Clear();
-                MainWindow.MainViewModel.start.ClearOpened();
-                Start.OpenButtonName = "OPEN";
+                if (MainWindow.MainViewModel.start.Opened.Count == 0)
+                    Start.OpenButtonName = "OPEN";
             }
         }
     }

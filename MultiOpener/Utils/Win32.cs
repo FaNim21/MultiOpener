@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MultiOpener.Utils
 {
@@ -25,8 +25,17 @@ namespace MultiOpener.Utils
         [DllImport("user32.dll")]
         private static extern int SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessageTimeout(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam, uint fuFlags, uint uTimeout, out IntPtr lpdwResult);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, StringBuilder lpExeName, out int lpdwSize);
+
+        [DllImport("user32.dll")]
+        private static extern bool IsWindow(IntPtr hWnd);
+
+        private const int WM_CLOSE = 0x0010;
+        private const int SMTO_ABORTIFHUNG = 0x0002;
         #endregion
 
         private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
@@ -40,7 +49,11 @@ namespace MultiOpener.Utils
                 return sb.ToString();
             return "";
         }
-
+        public static uint GetPidFromHwnd(IntPtr hwnd)
+        {
+            GetWindowThreadProcessId(hwnd, out uint processId);
+            return processId;
+        }
         public static IntPtr GetHwndFromHandle(IntPtr handle)
         {
             uint processId = GetProcessId(handle);
@@ -71,50 +84,6 @@ namespace MultiOpener.Utils
             return hwnd;
         }
 
-        public static Process GetProcessFromHandle(IntPtr handle)
-        {
-            uint id = GetProcessId(handle);
-            return Process.GetProcessById((int)id);
-        }
-
-        public static int GetMinecraftProcessID(IntPtr handle)
-        {
-            int pathLength = 1024;
-            StringBuilder sb = new(pathLength);
-
-            if (QueryFullProcessImageName(handle, 0, sb, out pathLength))
-            {
-                string exePath = sb.ToString();
-
-                if (exePath.ToLower().EndsWith(".exe"))
-                {
-                    ProcessStartInfo psi = new("tasklist.exe", "/FI \"IMAGENAME eq " + Path.GetFileName(exePath) + "\" /NH /FO CSV");
-                    psi.RedirectStandardOutput = true;
-                    psi.UseShellExecute = false;
-
-                    Process tasklistProcess = Process.Start(psi);
-                    tasklistProcess.WaitForExit();
-
-                    if (tasklistProcess.ExitCode == 0)
-                    {
-                        string output = tasklistProcess.StandardOutput.ReadToEnd();
-                        string[] fields = output.Split(',');
-
-                        if (fields.Length >= 2)
-                        {
-                            if (uint.TryParse(fields[1], out var processIdFromHandle))
-                            {
-                                return (int)processIdFromHandle;
-                                // Successfully obtained the process ID from the tasklist output
-                            }
-                        }
-                    }
-                }
-            }
-
-            return 0;
-        }
-
         public static List<IntPtr> GetWindowsByTitlePattern(string titlePattern)
         {
             List<IntPtr> windows = new();
@@ -133,24 +102,32 @@ namespace MultiOpener.Utils
             return windows;
         }
 
-        private const int WM_CLOSE = 0x10;
-        public static void CloseProcessByHwnd(IntPtr hWnd)
+        public static async Task<bool> CloseProcessByHwnd(IntPtr hwnd)
         {
-            SendMessage(hWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+            if (IsWindow(hwnd))
+            {
+                Task<bool> close = Task.Run(() =>
+                {
+                    return SendMessageTimeout(hwnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero, SMTO_ABORTIFHUNG, 4000, out var result) != IntPtr.Zero;
+                });
+
+                return await close;
+            }
+
+            return false;
         }
-        public static void CloseProcessByHandle(IntPtr handle)
+        public static async Task CloseProcessByPid(int pid)
         {
-            uint id = GetProcessId(handle);
-            Process process = Process.GetProcessById((int)id);
+            Process process = Process.GetProcessById(pid);
             if (process != null)
-                if (!process.CloseMainWindow())
+            {
+                await Task.Run(() =>
+                {
                     process.Kill();
+                    process.WaitForExit();
+                });
+            }
         }
 
-        public static uint GetPidFromHwnd(IntPtr hwnd)
-        {
-            GetWindowThreadProcessId(hwnd, out uint processId);
-            return processId;
-        }
     }
 }

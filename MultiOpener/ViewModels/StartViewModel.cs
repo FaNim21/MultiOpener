@@ -67,6 +67,10 @@ namespace MultiOpener.ViewModels
         {
             Opened.Add(openedProcess);
         }
+        public void RemoveOpened(OpenedProcess openedProcess)
+        {
+            Opened.Remove(openedProcess);
+        }
         public void ClearOpened()
         {
             Opened.Clear();

@@ -17,8 +17,6 @@ namespace MultiOpener.Commands.OpenedCommands
         {
             //TODO: 9 Panel/Okno z wyswietlanymi informacjami jak id 
 
-            //Trace.WriteLine($"{openedProcess.WindowTitle}");
-
             MessageBox.Show($"{openedProcess.WindowTitle}\nPID: {openedProcess.Pid}\nPath: {openedProcess.Path}\nHandle: {openedProcess.Handle}\nHwnd: {openedProcess.Hwnd}");
         }
     }

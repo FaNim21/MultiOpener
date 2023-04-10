@@ -20,6 +20,8 @@ namespace MultiOpener.Commands.StartCommands
                 int pid = (int)Win32.GetPidFromHwnd(current.Hwnd);
 
                 //moze powodowac problemy samo ustawianie hwnd jezeli i tak dany process nie ma swojego okna
+
+                //TODO: 3 Ogarnac zeby przy odswiezaniu tez sprawdzac czy program nie jest juz zamkniety i jezeli jest tez zeby oznaczyc status jako closed
                 current.SetHwnd();
                 current.UpdateTitle();
                 current.UpdateStatus();

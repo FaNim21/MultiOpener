@@ -222,10 +222,6 @@
                                 ContentText="Resfresh"
                                 OnCommand="{Binding RefreshOpenedCommand}"
                                 FontSize="20" />
-
-            <Button Width="100"
-                    Height="30"
-                    Click="Button_Click" />
         </Grid>
 
         <Grid Grid.Row="1"
