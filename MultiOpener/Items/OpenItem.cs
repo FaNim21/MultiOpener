@@ -1,9 +1,16 @@
-﻿using System.Collections.ObjectModel;
+﻿using MultiOpener.Items;
+using MultiOpener.Utils;
+using System.Collections.Generic;
+using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Threading;
+using MultiOpener.Windows;
 
 namespace MultiOpener.ListView
 {
@@ -37,7 +44,6 @@ namespace MultiOpener.ListView
             this.DelayAfter = DelayAfter;
             this.Type = Type;
         }
-
         public OpenItem(OpenItem item)
         {
             Name = item.Name;
@@ -70,16 +76,58 @@ namespace MultiOpener.ListView
             return false;
         }
 
-        public virtual async Task Open()
+        public virtual async Task Open(OpenningProcessLoadingWindow loading, CancellationTokenSource source, string infoText = "")
         {
+            try
+            {
+                await Task.Delay(DelayBefore);
+                string executable = Path.GetFileName(PathExe);
+                string pathDir = Path.GetDirectoryName(PathExe) ?? "";
 
+                ProcessStartInfo processStartInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
+                Process? process = Process.Start(processStartInfo);
+
+                if (process != null)
+                {
+                    process.EnableRaisingEvents = true;
+
+                    OpenedProcess open = new();
+                    open.SetStartInfo(processStartInfo);
+                    open.SetHandle(process.Handle);
+                    open.SetPath(PathExe);
+
+                    int errors = 0;
+                    while (!open.SetHwnd() && errors < 10)
+                    {
+                        if (source.IsCancellationRequested)
+                            break;
+
+                        await Task.Delay(250);
+                        errors++;
+                    }
+
+                    if (!process.HasExited)
+                    {
+                        Application.Current.Dispatcher.Invoke(delegate
+                        {
+                            ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(open);
+                        });
+                    }
+                }
+                await Task.Delay(DelayAfter);
+            }
+            catch (Win32Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 
     public class OpenInstance : OpenItem
     {
-        public int Quantity { get; set; }
         public int DelayBetweenInstances { get; set; }
+
+        public int Quantity { get; set; }
         public ObservableCollection<string> Names { get; set; }
 
 
@@ -93,7 +141,6 @@ namespace MultiOpener.ListView
                 this.Names = Names;
             this.DelayBetweenInstances = DelayBetweenInstances;
         }
-
         public OpenInstance(OpenInstance instance) : base(instance)
         {
             Quantity = instance.Quantity;
@@ -141,9 +188,81 @@ namespace MultiOpener.ListView
             return base.Validate();
         }
 
-        public override async Task Open()
+        public override async Task Open(OpenningProcessLoadingWindow loading, CancellationTokenSource source, string infoText = "")
         {
-            
+            List<OpenedProcess> mcInstances = new();
+            try
+            {
+                await Task.Delay(DelayBefore);
+                int count = 0;
+
+                ProcessStartInfo startInfo = new(PathExe) { UseShellExecute = false };
+                for (int i = 0; i < Quantity; i++)
+                {
+                    await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances);
+
+                    if (source.IsCancellationRequested)
+                        break;
+
+                    count++;
+                    Application.Current.Dispatcher.Invoke(delegate
+                    {
+                        loading.SetText($"{infoText} -- Instance ({i + 1}/{Quantity})");
+                        loading.progress.Value++;
+                    });
+
+                    startInfo.Arguments = $"--launch \"{Names[i]}\"";
+                    Process? process = Process.Start(startInfo);
+                    if (process != null)
+                    {
+                        process.WaitForInputIdle();
+
+                        OpenedProcess opened = new();
+                        opened.SetHandle(process.Handle);
+                        opened.SetStartInfo(startInfo);
+                        opened.SetPath(Names[i]);
+                        opened.isMCInstance = true;
+                        mcInstances.Add(opened);
+                    }
+                }
+
+                Application.Current.Dispatcher.Invoke(delegate
+                {
+                    loading.SetText($"{infoText} (loading datas)");
+                });
+
+                List<IntPtr> instances;
+                do
+                {
+                    instances = Win32.GetWindowsByTitlePattern("Minecraft*");
+                    await Task.Delay(750);
+                }
+                while (instances.Count != count);
+
+                for (int i = 0; i < mcInstances.Count; i++)
+                {
+                    var current = mcInstances[i];
+                    current.SetHwnd(instances[i]);
+                }
+
+                for (int i = mcInstances.Count - 1; i >= 0; i--)
+                {
+                    //polaczyc odwrotne wpisanie intancji do listy
+                    var current = mcInstances[i];
+                    Application.Current.Dispatcher.Invoke(delegate
+                    {
+                        ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(current);
+                    });
+                }
+
+                //TODO: 9 CALY CZAS TRZEBA LEKKO OPOZNIC SEGMENT PO MINECRAFTACH DO TEGO ZEBY WYKRYWAC CZY MC JEST ODPALONY DO MAIN MENU ZEBY WALLE GO ZCZYTYWALY
+                int loadingIntro = 3000;
+                await Task.Delay(DelayAfter + loadingIntro);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
     }
 }

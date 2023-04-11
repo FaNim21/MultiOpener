@@ -75,5 +75,9 @@ namespace MultiOpener.ViewModels
         {
             Opened.Clear();
         }
+        public bool OpenedIsEmpty()
+        {
+            return Opened == null || Opened.Count == 0;
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace MultiOpener.Utils
         #region Extern methods
         [DllImport("user32.dll")]
         private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
+        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
@@ -38,8 +39,6 @@ namespace MultiOpener.Utils
         private const int SMTO_ABORTIFHUNG = 0x0002;
         #endregion
 
-        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-
 
         public static string GetWindowTitle(IntPtr hwnd)
         {
@@ -54,12 +53,27 @@ namespace MultiOpener.Utils
             GetWindowThreadProcessId(hwnd, out uint processId);
             return processId;
         }
+        public static uint GetPidFromHandle(IntPtr handle)
+        {
+            uint id = GetProcessId(handle);
+            return id;
+        }
         public static IntPtr GetHwndFromHandle(IntPtr handle)
         {
             uint processId = GetProcessId(handle);
 
-            Process process = Process.GetProcessById((int)processId);
-            IntPtr hwnd = process.MainWindowHandle;
+            Process process;
+            IntPtr hwnd = IntPtr.Zero;
+
+            try
+            {
+                process = Process.GetProcessById((int)processId);
+                hwnd = process.MainWindowHandle;
+            }
+            catch
+            {
+                return IntPtr.Zero;
+            }
 
             // If the process does not have a visible window, enumerate all top-level windows and find the one with the matching process ID
             if (hwnd == IntPtr.Zero)
@@ -81,7 +95,10 @@ namespace MultiOpener.Utils
                 }, IntPtr.Zero);
             }
 
-            return hwnd;
+            if (IsWindow(hwnd))
+                return hwnd;
+            else
+                return IntPtr.Zero;
         }
 
         public static List<IntPtr> GetWindowsByTitlePattern(string titlePattern)
@@ -116,18 +133,46 @@ namespace MultiOpener.Utils
 
             return false;
         }
-        public static async Task CloseProcessByPid(int pid)
+        public static async Task<bool> CloseProcessByPid(int pid)
         {
-            Process process = Process.GetProcessById(pid);
+            Process process;
+            try
+            {
+                process = Process.GetProcessById(pid);
+            }
+            catch
+            {
+                return false;
+            }
+
             if (process != null)
             {
+                if (process.HasExited)
+                    return true;
+
                 await Task.Run(() =>
                 {
                     process.Kill();
                     process.WaitForExit();
                 });
+                return true;
             }
+            else
+                return false;
+
         }
 
+        public static bool ProcessExist(int pid)
+        {
+            try
+            {
+                Process process = Process.GetProcessById(pid);
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
     }
 }

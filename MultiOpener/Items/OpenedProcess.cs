@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Security.Policy;
+using System.Security.RightsManagement;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -66,18 +67,22 @@ namespace MultiOpener.Items
         }
         public bool SetHwnd()
         {
-            if (Hwnd != IntPtr.Zero) return true;
+            if (Handle == IntPtr.Zero) return false;
 
             IntPtr output = Win32.GetHwndFromHandle(Handle);
 
-            if (output != IntPtr.Zero)
+            if (output == IntPtr.Zero)
+            {
+                Hwnd = IntPtr.Zero;
+                return false;
+            }
+            else
             {
                 Hwnd = output;
                 UpdateTitle();
                 SetPid();
                 return true;
             }
-            return false;
         }
 
         public void SetHandle(IntPtr handle)
@@ -92,9 +97,20 @@ namespace MultiOpener.Items
                 if (pid == 0)
                     return;
 
-                if (Pid == 0 || isMCInstance)
+                if (Pid == 0 || isMCInstance || Pid != pid)
                     Pid = pid;
             }
+            else if (Handle != IntPtr.Zero)
+            {
+                int pid = (int)Win32.GetPidFromHandle(Handle);
+                if (pid == 0)
+                    return;
+
+                if (Pid != pid)
+                    Pid = pid;
+            }
+            else
+                Pid = -1;
         }
 
         public void SetPath(string path)
@@ -110,6 +126,19 @@ namespace MultiOpener.Items
             UpdateStatus();
         }
 
+        public void Update()
+        {
+            if (!StillExist() && Handle != IntPtr.Zero)
+            {
+                UpdateStatus("CLOSED");
+                ClearAfterClose();
+            }
+
+            SetHwnd();
+            SetPid();
+            UpdateStatus();
+            UpdateTitle();
+        }
         public void UpdateTitle()
         {
             if (!isMCInstance)
@@ -131,13 +160,18 @@ namespace MultiOpener.Items
         {
             if (string.IsNullOrEmpty(status))
             {
-                if (ProcessStartInfo != null && Handle != IntPtr.Zero)
+                if (Pid != -1)
                     status = "OPENED";
                 else
                     status = "CLOSED";
             }
 
             Status = "STATUS: " + status;
+        }
+
+        public bool IsOpened()
+        {
+            return Status.Equals("STATUS: OPENED");
         }
 
         public bool HasWindow() => Handle != IntPtr.Zero;
@@ -159,7 +193,9 @@ namespace MultiOpener.Items
 
                 if (isMCInstance)
                 {
-                    MessageBox.Show("Refresh after instance will be fully opened");
+                    MessageBox.Show("NOT IMPLEMENTED YET");
+
+                    //MessageBox.Show("Refresh after instance will be fully opened");
                     //TODO: 1 ustawic hwnd dla odpalanej instancji na nowo
                     //uzyc do tego rozpoznawania procesow po reszcie hwnd albo po pid
                     //nie jestem pewien tego, poniewaz ciezko bedzie znalesc ta konkretna teraz odpalana instancje, nawet jezeli porownam wszystkie odpalone co sie nie sprwadzi napewno
@@ -184,6 +220,56 @@ namespace MultiOpener.Items
                     }
                 }
             }
+
+            UpdateStatus();
+        }
+
+        public async Task<bool> Close()
+        {
+            if (Pid == -1)
+                return true;
+
+            try
+            {
+                bool output = await Win32.CloseProcessByHwnd(Hwnd);
+                if (!output)
+                {
+                    output = await Win32.CloseProcessByPid(Pid);
+                    if (!output)
+                    {
+                        output = await Win32.CloseProcessByPid((int)Win32.GetPidFromHandle(Handle));
+                    }
+                }
+                return output;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Cannot close {WindowTitle ?? ""} \n{e}");
+                return false;
+            }
+        }
+
+        public bool StillExist()
+        {
+            if (Status == "STATUS: CLOSED")
+                return false;
+
+            SetPid();
+
+            if (Pid == -1)
+                return false;
+
+            if (!Win32.ProcessExist(Pid))
+                return false;
+
+            return true;
+        }
+
+        public void ClearAfterClose()
+        {
+            Handle = IntPtr.Zero;
+            Hwnd = IntPtr.Zero;
+            Pid = -1;
         }
     }
 }

@@ -14,6 +14,7 @@
 - Wykrywac czy dana instancja czy program przestaly odpowiadac i do tego najlepiej zmiast przechowywac poprostu procesy danych programow to lepiej zrobic konkretne klasy do typu odpalanego programu jak dalem wyzej
 - pomysl zeby z racji jak najmniejszego uzycia ramu zrobic nowe okno do podgladu otwartych aplikacji jak juz ogarne te hwnd bo wtedy w tym oknie jedynie co bedzie to kontrola i info o odpalonych aplikacjach i tam dac opcje close i przy okazji bym zamknal opcje uruchamiania aplikacji z paru presetow na raz
 - Zrobic bardzo wolna petle po odpaleniu aplikacji zeby zczytywac czy jakas nie zostala zamknieta itp itd
+- naprawic ze przy swiezo zrobionym presecie ktory nie zostal zapisany do pliku
 
 
 ========== MNIEJSZE FEATURE'Y ==========
@@ -24,6 +25,7 @@
 ========== 0.4.0 ============
 - Podgladu odpalonych programow i kontrola nad nimi jako nowy panel w zakladce start po kliknieciu open do zdesignowania jeszcze jak to bedzie przedewszystkim wygladac
 - zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
+- Zrobic force close dla pojedyncznych procesow z poziomu context menu
 -- patch notes
 - zreworkowano logike odpalania i zamykania programow
 - dodano panel do informacji zwiazanych z aplikacja
@@ -33,6 +35,9 @@
 
 ========== 0.5.0 ?? 1.0 ===========
 - Supporty pod wiecej programow, czy nawet nowe opcje menu jak options itp itd do mozliwosci zmiany ustawien calego openera i ewentualnie do jakiejs konfiguracji albo menu ze skrotami klawiszowymi
+- dac opcje jak jak dlugo czekac az aplikacja sie zamknie defautlowo jest 5000, jak dlugo czekac na otwarcie okna itp itd zeby to byla taka pelna konfiguracja pod mozliwosc pcta
+-- patch notes
+-
 
 
 ========== DODATKOWE INFO ===========

@@ -1,8 +1,5 @@
-﻿using MultiOpener.Items;
-using MultiOpener.Utils;
-using MultiOpener.ViewModels;
+﻿using MultiOpener.ViewModels;
 using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -36,32 +33,10 @@ namespace MultiOpener.Commands.StartCommands
                 for (int i = 0; i < MainWindow.MainViewModel.start.Opened.Count; i++)
                 {
                     var current = MainWindow.MainViewModel.start.Opened[i];
-                    bool isSucceed = true;
 
-                    if (current.Hwnd != IntPtr.Zero)
-                    {
-                        try
-                        {
-                            isSucceed = await Win32.CloseProcessByHwnd(current.Hwnd);
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show($"Cannot close {current.WindowTitle ?? ""} \n{e}");
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            await Win32.CloseProcessByPid(current.Pid);
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show(e.ToString());
-                        }
-                    }
+                    bool isSucceed = await current.Close();
 
-                    if (isSucceed || current.Hwnd == IntPtr.Zero)
+                    if (isSucceed || current.Hwnd == IntPtr.Zero || !current.StillExist())
                     {
                         Application.Current.Dispatcher.Invoke(delegate
                         {

@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Items;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace MultiOpener.Commands.OpenedCommands
 {
@@ -14,9 +15,24 @@ namespace MultiOpener.Commands.OpenedCommands
 
         public override void Execute(object? parameter)
         {
-            Trace.WriteLine("Resetowanie");
+            openedProcess.Update();
+            Task task = Task.Run(ResetOpened);
+        }
 
-            //obczaic jak to w julti przekminil
+        public async Task ResetOpened()
+        {
+            if (openedProcess.IsOpened())
+            {
+                bool result = await openedProcess.Close();
+
+                if (result)
+                {
+                    openedProcess.ClearAfterClose();
+                    openedProcess.UpdateStatus();
+
+                    await openedProcess.QuickOpen();
+                }
+            }
         }
     }
 }
