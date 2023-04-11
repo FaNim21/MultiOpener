@@ -3,8 +3,6 @@ using MultiOpener.Utils;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Security.Policy;
-using System.Security.RightsManagement;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -128,6 +126,7 @@ namespace MultiOpener.Items
 
         public void Update()
         {
+            //might be expensive because of externs that is used here
             if (!StillExist() && Handle != IntPtr.Zero)
             {
                 UpdateStatus("CLOSED");

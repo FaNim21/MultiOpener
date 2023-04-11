@@ -1,6 +1,8 @@
 ﻿using MultiOpener.Commands.StartCommands;
 using MultiOpener.Items;
 using System.Collections.ObjectModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels
@@ -9,6 +11,10 @@ namespace MultiOpener.ViewModels
     {
         public OpenedProcess? MultiMC { get; set; }
         public ObservableCollection<OpenedProcess> Opened { get; set; }
+
+        public CancellationTokenSource loopSource = new();
+        public CancellationToken loopToken;
+        public Task? Loop { get; set; }
 
         public ICommand OpenCommand { get; set; }
         public ICommand CloseCommand { get; set; }

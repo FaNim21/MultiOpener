@@ -16,6 +16,7 @@ namespace MultiOpener.Commands.OpenedCommands
         public override void Execute(object? parameter)
         {
             //TODO: 9 Panel/Okno z wyswietlanymi informacjami jak id 
+            openedProcess.Update();
 
             MessageBox.Show($"{openedProcess.WindowTitle}\nPID: {openedProcess.Pid}\nPath: {openedProcess.Path}\nHandle: {openedProcess.Handle}\nHwnd: {openedProcess.Hwnd}");
         }

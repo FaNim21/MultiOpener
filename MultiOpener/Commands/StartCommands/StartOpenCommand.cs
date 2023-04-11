@@ -15,10 +15,13 @@ namespace MultiOpener.Commands.StartCommands
     {
         private MainWindow MainWindow { get; set; }
 
-        private OpenningProcessLoadingWindow loadingProcesses;
+        private OpenningProcessLoadingWindow? loadingProcesses;
 
         public CancellationTokenSource source = new();
         private CancellationToken token;
+
+        private Task task;
+
 
         public StartOpenCommand(StartViewModel startViewModel) : base(startViewModel)
         {
@@ -41,13 +44,13 @@ namespace MultiOpener.Commands.StartCommands
 
                 source = new();
                 token = source.Token;
-                Task task = Task.Run(OpenProgramsList, token);
+                task = Task.Run(OpenProgramsList, token);
             }
             else
                 Start.CloseCommand.Execute(null);
         }
 
-        public async Task OpenProgramsList()
+        private async Task OpenProgramsList()
         {
             int length = MainWindow.MainViewModel.settings.Opens.Count;
             int progressLength = length;
@@ -96,6 +99,7 @@ namespace MultiOpener.Commands.StartCommands
                 float windowPositionX = (float)(MainWindow.Left + (MainWindow.Width / 2));
                 float windowPositionY = (float)(MainWindow.Top + (MainWindow.Height / 2));
                 loadingProcesses = new(this, windowPositionX, windowPositionY) { Owner = MainWindow };
+                loadingProcesses.Owner = MainWindow;
                 loadingProcesses.Show();
                 loadingProcesses.progress.Maximum = progressLength;
             });
@@ -121,16 +125,33 @@ namespace MultiOpener.Commands.StartCommands
             {
                 loadingProcesses.Close();
                 MainWindow.OnShow();
+                loadingProcesses = null;
 
                 if (MainWindow.MainViewModel.start.Opened == null || MainWindow.MainViewModel.start.Opened.Count == 0)
                     Start.OpenButtonName = "OPEN";
             });
 
-            //TODO: 9 to jest tymczasowo na automatyczne odswiezenie informacji po chwili od ich odpalenia
-            if (!source.IsCancellationRequested)
+            TryRunRefreshLoop();
+        }
+
+        //trzeba na to uwazac, poniewaz nie jestem tego pewien
+        public void TryRunRefreshLoop()
+        {
+            if (Start == null) return;
+
+            Start.loopSource = new();
+            Start.loopToken = Start.loopSource.Token;
+            Start.Loop = Task.Factory.StartNew(async () => await RefreshOpenedLoop(), Start.loopToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        }
+        private async Task RefreshOpenedLoop()
+        {
+            if (Start == null) return;
+
+            while (!Start.loopSource.IsCancellationRequested)
             {
-                await Task.Delay(5000);
-                MainWindow.MainViewModel.start.RefreshOpenedCommand.Execute(null);
+                Trace.WriteLine("Loop");
+                Start.RefreshOpenedCommand.Execute(null);
+                await Task.Delay(2000);
             }
         }
     }

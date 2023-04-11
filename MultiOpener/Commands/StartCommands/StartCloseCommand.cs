@@ -30,6 +30,8 @@ namespace MultiOpener.Commands.StartCommands
 
             if (MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
+                Start.RefreshOpenedCommand.Execute(null);
+
                 for (int i = 0; i < MainWindow.MainViewModel.start.Opened.Count; i++)
                 {
                     var current = MainWindow.MainViewModel.start.Opened[i];
@@ -47,7 +49,13 @@ namespace MultiOpener.Commands.StartCommands
                 }
 
                 if (MainWindow.MainViewModel.start.Opened.Count == 0)
+                {
                     Start.OpenButtonName = "OPEN";
+                    if(Start.Loop != null)
+                    {
+                        Start.loopSource.Cancel();
+                    }
+                }
             }
         }
     }
