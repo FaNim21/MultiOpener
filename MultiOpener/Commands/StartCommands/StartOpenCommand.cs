@@ -95,6 +95,8 @@ namespace MultiOpener.Commands.StartCommands
 
             Application.Current.Dispatcher.Invoke(delegate
             {
+                //TODO: 0 Zrobic loadingProcesses window jako ShowDialog()
+
                 MainWindow.Hide();
                 float windowPositionX = (float)(MainWindow.Left + (MainWindow.Width / 2));
                 float windowPositionY = (float)(MainWindow.Top + (MainWindow.Height / 2));
