@@ -19,13 +19,11 @@ namespace MultiOpener.Commands.SettingsCommands.InstancesConfig
                 return;
 
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-            mainWindow.Hide();
-
             double leftPosition = mainWindow.Left + (mainWindow.Width / 2);
             double topPosition = mainWindow.Top + (mainWindow.Height / 2);
 
             WindowOpenInstancesSetup instanceSetup = new(settingsOpenInstancesModelView, leftPosition, topPosition) { Owner = mainWindow };
-            instanceSetup.Show();
+            instanceSetup.ShowDialog();
         }
     }
 }

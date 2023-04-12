@@ -20,6 +20,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Miscellaneous\Nowy folder\**" />
+    <EmbeddedResource Remove="Miscellaneous\Nowy folder\**" />
+    <None Remove="Miscellaneous\Nowy folder\**" />
+    <Page Remove="Miscellaneous\Nowy folder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Icon.ico" />
   </ItemGroup>
 
@@ -47,10 +54,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Miscellaneous\Nowy folder\" />
   </ItemGroup>
 
 </Project>

@@ -10,11 +10,6 @@
 
 ========== WAZNE ============
 - Zrobic wlasny MessageBox z opcja ze jak ztrigeruje sie ten popup to zeby cale okno bylo z tym popupem OnTop
-- Do odpalania instancji zrobic specjalna klase na kazda instancje zeby zapisywac najwazniejsze parametry i ogolnie info plus zrobic specjalne okno do ewentualnego resetowania instancji pojedynczo
-- Wykrywac czy dana instancja czy program przestaly odpowiadac i do tego najlepiej zmiast przechowywac poprostu procesy danych programow to lepiej zrobic konkretne klasy do typu odpalanego programu jak dalem wyzej
-- pomysl zeby z racji jak najmniejszego uzycia ramu zrobic nowe okno do podgladu otwartych aplikacji jak juz ogarne te hwnd bo wtedy w tym oknie jedynie co bedzie to kontrola i info o odpalonych aplikacjach i tam dac opcje close i przy okazji bym zamknal opcje uruchamiania aplikacji z paru presetow na raz
-- Zrobic bardzo wolna petle po odpaleniu aplikacji zeby zczytywac czy jakas nie zostala zamknieta itp itd
-- naprawic ze przy swiezo zrobionym presecie ktory nie zostal zapisany do pliku
 
 
 ========== MNIEJSZE FEATURE'Y ==========
@@ -27,10 +22,12 @@
 - zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
 - Zrobic force close dla pojedyncznych procesow z poziomu context menu
 -- patch notes
-- zreworkowano logike odpalania i zamykania programow
+- zreworkowano calkowicie logike odpalania i zamykania programow
 - dodano panel do informacji zwiazanych z aplikacja
 - poprawiono ui
-- dodano panel z odpalonymi procesami z prestu z mozliwoscia kontroli w postaci wylaczania, resetowania i wyswietlana ogolnych informacji pojedynczo dla kazdego procesu
+- dodano panel z odpalonymi procesami z presetu z mozliwoscia kontroli w postaci wylaczania/wlaczania, resetowania i wyswietlana ogolnych informacji pojedynczo dla kazdego procesu
+- naprawiono wiele błedów ogólnych związanych z MultiOpenerem i związanych z otwieraniem i zamykaniem procesów
+- dodano mozliwosc uruchamiania nie zapisanych nowo zrobionych presetow
 
 
 ========== 0.5.0 ?? 1.0 ===========

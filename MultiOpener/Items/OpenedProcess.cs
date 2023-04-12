@@ -173,13 +173,22 @@ namespace MultiOpener.Items
         {
             return Status.Equals("STATUS: OPENED");
         }
-         
-        public bool HasWindow() => Handle != IntPtr.Zero;
-
-        protected void OnPropertyChanged(string propertyName)
+        public bool StillExist()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (Status == "STATUS: CLOSED")
+                return false;
+
+            SetPid();
+
+            if (Pid == -1)
+                return false;
+
+            if (!Win32.ProcessExist(Pid))
+                return false;
+
+            return true;
         }
+        public bool HasWindow() => Handle != IntPtr.Zero;
 
         public async Task QuickOpen()
         {
@@ -223,7 +232,6 @@ namespace MultiOpener.Items
 
             UpdateStatus();
         }
-
         public async Task<bool> Close()
         {
             if (Pid == -1)
@@ -249,22 +257,6 @@ namespace MultiOpener.Items
             }
         }
 
-        public bool StillExist()
-        {
-            if (Status == "STATUS: CLOSED")
-                return false;
-
-            SetPid();
-
-            if (Pid == -1)
-                return false;
-
-            if (!Win32.ProcessExist(Pid))
-                return false;
-
-            return true;
-        }
-
         public void ClearAfterClose()
         {
             Handle = IntPtr.Zero;
@@ -279,6 +271,11 @@ namespace MultiOpener.Items
                    $"Path: {Path}\n" +
                    $"Handle: {Handle}\n" +
                    $"Hwnd: {Hwnd}";
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

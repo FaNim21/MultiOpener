@@ -1,7 +1,6 @@
 ﻿using MultiOpener.ViewModels.Settings;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -37,7 +36,7 @@ namespace MultiOpener.Windows
             TextBox title = new()
             {
                 Background = new SolidColorBrush(Colors.Transparent),
-                Text = "Folder names for minecraft instances",
+                Text = "Instances folder names",
                 FontSize = 17,
                 Foreground = new SolidColorBrush(Colors.White),
                 IsReadOnly = true,
@@ -48,7 +47,7 @@ namespace MultiOpener.Windows
 
             canvas.Children.Add(title);
 
-            if (openInstancesModelView.instanceNames != null && openInstancesModelView.instanceNames.Any() && openInstancesModelView.instanceNames.Count > 0)
+            if (openInstancesModelView.instanceNames != null && openInstancesModelView.instanceNames.Count > 0)
             {
                 for (int i = 0; i < TextBoxes.Count; i++)
                 {
@@ -61,7 +60,7 @@ namespace MultiOpener.Windows
             Width = leftOffset + (125 * columns) + 5 + 30;
             Height = topOffset + (35 * (rows + 1));
 
-            Canvas.SetLeft(title, Width / 2 - 130);
+            Canvas.SetLeft(title, Width / 2 - 85);
             Canvas.SetTop(title, 10);
 
             Left = windowLeftPosition - Width / 2;
@@ -72,8 +71,6 @@ namespace MultiOpener.Windows
 
         protected override void OnClosed(EventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow).OnShow();
-
             if (TextBoxes.Count == openInstancesModelView.instanceNames.Count)
                 for (int i = 0; i < openInstancesModelView.instanceNames.Count; i++)
                     openInstancesModelView.instanceNames[i] = TextBoxes[i].Text;

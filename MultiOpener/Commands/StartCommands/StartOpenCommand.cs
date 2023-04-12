@@ -30,14 +30,11 @@ namespace MultiOpener.Commands.StartCommands
         {
             if (Start == null) return;
 
-            if (Settings == null)
-                Settings = MainWindow.MainViewModel.settings;
+            Settings ??= MainWindow.MainViewModel.settings;
 
             if (Start.OpenButtonName.Equals("OPEN"))
             {
-                if (string.IsNullOrEmpty(Settings.PresetName)) return;
                 if (!Start.OpenedIsEmpty() || Settings.OpenIsEmpty()) return;
-
                 Start.OpenButtonName = "CLOSE";
 
                 //TODO: 1 -- NAPRAWIC -- kwestie zatrzymywania czesto zawiesza to cale ladowanie, a jak zatrzymuje sie przy odpalaniu instancji to crashuje
@@ -97,13 +94,10 @@ namespace MultiOpener.Commands.StartCommands
 
             Application.Current.Dispatcher.Invoke(delegate
             {
-                //TODO: 0 Zrobic loadingProcesses window jako ShowDialog()
-
                 MainWindow.Hide();
                 float windowPositionX = (float)(MainWindow.Left + (MainWindow.Width / 2));
                 float windowPositionY = (float)(MainWindow.Top + (MainWindow.Height / 2));
                 loadingProcesses = new(this, windowPositionX, windowPositionY) { Owner = MainWindow };
-                loadingProcesses.Owner = MainWindow;
                 loadingProcesses.Show();
                 loadingProcesses.progress.Maximum = progressLength;
             });
