@@ -7,11 +7,8 @@ namespace MultiOpener.Commands.StartCommands
 {
     public class StartCloseCommand : StartCommandBase
     {
-        public MainWindow MainWindow { get; set; }
-
         public StartCloseCommand(StartViewModel startViewModel) : base(startViewModel)
         {
-            MainWindow = (MainWindow)Application.Current.MainWindow;
         }
 
         public override void Execute(object? parameter)
@@ -22,7 +19,7 @@ namespace MultiOpener.Commands.StartCommands
         public async Task Close()
         {
             if (Start == null) return;
-            if (MainWindow.MainViewModel.start.Opened.Count == 0 || MainWindow.MainViewModel.start.Opened == null)
+            if (Start.OpenedIsEmpty())
             {
                 Start.OpenButtonName = "OPEN";
                 return;
@@ -32,30 +29,23 @@ namespace MultiOpener.Commands.StartCommands
             {
                 Start.RefreshOpenedCommand.Execute(null);
 
-                for (int i = 0; i < MainWindow.MainViewModel.start.Opened.Count; i++)
+                for (int i = 0; i < Start.Opened.Count; i++)
                 {
-                    var current = MainWindow.MainViewModel.start.Opened[i];
+                    var current = Start.Opened[i];
 
                     bool isSucceed = await current.Close();
-
                     if (isSucceed || current.Hwnd == IntPtr.Zero || !current.StillExist())
                     {
                         Application.Current.Dispatcher.Invoke(delegate
                         {
-                            MainWindow.MainViewModel.start.RemoveOpened(current);
+                            Start.RemoveOpened(current);
                             i--;
                         });
                     }
                 }
 
-                if (MainWindow.MainViewModel.start.Opened.Count == 0)
-                {
+                if (Start.OpenedIsEmpty())
                     Start.OpenButtonName = "OPEN";
-                    if(Start.Loop != null)
-                    {
-                        Start.loopSource.Cancel();
-                    }
-                }
             }
         }
     }

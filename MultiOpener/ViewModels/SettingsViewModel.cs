@@ -278,5 +278,10 @@ namespace MultiOpener.ViewModels
 
             return typeof(OpenItem);
         }
+
+        public bool OpenIsEmpty()
+        {
+            return Opens == null || Opens.Count == 0;
+        }
     }
 }

@@ -219,7 +219,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Bottom"
                                 Margin="0 0 15 15"
-                                ContentText="Resfresh"
+                                ContentText="Refresh"
                                 OnCommand="{Binding RefreshOpenedCommand}"
                                 FontSize="20" />
         </Grid>

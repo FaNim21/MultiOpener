@@ -4,7 +4,6 @@ using MultiOpener.ViewModels;
 using MultiOpener.Windows;
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,13 +13,12 @@ namespace MultiOpener.Commands.StartCommands
     public class StartOpenCommand : StartCommandBase
     {
         private MainWindow MainWindow { get; set; }
+        private SettingsViewModel Settings { get; set; }
 
         private OpenningProcessLoadingWindow? loadingProcesses;
 
         public CancellationTokenSource source = new();
         private CancellationToken token;
-
-        private Task task;
 
 
         public StartOpenCommand(StartViewModel startViewModel) : base(startViewModel)
@@ -32,11 +30,13 @@ namespace MultiOpener.Commands.StartCommands
         {
             if (Start == null) return;
 
+            if (Settings == null)
+                Settings = MainWindow.MainViewModel.settings;
+
             if (Start.OpenButtonName.Equals("OPEN"))
             {
-                if (string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName)) return;
-                if ((MainWindow.MainViewModel.start.Opened.Any() && MainWindow.MainViewModel.start.Opened.Count != 0) || string.IsNullOrEmpty(MainWindow.MainViewModel.settings.PresetName) || Start == null) return;
-                if (MainWindow.MainViewModel.settings.Opens == null || !MainWindow.MainViewModel.settings.Opens.Any()) return;
+                if (string.IsNullOrEmpty(Settings.PresetName)) return;
+                if (!Start.OpenedIsEmpty() || Settings.OpenIsEmpty()) return;
 
                 Start.OpenButtonName = "CLOSE";
 
@@ -44,7 +44,7 @@ namespace MultiOpener.Commands.StartCommands
 
                 source = new();
                 token = source.Token;
-                task = Task.Run(OpenProgramsList, token);
+                Task task = Task.Run(OpenProgramsList, token);
             }
             else
                 Start.CloseCommand.Execute(null);
@@ -52,12 +52,14 @@ namespace MultiOpener.Commands.StartCommands
 
         private async Task OpenProgramsList()
         {
-            int length = MainWindow.MainViewModel.settings.Opens.Count;
+            if (Start == null) return;
+
+            int length = Settings.Opens.Count;
             int progressLength = length;
 
             for (int i = 0; i < length; i++)
             {
-                var current = MainWindow.MainViewModel.settings.Opens[i];
+                var current = Settings.Opens[i];
                 if (current.Validate())
                 {
                     Application.Current.Dispatcher.Invoke(delegate
@@ -69,7 +71,7 @@ namespace MultiOpener.Commands.StartCommands
 
                 if (current.GetType() == typeof(OpenInstance))
                 {
-                    if (MainWindow.MainViewModel.start.MultiMC == null)
+                    if (Start.MultiMC == null)
                     {
                         try
                         {
@@ -79,7 +81,7 @@ namespace MultiOpener.Commands.StartCommands
                             {
                                 OpenedProcess open = new();
                                 open.SetHandle(process.Handle);
-                                MainWindow.MainViewModel.start.MultiMC = open;
+                                Start.MultiMC = open;
                             }
                         }
                         catch (Exception e)
@@ -108,7 +110,7 @@ namespace MultiOpener.Commands.StartCommands
 
             for (int i = 0; i < length; i++)
             {
-                var current = MainWindow.MainViewModel.settings.Opens[i];
+                var current = Settings.Opens[i];
 
                 if (string.IsNullOrEmpty(current.PathExe)) return;
                 if (source.IsCancellationRequested) break;
@@ -129,14 +131,19 @@ namespace MultiOpener.Commands.StartCommands
                 MainWindow.OnShow();
                 loadingProcesses = null;
 
-                if (MainWindow.MainViewModel.start.Opened == null || MainWindow.MainViewModel.start.Opened.Count == 0)
+                if (Start.OpenedIsEmpty())
                     Start.OpenButtonName = "OPEN";
             });
 
-            TryRunRefreshLoop();
+            await Task.Delay(3500);
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                Start.RefreshOpenedCommand.Execute(null);
+            });
         }
 
         //trzeba na to uwazac, poniewaz nie jestem tego pewien
+        [Obsolete]
         public void TryRunRefreshLoop()
         {
             if (Start == null) return;
@@ -145,6 +152,7 @@ namespace MultiOpener.Commands.StartCommands
             Start.loopToken = Start.loopSource.Token;
             Start.Loop = Task.Factory.StartNew(async () => await RefreshOpenedLoop(), Start.loopToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
+        [Obsolete]
         private async Task RefreshOpenedLoop()
         {
             if (Start == null) return;

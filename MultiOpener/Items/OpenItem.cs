@@ -97,7 +97,7 @@ namespace MultiOpener.ListView
                     open.SetPath(PathExe);
 
                     int errors = 0;
-                    while (!open.SetHwnd() && errors < 10)
+                    while (!open.SetHwnd() && errors < 15)
                     {
                         if (source.IsCancellationRequested)
                             break;
@@ -231,6 +231,7 @@ namespace MultiOpener.ListView
                     loading.SetText($"{infoText} (loading datas)");
                 });
 
+                //TODO 4 DAC MOZLIWOSCI pauzowania szukania tych mc, z racji opcji nie znalezienia wszystkich??
                 List<IntPtr> instances;
                 do
                 {

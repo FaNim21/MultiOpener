@@ -57,6 +57,7 @@ namespace MultiOpener.Items
             CloseOpenCommand = new OpenedCloseOpenCommand(this);
         }
 
+        //TODO: 7 moze cos typu CanSetHwnd? zeby sprawdzic czy proces jest non gui
         public void SetHwnd(IntPtr hwnd)
         {
             Hwnd = hwnd;
@@ -172,7 +173,7 @@ namespace MultiOpener.Items
         {
             return Status.Equals("STATUS: OPENED");
         }
-
+         
         public bool HasWindow() => Handle != IntPtr.Zero;
 
         protected void OnPropertyChanged(string propertyName)
@@ -212,7 +213,7 @@ namespace MultiOpener.Items
                 else
                 {
                     int errors = 0;
-                    while (!SetHwnd() && errors < 10)
+                    while (!SetHwnd() && errors < 15)
                     {
                         await Task.Delay(250);
                         errors++;
@@ -269,6 +270,15 @@ namespace MultiOpener.Items
             Handle = IntPtr.Zero;
             Hwnd = IntPtr.Zero;
             Pid = -1;
+        }
+
+        public override string ToString()
+        {
+            return $"{WindowTitle}\n" +
+                   $"PID: {Pid}\n" +
+                   $"Path: {Path}\n" +
+                   $"Handle: {Handle}\n" +
+                   $"Hwnd: {Hwnd}";
         }
     }
 }

@@ -28,6 +28,8 @@ namespace MultiOpener
             }
 
             MainViewModel.settings.LoadStartUPPreset(Settings.Default.LastOpenedPresetName);
+
+            //TODO: 1 Check for updates on repos
         }
 
         public void EnableDisableChoosenHeadButton(string option)
