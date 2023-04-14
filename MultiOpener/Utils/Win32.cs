@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Management;
 
 namespace MultiOpener.Utils
 {
@@ -29,14 +31,26 @@ namespace MultiOpener.Utils
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr SendMessageTimeout(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam, uint fuFlags, uint uTimeout, out IntPtr lpdwResult);
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, StringBuilder lpExeName, out int lpdwSize);
 
         [DllImport("user32.dll")]
         private static extern bool IsWindow(IntPtr hWnd);
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool CloseHandle(IntPtr hObject);
+
+        [DllImport("psapi.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, StringBuilder lpFileName, int nSize);
+
+
         private const int WM_CLOSE = 0x0010;
         private const int SMTO_ABORTIFHUNG = 0x0002;
+
+        private const int PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
         #endregion
 
 
@@ -48,6 +62,7 @@ namespace MultiOpener.Utils
                 return sb.ToString();
             return "";
         }
+
         public static uint GetPidFromHwnd(IntPtr hwnd)
         {
             GetWindowThreadProcessId(hwnd, out uint processId);
@@ -58,6 +73,7 @@ namespace MultiOpener.Utils
             uint id = GetProcessId(handle);
             return id;
         }
+
         public static IntPtr GetHwndFromHandle(IntPtr handle)
         {
             uint processId = GetProcessId(handle);
@@ -100,8 +116,50 @@ namespace MultiOpener.Utils
             else
                 return IntPtr.Zero;
         }
+        public static IntPtr GetHwndFromPid(int pid)
+        {
+            uint processId = (uint)pid;
 
-        public static List<IntPtr> GetWindowsByTitlePattern(string titlePattern)
+            Process process;
+            IntPtr hwnd = IntPtr.Zero;
+
+            try
+            {
+                process = Process.GetProcessById((int)processId);
+                hwnd = process.MainWindowHandle;
+            }
+            catch
+            {
+                return IntPtr.Zero;
+            }
+
+            // If the process does not have a visible window, enumerate all top-level windows and find the one with the matching process ID
+            if (hwnd == IntPtr.Zero)
+            {
+                EnumWindows((IntPtr wnd, IntPtr param) =>
+                {
+                    GetWindowThreadProcessId(wnd, out uint thisProcessId);
+                    if (thisProcessId == processId)
+                    {
+                        StringBuilder sb = new(256);
+                        GetWindowText(wnd, sb, sb.Capacity);
+                        if (sb.ToString().Contains(process.ProcessName))
+                        {
+                            hwnd = wnd;
+                            return false;
+                        }
+                    }
+                    return true;
+                }, IntPtr.Zero);
+            }
+
+            if (IsWindow(hwnd))
+                return hwnd;
+            else
+                return IntPtr.Zero;
+        }
+
+        public static List<IntPtr> GetWindowsByTitlePattern(Regex titlePattern)
         {
             List<IntPtr> windows = new();
 
@@ -109,7 +167,7 @@ namespace MultiOpener.Utils
             {
                 StringBuilder sb = new(256);
                 GetWindowText(hWnd, sb, sb.Capacity);
-                if (sb.ToString().Contains(titlePattern))
+                if (titlePattern.IsMatch(sb.ToString()))
                 {
                     windows.Add(hWnd);
                 }
@@ -173,6 +231,55 @@ namespace MultiOpener.Utils
             {
                 return false;
             }
+        }
+
+        public static string GetJavaFilePath(int pid)
+        {
+            try
+            {
+                Process process = Process.GetProcessById(pid);
+                string jarPath = GetJavaExecutablePathFromProcess(process);
+                return jarPath;
+            }
+            catch (ArgumentException ex)
+            {
+                System.Windows.MessageBox.Show("Failed to get process by ID: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show("Error: " + ex.Message);
+            }
+
+            return "";
+        }
+        private static string GetJavaExecutablePathFromProcess(Process process)
+        {
+            string javaLibraryPath = null;
+            Regex regex = new(@"-Djava\.library\.path\s*=\s*""?([^""]+)/natives""?");
+            using (ManagementObjectSearcher searcher = new("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id))
+            using (ManagementObjectCollection objects = searcher.Get())
+            {
+                foreach (ManagementObject obj in objects)
+                {
+                    string? commandLine = obj["CommandLine"] as string;
+                    if (!string.IsNullOrEmpty(commandLine))
+                    {
+                        Match match = regex.Match(commandLine);
+                        if (match.Success)
+                        {
+                            javaLibraryPath = match.Groups[1].Value;
+                            break;
+                        }
+                    }
+                    obj.Dispose();
+                    if (!string.IsNullOrEmpty(javaLibraryPath))
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return javaLibraryPath;
         }
     }
 }

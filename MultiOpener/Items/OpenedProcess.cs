@@ -1,8 +1,10 @@
 ﻿using MultiOpener.Commands.OpenedCommands;
 using MultiOpener.Utils;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -11,6 +13,8 @@ namespace MultiOpener.Items
 {
     public class OpenedProcess : INotifyPropertyChanged
     {
+        public const string MCPattern = @"Minecraft\*\s+(\s+-\s+instance)?\s*(?:\d+(\.\d+)+|\d+)";
+
         public IntPtr Hwnd { get; private set; }
         public IntPtr Handle { get; private set; }
         public int Pid { get; private set; }
@@ -20,6 +24,7 @@ namespace MultiOpener.Items
         public ProcessStartInfo? ProcessStartInfo { get; private set; }
 
         public bool isMCInstance = false;
+        public int mcInstancesAmount = 0;
 
         private string? _windowTitle;
         public string? WindowTitle
@@ -66,9 +71,11 @@ namespace MultiOpener.Items
         }
         public bool SetHwnd()
         {
-            if (Handle == IntPtr.Zero) return false;
+            if (Handle == IntPtr.Zero || Pid == -1) return false;
 
             IntPtr output = Win32.GetHwndFromHandle(Handle);
+            if (output == IntPtr.Zero)
+                output = Win32.GetHwndFromPid(Pid);
 
             if (output == IntPtr.Zero)
             {
@@ -112,8 +119,11 @@ namespace MultiOpener.Items
                 Pid = -1;
         }
 
-        public void SetPath(string path)
+        public void SetPath(string path = null)
         {
+            if (isMCInstance)
+                Path = Win32.GetJavaFilePath(Pid);
+
             if (!string.IsNullOrEmpty(path))
                 Path = path;
         }
@@ -128,6 +138,7 @@ namespace MultiOpener.Items
         public void Update()
         {
             //might be expensive because of externs that is used here
+            //TODO: 9 Optimize it
             if (!StillExist() && Handle != IntPtr.Zero)
             {
                 UpdateStatus("CLOSED");
@@ -202,9 +213,36 @@ namespace MultiOpener.Items
 
                 if (isMCInstance)
                 {
-                    MessageBox.Show("NOT IMPLEMENTED YET");
+                    //TODO: 0 NAPRAWIC TO - TRACE PROCESY MC PLUS PRZY ODPALANIU PROCESU ZE STARMY PROCESSSTARTINFO ODPALA MI LOG KONSOLE Z MULTIMC PLUS COS TAM JESZCZE
+                    Regex mcPatternRegex = new(MCPattern);
+                    List<IntPtr> instances;
 
-                    //MessageBox.Show("Refresh after instance will be fully opened");
+                    bool isHwndFound = false;
+                    int checkedAmount = 0;
+                    do
+                    {
+                        if (process.HasExited)
+                            return;
+
+                        instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
+                        for (int i = checkedAmount; i < instances.Count; i++, checkedAmount++)
+                        {
+                            int currentPid = (int)Win32.GetPidFromHwnd(instances[i]);
+
+                            if (Win32.GetJavaFilePath(currentPid).Equals(Path))
+                            {
+                                isHwndFound = true;
+                                SetHwnd(instances[i]);
+                                Pid = currentPid;
+                            }
+                        }
+                        await Task.Delay(750);
+                    } while (!isHwndFound);
+
+
+                    MessageBox.Show("NOT IMPLEMENTED YET");
+                    //nie wazna kolejnosc tych instancji raczej przy odpalaniu, ale tak czy siak trzeba bedzie sie stosowac logika odwrotnego szukania, jak przy pierwszy odpalaniu wszystkich instancji
+
                     //TODO: 1 ustawic hwnd dla odpalanej instancji na nowo
                     //uzyc do tego rozpoznawania procesow po reszcie hwnd albo po pid
                     //nie jestem pewien tego, poniewaz ciezko bedzie znalesc ta konkretna teraz odpalana instancje, nawet jezeli porownam wszystkie odpalone co sie nie sprwadzi napewno

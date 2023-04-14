@@ -1,6 +1,4 @@
-﻿using MultiOpener.Utils;
-using MultiOpener.ViewModels;
-using System;
+﻿using MultiOpener.ViewModels;
 
 namespace MultiOpener.Commands.StartCommands
 {

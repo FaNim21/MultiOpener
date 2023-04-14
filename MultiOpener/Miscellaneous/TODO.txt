@@ -21,6 +21,7 @@
 - Podgladu odpalonych programow i kontrola nad nimi jako nowy panel w zakladce start po kliknieciu open do zdesignowania jeszcze jak to bedzie przedewszystkim wygladac
 - zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
 - Zrobic force close dla pojedyncznych procesow z poziomu context menu
+- zrobic ewentualne blokowanie resetowania czy otwierania/zamykania podczas gdy inny process jest otwierany/zamykany itp itd
 -- patch notes
 - zreworkowano calkowicie logike odpalania i zamykania programow
 - dodano panel do informacji zwiazanych z aplikacja

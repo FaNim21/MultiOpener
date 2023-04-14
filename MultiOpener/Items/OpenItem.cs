@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Threading;
 using MultiOpener.Windows;
+using System.Text.RegularExpressions;
 
 namespace MultiOpener.ListView
 {
@@ -220,8 +221,8 @@ namespace MultiOpener.ListView
                         OpenedProcess opened = new();
                         opened.SetHandle(process.Handle);
                         opened.SetStartInfo(startInfo);
-                        opened.SetPath(Names[i]);
                         opened.isMCInstance = true;
+                        opened.mcInstancesAmount = Quantity;
                         mcInstances.Add(opened);
                     }
                 }
@@ -232,18 +233,19 @@ namespace MultiOpener.ListView
                 });
 
                 //TODO 4 DAC MOZLIWOSCI pauzowania szukania tych mc, z racji opcji nie znalezienia wszystkich??
+                Regex mcPatternRegex = new(OpenedProcess.MCPattern);
                 List<IntPtr> instances;
                 do
                 {
-                    instances = Win32.GetWindowsByTitlePattern("Minecraft*");
+                    instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
                     await Task.Delay(750);
-                }
-                while (instances.Count != count);
+                } while (instances.Count != count);
 
                 for (int i = 0; i < mcInstances.Count; i++)
                 {
                     var current = mcInstances[i];
                     current.SetHwnd(instances[i]);
+                    current.SetPath();
                 }
 
                 for (int i = mcInstances.Count - 1; i >= 0; i--)

@@ -1,5 +1,4 @@
 ﻿using MultiOpener.Items;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MultiOpener.Commands.OpenedCommands
