@@ -30,6 +30,7 @@ namespace MultiOpener.Commands.OpenedCommands
                     openedProcess.ClearAfterClose();
                     openedProcess.UpdateStatus();
 
+                    await Task.Delay(1000);
                     await openedProcess.QuickOpen();
                 }
             }

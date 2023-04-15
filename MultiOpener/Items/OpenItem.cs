@@ -212,7 +212,7 @@ namespace MultiOpener.ListView
                         loading.progress.Value++;
                     });
 
-                    startInfo.Arguments = $"--launch \"{Names[i]}\"";
+                    startInfo.Arguments = $"-l \"{Names[i]}\"";
                     Process? process = Process.Start(startInfo);
                     if (process != null)
                     {

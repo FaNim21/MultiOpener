@@ -145,6 +145,9 @@ namespace MultiOpener.Items
             //might be expensive because of externs that is used here
             //TODO: 9 Optimize it
 
+            if (StillExist())
+                return;
+
             if (!StillExist() && Handle != IntPtr.Zero)
             {
                 UpdateStatus("CLOSED");
@@ -211,15 +214,7 @@ namespace MultiOpener.Items
         {
             if (ProcessStartInfo == null) return;
 
-            ProcessStartInfo processStart = new()
-            {
-                UseShellExecute = false,
-                Arguments = ProcessStartInfo.Arguments,
-                FileName = ProcessStartInfo.FileName,
-                WorkingDirectory = ProcessStartInfo.WorkingDirectory
-            };
-
-            Process? process = Process.Start(processStart);
+            Process? process = Process.Start(ProcessStartInfo);
 
             if (process != null)
             {
@@ -227,29 +222,16 @@ namespace MultiOpener.Items
 
                 if (isMCInstance)
                 {
+                    process.WaitForInputIdle();
+
                     //TODO: 0 NAPRAWIC TO - TRACE PROCESY MC PLUS PRZY ODPALANIU PROCESU ZE STARMY PROCESSSTARTINFO ODPALA MI LOG KONSOLE Z MULTIMC PLUS COS TAM JESZCZE
                     bool isSuccessful = await SearchForMCInstance();
-
-                    if (!isSuccessful)
-                        MessageBox.Show("A problem occurred for loading data of chosen instance to open");
-                    //nie wazna kolejnosc tych instancji raczej przy odpalaniu, ale tak czy siak trzeba bedzie sie stosowac logika odwrotnego szukania, jak przy pierwszy odpalaniu wszystkich instancji
-
-                    //TODO: 1 ustawic hwnd dla odpalanej instancji na nowo
-                    //uzyc do tego rozpoznawania procesow po reszcie hwnd albo po pid
-                    //nie jestem pewien tego, poniewaz ciezko bedzie znalesc ta konkretna teraz odpalana instancje, nawet jezeli porownam wszystkie odpalone co sie nie sprwadzi napewno
-                    /*List<IntPtr> instances;
-                    do
-                    {
-                        instances = Win32.GetWindowsByTitlePattern("Minecraft");
-                        await Task.Delay(750);
-                    }
-                    while (instances.Count != 1);*/
-
-                    //ze znalezionego ustawic tu hwnd
-                    //current.SetHwnd(instances[i]);
+                    if (isSuccessful)
+                        SetPid();
                 }
                 else
                 {
+                    SetPid();
                     int errors = 0;
                     while (!SetHwnd() && errors < 15)
                     {
@@ -285,9 +267,9 @@ namespace MultiOpener.Items
                 }
                 await Task.Delay(750);
                 errorCount++;
-            } while (!isHwndFound && errorCount < 10);
+            } while (!isHwndFound && errorCount < 20);
 
-            return errorCount < 10;
+            return errorCount < 20;
         }
         public async Task<bool> Close()
         {
