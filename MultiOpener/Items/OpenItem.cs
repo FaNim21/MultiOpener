@@ -232,7 +232,7 @@ namespace MultiOpener.ListView
                     loading.SetText($"{infoText} (loading datas)");
                 });
 
-                //TODO 4 DAC MOZLIWOSCI pauzowania szukania tych mc, z racji opcji nie znalezienia wszystkich??
+                //TODO: 4 DAC MOZLIWOSCI pauzowania szukania tych mc, z racji opcji nie znalezienia wszystkich i nie skonczonej petli???
                 Regex mcPatternRegex = new(OpenedProcess.MCPattern);
                 List<IntPtr> instances;
                 do

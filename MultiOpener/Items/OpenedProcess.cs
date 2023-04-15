@@ -135,10 +135,16 @@ namespace MultiOpener.Items
             UpdateStatus();
         }
 
+        public void FastUpdate()
+        {
+            SetPid();
+            UpdateStatus();
+        }
         public void Update()
         {
             //might be expensive because of externs that is used here
             //TODO: 9 Optimize it
+
             if (!StillExist() && Handle != IntPtr.Zero)
             {
                 UpdateStatus("CLOSED");
@@ -205,7 +211,15 @@ namespace MultiOpener.Items
         {
             if (ProcessStartInfo == null) return;
 
-            Process? process = Process.Start(ProcessStartInfo);
+            ProcessStartInfo processStart = new()
+            {
+                UseShellExecute = false,
+                Arguments = ProcessStartInfo.Arguments,
+                FileName = ProcessStartInfo.FileName,
+                WorkingDirectory = ProcessStartInfo.WorkingDirectory
+            };
+
+            Process? process = Process.Start(processStart);
 
             if (process != null)
             {
@@ -214,33 +228,10 @@ namespace MultiOpener.Items
                 if (isMCInstance)
                 {
                     //TODO: 0 NAPRAWIC TO - TRACE PROCESY MC PLUS PRZY ODPALANIU PROCESU ZE STARMY PROCESSSTARTINFO ODPALA MI LOG KONSOLE Z MULTIMC PLUS COS TAM JESZCZE
-                    Regex mcPatternRegex = new(MCPattern);
-                    List<IntPtr> instances;
+                    bool isSuccessful = await SearchForMCInstance();
 
-                    bool isHwndFound = false;
-                    int checkedAmount = 0;
-                    do
-                    {
-                        if (process.HasExited)
-                            return;
-
-                        instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
-                        for (int i = checkedAmount; i < instances.Count; i++, checkedAmount++)
-                        {
-                            int currentPid = (int)Win32.GetPidFromHwnd(instances[i]);
-
-                            if (Win32.GetJavaFilePath(currentPid).Equals(Path))
-                            {
-                                isHwndFound = true;
-                                SetHwnd(instances[i]);
-                                Pid = currentPid;
-                            }
-                        }
-                        await Task.Delay(750);
-                    } while (!isHwndFound);
-
-
-                    MessageBox.Show("NOT IMPLEMENTED YET");
+                    if (!isSuccessful)
+                        MessageBox.Show("A problem occurred for loading data of chosen instance to open");
                     //nie wazna kolejnosc tych instancji raczej przy odpalaniu, ale tak czy siak trzeba bedzie sie stosowac logika odwrotnego szukania, jak przy pierwszy odpalaniu wszystkich instancji
 
                     //TODO: 1 ustawic hwnd dla odpalanej instancji na nowo
@@ -269,6 +260,34 @@ namespace MultiOpener.Items
             }
 
             UpdateStatus();
+        }
+        public async Task<bool> SearchForMCInstance()
+        {
+            Regex mcPatternRegex = new(MCPattern);
+            List<IntPtr> instances;
+            int errorCount = 0;
+
+            bool isHwndFound = false;
+            int checkedAmount = 0;
+            do
+            {
+                instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
+                for (int i = checkedAmount; i < instances.Count; i++, checkedAmount++)
+                {
+                    int currentPid = (int)Win32.GetPidFromHwnd(instances[i]);
+
+                    if (Win32.GetJavaFilePath(currentPid).Equals(Path))
+                    {
+                        isHwndFound = true;
+                        SetHwnd(instances[i]);
+                        Pid = currentPid;
+                    }
+                }
+                await Task.Delay(750);
+                errorCount++;
+            } while (!isHwndFound && errorCount < 10);
+
+            return errorCount < 10;
         }
         public async Task<bool> Close()
         {

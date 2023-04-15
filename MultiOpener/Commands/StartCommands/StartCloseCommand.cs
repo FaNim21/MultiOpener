@@ -27,11 +27,10 @@ namespace MultiOpener.Commands.StartCommands
 
             if (MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                Start.RefreshOpenedCommand.Execute(null);
-
                 for (int i = 0; i < Start.Opened.Count; i++)
                 {
                     var current = Start.Opened[i];
+                    current.FastUpdate();
 
                     bool isSucceed = await current.Close();
                     if (isSucceed || current.Hwnd == IntPtr.Zero || !current.StillExist())
