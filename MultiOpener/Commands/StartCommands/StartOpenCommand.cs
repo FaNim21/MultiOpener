@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Items;
 using MultiOpener.ListView;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using MultiOpener.Windows;
 using System;
@@ -76,8 +77,11 @@ namespace MultiOpener.Commands.StartCommands
                             Process? process = Process.Start(startInfo);
                             if (process != null)
                             {
+                                process.WaitForInputIdle();
+
                                 OpenedProcess open = new();
                                 open.SetHandle(process.Handle);
+                                open.SetPid();
                                 Start.MultiMC = open;
                             }
                         }
@@ -117,6 +121,12 @@ namespace MultiOpener.Commands.StartCommands
                 });
 
                 await current.Open(loadingProcesses, source, infoText);
+            }
+
+            if(Start.MultiMC != null)
+            {
+                await Start.MultiMC.Close();
+                Start.MultiMC = null;
             }
 
             Application.Current.Dispatcher.Invoke(delegate

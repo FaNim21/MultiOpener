@@ -142,11 +142,14 @@ namespace MultiOpener.Items
         }
         public void Update()
         {
-            //might be expensive because of externs that is used here
+            //might be expensive because of externs that is used here and stupid amount of things to check that needs to be changed etc
             //TODO: 9 Optimize it
 
             if (StillExist())
+            {
+                UpdateTitle();
                 return;
+            }
 
             if (!StillExist() && Handle != IntPtr.Zero)
             {
@@ -156,6 +159,10 @@ namespace MultiOpener.Items
 
             SetHwnd();
             SetPid();
+
+            if (Handle == IntPtr.Zero && Pid != -1)
+                SetHandle(Win32.GetHandleFromPid(Pid));
+
             UpdateStatus();
             UpdateTitle();
         }
@@ -208,7 +215,7 @@ namespace MultiOpener.Items
 
             return true;
         }
-        public bool HasWindow() => Handle != IntPtr.Zero;
+        public bool HasWindow() => Hwnd != IntPtr.Zero;
 
         public async Task QuickOpen()
         {
@@ -218,8 +225,6 @@ namespace MultiOpener.Items
 
             if (process != null)
             {
-                SetHandle(process.Handle);
-
                 if (isMCInstance)
                 {
                     process.WaitForInputIdle();
@@ -227,10 +232,15 @@ namespace MultiOpener.Items
                     //TODO: 0 NAPRAWIC TO - TRACE PROCESY MC PLUS PRZY ODPALANIU PROCESU ZE STARMY PROCESSSTARTINFO ODPALA MI LOG KONSOLE Z MULTIMC PLUS COS TAM JESZCZE
                     bool isSuccessful = await SearchForMCInstance();
                     if (isSuccessful)
-                        SetPid();
+                    {
+                        IntPtr handle = Win32.GetHandleFromPid(Pid);
+                        if(handle != IntPtr.Zero)
+                            SetHandle(handle);
+                    }
                 }
                 else
                 {
+                    SetHandle(process.Handle);
                     SetPid();
                     int errors = 0;
                     while (!SetHwnd() && errors < 15)
@@ -247,26 +257,29 @@ namespace MultiOpener.Items
         {
             Regex mcPatternRegex = new(MCPattern);
             List<IntPtr> instances;
-            int errorCount = 0;
+            int errorCount = -1;
 
             bool isHwndFound = false;
             int checkedAmount = 0;
             do
             {
+                errorCount++;
+                await Task.Delay(750);
+
                 instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
                 for (int i = checkedAmount; i < instances.Count; i++, checkedAmount++)
                 {
                     int currentPid = (int)Win32.GetPidFromHwnd(instances[i]);
+                    string currentPath = Win32.GetJavaFilePath(currentPid);
 
-                    if (Win32.GetJavaFilePath(currentPid).Equals(Path))
+                    if (currentPath.Equals(Path))
                     {
                         isHwndFound = true;
                         SetHwnd(instances[i]);
                         Pid = currentPid;
+                        break;
                     }
                 }
-                await Task.Delay(750);
-                errorCount++;
             } while (!isHwndFound && errorCount < 20);
 
             return errorCount < 20;
@@ -307,6 +320,9 @@ namespace MultiOpener.Items
         {
             return $"{WindowTitle}\n" +
                    $"PID: {Pid}\n" +
+                   $"StartInfo: FileName: {ProcessStartInfo.FileName}\n" +
+                   $"           WokrkingDirectory: {ProcessStartInfo.WorkingDirectory}\n" +
+                   $"           Path: {ProcessStartInfo.Arguments}\n" +
                    $"Path: {Path}\n" +
                    $"Handle: {Handle}\n" +
                    $"Hwnd: {Hwnd}";

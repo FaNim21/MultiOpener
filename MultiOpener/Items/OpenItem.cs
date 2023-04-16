@@ -92,13 +92,13 @@ namespace MultiOpener.ListView
                 {
                     process.EnableRaisingEvents = true;
 
-                    OpenedProcess open = new();
-                    open.SetStartInfo(processStartInfo);
-                    open.SetHandle(process.Handle);
-                    open.SetPath(PathExe);
+                    OpenedProcess openened = new();
+                    openened.SetStartInfo(processStartInfo);
+                    openened.SetHandle(process.Handle);
+                    openened.SetPath(PathExe);
 
                     int errors = 0;
-                    while (!open.SetHwnd() && errors < 15)
+                    while (!openened.SetHwnd() && errors < 15)
                     {
                         if (source.IsCancellationRequested)
                             break;
@@ -111,7 +111,7 @@ namespace MultiOpener.ListView
                     {
                         Application.Current.Dispatcher.Invoke(delegate
                         {
-                            ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(open);
+                            ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(openened);
                         });
                     }
                 }
@@ -197,10 +197,9 @@ namespace MultiOpener.ListView
                 await Task.Delay(DelayBefore);
                 int count = 0;
 
-                ProcessStartInfo startInfo = new(PathExe) { UseShellExecute = false };
                 for (int i = 0; i < Quantity; i++)
                 {
-                    await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances);
+                    await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances < 500 ? 500 : DelayBetweenInstances);
 
                     if (source.IsCancellationRequested)
                         break;
@@ -212,7 +211,12 @@ namespace MultiOpener.ListView
                         loading.progress.Value++;
                     });
 
-                    startInfo.Arguments = $"-l \"{Names[i]}\"";
+                    ProcessStartInfo startInfo = new(PathExe)
+                    {
+                        UseShellExecute = false,
+                        Arguments = $"--launch \"{Names[i]}\""
+                    };
+
                     Process? process = Process.Start(startInfo);
                     if (process != null)
                     {
@@ -223,6 +227,10 @@ namespace MultiOpener.ListView
                         opened.SetStartInfo(startInfo);
                         opened.isMCInstance = true;
                         opened.mcInstancesAmount = Quantity;
+
+                        string path = Path.GetDirectoryName(PathExe) + "\\instances\\" + Names[i];
+                        opened.SetPath(path.Replace("\\", "/"));
+
                         mcInstances.Add(opened);
                     }
                 }
@@ -231,6 +239,8 @@ namespace MultiOpener.ListView
                 {
                     loading.SetText($"{infoText} (loading datas)");
                 });
+
+                //TODO: 0 Problem jest tu z przydzielaniem startinfo dla procesu, ktory ma zle wyszukane okno
 
                 //TODO: 4 DAC MOZLIWOSCI pauzowania szukania tych mc, z racji opcji nie znalezienia wszystkich i nie skonczonej petli???
                 Regex mcPatternRegex = new(OpenedProcess.MCPattern);
@@ -241,21 +251,28 @@ namespace MultiOpener.ListView
                     await Task.Delay(750);
                 } while (instances.Count != count);
 
+                //TODO: 9 OPTIMIZE IT, because it is so fucking ugly as shit
                 for (int i = 0; i < mcInstances.Count; i++)
                 {
                     var current = mcInstances[i];
-                    current.SetHwnd(instances[i]);
-                    current.SetPath();
-                }
 
-                for (int i = mcInstances.Count - 1; i >= 0; i--)
-                {
-                    //polaczyc odwrotne wpisanie intancji do listy
-                    var current = mcInstances[i];
-                    Application.Current.Dispatcher.Invoke(delegate
+                    for (int j = 0; j < instances.Count; j++)
                     {
-                        ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(current);
-                    });
+                        string currentPath = Win32.GetJavaFilePath((int)Win32.GetPidFromHwnd(instances[j]));
+
+                        if (currentPath.Equals(current.Path))
+                        {
+                            current.SetHwnd(instances[j]);
+
+                            Application.Current.Dispatcher.Invoke(delegate
+                            {
+                                ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(current);
+                            });
+
+                            instances.Remove(instances[j]);
+                            break;
+                        }
+                    }
                 }
 
                 //TODO: 9 CALY CZAS TRZEBA LEKKO OPOZNIC SEGMENT PO MINECRAFTACH DO TEGO ZEBY WYKRYWAC CZY MC JEST ODPALONY DO MAIN MENU ZEBY WALLE GO ZCZYTYWALY
