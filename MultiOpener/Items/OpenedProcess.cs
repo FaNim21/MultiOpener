@@ -260,17 +260,18 @@ namespace MultiOpener.Items
             int errorCount = -1;
 
             bool isHwndFound = false;
-            int checkedAmount = 0;
             do
             {
                 errorCount++;
-                await Task.Delay(750);
+                await Task.Delay(1000);
 
                 instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
-                for (int i = checkedAmount; i < instances.Count; i++, checkedAmount++)
+                for (int i = 0; i < instances.Count; i++)
                 {
                     int currentPid = (int)Win32.GetPidFromHwnd(instances[i]);
                     string currentPath = Win32.GetJavaFilePath(currentPid);
+
+                    Trace.WriteLine($"error: {errorCount}, i = {i} -- MainPath: {Path} = CurrentPath {currentPath}");
 
                     if (currentPath.Equals(Path))
                     {
@@ -280,9 +281,9 @@ namespace MultiOpener.Items
                         break;
                     }
                 }
-            } while (!isHwndFound && errorCount < 20);
+            } while (!isHwndFound && errorCount < 15);
 
-            return errorCount < 20;
+            return errorCount < 15;
         }
         public async Task<bool> Close()
         {
