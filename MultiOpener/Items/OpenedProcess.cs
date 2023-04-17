@@ -143,7 +143,7 @@ namespace MultiOpener.Items
         public void Update()
         {
             //might be expensive because of externs that is used here and stupid amount of things to check that needs to be changed etc
-            //TODO: 9 Optimize it
+            //TODO: 9 OPTIMIZE IT
 
             if (StillExist())
             {
@@ -229,7 +229,6 @@ namespace MultiOpener.Items
                 {
                     process.WaitForInputIdle();
 
-                    //TODO: 0 NAPRAWIC TO - TRACE PROCESY MC PLUS PRZY ODPALANIU PROCESU ZE STARMY PROCESSSTARTINFO ODPALA MI LOG KONSOLE Z MULTIMC PLUS COS TAM JESZCZE
                     bool isSuccessful = await SearchForMCInstance();
                     if (isSuccessful)
                     {
@@ -270,8 +269,6 @@ namespace MultiOpener.Items
                 {
                     int currentPid = (int)Win32.GetPidFromHwnd(instances[i]);
                     string currentPath = Win32.GetJavaFilePath(currentPid);
-
-                    Trace.WriteLine($"error: {errorCount}, i = {i} -- MainPath: {Path} = CurrentPath {currentPath}");
 
                     if (currentPath.Equals(Path))
                     {

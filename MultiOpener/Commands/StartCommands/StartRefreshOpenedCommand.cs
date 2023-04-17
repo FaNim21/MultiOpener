@@ -18,6 +18,9 @@ namespace MultiOpener.Commands.StartCommands
 
         public async Task Refresh()
         {
+            if (Consts.IsStartPanelWorkingNow)
+                return;
+
             Consts.IsStartPanelWorkingNow = true;
 
             for (int i = 0; i < Start.Opened.Count; i++)

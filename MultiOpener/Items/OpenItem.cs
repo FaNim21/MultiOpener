@@ -240,18 +240,17 @@ namespace MultiOpener.ListView
                     loading.SetText($"{infoText} (loading datas)");
                 });
 
-                //TODO: 0 Problem jest tu z przydzielaniem startinfo dla procesu, ktory ma zle wyszukane okno
-
-                //TODO: 4 DAC MOZLIWOSCI pauzowania szukania tych mc, z racji opcji nie znalezienia wszystkich i nie skonczonej petli???
                 Regex mcPatternRegex = new(OpenedProcess.MCPattern);
+                int errorCount = -1;
                 List<IntPtr> instances;
                 do
                 {
+                    errorCount++;
                     instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
                     await Task.Delay(750);
-                } while (instances.Count != count);
+                } while (instances.Count != count && errorCount < 50);
 
-                //TODO: 9 OPTIMIZE IT, because it is so fucking ugly as shit
+                //TODO: 9 OPTIMIZE IT
                 for (int i = 0; i < mcInstances.Count; i++)
                 {
                     var current = mcInstances[i];
@@ -259,7 +258,6 @@ namespace MultiOpener.ListView
                     for (int j = 0; j < instances.Count; j++)
                     {
                         string currentPath = Win32.GetJavaFilePath((int)Win32.GetPidFromHwnd(instances[j]));
-
                         if (currentPath.Equals(current.Path))
                         {
                             current.SetHwnd(instances[j]);
@@ -275,7 +273,6 @@ namespace MultiOpener.ListView
                     }
                 }
 
-                //TODO: 9 CALY CZAS TRZEBA LEKKO OPOZNIC SEGMENT PO MINECRAFTACH DO TEGO ZEBY WYKRYWAC CZY MC JEST ODPALONY DO MAIN MENU ZEBY WALLE GO ZCZYTYWALY
                 int loadingIntro = 3000;
                 await Task.Delay(DelayAfter + loadingIntro);
             }

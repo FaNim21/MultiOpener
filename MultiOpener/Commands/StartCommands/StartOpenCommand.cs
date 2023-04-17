@@ -1,6 +1,5 @@
 ﻿using MultiOpener.Items;
 using MultiOpener.ListView;
-using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using MultiOpener.Windows;
 using System;
@@ -33,19 +32,18 @@ namespace MultiOpener.Commands.StartCommands
 
             Settings ??= MainWindow.MainViewModel.settings;
 
-            if (Start.OpenButtonName.Equals("OPEN"))
+            if (Start.OpenButtonName.Equals("CLOSE"))
             {
-                if (!Start.OpenedIsEmpty() || Settings.OpenIsEmpty()) return;
-                Start.OpenButtonName = "CLOSE";
-
-                //TODO: 1 -- NAPRAWIC -- kwestie zatrzymywania czesto zawiesza to cale ladowanie, a jak zatrzymuje sie przy odpalaniu instancji to crashuje
-
-                source = new();
-                token = source.Token;
-                Task task = Task.Run(OpenProgramsList, token);
-            }
-            else
                 Start.CloseCommand.Execute(null);
+                return;
+            }
+
+            if (!Start.OpenedIsEmpty() || Settings.OpenIsEmpty()) return;
+            Start.OpenButtonName = "CLOSE";
+
+            source = new();
+            token = source.Token;
+            Task task = Task.Run(OpenProgramsList, token);
         }
 
         private async Task OpenProgramsList()
@@ -54,7 +52,9 @@ namespace MultiOpener.Commands.StartCommands
 
             int length = Settings.Opens.Count;
             int progressLength = length;
+            string infoText = "";
 
+            //Validating all Opens
             for (int i = 0; i < length; i++)
             {
                 var current = Settings.Opens[i];
@@ -73,7 +73,7 @@ namespace MultiOpener.Commands.StartCommands
                     {
                         try
                         {
-                            ProcessStartInfo startInfo = new(current.PathExe) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Hidden };
+                            ProcessStartInfo startInfo = new(current.PathExe) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Minimized };
                             Process? process = Process.Start(startInfo);
                             if (process != null)
                             {
@@ -94,8 +94,8 @@ namespace MultiOpener.Commands.StartCommands
                     progressLength += ((OpenInstance)current).Quantity;
                 }
             }
-            string infoText = "";
 
+            //Initializing loading window
             Application.Current.Dispatcher.Invoke(delegate
             {
                 MainWindow.Hide();
@@ -106,6 +106,7 @@ namespace MultiOpener.Commands.StartCommands
                 loadingProcesses.progress.Maximum = progressLength;
             });
 
+            //Opening everything
             for (int i = 0; i < length; i++)
             {
                 var current = Settings.Opens[i];
@@ -123,12 +124,14 @@ namespace MultiOpener.Commands.StartCommands
                 await current.Open(loadingProcesses, source, infoText);
             }
 
-            if(Start.MultiMC != null)
+            //Destroying MultiMC if there was Instances as type in Opens
+            if (Start.MultiMC != null)
             {
                 await Start.MultiMC.Close();
                 Start.MultiMC = null;
             }
 
+            //Ending loading etc
             Application.Current.Dispatcher.Invoke(delegate
             {
                 loadingProcesses.Close();
@@ -139,34 +142,12 @@ namespace MultiOpener.Commands.StartCommands
                     Start.OpenButtonName = "OPEN";
             });
 
+            //Late Refresh
             await Task.Delay(3500);
             Application.Current.Dispatcher.Invoke(delegate
             {
                 Start.RefreshOpenedCommand.Execute(null);
             });
-        }
-
-        //trzeba na to uwazac, poniewaz nie jestem tego pewien
-        [Obsolete]
-        public void TryRunRefreshLoop()
-        {
-            if (Start == null) return;
-
-            Start.loopSource = new();
-            Start.loopToken = Start.loopSource.Token;
-            Start.Loop = Task.Factory.StartNew(async () => await RefreshOpenedLoop(), Start.loopToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
-        }
-        [Obsolete]
-        private async Task RefreshOpenedLoop()
-        {
-            if (Start == null) return;
-
-            while (!Start.loopSource.IsCancellationRequested)
-            {
-                Trace.WriteLine("Loop");
-                Start.RefreshOpenedCommand.Execute(null);
-                await Task.Delay(2000);
-            }
         }
     }
 }

@@ -180,12 +180,9 @@ namespace MultiOpener.Utils
             {
                 StringBuilder sb = new(256);
                 GetWindowText(hWnd, sb, sb.Capacity);
-
-                //TODO: 9 Jak nie bedzie dzialac pobieranie tak jak jest to bedzie mozna zrobic dodatkowe zczytywanie pojedynczych instancji przez GetJavaFilePath
                 if (titlePattern.IsMatch(sb.ToString()))
-                {
                     windows.Add(hWnd);
-                }
+
                 return true;
             }, IntPtr.Zero);
 

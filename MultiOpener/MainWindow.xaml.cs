@@ -1,6 +1,8 @@
 ﻿using MultiOpener.Properties;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -8,6 +10,9 @@ namespace MultiOpener
 {
     public partial class MainWindow : Window
     {
+        private const string Owner = "FaNim21";
+        private const string Repo = "MultiOpener";
+
         public MainViewModel MainViewModel { get; set; }
 
         public MainWindow()
@@ -30,6 +35,8 @@ namespace MultiOpener
             MainViewModel.settings.LoadStartUPPreset(Settings.Default.LastOpenedPresetName);
 
             //TODO: 1 Check for updates on repos
+            var checker = new UpdateChecker();
+            Task task = Task.Run(checker.CheckForUpdates);
         }
 
         public void EnableDisableChoosenHeadButton(string option)
