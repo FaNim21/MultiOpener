@@ -13,6 +13,8 @@ namespace MultiOpener.Utils
         private const string OWNER = "FaNim21";
         private const string REPO = "MultiOpener";
 
+        public Action OnClickAction;
+
         public async Task CheckForUpdates()
         {
             try
@@ -23,15 +25,7 @@ namespace MultiOpener.Utils
                 var latestRelease = releases.OrderByDescending(r => r.PublishedAt).FirstOrDefault();
 
                 if (latestRelease != null && !IsUpToDate(latestRelease.TagName))
-                {
-                    ShowNotification("Update Available", $"Version {latestRelease.TagName} is now available. Click here to download.", () =>
-                    {
-                        Process.Start(new ProcessStartInfo(latestRelease.HtmlUrl)
-                        {
-                            UseShellExecute = true
-                        });
-                    });
-                }
+                    ShowNotification("Update Available", $"Version {latestRelease.TagName} is now available. Click here to download.", latestRelease);
             }
             catch (Exception ex)
             {
@@ -43,13 +37,20 @@ namespace MultiOpener.Utils
         {
             NuGetVersion latest = new(latestTag);
             NuGetVersion current = new(Consts.Version[1..]);
-            
-            return latest > current;
+
+            Trace.WriteLine(latest + " -- " + current + " --- " + (latest <= current));
+                
+            return latest <= current;
         }
 
-        private void ShowNotification(string title, string message, Action onClickAction)
+        private void ShowNotification(string title, string message, Release release)
         {
-            onClickAction.Invoke();
+            /*Process.Start(new ProcessStartInfo(release.HtmlUrl)
+            {
+                UseShellExecute = true
+            });*/
+
+            OnClickAction?.Invoke();
         }
     }
 }

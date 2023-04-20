@@ -23,6 +23,7 @@
 - Zrobic force close dla pojedyncznych procesow z poziomu context menu
 - zrobic ewentualne blokowanie resetowania czy otwierania/zamykania podczas gdy inny process jest otwierany/zamykany itp itd
 - Dac ewentualnie mozliwosc podgladu okna MultiMC, czyli dac poprostu panel w otwartych procesach z MultiMC gdzie bedzie mial contextmenu tylko z show/hide czy cos takiego moze
+- sprobowac wykryc juz dany proces przed glowym otwarciem zeby moze nie otwierac go juz jak jest odpalony (KONCEPT)
 -- patch notes
 - zreworkowano calkowicie logike odpalania i zamykania programow
 - dodano panel do informacji zwiazanych z aplikacja

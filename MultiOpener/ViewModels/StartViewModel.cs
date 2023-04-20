@@ -53,6 +53,7 @@ namespace MultiOpener.ViewModels
             }
         }
 
+
         public StartViewModel()
         {
             OpenCommand = new StartOpenCommand(this);

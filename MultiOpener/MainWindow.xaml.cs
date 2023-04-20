@@ -10,9 +10,6 @@ namespace MultiOpener
 {
     public partial class MainWindow : Window
     {
-        private const string Owner = "FaNim21";
-        private const string Repo = "MultiOpener";
-
         public MainViewModel MainViewModel { get; set; }
 
         public MainWindow()

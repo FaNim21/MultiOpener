@@ -26,30 +26,38 @@
         </ContextMenu>
 
         <DataTemplate x:Key="itemsTemplate">
-                <Border Width="150"
-                        Height="50"
-                        CornerRadius="3 3 3 3"
-                        Margin="5 5 0 0"
-                        Padding="4 4 4 4"
-                        Background="#5b5e62"
-                        ContextMenu="{StaticResource ContextMenuOpened}">
-                    <Grid Width="150"
-                          Height="75"
-                          Margin="-5 -5 0 0">
-                        <WrapPanel Orientation="Horizontal"
-                                   HorizontalAlignment="Center">
-                            <Label Content="{Binding WindowTitle}"
-                                   Height="25"
-                                   Margin="0 0 0 0" />
-                        </WrapPanel>
-                        <WrapPanel Orientation="Horizontal"
-                                   HorizontalAlignment="Center">
-                            <Label Height="25"
-                                   Content="{Binding Status}"
-                                   Margin="0 25" />
-                        </WrapPanel>
-                    </Grid>
-                </Border>
+            <Border Width="150"
+                    Height="50"
+                    CornerRadius="3 3 3 3"
+                    Margin="5 5 0 0"
+                    Padding="4 4 4 4"
+                    Background="#5b5e62"
+                    ContextMenu="{StaticResource ContextMenuOpened}">
+                <Grid Width="150"
+                      Height="75"
+                      Margin="-5 -5 0 0">
+                    <WrapPanel Orientation="Horizontal"
+                               HorizontalAlignment="Center">
+                        <Label Content="{Binding WindowTitle}"
+                               Height="25"
+                               Margin="0 0 0 0" />
+                    </WrapPanel>
+                    <WrapPanel Orientation="Horizontal">
+                        <Label Height="25"
+                               Width="76"
+                               HorizontalAlignment="left"
+                               HorizontalContentAlignment="Right"
+                               Content="STATUS: "
+                               Margin="0 25" 
+                               Padding="0 4"/>
+                        <Label Height="25"
+                               Foreground="{Binding Path=StatusLabelColor}"
+                               Content="{Binding Status}"
+                               Margin="0 25"
+                               Padding="0 4"/>
+                    </WrapPanel>
+                </Grid>
+            </Border>
         </DataTemplate>
 
         <Style x:Key="ScrollThumbs"
@@ -105,7 +113,7 @@
                               Background="{x:Null}"
                               Margin="0 5">
                             <Grid.RenderTransform>
-                                <TranslateTransform X="-3"/>
+                                <TranslateTransform X="-3" />
                             </Grid.RenderTransform>
                             <Track x:Name="PART_Track"
                                    Grid.Row="0"

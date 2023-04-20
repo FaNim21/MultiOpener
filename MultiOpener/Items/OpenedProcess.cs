@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace MultiOpener.Items
 {
@@ -45,6 +46,17 @@ namespace MultiOpener.Items
             {
                 _status = value;
                 OnPropertyChanged(nameof(Status));
+            }
+        }
+
+        private Brush _color;
+        public Brush StatusLabelColor
+        {
+            get { return _color; }
+            set
+            {
+                _color = value;
+                OnPropertyChanged(nameof(StatusLabelColor));
             }
         }
 
@@ -188,21 +200,36 @@ namespace MultiOpener.Items
             if (string.IsNullOrEmpty(status))
             {
                 if (Pid != -1)
+                {
+                    Application.Current.Dispatcher.Invoke(delegate
+                    {
+                        StatusLabelColor = new BrushConverter().ConvertFromString("#33cc33") as SolidColorBrush;
+                    });
                     status = "OPENED";
+                }
                 else
+                {
+                    Application.Current.Dispatcher.Invoke(delegate
+                    {
+                        StatusLabelColor = new BrushConverter().ConvertFromString("#cc3300") as SolidColorBrush;
+                    });
                     status = "CLOSED";
+                }
             }
 
-            Status = "STATUS: " + status;
+            Status = status;
         }
 
         public bool IsOpened()
         {
-            return Status.Equals("STATUS: OPENED");
+            if (string.IsNullOrEmpty(Status))
+                return false;
+
+            return Status.Equals("OPENED");
         }
         public bool StillExist()
         {
-            if (Status == "STATUS: CLOSED")
+            if (Status == "CLOSED")
                 return false;
 
             SetPid();
@@ -316,6 +343,9 @@ namespace MultiOpener.Items
 
         public override string ToString()
         {
+            if (ProcessStartInfo == null)
+                return "";
+
             return $"{WindowTitle}\n" +
                    $"PID: {Pid}\n" +
                    $"StartInfo: FileName: {ProcessStartInfo.FileName}\n" +
