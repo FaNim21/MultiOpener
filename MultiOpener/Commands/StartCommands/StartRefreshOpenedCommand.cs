@@ -18,23 +18,25 @@ namespace MultiOpener.Commands.StartCommands
 
         public async Task Refresh()
         {
-            if (Consts.IsStartPanelWorkingNow)
-                return;
-
             Consts.IsStartPanelWorkingNow = true;
 
-            for (int i = 0; i < Start.Opened.Count; i++)
+            int length = Start.Opened.Count;
+            for (int i = 0; i < length; i++)
             {
                 var current = Start.Opened[i];
+
+                //Refreshing (2/5 - Intance 1) - looking for hwnd
+                Start.UpdateText($"Refreshing ({i+1}/{length} - {current.WindowTitle})");
+
                 if (current.isMCInstance && !current.IsOpened())
-                {
                     await current.SearchForMCInstance();
-                }
 
                 current.Update();
+                await Task.Delay(100);
             }
 
             Consts.IsStartPanelWorkingNow = false;
+            Start.UpdateText("");
         }
     }
 }

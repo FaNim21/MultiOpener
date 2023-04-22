@@ -53,6 +53,17 @@ namespace MultiOpener.ViewModels
             }
         }
 
+        private string? _panelInteractionText;
+        public string? PanelInteractionText
+        {
+            get { return _panelInteractionText; }
+            set
+            {
+                _panelInteractionText = value;
+                OnPropertyChanged(nameof(PanelInteractionText));
+            }
+        }
+
 
         public StartViewModel()
         {
@@ -68,6 +79,13 @@ namespace MultiOpener.ViewModels
         public void UpdatePresetName(string name = "Empty preset")
         {
             PresetNameLabel = name;
+        }
+
+        public void UpdateText(string content)
+        {
+            //if (string.IsNullOrEmpty(content)) return;
+
+            PanelInteractionText = content;
         }
 
         public void AddOpened(OpenedProcess openedProcess)

@@ -48,13 +48,13 @@
                                HorizontalAlignment="left"
                                HorizontalContentAlignment="Right"
                                Content="STATUS: "
-                               Margin="0 25" 
-                               Padding="0 4"/>
+                               Margin="0 25"
+                               Padding="0 4" />
                         <Label Height="25"
                                Foreground="{Binding Path=StatusLabelColor}"
                                Content="{Binding Status}"
                                Margin="0 25"
-                               Padding="0 4"/>
+                               Padding="0 4" />
                     </WrapPanel>
                 </Grid>
             </Border>
@@ -209,6 +209,12 @@
                    Height="40"
                    VerticalAlignment="top"
                    HorizontalContentAlignment="Center" />
+
+            <Label Height="30"
+                   Content="{Binding PanelInteractionText}"
+                   VerticalAlignment="Bottom"
+                   Margin="5 -10"
+                   Padding="0" />
 
             <local:ButtonNormal x:Name="OpenButton"
                                 Width="100"

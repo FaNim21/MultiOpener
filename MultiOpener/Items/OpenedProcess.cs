@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Commands.OpenedCommands;
 using MultiOpener.Utils;
+using MultiOpener.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -66,12 +67,25 @@ namespace MultiOpener.Items
         public ICommand ResetCommand { get; private set; }
         public ICommand CloseOpenCommand { get; private set; }
 
+        /*
+         IsEnabled="{Binding IsContextMenuEnabled}"
+         Visibility="{Binding IsContextMenuEnabled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+        */
+        public bool IsContextMenuEnabled { get { return !Consts.IsStartPanelWorkingNow; } private set { } }
+
 
         public OpenedProcess()
         {
+            StartViewModel start = null;
+
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                start = ((MainWindow)Application.Current.MainWindow).MainViewModel.start;
+            });
+
             ViewInformationsCommand = new OpenedViewInformationsCommand(this);
-            ResetCommand = new OpenedResetCommand(this);
-            CloseOpenCommand = new OpenedCloseOpenCommand(this);
+            ResetCommand = new OpenedResetCommand(this, start);
+            CloseOpenCommand = new OpenedCloseOpenCommand(this, start);
         }
 
         //TODO: 7 moze cos typu CanSetHwnd? zeby sprawdzic czy proces jest non gui
@@ -260,7 +274,7 @@ namespace MultiOpener.Items
                     if (isSuccessful)
                     {
                         IntPtr handle = Win32.GetHandleFromPid(Pid);
-                        if(handle != IntPtr.Zero)
+                        if (handle != IntPtr.Zero)
                             SetHandle(handle);
                     }
                 }
