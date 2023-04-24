@@ -146,6 +146,7 @@ namespace MultiOpener.Commands.StartCommands
             await Task.Delay(3500);
             Application.Current.Dispatcher.Invoke(delegate
             {
+                Consts.IsStartPanelWorkingNow = false;
                 Start.RefreshOpenedCommand.Execute(null);
             });
         }

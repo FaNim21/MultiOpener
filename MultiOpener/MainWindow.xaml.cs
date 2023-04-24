@@ -2,6 +2,7 @@
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -31,9 +32,7 @@ namespace MultiOpener
 
             MainViewModel.settings.LoadStartUPPreset(Settings.Default.LastOpenedPresetName);
 
-            //TODO: 1 Check for updates on repos
-            var checker = new UpdateChecker();
-            Task task = Task.Run(checker.CheckForUpdates);
+            Task task = Task.Factory.StartNew(CheckForUpdates);
         }
 
         public void EnableDisableChoosenHeadButton(string option)
@@ -81,6 +80,27 @@ namespace MultiOpener
             Show();
             Topmost = true;
             Topmost = false;
+        }
+
+        private async Task CheckForUpdates()
+        {
+            var checker = new UpdateChecker();
+            bool output = await checker.CheckForUpdates();
+
+            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            {
+                UpdateButton.Visibility = output ? Visibility.Visible : Visibility.Hidden;
+            });
+        }
+
+        private void UpdateButtonClick(object sender, RoutedEventArgs e)
+        {
+            Trace.WriteLine(UpdateButton.Content);
+
+            Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest")
+            {
+                UseShellExecute = true
+            });
         }
     }
 }

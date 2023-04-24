@@ -14,6 +14,7 @@
 
 ========== MNIEJSZE FEATURE'Y ==========
 - dac checkbox'a 
+- dac na guziku NEW UPDATE okno z patchnote'ami
 
 
 

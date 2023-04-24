@@ -4,7 +4,7 @@
     {
         public const string Version = "v0.4.0.10";
 
-        public static bool IsStartPanelWorkingNow { get; set; } = false;
+        public static bool IsStartPanelWorkingNow { get; set; } = true;
 
     }
 }
