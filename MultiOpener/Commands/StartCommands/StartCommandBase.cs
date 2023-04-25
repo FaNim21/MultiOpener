@@ -1,6 +1,6 @@
 ﻿using MultiOpener.ViewModels;
-using System.Windows.Input;
 using System;
+using System.Windows.Input;
 
 namespace MultiOpener.Commands.StartCommands
 {

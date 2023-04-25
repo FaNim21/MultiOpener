@@ -1,5 +1,4 @@
 ﻿using MultiOpener.ViewModels;
-using System.Linq;
 using System.Windows;
 
 namespace MultiOpener.Commands.SettingsCommands
@@ -14,10 +13,9 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null) return;
 
-            if ((Settings.Opens == null || !Settings.Opens.Any()) && string.IsNullOrEmpty(Settings.PresetName))
-                return;
+            if (Settings.OpenIsEmpty() && string.IsNullOrEmpty(Settings.PresetName)) return;
 
-            if(MessageBox.Show($"Are you sure that you want to delete {Settings.PresetName}?", "Deleting currently opened preset!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageBox.Show($"Are you sure that you want to delete {Settings.PresetName}?", "Deleting currently opened preset!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 Settings.RemoveCurrentOpenPreset();
         }
     }

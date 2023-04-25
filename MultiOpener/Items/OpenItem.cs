@@ -1,17 +1,17 @@
 ﻿using MultiOpener.Items;
 using MultiOpener.Utils;
-using System.Collections.Generic;
+using MultiOpener.Windows;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Threading;
-using MultiOpener.Windows;
-using System.Text.RegularExpressions;
 
 namespace MultiOpener.ListView
 {

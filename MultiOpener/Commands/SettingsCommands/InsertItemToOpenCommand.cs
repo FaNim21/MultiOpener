@@ -1,6 +1,5 @@
 ﻿using MultiOpener.ListView;
 using MultiOpener.ViewModels;
-using System.Windows.Media;
 
 namespace MultiOpener.Commands.SettingsCommands
 {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Management;
 
 namespace MultiOpener.Utils
 {
@@ -49,8 +49,6 @@ namespace MultiOpener.Utils
 
         private const int WM_CLOSE = 0x0010;
         private const int SMTO_ABORTIFHUNG = 0x0002;
-
-        private const int PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
         #endregion
 
 

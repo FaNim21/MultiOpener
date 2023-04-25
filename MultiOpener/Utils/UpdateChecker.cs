@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NuGet.Versioning;
+using Octokit;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using NuGet.Versioning;
-using Octokit;
 
 namespace MultiOpener.Utils
 {

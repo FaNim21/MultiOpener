@@ -12,7 +12,7 @@ namespace MultiOpener.Components.Buttons
             set { SetValue(ContextTextProperty, value); }
         }
 
-        public ICommand ChangeCommand 
+        public ICommand ChangeCommand
         {
             get { return (ICommand)GetValue(ChangeCommandProperty); }
             set { SetValue(ChangeCommandProperty, value); }

@@ -1,8 +1,8 @@
-﻿using System.Windows;
+﻿using MultiOpener.ListView;
+using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Text.RegularExpressions;
-using MultiOpener.ListView;
 
 namespace MultiOpener.Views
 {
@@ -47,7 +47,7 @@ namespace MultiOpener.Views
             if (item != null)
             {
                 Keyboard.Focus((IInputElement)sender);
-                OnListItemClickCommand?.Execute((OpenItem)item.DataContext);    
+                OnListItemClickCommand?.Execute((OpenItem)item.DataContext);
             }
         }
         private void TextBlockDragOver(object sender, DragEventArgs e)
@@ -57,7 +57,7 @@ namespace MultiOpener.Views
                 var targetedItem = (OpenItem)element.DataContext;
                 var insertedItem = (OpenItem)e.Data.GetData(DataFormats.Serializable);
 
-                OpenItem[] elements = new OpenItem[2]{ targetedItem, insertedItem };
+                OpenItem[] elements = new OpenItem[2] { targetedItem, insertedItem };
                 TextBlockDragOverCommand?.Execute(elements);
             }
         }

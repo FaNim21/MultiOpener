@@ -1,13 +1,13 @@
-﻿using MultiOpener.ListView;
+﻿using MultiOpener.Commands.SettingsCommands;
+using MultiOpener.Items;
+using MultiOpener.ListView;
+using MultiOpener.Utils;
+using MultiOpener.ViewModels.Settings;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
 using System.Windows.Input;
-using MultiOpener.Commands.SettingsCommands;
-using MultiOpener.ViewModels.Settings;
-using System;
-using MultiOpener.Items;
-using MultiOpener.Utils;
 
 namespace MultiOpener.ViewModels
 {

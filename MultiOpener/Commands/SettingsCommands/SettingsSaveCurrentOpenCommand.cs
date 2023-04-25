@@ -32,7 +32,7 @@ namespace MultiOpener.Commands.SettingsCommands
                         open = Settings.Opens[i];
                     }
 
-                    if(open.GetType() == typeof(OpenInstance))
+                    if (open.GetType() == typeof(OpenInstance))
                     {
                         OpenInstance instance = (OpenInstance)Settings.Opens[i];
                         instance.Quantity = ((SettingsOpenInstancesModelView)Settings.SelectedOpenTypeViewModel).Quantity;

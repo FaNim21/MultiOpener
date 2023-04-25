@@ -18,7 +18,7 @@ namespace MultiOpener.Commands.SettingsCommands
             var dialog = new VistaOpenFileDialog();
             if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
             {
-                if(dialog.CheckFileExists && !dialog.Multiselect)
+                if (dialog.CheckFileExists && !dialog.Multiselect)
                     OpenTypeViewModel.ApplicationPathField = dialog.FileName;
             }
         }
