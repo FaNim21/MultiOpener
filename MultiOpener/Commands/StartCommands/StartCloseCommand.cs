@@ -44,7 +44,10 @@ namespace MultiOpener.Commands.StartCommands
                 }
 
                 if (Start.OpenedIsEmpty())
+                {
                     Start.OpenButtonName = "OPEN";
+                    Consts.IsStartPanelWorkingNow = true;
+                }
             }
         }
     }

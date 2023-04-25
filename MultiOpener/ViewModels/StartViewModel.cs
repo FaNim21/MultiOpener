@@ -83,8 +83,6 @@ namespace MultiOpener.ViewModels
 
         public void UpdateText(string content)
         {
-            //if (string.IsNullOrEmpty(content)) return;
-
             PanelInteractionText = content;
         }
 

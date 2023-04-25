@@ -27,11 +27,13 @@ namespace MultiOpener.Commands.StartCommands
             {
                 var current = Start.Opened[i];
 
-                //Refreshing (2/5 - Intance 1) - looking for hwnd
-                Start.UpdateText($"Refreshing ({i + 1}/{length} - {current.WindowTitle})");
+                Start.UpdateText($"Refreshing ({i + 1}/{length} - {current.Name})");
 
                 if (current.isMCInstance && !current.IsOpened())
+                {
+                    Start.UpdateText($"Refreshing ({i + 1}/{length} - {current.Name}) - looking for window");
                     await current.SearchForMCInstance();
+                }
 
                 current.Update();
                 await Task.Delay(100);

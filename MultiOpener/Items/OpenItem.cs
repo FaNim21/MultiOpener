@@ -92,13 +92,14 @@ namespace MultiOpener.ListView
                 {
                     process.EnableRaisingEvents = true;
 
-                    OpenedProcess openened = new();
-                    openened.SetStartInfo(processStartInfo);
-                    openened.SetHandle(process.Handle);
-                    openened.SetPath(PathExe);
+                    OpenedProcess opened = new();
+                    opened.SetStartInfo(processStartInfo);
+                    opened.SetName();
+                    opened.SetHandle(process.Handle);
+                    opened.SetPath(PathExe);
 
                     int errors = 0;
-                    while (!openened.SetHwnd() && errors < 15)
+                    while (!opened.SetHwnd() && errors < 15)
                     {
                         if (source.IsCancellationRequested)
                             break;
@@ -111,7 +112,7 @@ namespace MultiOpener.ListView
                     {
                         Application.Current.Dispatcher.Invoke(delegate
                         {
-                            ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(openened);
+                            ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened);
                         });
                     }
                 }
@@ -225,6 +226,7 @@ namespace MultiOpener.ListView
                         OpenedProcess opened = new();
                         opened.SetHandle(process.Handle);
                         opened.SetStartInfo(startInfo);
+                        opened.SetName(Names[i]);
                         opened.isMCInstance = true;
                         opened.mcInstancesAmount = Quantity;
 
@@ -250,7 +252,7 @@ namespace MultiOpener.ListView
                     await Task.Delay(750);
                 } while (instances.Count != count && errorCount < 50);
 
-                //TODO: 9 OPTIMIZE IT
+                //TODO: 9 OPTIMIZE IT?
                 for (int i = 0; i < mcInstances.Count; i++)
                 {
                     var current = mcInstances[i];

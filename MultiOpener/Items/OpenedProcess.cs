@@ -17,6 +17,8 @@ namespace MultiOpener.Items
     {
         public const string MCPattern = @"Minecraft\*\s+(\s+-\s+instance)?\s*(?:\d+(\.\d+)+|\d+)";
 
+        public string? Name { get; private set; }
+
         public IntPtr Hwnd { get; private set; }
         public IntPtr Handle { get; private set; }
         public int Pid { get; private set; }
@@ -154,10 +156,18 @@ namespace MultiOpener.Items
                 Path = path;
         }
 
+        public void SetName(string name = "")
+        {
+            if(string.IsNullOrEmpty(name))
+                Name = System.IO.Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
+            else
+                Name = name;
+        }
+
         public void SetStartInfo(ProcessStartInfo startInfo)
         {
+            if (startInfo == null) return;
             ProcessStartInfo = startInfo;
-
             UpdateStatus();
         }
 
@@ -360,7 +370,10 @@ namespace MultiOpener.Items
             if (ProcessStartInfo == null)
                 return "";
 
-            return $"{WindowTitle}\n" +
+            //TODO: 1 dac wiecej opcji do wyswietlania i nie wyswietlac pustych informacji
+
+            return $"Name: {Name}" +
+                   $"Title: {WindowTitle}\n" +
                    $"PID: {Pid}\n" +
                    $"StartInfo: FileName: {ProcessStartInfo.FileName}\n" +
                    $"           WokrkingDirectory: {ProcessStartInfo.WorkingDirectory}\n" +

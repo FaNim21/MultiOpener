@@ -26,7 +26,7 @@ namespace MultiOpener.Commands.OpenedCommands
         {
             Consts.IsStartPanelWorkingNow = true;
 
-            Start?.UpdateText($"Reseting {openedProcess.WindowTitle}");
+            Start?.UpdateText($"Reseting {openedProcess.Name}");
             if (openedProcess.IsOpened())
             {
 
