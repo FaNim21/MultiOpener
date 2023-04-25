@@ -7,7 +7,7 @@ namespace MultiOpener.Commands.StartCommands
 {
     public class StartCloseCommand : StartCommandBase
     {
-        public StartCloseCommand(StartViewModel startViewModel) : base(startViewModel)
+        public StartCloseCommand(StartViewModel? startViewModel) : base(startViewModel)
         {
         }
 

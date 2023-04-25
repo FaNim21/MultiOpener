@@ -9,7 +9,7 @@ namespace MultiOpener.Commands.OpenedCommands
     {
         public OpenedProcess openedProcess;
 
-        public OpenedResetCommand(OpenedProcess openedProcess, StartViewModel start) : base(start)
+        public OpenedResetCommand(OpenedProcess openedProcess, StartViewModel? start) : base(start)
         {
             this.openedProcess = openedProcess;
         }
@@ -26,8 +26,10 @@ namespace MultiOpener.Commands.OpenedCommands
         {
             Consts.IsStartPanelWorkingNow = true;
 
+            Start?.UpdateText($"Reseting {openedProcess.WindowTitle}");
             if (openedProcess.IsOpened())
             {
+
                 bool result = await openedProcess.Close();
 
                 if (result)
@@ -41,6 +43,7 @@ namespace MultiOpener.Commands.OpenedCommands
             }
 
             Consts.IsStartPanelWorkingNow = false;
+            Start?.UpdateText($"");
         }
     }
 }

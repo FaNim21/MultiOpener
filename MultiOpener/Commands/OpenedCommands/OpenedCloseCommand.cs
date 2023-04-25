@@ -9,7 +9,7 @@ namespace MultiOpener.Commands.OpenedCommands
     {
         public OpenedProcess openedProcess;
 
-        public OpenedCloseOpenCommand(OpenedProcess openedProcess, StartViewModel start) : base(start)
+        public OpenedCloseOpenCommand(OpenedProcess openedProcess, StartViewModel? start) : base(start)
         {
             this.openedProcess = openedProcess;
         }

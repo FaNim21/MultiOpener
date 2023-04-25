@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -37,8 +36,6 @@ namespace MultiOpener.Utils
         {
             NuGetVersion latest = new(latestTag);
             NuGetVersion current = new(Consts.Version[1..]);
-
-            Trace.WriteLine(latest + " -- " + current + " --- " + (latest <= current));
 
             return latest <= current;
         }

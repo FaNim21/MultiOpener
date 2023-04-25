@@ -92,15 +92,9 @@ namespace MultiOpener
                 UpdateButton.Visibility = output ? Visibility.Visible : Visibility.Hidden;
             });
         }
-
         private void UpdateButtonClick(object sender, RoutedEventArgs e)
         {
-            Trace.WriteLine(UpdateButton.Content);
-
-            Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest")
-            {
-                UseShellExecute = true
-            });
+            Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest") { UseShellExecute = true });
         }
     }
 }

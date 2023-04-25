@@ -14,7 +14,7 @@
 
 ========== MNIEJSZE FEATURE'Y ==========
 - dac checkbox'a 
-- dac na guziku NEW UPDATE okno z patchnote'ami
+- dac na guziku NEW UPDATE okno z wszystkimi patchnote'ami od obecnej wersji do najnowszej
 
 
 
@@ -26,12 +26,13 @@
 - Dac ewentualnie mozliwosc podgladu okna MultiMC, czyli dac poprostu panel w otwartych procesach z MultiMC gdzie bedzie mial contextmenu tylko z show/hide czy cos takiego moze
 - sprobowac wykryc juz dany proces przed glowym otwarciem zeby moze nie otwierac go juz jak jest odpalony (KONCEPT)
 -- patch notes
-- zreworkowano calkowicie logike odpalania i zamykania programow
+- zreworkowano calkowicie logike odpalania i zamykania programow i teraz zamykanie jest w pełni bezpieczne
 - dodano panel do informacji zwiazanych z aplikacja
-- poprawiono ui
+- lekko poprawiono ui
 - dodano panel z odpalonymi procesami z presetu z mozliwoscia kontroli w postaci wylaczania/wlaczania, resetowania i wyswietlana ogolnych informacji pojedynczo dla kazdego procesu
-- naprawiono wiele błedów ogólnych związanych z MultiOpenerem i związanych z otwieraniem i zamykaniem procesów
-- dodano mozliwosc uruchamiania nie zapisanych nowo zrobionych presetow
+- naprawiono wiele błedów ogólnych związanych z MultiOpenerem i z otwieraniem/zamykaniem procesów
+- dodano mozliwosc uruchamiania nie zapisanego, nowo zrobionego presetu w formie testu
+- dodano powiadomienia o nowej aktualizacji do MultiOpenera
 
 
 ========== 0.5.0 ?? 1.0 ===========

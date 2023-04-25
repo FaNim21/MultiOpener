@@ -21,12 +21,13 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            
         </Button.Style>
 
         <Button.Template>
             <ControlTemplate TargetType="Button">
                 <Border Background="{TemplateBinding Background}">
-                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <ContentPresenter VerticalAlignment="Bottom" HorizontalAlignment="Center">
                         <ContentPresenter.RenderTransform>
                             <TranslateTransform X="0" Y="-2.0" />
                         </ContentPresenter.RenderTransform>

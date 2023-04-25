@@ -8,7 +8,7 @@ namespace MultiOpener.Commands.StartCommands
     {
         public StartViewModel? Start { get; set; }
 
-        public StartCommandBase(StartViewModel startViewModel)
+        public StartCommandBase(StartViewModel? startViewModel)
         {
             Start = startViewModel;
         }

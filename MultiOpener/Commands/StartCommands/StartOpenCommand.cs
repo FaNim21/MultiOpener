@@ -13,7 +13,7 @@ namespace MultiOpener.Commands.StartCommands
     public class StartOpenCommand : StartCommandBase
     {
         private MainWindow MainWindow { get; set; }
-        private SettingsViewModel Settings { get; set; }
+        private SettingsViewModel? Settings { get; set; }
 
         private OpenningProcessLoadingWindow? loadingProcesses;
 
@@ -21,7 +21,7 @@ namespace MultiOpener.Commands.StartCommands
         private CancellationToken token;
 
 
-        public StartOpenCommand(StartViewModel startViewModel) : base(startViewModel)
+        public StartOpenCommand(StartViewModel? startViewModel) : base(startViewModel)
         {
             MainWindow = (MainWindow)Application.Current.MainWindow;
         }
@@ -48,7 +48,7 @@ namespace MultiOpener.Commands.StartCommands
 
         private async Task OpenProgramsList()
         {
-            if (Start == null) return;
+            if (Start == null || Settings == null) return;
 
             int length = Settings.Opens.Count;
             int progressLength = length;

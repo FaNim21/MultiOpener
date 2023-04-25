@@ -35,7 +35,7 @@
                                  Height="25"
                                  FontSize="20"
                                  HorizontalAlignment="Right"
-                                 Grid.Column="3"
+                                 Grid.Column="1"
                                  Margin="0 0 30 0"
                                  ContentText="-"
                                  Click="MinimizeButtonsClick" />
@@ -45,7 +45,7 @@
                                  Height="25"
                                  FontSize="20"
                                  HorizontalAlignment="Right"
-                                 Grid.Column="3"
+                                 Grid.Column="1"
                                  ContentText="X"
                                  Click="ExitButtonClick" />
 
@@ -98,15 +98,37 @@
                     Grid.Column="1"
                     Visibility="Hidden"
                     Width="90"
-                    Height="20"
-                    Background="OrangeRed"
-                    BorderBrush="IndianRed"
+                    Height="25"
                     HorizontalAlignment="Left"
                     Content="NEW UPDATE"
                     FontWeight="Medium"
+                    Foreground="White"
+                    FontSize="13"
                     Margin="55 0 0 0"
-                    Padding="0 2 0 0"
-                    Click="UpdateButtonClick" />
+                    BorderThickness="0"
+                    Click="UpdateButtonClick">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background"
+                                Value="DarkRed" />
+                        <Setter Property="Cursor"
+                                Value="Hand" />
+                        <Style.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                                        To="Red"
+                                                        Duration="0:0:0.4"
+                                                        AutoReverse="True"
+                                                        RepeatBehavior="Forever" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
 
             <Label Content="MultiOpener"
                    FontWeight="Bold"

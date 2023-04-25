@@ -50,8 +50,8 @@ namespace MultiOpener.Items
             }
         }
 
-        private Brush _color;
-        public Brush StatusLabelColor
+        private Brush? _color;
+        public Brush? StatusLabelColor
         {
             get { return _color; }
             set
@@ -71,12 +71,12 @@ namespace MultiOpener.Items
          IsEnabled="{Binding IsContextMenuEnabled}"
          Visibility="{Binding IsContextMenuEnabled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
         */
-        public bool IsContextMenuEnabled { get { return !Consts.IsStartPanelWorkingNow; } private set { } }
+        //public bool IsContextMenuEnabled { get { return !Consts.IsStartPanelWorkingNow; } private set { } }
 
 
         public OpenedProcess()
         {
-            StartViewModel start = null;
+            StartViewModel? start = null;
 
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -145,7 +145,7 @@ namespace MultiOpener.Items
                 Pid = -1;
         }
 
-        public void SetPath(string path = null)
+        public void SetPath(string path = "")
         {
             if (isMCInstance)
                 Path = Win32.GetJavaFilePath(Pid);
