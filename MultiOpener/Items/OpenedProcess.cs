@@ -95,7 +95,9 @@ namespace MultiOpener.Items
         {
             Hwnd = hwnd;
             UpdateTitle();
-            SetPid();
+
+            if (Pid <= 0)
+                SetPid();
         }
         public bool SetHwnd()
         {
@@ -125,40 +127,35 @@ namespace MultiOpener.Items
         }
         public void SetPid()
         {
+            int pid;
             if (Hwnd != IntPtr.Zero)
-            {
-                int pid = (int)Win32.GetPidFromHwnd(Hwnd);
-                if (pid == 0)
-                    return;
-
-                if (Pid == 0 || isMCInstance || Pid != pid)
-                    Pid = pid;
-            }
+                pid = (int)Win32.GetPidFromHwnd(Hwnd);
             else if (Handle != IntPtr.Zero)
-            {
-                int pid = (int)Win32.GetPidFromHandle(Handle);
-                if (pid == 0)
-                    return;
-
-                if (Pid != pid)
-                    Pid = pid;
-            }
+                pid = (int)Win32.GetPidFromHandle(Handle);
             else
-                Pid = -1;
+                pid = -1;
+
+            if (pid <= 0) return;
+
+            if (pid == -1)
+            {
+                Pid = pid;
+                return;
+            }
+
+            if (Pid == 0 || isMCInstance || Pid != pid)
+                Pid = pid;
         }
 
         public void SetPath(string path = "")
         {
-            if (isMCInstance)
-                Path = Win32.GetJavaFilePath(Pid);
-
-            if (!string.IsNullOrEmpty(path))
-                Path = path;
+            if (string.IsNullOrEmpty(path)) return;
+            Path = path;
         }
 
         public void SetName(string name = "")
         {
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 Name = System.IO.Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
             else
                 Name = name;
@@ -187,6 +184,7 @@ namespace MultiOpener.Items
                 return;
             }
 
+            //?????????????
             if (!StillExist() && Handle != IntPtr.Zero)
             {
                 UpdateStatus("CLOSED");
@@ -221,6 +219,7 @@ namespace MultiOpener.Items
         }
         public void UpdateStatus(string status = "")
         {
+            //TODO: Nawiazujac do update omzna pozbyc sie argumentu przypisywania statusu
             if (string.IsNullOrEmpty(status))
             {
                 if (Pid != -1)
@@ -253,7 +252,10 @@ namespace MultiOpener.Items
         }
         public bool StillExist()
         {
-            if (Status == "CLOSED")
+            if (string.IsNullOrEmpty(Status))
+                return false;
+
+            if (Status.Equals("CLOSED"))
                 return false;
 
             SetPid();
@@ -335,8 +337,7 @@ namespace MultiOpener.Items
         }
         public async Task<bool> Close()
         {
-            if (Pid == -1)
-                return true;
+            if (Pid == -1) return true;
 
             try
             {
@@ -370,7 +371,7 @@ namespace MultiOpener.Items
             if (ProcessStartInfo == null)
                 return "";
 
-            //TODO: 1 dac wiecej opcji do wyswietlania i nie wyswietlac pustych informacji
+            //TODO: 0 dac wiecej opcji do wyswietlania i nie wyswietlac pustych informacji | uzyc string buildera do zrobienia calej konstrukcji informacji
 
             return $"Name: {Name}" +
                    $"Title: {WindowTitle}\n" +

@@ -118,7 +118,7 @@ namespace MultiOpener.ListView
                 }
                 await Task.Delay(DelayAfter);
             }
-            catch (Win32Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
@@ -185,6 +185,14 @@ namespace MultiOpener.ListView
             {
                 MessageBox.Show($"You didn't set names for {amount} instances in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
+            }
+
+            for (int i = 0; i < Names.Count; i++)
+            {
+                var current = Names[i];
+
+                //TODO: 0 zrobic walidacje czy dane nazwy jako instancje instanieja w folderze
+                //if(Path.Exists())
             }
 
             return base.Validate();
