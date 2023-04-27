@@ -76,14 +76,15 @@ namespace MultiOpener.Items
         //public bool IsContextMenuEnabled { get { return !Consts.IsStartPanelWorkingNow; } private set { } }
 
 
-        public OpenedProcess()
+        public OpenedProcess(StartViewModel? start = null)
         {
-            StartViewModel? start = null;
-
-            Application.Current.Dispatcher.Invoke(delegate
+            if (start == null)
             {
-                start = ((MainWindow)Application.Current.MainWindow).MainViewModel.start;
-            });
+                Application.Current.Dispatcher.Invoke(delegate
+                {
+                    start = ((MainWindow)Application.Current.MainWindow).MainViewModel.start;
+                });
+            }
 
             ViewInformationsCommand = new OpenedViewInformationsCommand(this);
             ResetCommand = new OpenedResetCommand(this, start);

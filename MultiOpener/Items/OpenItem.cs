@@ -161,6 +161,12 @@ namespace MultiOpener.ListView
                 return true;
             }
 
+            if (!File.Exists(PathExe))
+            {
+                MessageBox.Show($"Your path to MultiMC doesn't exist in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                return true;
+            }
+
             if (DelayBetweenInstances > 99999 || DelayBetweenInstances < 0)
             {
                 MessageBox.Show($"Delay between openning instances should be between 0 and 99999 in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -187,12 +193,17 @@ namespace MultiOpener.ListView
                 return true;
             }
 
-            for (int i = 0; i < Names.Count; i++)
+            string instancePath = Path.GetDirectoryName(PathExe) + "\\instances\\";
+
+            for (int i = 0; i < Quantity; i++)
             {
                 var current = Names[i];
 
-                //TODO: 0 zrobic walidacje czy dane nazwy jako instancje instanieja w folderze
-                //if(Path.Exists())
+                if (!File.Exists(instancePath + current))
+                {
+                    MessageBox.Show($"Instance \"{current}\" doesn't exist in multiMC instance folder", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return true;
+                }
             }
 
             return base.Validate();
