@@ -56,6 +56,8 @@ namespace MultiOpener.ListView
 
         public virtual bool Validate()
         {
+            //TODO: 1 Naprawic MessageBox.Show na customwe co wiadomo ale zrobic przy okazji provider, ktory wyswietli na koniec walidacji ich pare na raz czy cos takiego
+            //i przy okazji zeby popupy nie wyskakiwaly w testach
             if (!File.Exists(PathExe))
             {
                 MessageBox.Show($"You set a path to file that not exist in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -199,7 +201,7 @@ namespace MultiOpener.ListView
             {
                 var current = Names[i];
 
-                if (!File.Exists(instancePath + current))
+                if (!Directory.Exists(instancePath + current))
                 {
                     MessageBox.Show($"Instance \"{current}\" doesn't exist in multiMC instance folder", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
                     return true;
