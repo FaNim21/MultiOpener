@@ -6,9 +6,9 @@ namespace MultiOpener.Windows
 {
     public partial class OpenningProcessLoadingWindow : Window
     {
-        public StartOpenCommand StartOpenCommand { get; set; }
+        public StartOpenCommand? StartOpenCommand { get; set; }
 
-        public OpenningProcessLoadingWindow(StartOpenCommand openCommand, double windowLeftPosition, double windowTopPosition)
+        public OpenningProcessLoadingWindow(StartOpenCommand? openCommand, double windowLeftPosition, double windowTopPosition)
         {
             InitializeComponent();
 
@@ -31,6 +31,8 @@ namespace MultiOpener.Windows
 
         private void CancelButton(object sender, RoutedEventArgs e)
         {
+            if (StartOpenCommand == null) return;
+
             Button.IsEnabled = false;
             InfoText.Content = "Canceling...";
 

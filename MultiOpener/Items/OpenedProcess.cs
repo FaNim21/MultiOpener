@@ -69,12 +69,6 @@ namespace MultiOpener.Items
         public ICommand ResetCommand { get; private set; }
         public ICommand CloseOpenCommand { get; private set; }
 
-        /*
-         IsEnabled="{Binding IsContextMenuEnabled}"
-         Visibility="{Binding IsContextMenuEnabled, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-        */
-        //public bool IsContextMenuEnabled { get { return !Consts.IsStartPanelWorkingNow; } private set { } }
-
 
         public OpenedProcess(StartViewModel? start = null)
         {

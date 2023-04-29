@@ -28,7 +28,7 @@ namespace MultiOpener.Commands.OpenedCommands
 
             if (openedProcess.IsOpened())
             {
-                Start.UpdateText($"Closing {openedProcess.Name}");
+                Start?.UpdateText($"Closing {openedProcess.Name}");
                 bool result = await openedProcess.Close();
 
                 if (result)
@@ -39,13 +39,13 @@ namespace MultiOpener.Commands.OpenedCommands
             }
             else
             {
-                Start.UpdateText($"Opening {openedProcess.Name}");
+                Start?.UpdateText($"Opening {openedProcess.Name}");
                 await openedProcess.QuickOpen();
             }
             await Task.Delay(100);
 
             Consts.IsStartPanelWorkingNow = false;
-            Start.UpdateText($"");
+            Start?.UpdateText($"");
         }
     }
 }

@@ -65,9 +65,9 @@ namespace MultiOpener.ViewModels
         }
 
 
-        public StartViewModel()
+        public StartViewModel(MainWindow mainWindow)
         {
-            OpenCommand = new StartOpenCommand(this);
+            OpenCommand = new StartOpenCommand(this, mainWindow);
             CloseCommand = new StartCloseCommand(this);
             RefreshOpenedCommand = new StartRefreshOpenedCommand(this);
 

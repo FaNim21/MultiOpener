@@ -79,7 +79,7 @@ namespace MultiOpener.ListView
             return false;
         }
 
-        public virtual async Task Open(OpenningProcessLoadingWindow loading, CancellationTokenSource source, string infoText = "")
+        public virtual async Task Open(OpenningProcessLoadingWindow? loading, CancellationTokenSource source, string infoText = "")
         {
             try
             {
@@ -211,7 +211,7 @@ namespace MultiOpener.ListView
             return base.Validate();
         }
 
-        public override async Task Open(OpenningProcessLoadingWindow loading, CancellationTokenSource source, string infoText = "")
+        public override async Task Open(OpenningProcessLoadingWindow? loading, CancellationTokenSource source, string infoText = "")
         {
             List<OpenedProcess> mcInstances = new();
             try
@@ -227,11 +227,15 @@ namespace MultiOpener.ListView
                         break;
 
                     count++;
-                    Application.Current.Dispatcher.Invoke(delegate
+
+                    if (loading != null)
                     {
-                        loading.SetText($"{infoText} -- Instance ({i + 1}/{Quantity})");
-                        loading.progress.Value++;
-                    });
+                        Application.Current.Dispatcher.Invoke(delegate
+                        {
+                            loading.SetText($"{infoText} -- Instance ({i + 1}/{Quantity})");
+                            loading.progress.Value++;
+                        });
+                    }
 
                     ProcessStartInfo startInfo = new(PathExe)
                     {
@@ -258,10 +262,13 @@ namespace MultiOpener.ListView
                     }
                 }
 
-                Application.Current.Dispatcher.Invoke(delegate
+                if (loading != null)
                 {
-                    loading.SetText($"{infoText} (loading datas)");
-                });
+                    Application.Current.Dispatcher.Invoke(delegate
+                    {
+                        loading.SetText($"{infoText} (loading datas)");
+                    });
+                }
 
                 Regex mcPatternRegex = new(OpenedProcess.MCPattern);
                 int errorCount = -1;

@@ -21,9 +21,9 @@ namespace MultiOpener.Commands.StartCommands
         private CancellationToken token;
 
 
-        public StartOpenCommand(StartViewModel? startViewModel) : base(startViewModel)
+        public StartOpenCommand(StartViewModel? startViewModel, MainWindow mainWindow) : base(startViewModel)
         {
-            MainWindow = (MainWindow)Application.Current.MainWindow;
+            MainWindow = mainWindow;
         }
 
         public override void Execute(object? parameter)

@@ -87,7 +87,7 @@ namespace MultiOpener
             var checker = new UpdateChecker();
             bool output = await checker.CheckForUpdates();
 
-            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            Application.Current.Dispatcher.Invoke(delegate
             {
                 UpdateButton.Visibility = output ? Visibility.Visible : Visibility.Hidden;
             });
