@@ -57,11 +57,12 @@ internal class OpeningTest
         Assert.That((SettingsViewModel)_mainWindow.MainViewModel.SelectedViewModel, Is.Not.EqualTo(null));
     }
 
-    /*[Test]
+    [Test]
     public async Task OpenMethod_Should_Start_New_Process()
     {
-        // Arrange
-        var openItem = new OpenItem
+
+
+        /*var openItem = new OpenItem
         {
             Name = "Notepad",
             PathExe = "C:\\Windows\\System32\\notepad.exe",
@@ -72,14 +73,12 @@ internal class OpeningTest
 
         var cancellationTokenSource = new CancellationTokenSource();
 
-        // Act
         await openItem.Open(null, cancellationTokenSource);
 
-        // Assert
         var processName = Path.GetFileNameWithoutExtension(openItem.PathExe);
         var process = Process.GetProcessesByName(processName).FirstOrDefault();
         Assert.That(process, Is.Not.Null);
 
-        cancellationTokenSource.Cancel();
-    }*/
+        cancellationTokenSource.Cancel();*/
+    }
 }

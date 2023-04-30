@@ -13,6 +13,8 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
+            if (Consts.IsStartPanelWorkingNow) return;
+
             Task task = Task.Run(Close);
         }
 

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Linq;
 
 namespace MultiOpener.Commands.StartCommands
 {
@@ -58,8 +59,12 @@ namespace MultiOpener.Commands.StartCommands
             for (int i = 0; i < length; i++)
             {
                 var current = Settings.Opens[i];
-                if (current.Validate())
+
+                string result = current.Validate();
+                if (!string.IsNullOrEmpty(result))
                 {
+                    MessageBox.Show(result, "", MessageBoxButton.OK, MessageBoxImage.Error);
+
                     Application.Current.Dispatcher.Invoke(delegate
                     {
                         Start.OpenButtonName = "OPEN";

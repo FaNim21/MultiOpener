@@ -54,29 +54,18 @@ namespace MultiOpener.ListView
             Type = item.Type;
         }
 
-        public virtual bool Validate()
+        public virtual string Validate()
         {
-            //TODO: 1 Naprawic MessageBox.Show na customwe co wiadomo ale zrobic przy okazji provider, ktory wyswietli na koniec walidacji ich pare na raz czy cos takiego
-            //i przy okazji zeby popupy nie wyskakiwaly w testach
             if (!File.Exists(PathExe))
-            {
-                MessageBox.Show($"You set a path to file that not exist in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                return true;
-            }
+                return $"You set a path to file that not exist in {Name}";
 
             if (DelayAfter < 0 || DelayBefore < 0)
-            {
-                MessageBox.Show($"You set delay lower than 0 in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                return true;
-            }
+                return $"You set delay lower than 0 in {Name}";
 
             if (DelayAfter > 999999 || DelayBefore > 99999)
-            {
-                MessageBox.Show($"Your delay can't be higher than 99999 in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return true;
-            }
+                return $"Your delay can't be higher than 99999 in {Name}";
 
-            return false;
+            return string.Empty;
         }
 
         public virtual async Task Open(OpenningProcessLoadingWindow? loading, CancellationTokenSource source, string infoText = "")
@@ -155,31 +144,21 @@ namespace MultiOpener.ListView
             DelayBetweenInstances = instance.DelayBetweenInstances;
         }
 
-        public override bool Validate()
+        public override string Validate()
         {
+            string output = base.Validate();
+
             if (!Path.GetFileName(PathExe).Equals("MultiMC.exe"))
-            {
-                MessageBox.Show($"You set wrong path to MultiMC exe file in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                return true;
-            }
+                return $"You set wrong path to MultiMC exe file in {Name}";
 
             if (!File.Exists(PathExe))
-            {
-                MessageBox.Show($"Your path to MultiMC doesn't exist in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                return true;
-            }
+                return $"Your path to MultiMC doesn't exist in {Name}";
 
             if (DelayBetweenInstances > 99999 || DelayBetweenInstances < 0)
-            {
-                MessageBox.Show($"Delay between openning instances should be between 0 and 99999 in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                return true;
-            }
+                return $"Delay between openning instances should be between 0 and 99999 in {Name}";
 
             if (Quantity > 32 || Quantity < 0)
-            {
-                MessageBox.Show($"Amount of instances should be between 0 and 32 in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                return true;
-            }
+                return $"Amount of instances should be between 0 and 32 in {Name}";
 
             int amount = 0;
             for (int i = 0; i < Names.Count; i++)
@@ -190,10 +169,7 @@ namespace MultiOpener.ListView
             }
 
             if (amount > 0)
-            {
-                MessageBox.Show($"You didn't set names for {amount} instances in {Name}", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                return true;
-            }
+                return $"You didn't set names for {amount} instances in {Name}";
 
             string instancePath = Path.GetDirectoryName(PathExe) + "\\instances\\";
 
@@ -202,13 +178,10 @@ namespace MultiOpener.ListView
                 var current = Names[i];
 
                 if (!Directory.Exists(instancePath + current))
-                {
-                    MessageBox.Show($"Instance \"{current}\" doesn't exist in multiMC instance folder", "Something went wrong", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return true;
-                }
+                    return $"Instance \"{current}\" doesn't exist in multiMC instance folder";
             }
 
-            return base.Validate();
+            return output;
         }
 
         public override async Task Open(OpenningProcessLoadingWindow? loading, CancellationTokenSource source, string infoText = "")

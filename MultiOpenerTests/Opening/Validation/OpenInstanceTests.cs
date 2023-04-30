@@ -9,22 +9,25 @@ internal class OpenInstanceTests
     [Test]
     public void InstanceNamesValidation()
     {
-        OpenInstance open = new();
-        open.PathExe = "C:\\Games\\MultiMC\\MultiMC.exe";
-        open.DelayBefore = 100;
-        open.DelayAfter = 100;
-        open.DelayBetweenInstances = 100;
-        open.Quantity = 5;
-        open.Names = new()
+        OpenInstance instance = new()
+        {
+            PathExe = "C:\\Games\\MultiMC\\MultiMC.exe",
+            DelayBefore = 100,
+            DelayAfter = 100,
+            DelayBetweenInstances = 100,
+            Quantity = 5,
+            Names = new()
         {
             "1.16 speedrun instance 3",
             "1.16 speedrun instance 4",
             "1.15.2 speedrun instance 1",
             "1.16 speedrun instance 5",
             "1.16 speedrun instance 1"
+        }
         };
 
-        Assert.That(open.Validate(), Is.False);
+        var result = instance.Validate();
+        Assert.That(result, Is.EqualTo(string.Empty));
     }
 
     [Test]
@@ -37,7 +40,7 @@ internal class OpenInstanceTests
         };
 
         var result = instance.Validate();
-        Assert.That(result, Is.True);
+        Assert.That(result, Is.EqualTo($"You set wrong path to MultiMC exe file in {instance.Name}"));
     }
 
     [Test]
@@ -50,7 +53,7 @@ internal class OpenInstanceTests
         };
 
         var result = instance.Validate();
-        Assert.That(result, Is.True);
+        Assert.That(result, Is.EqualTo($"Your path to MultiMC doesn't exist in {instance.Name}"));
     }
 
     [Test]
@@ -64,7 +67,7 @@ internal class OpenInstanceTests
         };
 
         var result = instance.Validate();
-        Assert.That(result, Is.True);
+        Assert.That(result, Is.EqualTo($"Delay between openning instances should be between 0 and 99999 in {instance.Name}"));
     }
 
     [Test]
@@ -78,7 +81,7 @@ internal class OpenInstanceTests
         };
 
         var result = instance.Validate();
-        Assert.That(result, Is.True);
+        Assert.That(result, Is.EqualTo($"Amount of instances should be between 0 and 32 in {instance.Name}"));
     }
 
     [Test]
@@ -93,13 +96,12 @@ internal class OpenInstanceTests
         };
 
         var result = instance.Validate();
-        Assert.That(result, Is.True);
+        Assert.That(result, Is.EqualTo($"You didn't set names for 1 instances in {instance.Name}"));
     }
 
     [Test]
     public void Validate_Should_Return_True_If_Instance_Directory_Does_Not_Exist()
     {
-        // Arrange
         var instance = new OpenInstance
         {
             Name = "Test",
@@ -109,7 +111,7 @@ internal class OpenInstanceTests
         };
 
         var result = instance.Validate();
-        Assert.That(result, Is.True);
+        Assert.That(result, Is.EqualTo($"Instance \"{instance.Names[0]}\" doesn't exist in multiMC instance folder"));
     }
 
     [Test]
@@ -124,6 +126,6 @@ internal class OpenInstanceTests
         };
 
         var result = instance.Validate();
-        Assert.That(result, Is.False);
+        Assert.That(result, Is.EqualTo(string.Empty));
     }
 }

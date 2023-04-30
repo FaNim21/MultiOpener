@@ -1,13 +1,15 @@
 ﻿using MultiOpener.ListView;
+using System.Xml.Linq;
 
 namespace MultiOpenerTests.Opening.Validation;
+
 [TestFixture]
 internal class OpenItemTests
 {
     [Test]
     public void Validate_InvalidPath_ReturnsTrue()
     {
-        var openItem = new OpenItem
+        var instance = new OpenItem
         {
             Name = "MyApp",
             PathExe = "C:\\Program Files\\log.txt",
@@ -16,14 +18,14 @@ internal class OpenItemTests
             Type = OpenType.Normal
         };
 
-        var result = openItem.Validate();
-        Assert.That(result, Is.True);
+        var result = instance.Validate();
+        Assert.That(result, Is.EqualTo($"You set a path to file that not exist in {instance.Name}"));
     }
 
     [Test]
     public void Validate_NegativeDelay_ReturnsTrue()
     {
-        var openItem = new OpenItem
+        var instance = new OpenItem
         {
             Name = "MyApp",
             PathExe = "C:\\log.txt",
@@ -32,14 +34,14 @@ internal class OpenItemTests
             Type = OpenType.Normal
         };
 
-        var result = openItem.Validate();
-        Assert.That(result, Is.True);
+        var result = instance.Validate();
+        Assert.That(result, Is.EqualTo($"You set delay lower than 0 in {instance.Name}"));
     }
 
     [Test]
     public void Validate_DelayTooHigh_ReturnsTrue()
     {
-        var openItem = new OpenItem
+        var instance = new OpenItem
         {
             Name = "MyApp",
             PathExe = "C:\\log.txt",
@@ -48,14 +50,14 @@ internal class OpenItemTests
             Type = OpenType.Normal
         };
 
-        var result = openItem.Validate();
-        Assert.That(result, Is.True);
+        var result = instance.Validate();
+        Assert.That(result, Is.EqualTo($"Your delay can't be higher than 99999 in {instance.Name}"));
     }
 
     [Test]
     public void Validate_ValidInput_ReturnsFalse()
     {
-        var openItem = new OpenItem
+        var instance = new OpenItem
         {
             Name = "MyApp",
             PathExe = "C:\\log.txt",
@@ -64,7 +66,7 @@ internal class OpenItemTests
             Type = OpenType.Normal
         };
 
-        var result = openItem.Validate();
-        Assert.That(result, Is.False);
+        var result = instance.Validate();
+        Assert.That(result, Is.EqualTo(string.Empty));
     }
 }
