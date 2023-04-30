@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,7 +29,6 @@ namespace MultiOpener.Items
         public ProcessStartInfo? ProcessStartInfo { get; private set; }
 
         public bool isMCInstance = false;
-        public int mcInstancesAmount = 0;
 
         private string? _windowTitle;
         public string? WindowTitle
@@ -107,13 +107,11 @@ namespace MultiOpener.Items
                 Hwnd = IntPtr.Zero;
                 return false;
             }
-            else
-            {
-                Hwnd = output;
-                UpdateTitle();
-                SetPid();
-                return true;
-            }
+
+            Hwnd = output;
+            UpdateTitle();
+            SetPid();
+            return true;
         }
 
         public void SetHandle(IntPtr handle)
@@ -214,7 +212,7 @@ namespace MultiOpener.Items
         }
         public void UpdateStatus(string status = "")
         {
-            //TODO: Nawiazujac do update omzna pozbyc sie argumentu przypisywania statusu
+            //TODO: Nawiazujac do update mozna pozbyc sie argumentu przypisywania statusu
             if (string.IsNullOrEmpty(status))
             {
                 if (Pid != -1)
@@ -366,17 +364,23 @@ namespace MultiOpener.Items
             if (ProcessStartInfo == null)
                 return "";
 
-            //TODO: 0 dac wiecej opcji do wyswietlania i nie wyswietlac pustych informacji | uzyc string buildera do zrobienia calej konstrukcji informacji
+            StringBuilder sb = new();
 
-            return $"Name: {Name}" +
-                   $"Title: {WindowTitle}\n" +
-                   $"PID: {Pid}\n" +
-                   $"StartInfo: FileName: {ProcessStartInfo.FileName}\n" +
-                   $"           WokrkingDirectory: {ProcessStartInfo.WorkingDirectory}\n" +
-                   $"           Path: {ProcessStartInfo.Arguments}\n" +
-                   $"Path: {Path}\n" +
-                   $"Handle: {Handle}\n" +
-                   $"Hwnd: {Hwnd}";
+            sb.AppendLine($"Name: {Name}");
+            sb.AppendLine($"Title: {WindowTitle}");
+            sb.AppendLine($"Path: {Path}");
+            sb.AppendLine($"Handle: {Handle.ToString()}");
+            sb.AppendLine($"Hwnd: {Hwnd.ToString()}");
+            sb.AppendLine("");
+            sb.AppendLine(" -- StartInfo -- ");
+            if (!string.IsNullOrEmpty(ProcessStartInfo.FileName))
+                sb.AppendLine($"FileName: {ProcessStartInfo.FileName}");
+            if (!string.IsNullOrEmpty(ProcessStartInfo.WorkingDirectory))
+                sb.AppendLine($"WokrkingDirectory: {ProcessStartInfo.WorkingDirectory}");
+            if (!string.IsNullOrEmpty(ProcessStartInfo.Arguments))
+                sb.AppendLine($"Arguments: {ProcessStartInfo.Arguments}");
+
+            return sb.ToString();
         }
 
         protected void OnPropertyChanged(string propertyName)

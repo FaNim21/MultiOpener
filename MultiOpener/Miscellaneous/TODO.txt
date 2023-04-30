@@ -3,8 +3,6 @@
 ========================================================
 
 ========== OGOLNE ===========
-- narazie program zrobic pod speedruny minecrafta
-- (TO ZALEZY JAK DALEJ TA APKA POJDZIE) Zrobic zeby program uruchamial programy z listy ktorych procesy nie sa jeszcze uruchomione
 - Zrobic ewentualnie opcje clearowania sciezki do pliku jako opcje ominiecia tego open przy otwieraniu dla pozniejszej edycji albo pod testy zeby zostawic konfiguracje danego open bez jego usuwania
 
 
@@ -15,15 +13,14 @@
 ========== MNIEJSZE FEATURE'Y ==========
 - dac checkbox'a 
 - dac na guziku NEW UPDATE okno z wszystkimi patchnote'ami od obecnej wersji do najnowszej
+- dodac jakies proste guziki w panelu info dla kazdego openedProcess jak na przyklad otworz folder gdzie znajduje sie executable itp itd
 
 
 
 ========== 0.4.0 ============
 - Podgladu odpalonych programow i kontrola nad nimi jako nowy panel w zakladce start po kliknieciu open do zdesignowania jeszcze jak to bedzie przedewszystkim wygladac
 - zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
-- Zrobic force close dla pojedyncznych procesow z poziomu context menu
-- zrobic ewentualne blokowanie resetowania czy otwierania/zamykania podczas gdy inny process jest otwierany/zamykany itp itd
-- Dac ewentualnie mozliwosc podgladu okna MultiMC, czyli dac poprostu panel w otwartych procesach z MultiMC gdzie bedzie mial contextmenu tylko z show/hide czy cos takiego moze
+- Zrobic force close dla pojedyncznych procesow z poziomu context menu (KONCEPT)
 - sprobowac wykryc juz dany proces przed glowym otwarciem zeby moze nie otwierac go juz jak jest odpalony (KONCEPT)
 -- patch notes
 - zreworkowano calkowicie logike odpalania i zamykania programow i teraz zamykanie jest w pełni bezpieczne
@@ -33,6 +30,8 @@
 - naprawiono wiele błedów ogólnych związanych z MultiOpenerem i z otwieraniem/zamykaniem procesów
 - dodano mozliwosc uruchamiania nie zapisanego, nowo zrobionego presetu w formie testu
 - dodano powiadomienia o nowej aktualizacji do MultiOpenera
+- dodano nowa zakładke z informacjami odnośnie aplikacji, obecnie tam za dużo nie ma zostanie ona uzupełniona w przyszłości o ważne informacje
+
 
 
 ========== 0.5.0 ?? 1.0 ===========

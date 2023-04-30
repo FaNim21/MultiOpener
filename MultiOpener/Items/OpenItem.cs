@@ -226,7 +226,6 @@ namespace MultiOpener.ListView
                         opened.SetStartInfo(startInfo);
                         opened.SetName(Names[i]);
                         opened.isMCInstance = true;
-                        opened.mcInstancesAmount = Quantity;
 
                         string path = Path.GetDirectoryName(PathExe) + "\\instances\\" + Names[i];
                         opened.SetPath(path.Replace("\\", "/"));
