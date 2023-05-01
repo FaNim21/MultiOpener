@@ -17,29 +17,24 @@
 
 
 
-========== 0.4.0 ============
-- Podgladu odpalonych programow i kontrola nad nimi jako nowy panel w zakladce start po kliknieciu open do zdesignowania jeszcze jak to bedzie przedewszystkim wygladac
+========== 0.4 ============
 - zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
 - Zrobic force close dla pojedyncznych procesow z poziomu context menu (KONCEPT)
 - sprobowac wykryc juz dany proces przed glowym otwarciem zeby moze nie otwierac go juz jak jest odpalony (KONCEPT)
--- patch notes
-- zreworkowano calkowicie logike odpalania i zamykania programow i teraz zamykanie jest w pełni bezpieczne
-- dodano panel do informacji zwiazanych z aplikacja
-- lekko poprawiono ui
-- dodano panel z odpalonymi procesami z presetu z mozliwoscia kontroli w postaci wylaczania/wlaczania, resetowania i wyswietlana ogolnych informacji pojedynczo dla kazdego procesu
-- naprawiono wiele błedów ogólnych związanych z MultiOpenerem i z otwieraniem/zamykaniem procesów
-- dodano mozliwosc uruchamiania nie zapisanego, nowo zrobionego presetu w formie testu
-- dodano powiadomienia o nowej aktualizacji do MultiOpenera
-- dodano nowa zakładke z informacjami odnośnie aplikacji, obecnie tam za dużo nie ma zostanie ona uzupełniona w przyszłości o ważne informacje
 
 
 
-========== 0.5.0 ?? 1.0 ===========
+========== 0.5 ?? 1.0 ===========
 - Supporty pod wiecej programow, czy nawet nowe opcje menu jak options itp itd do mozliwosci zmiany ustawien calego openera i ewentualnie do jakiejs konfiguracji albo menu ze skrotami klawiszowymi
 - dac opcje jak jak dlugo czekac az aplikacja sie zamknie defautlowo jest 5000, jak dlugo czekac na otwarcie okna itp itd zeby to byla taka pelna konfiguracja pod mozliwosc pcta
--- patch notes
--
+
 
 
 ========== DODATKOWE INFO ===========
 - Zeby dodawac kolejne typy 'Open' trzeba uzupelnic SettingsViewModel GetType na samym dole i dodac odwolanie w SaveCurrentOpen
+
+
+
+
+-- PATCH NOTES --
+- 

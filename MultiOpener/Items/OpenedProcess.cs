@@ -212,7 +212,7 @@ namespace MultiOpener.Items
         }
         public void UpdateStatus(string status = "")
         {
-            //TODO: Nawiazujac do update mozna pozbyc sie argumentu przypisywania statusu
+            //TODO: 9 Nawiazujac do update mozna pozbyc sie argumentu przypisywania statusu
             if (string.IsNullOrEmpty(status))
             {
                 if (Pid != -1)
@@ -367,8 +367,10 @@ namespace MultiOpener.Items
             StringBuilder sb = new();
 
             sb.AppendLine($"Name: {Name}");
-            sb.AppendLine($"Title: {WindowTitle}");
+            if(!WindowTitle!.ToLower().Equals(Name!.ToLower()))
+                sb.AppendLine($"Title: {WindowTitle}");
             sb.AppendLine($"Path: {Path}");
+            sb.AppendLine($"ID: {Pid}");
             sb.AppendLine($"Handle: {Handle.ToString()}");
             sb.AppendLine($"Hwnd: {Hwnd.ToString()}");
             sb.AppendLine("");

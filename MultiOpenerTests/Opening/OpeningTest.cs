@@ -60,7 +60,7 @@ internal class OpeningTest
     [Test]
     public async Task OpenMethod_Should_Start_New_Process()
     {
-
+        Assert.Pass();
 
         /*var openItem = new OpenItem
         {
