@@ -85,7 +85,16 @@ namespace MultiOpener
         private async Task CheckForUpdates()
         {
             var checker = new UpdateChecker();
-            bool output = await checker.CheckForUpdates();
+            bool output = false;
+
+            try
+            {
+                output = await checker.CheckForUpdates();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to check for updates: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
             Application.Current.Dispatcher.Invoke(delegate
             {
