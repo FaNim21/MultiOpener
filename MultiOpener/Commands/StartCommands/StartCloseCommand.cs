@@ -7,6 +7,8 @@ namespace MultiOpener.Commands.StartCommands
 {
     public class StartCloseCommand : StartCommandBase
     {
+        public bool isForcedToClose = false;
+
         public StartCloseCommand(StartViewModel? startViewModel) : base(startViewModel)
         {
         }
@@ -27,7 +29,13 @@ namespace MultiOpener.Commands.StartCommands
                 return;
             }
 
-            if (MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            MessageBoxResult? result = null;
+            if (isForcedToClose)
+                result = MessageBoxResult.Yes;
+            else
+                result = MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
             {
                 for (int i = 0; i < Start.Opened.Count; i++)
                 {

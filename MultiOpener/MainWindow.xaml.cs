@@ -32,6 +32,8 @@ namespace MultiOpener
 
             MainViewModel.settings.LoadStartUPPreset(Settings.Default.LastOpenedPresetName);
 
+            //TODO: -1 to todo jest po to zeby pamietac o odblokowaniu sprawdzania po update
+            return;
             Task task = Task.Factory.StartNew(CheckForUpdates);
         }
 
@@ -93,7 +95,9 @@ namespace MultiOpener
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to check for updates: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //TODO: 0 Zrobic inne wyswietlanie bledu o aktualizacji z racji limitu wysylania zapytan i poprostu pozniej przez jakis czas ciaglego wyswietlania komunikatu bledu przy otwieraniu
+                Trace.WriteLine($"Failed to check for updates: {ex.Message}");
+                //MessageBox.Show($"Failed to check for updates: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             Application.Current.Dispatcher.Invoke(delegate

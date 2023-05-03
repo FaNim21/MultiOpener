@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.Linq;
 
 namespace MultiOpener.Commands.StartCommands
 {
@@ -20,6 +19,8 @@ namespace MultiOpener.Commands.StartCommands
 
         public CancellationTokenSource source = new();
         private CancellationToken token;
+
+        public bool isOpening = false;
 
 
         public StartOpenCommand(StartViewModel? startViewModel, MainWindow mainWindow) : base(startViewModel)
@@ -50,6 +51,8 @@ namespace MultiOpener.Commands.StartCommands
         private async Task OpenProgramsList()
         {
             if (Start == null || Settings == null) return;
+
+            isOpening = true;
 
             int length = Settings.Opens.Count;
             int progressLength = length;
@@ -154,6 +157,7 @@ namespace MultiOpener.Commands.StartCommands
                 Consts.IsStartPanelWorkingNow = false;
                 Start.RefreshOpenedCommand.Execute(null);
             });
+            isOpening = false;
         }
     }
 }
