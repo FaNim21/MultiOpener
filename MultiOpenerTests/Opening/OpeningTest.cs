@@ -53,8 +53,8 @@ internal class OpeningTest
         }
     }
 
-    [Test]
-    public void Test1_Load_Settings2Tests_Preset()
+    [Test, Order(0)]
+    public void Load_Settings2Tests_Preset()
     {
         Thread.Sleep(250);
         Application.Current.Dispatcher.Invoke(delegate
@@ -66,8 +66,8 @@ internal class OpeningTest
         Assert.That(_mainWindow!.MainViewModel.start.PresetNameLabel, Is.EqualTo("Current preset: settings2Tests"));
     }
 
-    [Test]
-    public async Task Test2_OpenAndClose_Preset_Succesfully()
+    [Test, Order(1)]
+    public async Task Open_Preset_Succesfully()
     {
         await Task.Delay(250);
 
@@ -85,7 +85,7 @@ internal class OpeningTest
             await Task.Delay(500);
         await Task.Delay(250);
 
-        bool result1 = false;
+        bool result = false;
         Application.Current.Dispatcher.Invoke(delegate
         {
             if (_mainWindow!.MainViewModel.start.Opened.Count == 6)
@@ -106,9 +106,18 @@ internal class OpeningTest
                     }
                 }
 
-                result1 = isRestOpened && isScriptClosed;
+                result = isRestOpened && isScriptClosed;
             }
+        });
 
+        Assert.That(result, Is.True);
+    }
+
+    [Test, Order(2)]
+    public async Task Close_Preset_Succesfully()
+    {
+        Application.Current.Dispatcher.Invoke(delegate
+        {
             StartCloseCommand? closeCommand = (StartCloseCommand)_mainWindow!.MainViewModel.start.CloseCommand;
             closeCommand.isForcedToClose = true;
             closeCommand.Execute(null);
@@ -119,10 +128,6 @@ internal class OpeningTest
             await Task.Delay(250);
         await Task.Delay(250);
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(result1, Is.True);
-            Assert.That(_mainWindow!.MainViewModel.start.OpenedIsEmpty(), Is.True);
-        });
+        Assert.That(_mainWindow!.MainViewModel.start.OpenedIsEmpty(), Is.True);
     }
 }
