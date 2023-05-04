@@ -53,7 +53,6 @@ namespace MultiOpener.Commands.StartCommands
             if (Start == null || Settings == null) return;
 
             isOpening = true;
-
             int length = Settings.Opens.Count;
             int progressLength = length;
             string infoText = "";
@@ -125,8 +124,8 @@ namespace MultiOpener.Commands.StartCommands
                 Application.Current.Dispatcher.Invoke(delegate
                 {
                     infoText = $"({i + 1}/{length}) Openning {current.Name}...";
-                    loadingProcesses.SetText(infoText);
-                    loadingProcesses.progress.Value++;
+                    loadingProcesses!.SetText(infoText);
+                    loadingProcesses!.progress.Value++;
                 });
 
                 await current.Open(loadingProcesses, source, infoText);
@@ -142,7 +141,7 @@ namespace MultiOpener.Commands.StartCommands
             //Ending loading etc
             Application.Current.Dispatcher.Invoke(delegate
             {
-                loadingProcesses.Close();
+                loadingProcesses!.Close();
                 MainWindow.OnShow();
                 loadingProcesses = null;
 
@@ -157,7 +156,9 @@ namespace MultiOpener.Commands.StartCommands
                 Consts.IsStartPanelWorkingNow = false;
                 Start.RefreshOpenedCommand.Execute(null);
             });
+
             isOpening = false;
+            source.Dispose();
         }
     }
 }

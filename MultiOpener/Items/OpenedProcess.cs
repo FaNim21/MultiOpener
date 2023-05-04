@@ -85,7 +85,6 @@ namespace MultiOpener.Items
             CloseOpenCommand = new OpenedCloseOpenCommand(this, start);
         }
 
-        //TODO: 7 moze cos typu CanSetHwnd? zeby sprawdzic czy proces jest non gui
         public void SetHwnd(IntPtr hwnd)
         {
             Hwnd = hwnd;
@@ -117,6 +116,11 @@ namespace MultiOpener.Items
         public void SetHandle(IntPtr handle)
         {
             Handle = handle;
+        }
+
+        public void SetPid(int pid)
+        {
+            Pid = pid;
         }
         public void SetPid()
         {
@@ -180,8 +184,8 @@ namespace MultiOpener.Items
             //?????????????
             if (!StillExist() && Handle != IntPtr.Zero)
             {
-                UpdateStatus("CLOSED");
                 ClearAfterClose();
+                UpdateStatus();
             }
 
             SetHwnd();
@@ -190,8 +194,8 @@ namespace MultiOpener.Items
             if (Handle == IntPtr.Zero && Pid != -1)
                 SetHandle(Win32.GetHandleFromPid(Pid));
 
-            UpdateStatus();
             UpdateTitle();
+            UpdateStatus();
         }
         public void UpdateTitle()
         {
@@ -210,30 +214,23 @@ namespace MultiOpener.Items
             if (string.IsNullOrEmpty(WindowTitle))
                 WindowTitle = "Unknown";
         }
-        public void UpdateStatus(string status = "")
+        public void UpdateStatus()
         {
-            //TODO: 9 Nawiazujac do update mozna pozbyc sie argumentu przypisywania statusu
-            if (string.IsNullOrEmpty(status))
+            if (Pid != -1)
             {
-                if (Pid != -1)
+                Application.Current.Dispatcher.Invoke(delegate
                 {
-                    Application.Current.Dispatcher.Invoke(delegate
-                    {
-                        StatusLabelColor = new BrushConverter().ConvertFromString("#33cc33") as SolidColorBrush;
-                    });
-                    status = "OPENED";
-                }
-                else
-                {
-                    Application.Current.Dispatcher.Invoke(delegate
-                    {
-                        StatusLabelColor = new BrushConverter().ConvertFromString("#cc3300") as SolidColorBrush;
-                    });
-                    status = "CLOSED";
-                }
+                    StatusLabelColor = new BrushConverter().ConvertFromString("#33cc33") as SolidColorBrush;
+                });
+                Status = "OPENED";
+                return;
             }
 
-            Status = status;
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                StatusLabelColor = new BrushConverter().ConvertFromString("#cc3300") as SolidColorBrush;
+            });
+            Status = "CLOSED";
         }
 
         public bool IsOpened()
@@ -245,10 +242,7 @@ namespace MultiOpener.Items
         }
         public bool StillExist()
         {
-            if (string.IsNullOrEmpty(Status))
-                return false;
-
-            if (Status.Equals("CLOSED"))
+            if (!IsOpened())
                 return false;
 
             SetPid();
@@ -261,7 +255,6 @@ namespace MultiOpener.Items
 
             return true;
         }
-        public bool HasWindow() => Hwnd != IntPtr.Zero;
 
         public async Task QuickOpen()
         {
@@ -298,6 +291,30 @@ namespace MultiOpener.Items
 
             UpdateStatus();
         }
+        public async Task<bool> Close()
+        {
+            if (Pid == -1) return true;
+
+            try
+            {
+                bool output = await Win32.CloseProcessByHwnd(Hwnd);
+                if (!output)
+                {
+                    output = await Win32.CloseProcessByPid(Pid);
+                    if (!output)
+                    {
+                        output = await Win32.CloseProcessByPid((int)Win32.GetPidFromHandle(Handle));
+                    }
+                }
+                return output;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Cannot close {WindowTitle ?? ""} \n{e}");
+                return false;
+            }
+        }
+
         public async Task<bool> SearchForMCInstance()
         {
             Regex mcPatternRegex = new(MCPattern);
@@ -328,29 +345,6 @@ namespace MultiOpener.Items
 
             return errorCount < 15;
         }
-        public async Task<bool> Close()
-        {
-            if (Pid == -1) return true;
-
-            try
-            {
-                bool output = await Win32.CloseProcessByHwnd(Hwnd);
-                if (!output)
-                {
-                    output = await Win32.CloseProcessByPid(Pid);
-                    if (!output)
-                    {
-                        output = await Win32.CloseProcessByPid((int)Win32.GetPidFromHandle(Handle));
-                    }
-                }
-                return output;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"Cannot close {WindowTitle ?? ""} \n{e}");
-                return false;
-            }
-        }
 
         public void ClearAfterClose()
         {
@@ -367,7 +361,7 @@ namespace MultiOpener.Items
             StringBuilder sb = new();
 
             sb.AppendLine($"Name: {Name}");
-            if(!WindowTitle!.ToLower().Equals(Name!.ToLower()))
+            if (!WindowTitle!.ToLower().Equals(Name!.ToLower()))
                 sb.AppendLine($"Title: {WindowTitle}");
             sb.AppendLine($"Path: {Path}");
             sb.AppendLine($"ID: {Pid}");

@@ -4,6 +4,8 @@
 
 ========== OGOLNE ===========
 - Zrobic ewentualnie opcje clearowania sciezki do pliku jako opcje ominiecia tego open przy otwieraniu dla pozniejszej edycji albo pod testy zeby zostawic konfiguracje danego open bez jego usuwania
+- Zrobic ewentualna zamiane z loading processes window na poprostu akcje w jednym oknie w panelu start czyli informacje byly by aktualizowane tak jak jest aktualizowane info podczas interackji z panelem czyli reset, refresh itp itd
+  i wtedy mozna bylo by wylaczyc na czas otwierania danych aplikacji taskbar buttons i dodac trzecia przemienna funkcjonalnosc dla glownego guzika w panelu start na poprostu cancel zeby zcancelowac otwieranie danego presetu w konkretnym momencie
 
 
 ========== WAZNE ============

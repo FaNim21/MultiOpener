@@ -59,11 +59,11 @@ internal class OpeningTest
         Thread.Sleep(250);
         Application.Current.Dispatcher.Invoke(delegate
         {
-            _mainWindow!.MainViewModel.settings.LoadOpenList("settings2Tests.json");
+            _mainWindow!.MainViewModel.settings.LoadOpenList("OpeningUnitTest.json");
         });
         Thread.Sleep(250);
 
-        Assert.That(_mainWindow!.MainViewModel.start.PresetNameLabel, Is.EqualTo("Current preset: settings2Tests"));
+        Assert.That(_mainWindow!.MainViewModel.start.PresetNameLabel, Is.EqualTo("Current preset: OpeningUnitTest"));
     }
 
     [Test, Order(1)]
@@ -73,9 +73,6 @@ internal class OpeningTest
 
         Application.Current.Dispatcher.Invoke(delegate
         {
-            _mainWindow!.MainViewModel.settings.LoadOpenList("settings2Tests.json");
-            _mainWindow!.MainViewModel.start.OpenCommand.Execute(null);
-
             StartOpenCommand? openCommand = (StartOpenCommand)_mainWindow!.MainViewModel.start.OpenCommand;
             openCommand.Execute(null);
         });
@@ -88,7 +85,7 @@ internal class OpeningTest
         bool result = false;
         Application.Current.Dispatcher.Invoke(delegate
         {
-            if (_mainWindow!.MainViewModel.start.Opened.Count == 6)
+            if (_mainWindow!.MainViewModel.start.Opened.Count == 7)
             {
                 bool isScriptClosed = false;
                 bool isRestOpened = false;
