@@ -33,7 +33,7 @@ namespace MultiOpener.Commands.OpenedCommands
 
                 if (result)
                 {
-                    openedProcess.ClearAfterClose();
+                    openedProcess.Clear();
                     openedProcess.UpdateStatus();
                 }
             }

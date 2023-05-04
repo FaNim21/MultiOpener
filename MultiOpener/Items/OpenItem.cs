@@ -76,18 +76,14 @@ namespace MultiOpener.ListView
                 string executable = Path.GetFileName(PathExe);
                 string pathDir = Path.GetDirectoryName(PathExe) ?? "";
 
-                ProcessStartInfo processStartInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
-                Process? process = Process.Start(processStartInfo);
+                ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
+                Process? process = Process.Start(startInfo);
 
                 if (process != null)
                 {
-                    process.EnableRaisingEvents = true;
-
                     OpenedProcess opened = new();
-                    opened.SetStartInfo(processStartInfo);
-                    opened.SetName();
-                    opened.SetHandle(process.Handle);
-                    opened.SetPath(PathExe);
+                    string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
+                    opened.Initialize(startInfo, name!, process.Handle, PathExe);
 
                     int errors = 0;
                     while (!opened.SetHwnd() && errors < 15)
@@ -99,13 +95,10 @@ namespace MultiOpener.ListView
                         errors++;
                     }
 
-                    if (!process.HasExited)
+                    Application.Current.Dispatcher.Invoke(delegate
                     {
-                        Application.Current.Dispatcher.Invoke(delegate
-                        {
-                            ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened);
-                        });
-                    }
+                        ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened);
+                    });
                 }
                 await Task.Delay(DelayAfter);
             }
@@ -201,14 +194,11 @@ namespace MultiOpener.ListView
 
                     count++;
 
-                    if (loading != null)
+                    Application.Current.Dispatcher.Invoke(delegate
                     {
-                        Application.Current.Dispatcher.Invoke(delegate
-                        {
-                            loading.SetText($"{infoText} -- Instance ({i + 1}/{Quantity})");
-                            loading.progress.Value++;
-                        });
-                    }
+                        loading!.SetText($"{infoText} -- Instance ({i + 1}/{Quantity})");
+                        loading.progress.Value++;
+                    });
 
                     ProcessStartInfo startInfo = new(PathExe)
                     {
@@ -222,25 +212,17 @@ namespace MultiOpener.ListView
                         process.WaitForInputIdle();
 
                         OpenedProcess opened = new();
-                        opened.SetHandle(process.Handle);
-                        opened.SetStartInfo(startInfo);
-                        opened.SetName(Names[i]);
+                        string path = (Path.GetDirectoryName(PathExe) + "\\instances\\" + Names[i]).Replace("\\", "/");
+                        opened.Initialize(startInfo, Names[i], process.Handle, path);
                         opened.isMCInstance = true;
-
-                        string path = Path.GetDirectoryName(PathExe) + "\\instances\\" + Names[i];
-                        opened.SetPath(path.Replace("\\", "/"));
-
                         mcInstances.Add(opened);
                     }
                 }
 
-                if (loading != null)
+                Application.Current.Dispatcher.Invoke(delegate
                 {
-                    Application.Current.Dispatcher.Invoke(delegate
-                    {
-                        loading.SetText($"{infoText} (loading datas)");
-                    });
-                }
+                    loading!.SetText($"{infoText} (loading datas)");
+                });
 
                 Regex mcPatternRegex = new(OpenedProcess.MCPattern);
                 int errorCount = -1;
@@ -263,6 +245,7 @@ namespace MultiOpener.ListView
                         if (currentPath.Equals(current.Path))
                         {
                             current.SetHwnd(instances[j]);
+                            current.SetPid();
 
                             Application.Current.Dispatcher.Invoke(delegate
                             {

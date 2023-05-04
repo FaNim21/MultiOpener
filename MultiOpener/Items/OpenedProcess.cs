@@ -84,14 +84,20 @@ namespace MultiOpener.Items
             ResetCommand = new OpenedResetCommand(this, start);
             CloseOpenCommand = new OpenedCloseOpenCommand(this, start);
         }
+        public void Initialize(ProcessStartInfo? processStartInfo, string name, IntPtr handle, string path)
+        {
+            ProcessStartInfo = processStartInfo;
+            Name = name;
+            Handle = handle;
+            Path = path;
+
+            UpdateStatus();
+        }
 
         public void SetHwnd(IntPtr hwnd)
         {
             Hwnd = hwnd;
             UpdateTitle();
-
-            if (Pid <= 0)
-                SetPid();
         }
         public bool SetHwnd()
         {
@@ -144,27 +150,6 @@ namespace MultiOpener.Items
                 Pid = pid;
         }
 
-        public void SetPath(string path = "")
-        {
-            if (string.IsNullOrEmpty(path)) return;
-            Path = path;
-        }
-
-        public void SetName(string name = "")
-        {
-            if (string.IsNullOrEmpty(name))
-                Name = System.IO.Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
-            else
-                Name = name;
-        }
-
-        public void SetStartInfo(ProcessStartInfo startInfo)
-        {
-            if (startInfo == null) return;
-            ProcessStartInfo = startInfo;
-            UpdateStatus();
-        }
-
         public void FastUpdate()
         {
             SetPid();
@@ -172,20 +157,17 @@ namespace MultiOpener.Items
         }
         public void Update()
         {
-            //might be expensive because of externs that is used here and stupid amount of things to check that needs to be changed etc
-            //TODO: 9 OPTIMIZE IT
-
             if (StillExist())
             {
                 UpdateTitle();
                 return;
             }
 
-            //?????????????
             if (!StillExist() && Handle != IntPtr.Zero)
             {
-                ClearAfterClose();
+                Clear();
                 UpdateStatus();
+                return;
             }
 
             SetHwnd();
@@ -199,9 +181,9 @@ namespace MultiOpener.Items
         }
         public void UpdateTitle()
         {
-            if (!isMCInstance)
+            if (!isMCInstance && string.IsNullOrEmpty(WindowTitle))
                 WindowTitle = System.IO.Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
-            else
+            else if (isMCInstance)
             {
                 if (Hwnd == IntPtr.Zero) return;
 
@@ -346,7 +328,7 @@ namespace MultiOpener.Items
             return errorCount < 15;
         }
 
-        public void ClearAfterClose()
+        public void Clear()
         {
             Handle = IntPtr.Zero;
             Hwnd = IntPtr.Zero;
