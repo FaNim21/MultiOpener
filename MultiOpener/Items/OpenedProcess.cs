@@ -23,7 +23,6 @@ namespace MultiOpener.Items
         public IntPtr Hwnd { get; private set; }
         public IntPtr Handle { get; private set; }
         public int Pid { get; private set; }
-
         public string? Path { get; private set; }
 
         public ProcessStartInfo? ProcessStartInfo { get; private set; }
@@ -74,7 +73,7 @@ namespace MultiOpener.Items
         {
             if (start == null)
             {
-                Application.Current.Dispatcher.Invoke(delegate
+                Application.Current?.Dispatcher.Invoke(delegate
                 {
                     start = ((MainWindow)Application.Current.MainWindow).MainViewModel.start;
                 });
@@ -92,6 +91,11 @@ namespace MultiOpener.Items
             Path = path;
 
             UpdateStatus();
+        }
+
+        public void SetHandle(IntPtr handle)
+        {
+            Handle = handle;
         }
 
         public void SetHwnd(IntPtr hwnd)
@@ -119,15 +123,6 @@ namespace MultiOpener.Items
             return true;
         }
 
-        public void SetHandle(IntPtr handle)
-        {
-            Handle = handle;
-        }
-
-        public void SetPid(int pid)
-        {
-            Pid = pid;
-        }
         public void SetPid()
         {
             int pid;
@@ -179,6 +174,7 @@ namespace MultiOpener.Items
             UpdateTitle();
             UpdateStatus();
         }
+
         public void UpdateTitle()
         {
             if (!isMCInstance && string.IsNullOrEmpty(WindowTitle))
@@ -200,7 +196,7 @@ namespace MultiOpener.Items
         {
             if (Pid != -1)
             {
-                Application.Current.Dispatcher.Invoke(delegate
+                Application.Current?.Dispatcher.Invoke(delegate
                 {
                     StatusLabelColor = new BrushConverter().ConvertFromString("#33cc33") as SolidColorBrush;
                 });
@@ -208,7 +204,7 @@ namespace MultiOpener.Items
                 return;
             }
 
-            Application.Current.Dispatcher.Invoke(delegate
+            Application.Current?.Dispatcher.Invoke(delegate
             {
                 StatusLabelColor = new BrushConverter().ConvertFromString("#cc3300") as SolidColorBrush;
             });

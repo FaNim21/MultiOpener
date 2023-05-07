@@ -16,7 +16,7 @@ namespace MultiOpener.Commands.OpenedCommands
 
         public override void Execute(object? parameter)
         {
-            if (Start == null || openedProcess == null || Consts.IsStartPanelWorkingNow) return;
+            if (openedProcess == null || Consts.IsStartPanelWorkingNow) return;
 
             openedProcess.Update();
             Task task = Task.Run(CloseOpenOpened);

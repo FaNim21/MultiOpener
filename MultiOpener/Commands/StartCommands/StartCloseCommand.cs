@@ -45,7 +45,7 @@ namespace MultiOpener.Commands.StartCommands
                     bool isSucceed = await current.Close();
                     if (isSucceed || current.Hwnd == IntPtr.Zero || !current.StillExist())
                     {
-                        Application.Current.Dispatcher.Invoke(delegate
+                        Application.Current?.Dispatcher.Invoke(delegate
                         {
                             Start.RemoveOpened(current);
                             i--;

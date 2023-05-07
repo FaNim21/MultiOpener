@@ -95,7 +95,7 @@ namespace MultiOpener.ListView
                         errors++;
                     }
 
-                    Application.Current.Dispatcher.Invoke(delegate
+                    Application.Current?.Dispatcher.Invoke(delegate
                     {
                         ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened);
                     });
@@ -194,7 +194,7 @@ namespace MultiOpener.ListView
 
                     count++;
 
-                    Application.Current.Dispatcher.Invoke(delegate
+                    Application.Current?.Dispatcher.Invoke(delegate
                     {
                         loading!.SetText($"{infoText} -- Instance ({i + 1}/{Quantity})");
                         loading.progress.Value++;
@@ -219,7 +219,7 @@ namespace MultiOpener.ListView
                     }
                 }
 
-                Application.Current.Dispatcher.Invoke(delegate
+                Application.Current?.Dispatcher.Invoke(delegate
                 {
                     loading!.SetText($"{infoText} (loading datas)");
                 });
@@ -247,7 +247,7 @@ namespace MultiOpener.ListView
                             current.SetHwnd(instances[j]);
                             current.SetPid();
 
-                            Application.Current.Dispatcher.Invoke(delegate
+                            Application.Current?.Dispatcher.Invoke(delegate
                             {
                                 ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(current);
                             });
