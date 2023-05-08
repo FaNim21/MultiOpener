@@ -27,7 +27,7 @@ internal class OpeningTest
         t.SetApartmentState(ApartmentState.STA);
         t.Start();
 
-        Thread.Sleep(100);
+        Thread.Sleep(250);
         Application.Current.Dispatcher.Invoke(delegate
         {
             _mainWindow = (MainWindow)_app!.MainWindow;
