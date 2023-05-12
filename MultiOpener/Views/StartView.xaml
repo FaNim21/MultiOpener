@@ -229,13 +229,13 @@
 
             <local:ButtonNormal x:Name="RefreshTitlesbutton"
                                 Width="100"
-                                Height="35"
+                                Height="25"
+                                FontSize="17"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Bottom"
-                                Margin="0 0 15 15"
                                 ContentText="Refresh"
                                 OnCommand="{Binding RefreshOpenedCommand}"
-                                FontSize="20" />
+                                Margin="0 0 10 10" />
         </Grid>
 
         <Grid Grid.Row="1"

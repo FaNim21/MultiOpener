@@ -4,9 +4,9 @@ using System.Windows.Controls;
 
 namespace MultiOpener.Views
 {
-    public partial class InformationView : UserControl
+    public partial class OptionsView : UserControl
     {
-        public InformationView()
+        public OptionsView()
         {
             InitializeComponent();
 

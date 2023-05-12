@@ -10,8 +10,7 @@ namespace MultiOpenerTests.Opening
     {
         public OpenedProcess? opened;
 
-        //private const string _pathExe = "C:\\Users\\Filip\\Desktop\\Julti.jar";
-        private const string _pathExe = "C:\\Users\\filip\\Desktop\\Julti.jar";
+        private const string _pathExe = "C:\\Users\\Filip\\Desktop\\Julti.jar";
 
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
@@ -71,16 +70,23 @@ namespace MultiOpenerTests.Opening
         }
 
         [Test, Order(1)]
-        public async Task RestartOpened_Succesfully()
+        public void UpdateOpened_WorkSuccesfully()
         {
             opened!.Update();
-            await ((OpenedResetCommand)opened!.ResetCommand).ResetOpened();
-            opened!.Update();
-            bool result = !Consts.IsStartPanelWorkingNow && opened!.IsOpened();
+            bool result = opened!.StillExist();
             Assert.That(result, Is.True);
         }
 
         [Test, Order(2)]
+        public async Task RestartOpened_Succesfully()
+        {
+            opened!.FastUpdate();
+            await ((OpenedResetCommand)opened!.ResetCommand).ResetOpened();
+            bool result = !Consts.IsStartPanelWorkingNow && opened!.StillExist();
+            Assert.That(result, Is.True);
+        }
+
+        [Test, Order(3)]
         public async Task CloseOpened_Succesfully()
         {
             opened!.FastUpdate();
@@ -90,12 +96,11 @@ namespace MultiOpenerTests.Opening
             Assert.That(result, Is.True);
         }
 
-        [Test, Order(3)]
+        [Test, Order(4)]
         public async Task OpenOpened_Succesfully()
         {
             opened!.FastUpdate();
             await ((OpenedCloseOpenCommand)opened!.CloseOpenCommand).CloseOpenOpened();
-            opened!.Update();
             bool result = !Consts.IsStartPanelWorkingNow && opened!.StillExist();
             Assert.That(result, Is.True);
         }

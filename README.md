@@ -46,6 +46,5 @@ If you find an issue or you think that something could work better, different, o
 
 ## Features planned to future!
 
-* Panel to view what programs are opened and giving options for each to reset and control it
 * Option settings with keybinds and customizations etc
 * And more

@@ -71,40 +71,30 @@
                                        ChangeCommand="{Binding UpdateViewCommand}"
                                        CommandParameter="Settings" />
 
-            <local:ButtonTaskbarChoose x:Name="InformationsButton"
-                                       Width="80"
-                                       Height="20"
-                                       FontSize="12"
-                                       Grid.Column="0"
-                                       HorizontalAlignment="Left"
-                                       Margin="202,5,5,0"
-                                       ContentText="Information"
-                                       ChangeCommand="{Binding UpdateViewCommand}"
-                                       CommandParameter="Informations" />
-
             <local:ButtonTaskbarChoose x:Name="OptionsButton"
                                        Width="80"
                                        Height="20"
                                        FontSize="12"
                                        Grid.Column="0"
                                        HorizontalAlignment="Left"
-                                       Margin="297,5,5,0"
+                                       Margin="202,5,5,0"
                                        ContentText="Options"
-                                       Visibility="Hidden"
                                        ChangeCommand="{Binding UpdateViewCommand}"
                                        CommandParameter="Options" />
 
             <Button x:Name="UpdateButton"
                     Grid.Column="1"
                     Visibility="Hidden"
-                    Width="90"
+                    Width="25"
                     Height="25"
-                    HorizontalAlignment="Left"
-                    Content="NEW UPDATE"
+                    HorizontalAlignment="Right"
+                    VerticalContentAlignment="Top"
+                    Content="!"
                     FontWeight="Medium"
                     Foreground="White"
-                    FontSize="13"
-                    Margin="55 0 0 0"
+                    FontSize="23"
+                    Margin="0 0 60 0"
+                    Padding="-5"
                     BorderThickness="0"
                     Click="UpdateButtonClick">
                 <Button.Style>

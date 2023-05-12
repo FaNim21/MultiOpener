@@ -1,4 +1,4 @@
-﻿                      TO NIE MOJE
+﻿                      THATS NOT MINE
                       .,,uod8B8bou,,.
               ..,uod8BBBBBBBBBBBBBBBBRPFT?l!i:.
          ,=m8BBBBBBBBBBBBBBBRPFT?!||||||||||||||
@@ -54,7 +54,6 @@
 
 ========== 0.4 ============
 - zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
-- Zrobic force close dla pojedyncznych procesow z poziomu context menu (KONCEPT)
 - sprobowac wykryc juz dany proces przed glowym otwarciem zeby moze nie otwierac go juz jak jest odpalony (KONCEPT)
 
 

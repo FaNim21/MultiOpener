@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using static System.Windows.Forms.Design.AxImporter;
 
 namespace MultiOpener
 {
@@ -42,19 +43,19 @@ namespace MultiOpener
             {
                 StartButton.IsEnabled = false;
                 SettingsButton.IsEnabled = true;
-                InformationsButton.IsEnabled = true;
+                OptionsButton.IsEnabled = true;
             }
             else if (option.Equals("Settings"))
             {
                 StartButton.IsEnabled = true;
                 SettingsButton.IsEnabled = false;
-                InformationsButton.IsEnabled = true;
+                OptionsButton.IsEnabled = true;
             }
-            else if (option.Equals("Informations"))
+            else if (option.Equals("Options"))
             {
                 StartButton.IsEnabled = true;
                 SettingsButton.IsEnabled = true;
-                InformationsButton.IsEnabled = false;
+                OptionsButton.IsEnabled = false;
             }
         }
 
