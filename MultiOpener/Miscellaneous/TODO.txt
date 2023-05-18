@@ -31,9 +31,6 @@
                       `!^"'
 
 
-========== NOTATKI ==========
-- tytuł okna jest tylko odswieżany dla instancji minecrafta
-
 
 ========== OGOLNE ===========
 - Zrobic ewentualnie opcje clearowania sciezki do pliku jako opcje ominiecia tego open przy otwieraniu dla pozniejszej edycji albo pod testy zeby zostawic konfiguracje danego open bez jego usuwania
@@ -54,13 +51,15 @@
 
 ========== 0.4 ============
 - zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
-- sprobowac wykryc juz dany proces przed glowym otwarciem zeby moze nie otwierac go juz jak jest odpalony (KONCEPT)
+- !!!!!!!!!sprobowac wykryc juz dany proces przed glowym otwarciem zeby moze nie otwierac go juz jak jest odpalony (KONCEPT)
 
 
 
 ========== 0.5 ?? 1.0 ===========
 - Supporty pod wiecej programow, czy nawet nowe opcje menu jak options itp itd do mozliwosci zmiany ustawien calego openera i ewentualnie do jakiejs konfiguracji albo menu ze skrotami klawiszowymi
 - dac opcje jak jak dlugo czekac az aplikacja sie zamknie defautlowo jest 5000, jak dlugo czekac na otwarcie okna itp itd zeby to byla taka pelna konfiguracja pod mozliwosc pcta
+--- OPCJE DO DODANIA w ustawiwniach ---
+- 
 
 
 
@@ -71,4 +70,6 @@
 
 
 -- PATCH NOTES --
-- 
+- Small ui changes
+- some optimizations for openened processes
+- changed informations panel to options with opening configurations, hotkeys and more

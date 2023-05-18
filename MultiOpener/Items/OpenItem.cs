@@ -234,7 +234,6 @@ namespace MultiOpener.ListView
                     await Task.Delay(750);
                 } while (instances.Count != count && errorCount < 50);
 
-                //TODO: 9 OPTIMIZE IT?
                 for (int i = 0; i < mcInstances.Count; i++)
                 {
                     var current = mcInstances[i];

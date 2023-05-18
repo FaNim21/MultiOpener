@@ -9,7 +9,7 @@ namespace MultiOpener.ViewModels
 
         public readonly SettingsViewModel settings;
         public readonly StartViewModel start;
-        public readonly OptionsViewModel information;
+        public readonly OptionsViewModel options;
 
 
         private BaseViewModel? _selectedViewModel;
@@ -31,9 +31,7 @@ namespace MultiOpener.ViewModels
 
             settings = new SettingsViewModel(this);
             start = new StartViewModel(MainWindow);
-            information = new OptionsViewModel();
-
-            //TODO: 9 Dodac wiecej paneli typu changelog/Info(czyl caly teskt z panelu start plus credits i cos jeszcze), i panel options
+            options = new OptionsViewModel();
 
             UpdateViewCommand = new UpdateViewCommand(this);
             UpdateViewCommand.Execute("Start");

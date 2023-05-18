@@ -34,7 +34,7 @@ namespace MultiOpener.Commands
             else if (result.Equals("Options"))
             {
                 viewModel.settings?.SaveCurrentOpenCommand?.Execute(null);
-                viewModel.SelectedViewModel = viewModel.information;
+                viewModel.SelectedViewModel = viewModel.options;
             }
         }
     }

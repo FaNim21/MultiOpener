@@ -11,21 +11,74 @@
              d:DesignWidth="800"
              Background="#383A3C">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
         <Label x:Name="versionLabel"
                HorizontalAlignment="Left"
-               VerticalAlignment="Bottom" 
-               Margin="0 16"/>
+               VerticalAlignment="Bottom"
+               Margin="0 16" />
         <Label Content="Made by FaNim"
                HorizontalAlignment="Left"
                VerticalAlignment="Bottom" />
 
         <TextBlock HorizontalAlignment="Right"
                    VerticalAlignment="Bottom"
+                   Grid.Column="1"
                    Margin="3">
                     <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/releases"
                                RequestNavigate="Hyperlink_RequestNavigate">
                         All releases here
                     </Hyperlink>
         </TextBlock>
+
+        <Grid Grid.Column="0">
+            <Label Content="Options for open"
+                   FontSize="24"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Height="40"/>
+
+            <TextBox x:Name="delayBeforeTimeField"
+                     TextWrapping="Wrap"
+                     Width="80"
+                     Height="20"
+                     Text="{Binding DelayBeforeTimeField}"
+                     PreviewTextInput="NumberValidationTextBox"
+                     Background="#9E9E9E"
+                     MaxLength="5"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Top"
+                     Margin="0 90 270 0" />
+            <Label Content="Before"
+                   Foreground="White"
+                   Height="30"
+                   FontSize="16"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Margin="0 84 132 0" />
+        </Grid>
+
+        <Line X1="400"
+              Y1="450"
+              X2="400"
+              Y2="0"
+              Grid.Row="1"
+              Grid.ColumnSpan="2"
+              Stroke="#000D14"
+              StrokeThickness="3" />
+
+        <Grid Grid.Column="1">
+            <Label Content="Hotkeys"
+                   FontSize="24"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Height="40" />
+            
+        </Grid>
     </Grid>
 </UserControl>
