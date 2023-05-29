@@ -40,6 +40,7 @@
 
 ========== WAZNE ============
 - Zrobic wlasny MessageBox z opcja ze jak ztrigeruje sie ten popup to zeby cale okno bylo z tym popupem OnTop
+- naprawic zaleznosci z cancelowaniem i z timeoutami dla nie znalezionych elementow
 
 
 ========== MNIEJSZE FEATURE'Y ==========
