@@ -41,6 +41,8 @@
 ========== WAZNE ============
 - Zrobic wlasny MessageBox z opcja ze jak ztrigeruje sie ten popup to zeby cale okno bylo z tym popupem OnTop
 - naprawic zaleznosci z cancelowaniem i z timeoutami dla nie znalezionych elementow
+- dodac wiecej opcji przy ustawianiu open jak: minimalize on open, etc etc
+- ewentualnie przerobic pliki exe
 
 
 ========== MNIEJSZE FEATURE'Y ==========
