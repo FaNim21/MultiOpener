@@ -46,8 +46,6 @@
                      TextWrapping="Wrap"
                      Width="80"
                      Height="20"
-                     Text="{Binding DelayBeforeTimeField}"
-                     PreviewTextInput="NumberValidationTextBox"
                      Background="#9E9E9E"
                      MaxLength="5"
                      HorizontalAlignment="Center"

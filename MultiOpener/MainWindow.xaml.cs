@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using static System.Windows.Forms.Design.AxImporter;
 
 namespace MultiOpener
 {
@@ -38,24 +37,16 @@ namespace MultiOpener
 
         public void EnableDisableChoosenHeadButton(string option)
         {
-            bool result = option.Equals("Start");
-            if (option.Equals("Start"))
+            StartButton.IsEnabled = true;
+            SettingsButton.IsEnabled = true;
+            OptionsButton.IsEnabled = true;
+
+            switch (option)
             {
-                StartButton.IsEnabled = false;
-                SettingsButton.IsEnabled = true;
-                OptionsButton.IsEnabled = true;
-            }
-            else if (option.Equals("Settings"))
-            {
-                StartButton.IsEnabled = true;
-                SettingsButton.IsEnabled = false;
-                OptionsButton.IsEnabled = true;
-            }
-            else if (option.Equals("Options"))
-            {
-                StartButton.IsEnabled = true;
-                SettingsButton.IsEnabled = true;
-                OptionsButton.IsEnabled = false;
+                case "Start": StartButton.IsEnabled = false; break;
+                case "Settings": SettingsButton.IsEnabled = false; break;
+                case "Options": OptionsButton.IsEnabled = false; break;
+                default: Trace.WriteLine("Nieznana opcja: " + option); break;
             }
         }
 
