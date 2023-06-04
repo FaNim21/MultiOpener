@@ -233,6 +233,7 @@ namespace MultiOpener.ListView
                     instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
                     await Task.Delay(750);
                 } while (instances.Count != count && errorCount < 50);
+                //TODO: 2 customize this timeout in options (looking for mc instances data)
 
                 for (int i = 0; i < mcInstances.Count; i++)
                 {

@@ -114,7 +114,7 @@
                 <RowDefinition Height="70" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0" Margin="50 0 0 0">
                 <Label Content="Type:"
                        Foreground="White"
                        Width="120"
@@ -122,7 +122,7 @@
                        FontSize="12"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"
-                       Margin="75 20 0 0" />
+                       Margin="0 20 0 0" />
 
                 <ComboBox x:Name="typeOptionComboBox"
                           Style="{StaticResource ComboBoxTest2}"
@@ -134,7 +134,7 @@
                           SelectedValue="{Binding Path=ChooseTypeBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Width="120"
                           Height="20"
-                          Margin="75 45 0 0">
+                          Margin="0 45 0 0">
                 </ComboBox>
 
                 <Label x:Name="NameLabel"
@@ -147,7 +147,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Top"
                        HorizontalContentAlignment="Center"
-                       Margin="200 15 0 0" />
+                       Margin="120 15 0 0" />
             </Grid>
 
             <ContentControl Grid.Row="1"

@@ -16,27 +16,27 @@
                Width="350"
                Height="31"
                FontSize="16"
-               HorizontalAlignment="Center"
+               HorizontalAlignment="Left"
                VerticalAlignment="Top"
-               Margin="0 0 0 0" />
+               Margin="50 0 0 0" />
         <TextBox x:Name="AppDirectoryPathField"
                  TextWrapping="NoWrap"
                  Width="350"
                  Height="20"
                  Text="{Binding ApplicationPathField}"
                  Background="#9E9E9E"
-                 HorizontalAlignment="Center"
+                 HorizontalAlignment="Left"
                  VerticalAlignment="Top"
-                 Margin="0 30 0 0" 
+                 Margin="50 30 0 0" 
                  IsReadOnly="True"/>
         <local:ButtonNormal x:Name="SetAppPath"
                             Width="40"
                             Height="20"
-                            HorizontalAlignment="Right"
+                            HorizontalAlignment="Center"
                             VerticalAlignment="Top"
                             FontSize="14"
                             ContentText="SET"
-                            Margin="0 30 30 0"
+                            Margin="390 30 30 0"
                             OnCommand="{Binding SettingsSetDirectoryPathCommand}" />
 
         <Label Content="Delays (1000 - 1 sec):"
@@ -44,9 +44,9 @@
                Width="350"
                Height="31"
                FontSize="16"
-               HorizontalAlignment="Center"
+               HorizontalAlignment="Left"
                VerticalAlignment="Top"
-               Margin="0 60 0 0" />
+               Margin="50 60 0 0" />
 
         <TextBox x:Name="delayBeforeTimeField"
                  TextWrapping="Wrap"
@@ -56,16 +56,16 @@
                  PreviewTextInput="NumberValidationTextBox"
                  Background="#9E9E9E"
                  MaxLength="5"
-                 HorizontalAlignment="Center"
+                 HorizontalAlignment="Left"
                  VerticalAlignment="Top"
-                 Margin="0 90 270 0" />
+                 Margin="50 90 270 0" />
         <Label Content="Before"
                Foreground="White"
                Height="30"
                FontSize="16"
-               HorizontalAlignment="Center"
+               HorizontalAlignment="Left"
                VerticalAlignment="Top"
-               Margin="0 84 132 0" />
+               Margin="130 84 132 0" />
 
         <TextBox x:Name="delayAfterTimeField"
                  TextWrapping="Wrap"
@@ -75,15 +75,15 @@
                  PreviewTextInput="NumberValidationTextBox"
                  Background="#9E9E9E"
                  MaxLength="5"
-                 HorizontalAlignment="Center"
+                 HorizontalAlignment="Left"
                  VerticalAlignment="Top"
-                 Margin="0 115 270 0" />
+                 Margin="50 115 270 0" />
         <Label Content="After"
                Foreground="White"
                Height="30"
                FontSize="16"
-               HorizontalAlignment="Center"
+               HorizontalAlignment="Left"
                VerticalAlignment="Top"
-               Margin="0 109 140 0" />
+               Margin="130 109 140 0" />
     </Grid>
 </UserControl>

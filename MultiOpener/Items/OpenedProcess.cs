@@ -238,7 +238,12 @@ namespace MultiOpener.Items
         {
             if (ProcessStartInfo == null) return;
 
-            Process? process = Process.Start(ProcessStartInfo);
+            Process? process = null;
+            try
+            {
+                process = Process.Start(ProcessStartInfo);
+            }
+            catch { }
 
             if (process != null)
             {
@@ -264,6 +269,7 @@ namespace MultiOpener.Items
                         await Task.Delay(250);
                         errors++;
                     }
+                    //TODO: 2 customize this timeout in options (waiting for hwnd in quick open)
                 }
             }
 
@@ -320,6 +326,7 @@ namespace MultiOpener.Items
                     }
                 }
             } while (!isHwndFound && errorCount < 15);
+            //TODO: 2 customize this timeout in options (looking for single instance in start panel)
 
             return errorCount < 15;
         }
