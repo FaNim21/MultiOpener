@@ -258,6 +258,7 @@ namespace MultiOpener.ListView
                     }
                 }
 
+                //TODO: 0 zrobic cos w formie poinformowania o tym ze automatyczne odswiezenie nastapi za 3 sekundy? albo poprostu ze odswieza i elo
                 int loadingIntro = 3000;
                 await Task.Delay(DelayAfter + loadingIntro);
             }

@@ -103,7 +103,7 @@ namespace MultiOpener.Commands.StartCommands
             }
 
             //Initializing loading window
-            Application.Current.Dispatcher.Invoke(delegate
+            Application.Current?.Dispatcher.Invoke(delegate
             {
                 MainWindow.Hide();
                 float windowPositionX = (float)(MainWindow.Left + (MainWindow.Width / 2));
@@ -139,7 +139,7 @@ namespace MultiOpener.Commands.StartCommands
             }
 
             //Ending loading etc
-            Application.Current.Dispatcher.Invoke(delegate
+            Application.Current?.Dispatcher.Invoke(delegate
             {
                 loadingProcesses!.Close();
                 MainWindow.OnShow();
@@ -150,8 +150,12 @@ namespace MultiOpener.Commands.StartCommands
             });
 
             //Late Refresh
+            Application.Current?.Dispatcher.Invoke(delegate
+            {
+                ((MainWindow)Application.Current.MainWindow).MainViewModel.start.UpdateText("Attempting to first Auto-Refresh");
+            });
             await Task.Delay(3500);
-            Application.Current.Dispatcher.Invoke(delegate
+            Application.Current?.Dispatcher.Invoke(delegate
             {
                 Consts.IsStartPanelWorkingNow = false;
                 Start.RefreshOpenedCommand.Execute(null);
