@@ -56,7 +56,16 @@ namespace MultiOpener
                 DragMove();
         }
         private void MinimizeButtonsClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
-        private void ExitButtonClick(object sender, RoutedEventArgs e) => Close();
+        private void ExitButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (!MainViewModel.start.OpenedIsEmpty())
+            {
+                MessageBoxResult result = MessageBox.Show($"Are you certain about closing MultiOpener? There are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result != MessageBoxResult.Yes)
+                    return;
+            }
+            Close();
+        }
 
         private void OnClosed(object sender, EventArgs e)
         {
