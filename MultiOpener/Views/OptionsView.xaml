@@ -51,7 +51,7 @@
                      HorizontalAlignment="Center"
                      VerticalAlignment="Top"
                      Margin="0 90 270 0" />
-            <Label Content="Before"
+            <Label Content="Text"
                    Foreground="White"
                    Height="30"
                    FontSize="16"

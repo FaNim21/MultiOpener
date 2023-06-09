@@ -15,7 +15,7 @@ namespace MultiOpener.Commands.SettingsCommands
 
             if (Settings.OpenIsEmpty() && string.IsNullOrEmpty(Settings.PresetName)) return;
 
-            if (MessageBox.Show($"Are you sure that you want to delete {Settings.PresetName}?", "Deleting currently opened preset!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageBox.Show($"Are you sure that you want to delete {Settings.PresetName}?\nThe changes will not be able to be restored.", "Deleting currently opened preset!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 Settings.RemoveCurrentOpenPreset();
         }
     }
