@@ -34,16 +34,18 @@
                     </Hyperlink>
         </TextBlock>
 
+        <!-- TIMINGS -->
         <Grid Grid.Column="0">
-            <Label Content="Options for open"
+            <Label Content="Timings"
                    FontSize="24"
                    Foreground="White"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Top"
-                   Height="40"/>
+                   Height="42"/>
 
             <TextBox x:Name="delayBeforeTimeField"
                      TextWrapping="Wrap"
+                     Text="{Binding TimeLookingForInstancesData}"
                      Width="80"
                      Height="20"
                      Background="#9E9E9E"
@@ -51,13 +53,13 @@
                      HorizontalAlignment="Center"
                      VerticalAlignment="Top"
                      Margin="0 90 270 0" />
-            <Label Content="Text"
+            <Label Content="LookingForInstancesData"
                    Foreground="White"
-                   Height="30"
+                   Height="32"
                    FontSize="16"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Top"
-                   Margin="0 84 132 0" />
+                   Margin="0 84 0 0" />
         </Grid>
 
         <Line X1="400"
@@ -69,8 +71,9 @@
               Stroke="#000D14"
               StrokeThickness="3" />
 
+        <!-- OTHER -->
         <Grid Grid.Column="1">
-            <Label Content="Hotkeys"
+            <Label Content="Other"
                    FontSize="24"
                    Foreground="White"
                    HorizontalAlignment="Center"
