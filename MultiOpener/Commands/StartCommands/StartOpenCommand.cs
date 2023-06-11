@@ -1,5 +1,4 @@
 ﻿using MultiOpener.Items;
-using MultiOpener.ListView;
 using MultiOpener.ViewModels;
 using MultiOpener.Windows;
 using System;
@@ -121,7 +120,7 @@ namespace MultiOpener.Commands.StartCommands
                 if (string.IsNullOrEmpty(current.PathExe)) return;
                 if (source.IsCancellationRequested) break;
 
-                Application.Current.Dispatcher.Invoke(delegate
+                Application.Current?.Dispatcher.Invoke(delegate
                 {
                     infoText = $"({i + 1}/{length}) Openning {current.Name}...";
                     loadingProcesses!.SetText(infoText);

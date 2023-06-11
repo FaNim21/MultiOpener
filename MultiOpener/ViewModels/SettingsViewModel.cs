@@ -1,6 +1,5 @@
 ﻿using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.Items;
-using MultiOpener.ListView;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels.Settings;
 using System;
@@ -75,7 +74,7 @@ namespace MultiOpener.ViewModels
                     _chooseTypeBox = value;
                     OnPropertyChanged(nameof(ChooseTypeBox));
                 }
-                SelectedOpenTypeViewModel?.UpdatePanelField(CurrentChosen);
+                SelectedOpenTypeViewModel?.UpdatePanelField(CurrentChosen!);
             }
         }
 
@@ -142,7 +141,7 @@ namespace MultiOpener.ViewModels
         {
             MainViewModel = mainViewModel;
 
-            directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MultiOpener", "Presets");
+            directoryPath = Path.Combine(Consts.AppdataPath, "Presets");
 
             Opens = new ObservableCollection<OpenItem>();
             Presets = new ObservableCollection<LoadedPresetItem>();

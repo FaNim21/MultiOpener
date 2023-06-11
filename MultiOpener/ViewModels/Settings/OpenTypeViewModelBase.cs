@@ -1,5 +1,5 @@
 ﻿using MultiOpener.Commands.SettingsCommands;
-using MultiOpener.ListView;
+using MultiOpener.Items;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels.Settings

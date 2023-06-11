@@ -1,5 +1,5 @@
 ﻿using MultiOpener.Commands.SettingsCommands.InstancesConfig;
-using MultiOpener.ListView;
+using MultiOpener.Items;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 

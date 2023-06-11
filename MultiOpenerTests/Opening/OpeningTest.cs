@@ -79,7 +79,7 @@ internal class OpeningTest
 
         await Task.Delay(100);
         while (Consts.IsStartPanelWorkingNow)
-            await Task.Delay(500);
+            await Task.Delay(1000);
         await Task.Delay(250);
 
         bool result = false;
@@ -94,7 +94,10 @@ internal class OpeningTest
                 {
                     var current = _mainWindow!.MainViewModel.start.Opened[i];
                     if (i == 2)
+                    {
+                        current.UpdateStatus();
                         isScriptClosed = !current.IsOpened();
+                    }
                     else
                     {
                         isRestOpened = current.IsOpened();
