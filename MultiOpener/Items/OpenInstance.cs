@@ -125,13 +125,14 @@ public class OpenInstance : OpenItem
             });
 
             Regex mcPatternRegex = new(OpenedProcess.MCPattern);
-            int errorCount = -1;
             List<IntPtr> instances;
+            int errorCount = -1;
+            //int timePerIteration = //TODO: 0 NIE PRZEKMINILEM JESZCZE JAK LADOWAC INFORMACJE Z CONFIGU
             do
             {
                 errorCount++;
                 instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
-                await Task.Delay(750);
+                await Task.Delay(800);
             } while (instances.Count != Quantity && errorCount < 50);
             //TODO: 2 customize this timeout in options (looking for mc instances data)
 

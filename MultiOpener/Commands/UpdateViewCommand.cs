@@ -18,23 +18,23 @@ namespace MultiOpener.Commands
         public bool CanExecute(object? parameter) => true;
         public void Execute(object? parameter)
         {
+            //TODO: 9 definitely need to rework it to make it better with adding new tabs in future etc?
             string result = parameter?.ToString() ?? "";
             viewModel.MainWindow.EnableDisableChoosenHeadButton(result);
 
-            if (result.Equals("Start"))
-            {
+            if (viewModel.SelectedViewModel == viewModel.options)
+                viewModel.options.SaveOptions();
+            else if (viewModel.SelectedViewModel == viewModel.settings)
                 viewModel.settings?.SaveCurrentOpenCommand?.Execute(null);
+
+            if (result.Equals("Start"))
                 viewModel.SelectedViewModel = viewModel.start;
-            }
+            else if (result.Equals("Options"))
+                viewModel.SelectedViewModel = viewModel.options;
             else if (result.Equals("Settings"))
             {
                 viewModel.settings?.UpdatePresetsComboBox();
                 viewModel.SelectedViewModel = viewModel.settings;
-            }
-            else if (result.Equals("Options"))
-            {
-                viewModel.settings?.SaveCurrentOpenCommand?.Execute(null);
-                viewModel.SelectedViewModel = viewModel.options;
             }
         }
     }

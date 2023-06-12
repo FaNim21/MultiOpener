@@ -64,6 +64,10 @@ namespace MultiOpener
                 if (result != MessageBoxResult.Yes)
                     return;
             }
+
+            if(MainViewModel.SelectedViewModel == MainViewModel.options)
+                MainViewModel.options.SaveOptions();
+
             Close();
         }
 
