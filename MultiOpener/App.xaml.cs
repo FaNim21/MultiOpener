@@ -1,11 +1,11 @@
-﻿using System.Windows;
+﻿using MultiOpener.Items.Options;
+using System.Windows;
 
 namespace MultiOpener
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        public static OptionSaveItem config { get; set; } = new();
+
     }
 }

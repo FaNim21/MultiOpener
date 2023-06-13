@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 using System.Windows;
+using MultiOpener.ViewModels;
 
 namespace MultiOpener.Items;
 public class OpenInstance : OpenItem
@@ -127,24 +128,25 @@ public class OpenInstance : OpenItem
             Regex mcPatternRegex = new(OpenedProcess.MCPattern);
             List<IntPtr> instances;
             int errorCount = -1;
-            //int timePerIteration = //TODO: 0 NIE PRZEKMINILEM JESZCZE JAK LADOWAC INFORMACJE Z CONFIGU
+            var config = new TimeoutConfigurator(App.config.TimeLookingForInstancesData, 50);
             do
             {
                 errorCount++;
                 instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
-                await Task.Delay(800);
-            } while (instances.Count != Quantity && errorCount < 50);
-            //TODO: 2 customize this timeout in options (looking for mc instances data)
+                await Task.Delay(TimeSpan.FromMilliseconds(config.Cooldown));
+            } while (instances.Count != Quantity && errorCount < config.ErrorCount);
 
             for (int i = 0; i < mcInstances.Count; i++)
             {
                 var current = mcInstances[i];
+                bool isFound = false;
 
                 for (int j = 0; j < instances.Count; j++)
                 {
                     string currentPath = Win32.GetJavaFilePath((int)Win32.GetPidFromHwnd(instances[j]));
                     if (currentPath.Equals(current.Path))
                     {
+                        isFound = true;
                         current.SetHwnd(instances[j]);
                         current.SetPid();
 
@@ -152,16 +154,14 @@ public class OpenInstance : OpenItem
                         break;
                     }
                 }
+                if (!isFound)
+                    current.Clear();
 
                 Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(current); });
             }
 
-            int loadingIntro = 3000;
-            Application.Current?.Dispatcher.Invoke(delegate
-            {
-                loading!.SetText($"{infoText} (finalizing datas)");
-            });
-            await Task.Delay(DelayAfter + loadingIntro);
+            Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (finalizing datas)"); });
+            await Task.Delay(DelayAfter + App.config.TimeInstanceFinalizingData);
         }
         catch (Exception e)
         {

@@ -28,7 +28,7 @@ namespace MultiOpener.Components.Buttons
         public static readonly DependencyProperty ChangeCommandProperty = DependencyProperty.Register("ChangeCommand", typeof(ICommand), typeof(ButtonTaskbarChoose), new UIPropertyMetadata(null));
         public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register("CommandParameter", typeof(object), typeof(ButtonTaskbarChoose), new PropertyMetadata(""));
 
-        public event RoutedEventHandler Click;
+        public event RoutedEventHandler? Click;
 
         public ButtonTaskbarChoose()
         {

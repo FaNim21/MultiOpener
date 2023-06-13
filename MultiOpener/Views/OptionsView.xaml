@@ -11,11 +11,6 @@
              d:DesignWidth="800"
              Background="#383A3C">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-
         <Label x:Name="versionLabel"
                HorizontalAlignment="Left"
                VerticalAlignment="Bottom"
@@ -34,52 +29,77 @@
                     </Hyperlink>
         </TextBlock>
 
+        <local:ButtonNormal Width="120"
+                            Height="30"
+                            ContentText="Reset to default"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            FontSize="15"
+                            OnCommand="{Binding ResetToDefaultCommand}"
+                            Margin="0 10 10 0" />
+        
         <!-- TIMINGS -->
-        <Grid Grid.Column="0">
-            <Label Content="Timings"
-                   FontSize="24"
-                   Foreground="White"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   Height="42"/>
+        <Label Content="Timings (1000 = 1 sec)"
+               FontSize="26"
+               Foreground="White"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top"
+               Height="50" />
+        <WrapPanel Orientation="Vertical"
+                   Margin="50 50 0 0">
+            <!--Main-->
+            <Label Foreground="White"
+                   FontSize="22"
+                   Content="Main" />
+            <Grid>
+                <TextBox TextWrapping="Wrap"
+                         Text="{Binding TimeLateRefresh}"
+                         Width="80"
+                         Height="20"
+                         Background="#9E9E9E"
+                         HorizontalAlignment="Left"
+                         MaxLength="5" />
+                <Label Content="Time for late refresh"
+                       Foreground="White"
+                       Height="32"
+                       FontSize="16"
+                       Margin="80 0 0 0" />
+            </Grid>
 
-            <TextBox x:Name="delayBeforeTimeField"
-                     TextWrapping="Wrap"
-                     Text="{Binding TimeLookingForInstancesData}"
-                     Width="80"
-                     Height="20"
-                     Background="#9E9E9E"
-                     MaxLength="5"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Top"
-                     Margin="0 90 270 0" />
-            <Label Content="LookingForInstancesData"
-                   Foreground="White"
-                   Height="32"
-                   FontSize="16"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   Margin="0 84 0 0" />
-        </Grid>
+            <!--Instance-->
+            <Label Foreground="White"
+                   FontSize="22"
+                   Content="Instance for MC" 
+                   Margin="0 20 0 0"/>
+            <Grid>
+                <TextBox TextWrapping="Wrap"
+                         Text="{Binding TimeLookingForInstancesData}"
+                         Width="80"
+                         Height="20"
+                         Background="#9E9E9E"
+                         HorizontalAlignment="Left"
+                         MaxLength="5" />
+                <Label Content="Looking for instances data timeout"
+                       Foreground="White"
+                       Height="32"
+                       FontSize="16"
+                       Margin="80 0 0 0" />
+            </Grid>
+            <Grid>
+                <TextBox TextWrapping="Wrap"
+                         Text="{Binding TimeInstanceFinalizingData}"
+                         Width="80"
+                         Height="20"
+                         Background="#9E9E9E"
+                         HorizontalAlignment="Left"
+                         MaxLength="5" />
+                <Label Content="instance finalizing data timeout"
+                       Foreground="White"
+                       Height="32"
+                       FontSize="16"
+                       Margin="80 0 0 0" />
+            </Grid>
 
-        <Line X1="400"
-              Y1="450"
-              X2="400"
-              Y2="0"
-              Grid.Row="1"
-              Grid.ColumnSpan="2"
-              Stroke="#000D14"
-              StrokeThickness="3" />
-
-        <!-- OTHER -->
-        <Grid Grid.Column="1">
-            <Label Content="Other"
-                   FontSize="24"
-                   Foreground="White"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   Height="40" />
-            
-        </Grid>
+        </WrapPanel>
     </Grid>
 </UserControl>

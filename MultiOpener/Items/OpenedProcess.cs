@@ -304,6 +304,7 @@ public class OpenedProcess : INotifyPropertyChanged
         Regex mcPatternRegex = new(MCPattern);
         List<IntPtr> instances;
         int errorCount = -1;
+        //var config = new TimeoutConfigurator(App.config.TimeLookingForInstancesData, 50);
 
         bool isHwndFound = false;
         do

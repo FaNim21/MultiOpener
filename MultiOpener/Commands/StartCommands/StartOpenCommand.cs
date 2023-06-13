@@ -153,7 +153,7 @@ namespace MultiOpener.Commands.StartCommands
             {
                 ((MainWindow)Application.Current.MainWindow).MainViewModel.start.UpdateText("Attempting to first Auto-Refresh");
             });
-            await Task.Delay(3500);
+            await Task.Delay(App.config.TimeLateRefresh);
             Application.Current?.Dispatcher.Invoke(delegate
             {
                 Consts.IsStartPanelWorkingNow = false;

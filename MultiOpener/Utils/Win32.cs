@@ -264,7 +264,7 @@ namespace MultiOpener.Utils
         }
         private static string GetJavaExecutablePathFromProcess(Process process)
         {
-            string javaLibraryPath = null;
+            string? javaLibraryPath = null;
             Regex regex = new(@"-Djava\.library\.path\s*=\s*""?([^""]+)/natives""?");
             using (ManagementObjectSearcher searcher = new("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id))
             using (ManagementObjectCollection objects = searcher.Get())
