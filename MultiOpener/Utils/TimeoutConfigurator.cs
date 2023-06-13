@@ -9,8 +9,7 @@ public class TimeoutConfigurator
 
     public TimeoutConfigurator(float time, int errorCount)
     {
-        //TODO: 0 Zrobic do tego unit testy
-        int timePerIteration = (int)Math.Floor(time / errorCount);
+        int timePerIteration = (int)(time / errorCount);
         if (timePerIteration <= 1)
         {
             errorCount = 0;
@@ -18,10 +17,20 @@ public class TimeoutConfigurator
         }
         else
         {
-            while (timePerIteration <= 100 && errorCount >= timePerIteration / 4)
+            if (time <= 500)
             {
-                errorCount /= 2;
-                timePerIteration = (int)Math.Floor(time / errorCount);
+                timePerIteration = 500;
+                errorCount = 1;
+            }
+            else if (timePerIteration <= 400)
+            {
+                errorCount = (errorCount + 1) / 3;
+                timePerIteration = (int)(time / errorCount);
+            }
+            else if (timePerIteration >= 2500)
+            {
+                errorCount = errorCount * 3 / 2;
+                timePerIteration = (int)(time / errorCount);
             }
         }
 

@@ -128,7 +128,7 @@ public class OpenInstance : OpenItem
             Regex mcPatternRegex = new(OpenedProcess.MCPattern);
             List<IntPtr> instances;
             int errorCount = -1;
-            var config = new TimeoutConfigurator(App.config.TimeoutLookingForInstancesData, 50);
+            var config = new TimeoutConfigurator(App.config.TimeoutLookingForInstancesData, 30);
             do
             {
                 errorCount++;

@@ -25,6 +25,6 @@ public class OptionSaveItem
         TimeoutInstanceFinalizingData = 3000;
         TimeoutLookingForSingleInstanceData = 15000;
 
-        //TODO: 0 DOROBIC RESZTE Z TODO LISTY I TEZ TE CO NIE ZNALAZLEM JESZCZE
+        //TODO: 0 DOROBIC TE CO NIE ZNALAZLEM JESZCZE
     }
 }
