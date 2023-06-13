@@ -4,22 +4,27 @@ public class OptionSaveItem
 {
     //Main
     public int TimeLateRefresh { get; set; }
+    public int TimeoutOpen { get; set; }
+    public int TimeoutSingleOpen { get; set; }
 
     //Instance
-    public int TimeLookingForInstancesData { get; set; }
-    public int TimeInstanceFinalizingData { get; set; }
+    public int TimeoutLookingForInstancesData { get; set; }
+    public int TimeoutInstanceFinalizingData { get; set; }
+    public int TimeoutLookingForSingleInstanceData { get; set; }
 
 
     public void ResetToDefault()
     {
         //Main
         TimeLateRefresh = 3500;
+        TimeoutOpen = 3750;
+        TimeoutSingleOpen = 3750;
 
         //Instance
-        TimeLookingForInstancesData = 40000;
-        TimeInstanceFinalizingData = 3000;
+        TimeoutLookingForInstancesData = 40000;
+        TimeoutInstanceFinalizingData = 3000;
+        TimeoutLookingForSingleInstanceData = 15000;
 
         //TODO: 0 DOROBIC RESZTE Z TODO LISTY I TEZ TE CO NIE ZNALAZLEM JESZCZE
-
     }
 }

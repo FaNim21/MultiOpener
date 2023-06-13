@@ -264,12 +264,12 @@ public class OpenedProcess : INotifyPropertyChanged
                 SetHandle(process.Handle);
                 SetPid();
                 int errors = 0;
-                while (!SetHwnd() && errors < 15)
+                var config = new TimeoutConfigurator(App.config.TimeoutSingleOpen, 15);
+                while (!SetHwnd() && errors < config.ErrorCount)
                 {
-                    await Task.Delay(250);
+                    await Task.Delay(config.Cooldown);
                     errors++;
                 }
-                //TODO: 2 customize this timeout in options (waiting for hwnd in quick open)
             }
         }
 
@@ -304,13 +304,13 @@ public class OpenedProcess : INotifyPropertyChanged
         Regex mcPatternRegex = new(MCPattern);
         List<IntPtr> instances;
         int errorCount = -1;
-        //var config = new TimeoutConfigurator(App.config.TimeLookingForInstancesData, 50);
+        var config = new TimeoutConfigurator(App.config.TimeoutLookingForSingleInstanceData, 15);
 
         bool isHwndFound = false;
         do
         {
             errorCount++;
-            await Task.Delay(1000);
+            await Task.Delay(config.Cooldown);
 
             instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
             for (int i = 0; i < instances.Count; i++)
@@ -326,10 +326,9 @@ public class OpenedProcess : INotifyPropertyChanged
                     break;
                 }
             }
-        } while (!isHwndFound && errorCount < 15);
-        //TODO: 2 customize this timeout in options (looking for single instance in start panel)
+        } while (!isHwndFound && errorCount < config.ErrorCount);
 
-        return errorCount < 15;
+        return errorCount < config.ErrorCount;
     }
 
     public void Clear()

@@ -1,4 +1,5 @@
-﻿using MultiOpener.Windows;
+﻿using MultiOpener.Utils;
+using MultiOpener.Windows;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -81,12 +82,14 @@ public class OpenItem
                 opened.Initialize(startInfo, name!, process.Handle, PathExe);
 
                 int errors = 0;
-                while (!opened.SetHwnd() && errors < 15)
+                var config = new TimeoutConfigurator(App.config.TimeoutOpen, 15);
+
+                while (!opened.SetHwnd() && errors < config.ErrorCount)
                 {
                     if (source.IsCancellationRequested)
                         break;
 
-                    await Task.Delay(250);
+                    await Task.Delay(config.Cooldown);
                     errors++;
                 }
 

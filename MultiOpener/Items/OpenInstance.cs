@@ -128,7 +128,7 @@ public class OpenInstance : OpenItem
             Regex mcPatternRegex = new(OpenedProcess.MCPattern);
             List<IntPtr> instances;
             int errorCount = -1;
-            var config = new TimeoutConfigurator(App.config.TimeLookingForInstancesData, 50);
+            var config = new TimeoutConfigurator(App.config.TimeoutLookingForInstancesData, 50);
             do
             {
                 errorCount++;
@@ -161,7 +161,7 @@ public class OpenInstance : OpenItem
             }
 
             Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (finalizing datas)"); });
-            await Task.Delay(DelayAfter + App.config.TimeInstanceFinalizingData);
+            await Task.Delay(DelayAfter + App.config.TimeoutInstanceFinalizingData);
         }
         catch (Exception e)
         {

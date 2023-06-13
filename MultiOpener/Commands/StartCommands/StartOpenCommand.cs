@@ -115,6 +115,8 @@ namespace MultiOpener.Commands.StartCommands
             //Opening everything
             for (int i = 0; i < length; i++)
             {
+                //TODO: 1 Zrobic mozliwosc zrobienia quick preset open czyli poprostu startujesz i odrazu zamykasz i robi szkielety wszystkie 'open' w panelu start po to zeby moc jest wystartowac kiedy tylko sie zechce
+                //lub dac opcje na right click contextmenu zeby zrobic quick open tylko okienek z zamknietymi procesami
                 var current = Settings.Opens[i];
 
                 if (string.IsNullOrEmpty(current.PathExe)) return;

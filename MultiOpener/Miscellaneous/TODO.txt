@@ -79,3 +79,4 @@
 - some optimizations for openened processes
 - changed informations panel to options with opening configurations and more
 - fixed few freezes with opening and canceling opening
+- fixed a lot of small errors/details

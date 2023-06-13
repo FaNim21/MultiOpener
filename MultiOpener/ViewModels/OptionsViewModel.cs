@@ -23,27 +23,63 @@ namespace MultiOpener.ViewModels
             }
         }
 
-        private int _timeLookingForInstancesData;
-        public int TimeLookingForInstancesData
+        private int _timeoutOpen;
+        public int TimeoutOpen
         {
-            get { return _timeLookingForInstancesData; }
+            get { return _timeoutOpen; }
             set
             {
-                _timeLookingForInstancesData = value;
-                App.config.TimeLookingForInstancesData = value;
-                OnPropertyChanged(nameof(TimeLookingForInstancesData));
+                _timeoutOpen = value;
+                App.config.TimeoutOpen = value;
+                OnPropertyChanged(nameof(TimeoutOpen));
             }
         }
 
-        private int _timeInstanceFinalizingData;
-        public int TimeInstanceFinalizingData
+        private int _timeoutSingleOpen;
+        public int TimeoutSingleOpen
         {
-            get { return _timeInstanceFinalizingData; }
+            get { return _timeoutSingleOpen; }
             set
             {
-                _timeInstanceFinalizingData = value;
-                App.config.TimeInstanceFinalizingData = value;
-                OnPropertyChanged(nameof(TimeInstanceFinalizingData));
+                _timeoutSingleOpen = value;
+                App.config.TimeoutSingleOpen = value;
+                OnPropertyChanged(nameof(TimeoutSingleOpen));
+            }
+        }
+
+        private int _timeoutLookingForInstancesData;
+        public int TimeoutLookingForInstancesData
+        {
+            get { return _timeoutLookingForInstancesData; }
+            set
+            {
+                _timeoutLookingForInstancesData = value;
+                App.config.TimeoutLookingForInstancesData = value;
+                OnPropertyChanged(nameof(TimeoutLookingForInstancesData));
+            }
+        }
+
+        private int _timeoutInstanceFinalizingData;
+        public int TimeoutInstanceFinalizingData
+        {
+            get { return _timeoutInstanceFinalizingData; }
+            set
+            {
+                _timeoutInstanceFinalizingData = value;
+                App.config.TimeoutInstanceFinalizingData = value;
+                OnPropertyChanged(nameof(TimeoutInstanceFinalizingData));
+            }
+        }
+
+        private int _timeoutLookingForSingleInstanceData;
+        public int TimeoutLookingForSingleInstanceData
+        {
+            get { return _timeoutLookingForSingleInstanceData; }
+            set
+            {
+                _timeoutLookingForSingleInstanceData = value;
+                App.config.TimeoutLookingForSingleInstanceData = value;
+                OnPropertyChanged(nameof(TimeoutLookingForSingleInstanceData));
             }
         }
 
@@ -89,8 +125,12 @@ namespace MultiOpener.ViewModels
         {
             var config = App.config;
             TimeLateRefresh = config.TimeLateRefresh;
-            TimeLookingForInstancesData = config.TimeLookingForInstancesData;
-            TimeInstanceFinalizingData = config.TimeInstanceFinalizingData;
+            TimeoutOpen = config.TimeoutOpen;
+            TimeoutSingleOpen = config.TimeoutSingleOpen;
+
+            TimeoutLookingForInstancesData = config.TimeoutLookingForInstancesData;
+            TimeoutInstanceFinalizingData = config.TimeoutInstanceFinalizingData;
+            TimeoutLookingForSingleInstanceData = config.TimeoutLookingForSingleInstanceData;
         }
 
         public void ResetToDefault()
