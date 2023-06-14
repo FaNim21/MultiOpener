@@ -44,6 +44,7 @@
 - dodac wiecej opcji przy ustawianiu open jak: minimalize on open, etc etc
 - ewentualnie przerobic pliki exe (aspekt lapania nazw podobnych, albo poprostu wysylania informacji o bledzie przy odpalaniu nie insteniejacej nazwy)
 - PRZENIUESC WIEKSZASC LOGIKI MainWindow do klasy app, bo mi sie popieprzylo wszystko, poniewaz ta klasa pelni role kontolera w wpf, a glownie viewmodel powinien byc w MainWindow z zasady ustalania DataContext
+- Zrobic na shift + left click na guzik jak jest OPEN zeby odpalalo caly preset, ale w formie tylko paneli w start menu bez rzeczywistego odpalania aplikacji
 
 
 ========== MNIEJSZE FEATURE'Y ==========

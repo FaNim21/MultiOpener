@@ -9,8 +9,6 @@ namespace MultiOpener.Views
         public OptionsView()
         {
             InitializeComponent();
-
-            versionLabel.Content = Consts.Version;
         }
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 using System.Windows;
-using MultiOpener.ViewModels;
 
 namespace MultiOpener.Items;
 public class OpenInstance : OpenItem
@@ -120,10 +119,7 @@ public class OpenInstance : OpenItem
                 }
             }
 
-            Application.Current?.Dispatcher.Invoke(delegate
-            {
-                loading!.SetText($"{infoText} (loading datas)");
-            });
+            Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (loading datas)"); });
 
             Regex mcPatternRegex = new(OpenedProcess.MCPattern);
             List<IntPtr> instances;
@@ -143,17 +139,22 @@ public class OpenInstance : OpenItem
 
                 for (int j = 0; j < instances.Count; j++)
                 {
-                    string currentPath = Win32.GetJavaFilePath((int)Win32.GetPidFromHwnd(instances[j]));
-                    if (currentPath.Equals(current.Path))
+                    try
                     {
-                        isFound = true;
-                        current.SetHwnd(instances[j]);
-                        current.SetPid();
+                        string currentPath = Win32.GetJavaFilePath((int)Win32.GetPidFromHwnd(instances[j]));
+                        if (currentPath.Equals(current.Path))
+                        {
+                            isFound = true;
+                            current.SetHwnd(instances[j]);
+                            current.SetPid();
 
-                        instances.Remove(instances[j]);
-                        break;
+                            instances.Remove(instances[j]);
+                            break;
+                        }
                     }
+                    catch { }
                 }
+
                 if (!isFound)
                     current.Clear();
 

@@ -10,139 +10,168 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              Background="#383A3C">
-    <Grid>
-        <Label x:Name="versionLabel"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Bottom"
-               Margin="0 32" />
-        <Label Content="Made by FaNim"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Bottom" 
-               Margin="0 16"/>
+    <Grid ScrollViewer.VerticalScrollBarVisibility="Visible">
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical">
+                <Grid>
+                    <Label Content="Made by FaNim"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Padding="0"
+                           Margin="2 20 0 0" />
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Grid.Column="1"
+                               Margin="3">
+                        <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/releases"
+                                   RequestNavigate="Hyperlink_RequestNavigate">
+                            All releases here
+                        </Hyperlink>
+                    </TextBlock>
+                    <local:ButtonNormal Width="120"
+                                        Height="30"
+                                        ContentText="Reset to default"
+                                        VerticalAlignment="Top"
+                                        HorizontalAlignment="Right"
+                                        FontSize="15"
+                                        OnCommand="{Binding ResetToDefaultCommand}"
+                                        Margin="0 10 10 0" />
+                    <Label Content="Jakis sobie tytuł strony pog"
+                           FontSize="26"
+                           Foreground="White"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           Height="50" />
+                </Grid>
+                <WrapPanel Orientation="Vertical"
+                           Margin="50 15 0 0">
+                    <!--GENERAL-->
+                    <WrapPanel Orientation="Vertical"
+                               Margin="0 0 0 15">
 
-        <TextBlock HorizontalAlignment="Right"
-                   VerticalAlignment="Bottom"
-                   Grid.Column="1"
-                   Margin="3">
-                    <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/releases"
-                               RequestNavigate="Hyperlink_RequestNavigate">
-                        All releases here
-                    </Hyperlink>
-        </TextBlock>
+                        <Label Foreground="Wheat"
+                               FontSize="32"
+                               Content="General" />
+                        <Grid>
+                            <TextBox TextWrapping="Wrap"
+                                     Text="ustawienie lol"
+                                     Width="80"
+                                     Height="20"
+                                     Background="#9E9E9E"
+                                     HorizontalAlignment="Left"
+                                     MaxLength="5" />
+                            <Label Content="cos tu kiedys bedzie"
+                                   Foreground="White"
+                                   Height="32"
+                                   FontSize="16"
+                                   Margin="80 0 0 0" />
+                        </Grid>
+                    </WrapPanel>
 
-        <local:ButtonNormal Width="120"
-                            Height="30"
-                            ContentText="Reset to default"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Right"
-                            FontSize="15"
-                            OnCommand="{Binding ResetToDefaultCommand}"
-                            Margin="0 10 10 0" />
-        
-        <!-- TIMINGS -->
-        <Label Content="Timings (1000 = 1 sec)"
-               FontSize="26"
-               Foreground="White"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Top"
-               Height="50" />
-        <WrapPanel Orientation="Vertical"
-                   Margin="50 50 0 0">
-            <!--Main-->
-            <Label Foreground="White"
-                   FontSize="22"
-                   Content="Main" />
-            <Grid>
-                <TextBox TextWrapping="Wrap"
-                         Text="{Binding TimeLateRefresh}"
-                         Width="80"
-                         Height="20"
-                         Background="#9E9E9E"
-                         HorizontalAlignment="Left"
-                         MaxLength="5" />
-                <Label Content="Time for late refresh"
-                       Foreground="White"
-                       Height="32"
-                       FontSize="16"
-                       Margin="80 0 0 0" />
-            </Grid>
-            <Grid>
-                <TextBox TextWrapping="Wrap"
-                         Text="{Binding TimeoutOpen}"
-                         Width="80"
-                         Height="20"
-                         Background="#9E9E9E"
-                         HorizontalAlignment="Left"
-                         MaxLength="5" />
-                <Label Content="Opening timeout on every 'Open' in preset"
-                       Foreground="White"
-                       Height="32"
-                       FontSize="16"
-                       Margin="80 0 0 0" />
-            </Grid>
-            <Grid>
-                <TextBox TextWrapping="Wrap"
-                         Text="{Binding TimeoutSingleOpen}"
-                         Width="80"
-                         Height="20"
-                         Background="#9E9E9E"
-                         HorizontalAlignment="Left"
-                         MaxLength="5" />
-                <Label Content="Opening timeout on chosen opening"
-                       Foreground="White"
-                       Height="32"
-                       FontSize="16"
-                       Margin="80 0 0 0" />
-            </Grid>
+                    <!--TIMINGS-->
+                    <WrapPanel Orientation="Vertical"
+                               Margin="0 0 0 15">
 
-            <!--Instance-->
-            <Label Foreground="White"
-                   FontSize="22"
-                   Content="Instance for MC" 
-                   Margin="0 20 0 0"/>
-            <Grid>
-                <TextBox TextWrapping="Wrap"
-                         Text="{Binding TimeoutLookingForInstancesData}"
-                         Width="80"
-                         Height="20"
-                         Background="#9E9E9E"
-                         HorizontalAlignment="Left"
-                         MaxLength="5" />
-                <Label Content="Looking for instances data timeout"
-                       Foreground="White"
-                       Height="32"
-                       FontSize="16"
-                       Margin="80 0 0 0" />
-            </Grid>
-            <Grid>
-                <TextBox TextWrapping="Wrap"
-                         Text="{Binding TimeoutInstanceFinalizingData}"
-                         Width="80"
-                         Height="20"
-                         Background="#9E9E9E"
-                         HorizontalAlignment="Left"
-                         MaxLength="5" />
-                <Label Content="instance finalizing data timeout"
-                       Foreground="White"
-                       Height="32"
-                       FontSize="16"
-                       Margin="80 0 0 0" />
-            </Grid>
-            <Grid>
-                <TextBox TextWrapping="Wrap"
-                         Text="{Binding TimeoutLookingForSingleInstanceData}"
-                         Width="80"
-                         Height="20"
-                         Background="#9E9E9E"
-                         HorizontalAlignment="Left"
-                         MaxLength="5" />
-                <Label Content="Single opening instance timeout"
-                       Foreground="White"
-                       Height="32"
-                       FontSize="16"
-                       Margin="80 0 0 0" />
-            </Grid>
+                        <Label Foreground="Wheat"
+                               FontSize="32"
+                               Content="Timings (1000 = 1 sec)" />
+                        <!--Main-->
+                        <Label Foreground="White"
+                               FontSize="22"
+                               Content="Main" />
+                        <Grid>
+                            <TextBox TextWrapping="Wrap"
+                                     Text="{Binding TimeLateRefresh}"
+                                     Width="80"
+                                     Height="20"
+                                     Background="#9E9E9E"
+                                     HorizontalAlignment="Left"
+                                     MaxLength="5" />
+                            <Label Content="Time for late refresh"
+                                   Foreground="White"
+                                   Height="32"
+                                   FontSize="16"
+                                   Margin="80 0 0 0" />
+                        </Grid>
+                        <Grid>
+                            <TextBox TextWrapping="Wrap"
+                                     Text="{Binding TimeoutOpen}"
+                                     Width="80"
+                                     Height="20"
+                                     Background="#9E9E9E"
+                                     HorizontalAlignment="Left"
+                                     MaxLength="5" />
+                            <Label Content="Opening timeout on every 'Open' in preset"
+                                   Foreground="White"
+                                   Height="32"
+                                   FontSize="16"
+                                   Margin="80 0 0 0" />
+                        </Grid>
+                        <Grid>
+                            <TextBox TextWrapping="Wrap"
+                                     Text="{Binding TimeoutSingleOpen}"
+                                     Width="80"
+                                     Height="20"
+                                     Background="#9E9E9E"
+                                     HorizontalAlignment="Left"
+                                     MaxLength="5" />
+                            <Label Content="Opening timeout on chosen opening"
+                                   Foreground="White"
+                                   Height="32"
+                                   FontSize="16"
+                                   Margin="80 0 0 0" />
+                        </Grid>
 
-        </WrapPanel>
+                        <!--Instance-->
+                        <Label Foreground="White"
+                               FontSize="22"
+                               Content="Instances(MultiMC)"
+                               Margin="0 20 0 0" />
+                        <Grid>
+                            <TextBox TextWrapping="Wrap"
+                                     Text="{Binding TimeoutLookingForInstancesData}"
+                                     Width="80"
+                                     Height="20"
+                                     Background="#9E9E9E"
+                                     HorizontalAlignment="Left"
+                                     MaxLength="5" />
+                            <Label Content="Looking for instances data timeout"
+                                   Foreground="White"
+                                   Height="32"
+                                   FontSize="16"
+                                   Margin="80 0 0 0" />
+                        </Grid>
+                        <Grid>
+                            <TextBox TextWrapping="Wrap"
+                                     Text="{Binding TimeoutInstanceFinalizingData}"
+                                     Width="80"
+                                     Height="20"
+                                     Background="#9E9E9E"
+                                     HorizontalAlignment="Left"
+                                     MaxLength="5" />
+                            <Label Content="instance finalizing data timeout"
+                                   Foreground="White"
+                                   Height="32"
+                                   FontSize="16"
+                                   Margin="80 0 0 0" />
+                        </Grid>
+                        <Grid>
+                            <TextBox TextWrapping="Wrap"
+                                     Text="{Binding TimeoutLookingForSingleInstanceData}"
+                                     Width="80"
+                                     Height="20"
+                                     Background="#9E9E9E"
+                                     HorizontalAlignment="Left"
+                                     MaxLength="5" />
+                            <Label Content="Single opening instance timeout"
+                                   Foreground="White"
+                                   Height="32"
+                                   FontSize="16"
+                                   Margin="80 0 0 0" />
+                        </Grid>
+                    </WrapPanel>
+                </WrapPanel>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>
