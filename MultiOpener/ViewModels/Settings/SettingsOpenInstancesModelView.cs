@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Commands.SettingsCommands.InstancesConfig;
 using MultiOpener.Items;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -7,6 +8,8 @@ namespace MultiOpener.ViewModels.Settings
 {
     public class SettingsOpenInstancesModelView : OpenTypeViewModelBase
     {
+        public override Type ItemType { get; set; } = typeof(OpenInstance);
+
         public ObservableCollection<string> instanceNames = new();
 
         private int _quantity;
@@ -33,8 +36,7 @@ namespace MultiOpener.ViewModels.Settings
 
         public ICommand SettingsInstanceOpenSetupCommand { get; set; }
 
-
-        public SettingsOpenInstancesModelView()
+        public SettingsOpenInstancesModelView() : base()
         {
             SettingsInstanceOpenSetupCommand = new SettingsInstanceOpenSetupCommand(this);
 

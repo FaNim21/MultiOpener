@@ -1,11 +1,14 @@
 ﻿using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.Items;
+using System;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels.Settings
 {
     public abstract class OpenTypeViewModelBase : BaseViewModel
     {
+        public abstract Type ItemType { get; set; }
+
         private string? _applicationPathField;
         public string? ApplicationPathField
         {
@@ -42,7 +45,7 @@ namespace MultiOpener.ViewModels.Settings
         public ICommand SettingsSetDirectoryPathCommand { get; set; }
 
 
-        public OpenTypeViewModelBase()
+        protected OpenTypeViewModelBase()
         {
             SettingsSetDirectoryPathCommand = new SettingsSetDirectoryPathCommand(this);
         }

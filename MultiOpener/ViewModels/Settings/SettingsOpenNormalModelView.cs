@@ -1,10 +1,16 @@
-﻿namespace MultiOpener.ViewModels.Settings
+﻿using MultiOpener.Items;
+using System;
+
+namespace MultiOpener.ViewModels.Settings
 {
     public class SettingsOpenNormalModelView : OpenTypeViewModelBase
     {
-        public SettingsOpenNormalModelView()
-        {
+        public override Type ItemType { get; set; } = typeof(OpenItem);
 
+        public SettingsOpenNormalModelView() : base()
+        {
+            
         }
+
     }
 }

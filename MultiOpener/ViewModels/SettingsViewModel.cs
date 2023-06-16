@@ -270,10 +270,7 @@ namespace MultiOpener.ViewModels
         public Type GetSelectedOpenType()
         {
             if (SelectedOpenTypeViewModel != null)
-            {
-                if (SelectedOpenTypeViewModel.GetType() == typeof(SettingsOpenInstancesModelView))
-                    return typeof(OpenInstance);
-            }
+                return SelectedOpenTypeViewModel.ItemType;
 
             return typeof(OpenItem);
         }
