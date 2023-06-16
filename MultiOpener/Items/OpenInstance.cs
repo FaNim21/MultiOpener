@@ -141,13 +141,10 @@ public class OpenInstance : OpenItem
                 {
                     try
                     {
-                        string currentPath = Win32.GetJavaFilePath((int)Win32.GetPidFromHwnd(instances[j]));
-                        if (currentPath.Equals(current.Path))
+                        bool output = current.IsInstancePathEqual(instances[i]);
+                        if (output)
                         {
                             isFound = true;
-                            current.SetHwnd(instances[j]);
-                            current.SetPid();
-
                             instances.Remove(instances[j]);
                             break;
                         }

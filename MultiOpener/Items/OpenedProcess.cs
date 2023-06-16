@@ -263,6 +263,7 @@ public class OpenedProcess : INotifyPropertyChanged
             {
                 SetHandle(process.Handle);
                 SetPid();
+
                 int errors = 0;
                 var config = new TimeoutConfigurator(App.config.TimeoutSingleOpen, 15);
                 while (!SetHwnd() && errors < config.ErrorCount)
@@ -315,20 +316,34 @@ public class OpenedProcess : INotifyPropertyChanged
             instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
             for (int i = 0; i < instances.Count; i++)
             {
-                int currentPid = (int)Win32.GetPidFromHwnd(instances[i]);
-                string currentPath = Win32.GetJavaFilePath(currentPid);
-
-                if (currentPath.Equals(Path))
+                try
                 {
-                    isHwndFound = true;
-                    SetHwnd(instances[i]);
-                    Pid = currentPid;
-                    break;
+                    bool output = IsInstancePathEqual(instances[i]);
+                    if (output)
+                    {
+                        isHwndFound = true;
+                        break;
+                    }
                 }
+                catch { }
             }
         } while (!isHwndFound && errorCount < config.ErrorCount);
 
         return errorCount < config.ErrorCount;
+    }
+    public bool IsInstancePathEqual(IntPtr _hwnd)
+    {
+        if (_hwnd == IntPtr.Zero) return false;
+
+        int currentPid = (int)Win32.GetPidFromHwnd(_hwnd);
+        string currentPath = Win32.GetJavaFilePath(currentPid);
+        if (currentPath.Equals(Path))
+        {
+            SetHwnd(_hwnd);
+            Pid = currentPid;
+            return true;
+        }
+        return false;
     }
 
     public void Clear()

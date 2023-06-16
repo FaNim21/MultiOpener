@@ -6,9 +6,6 @@ using System.Windows.Input;
 
 namespace MultiOpener.ViewModels
 {
-    /// <summary>
-    /// MAIN IDEA IS TO MAKE IT SCROLLABLE?? WITH ALL SUPPORTED PROGRAMS/MECHANICS TO CONFIGURE
-    /// </summary>
     public class OptionsViewModel : BaseViewModel
     {
         private int _timeLateRefresh;

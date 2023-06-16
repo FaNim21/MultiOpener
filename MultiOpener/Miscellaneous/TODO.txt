@@ -65,7 +65,8 @@
 - Supporty pod wiecej programow, czy nawet nowe opcje menu jak options itp itd do mozliwosci zmiany ustawien calego openera i ewentualnie do jakiejs konfiguracji albo menu ze skrotami klawiszowymi
 - dac opcje jak jak dlugo czekac az aplikacja sie zamknie defautlowo jest 5000, jak dlugo czekac na otwarcie okna itp itd zeby to byla taka pelna konfiguracja pod mozliwosc pcta
 --- OPCJE DO DODANIA w ustawiwniach ---
-- 
+- wybranie miedzy wyswietlanymi nazwami jak nazwane sa w presetach, a do tego jak nazywaja sie okna (niektore aplikacje nie maja okien wiec wtedy i tak maja nazwe z presetu)
+- checkbox czy chcesz zeby MO minimalizowal sie po otwarciu i odswiezeniu wszystkich aplikacji z presetu (i moze dac opcje z jakim opoznieniem?)
 
 
 

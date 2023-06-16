@@ -1,62 +1,62 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
-    <Version>0.1.0</Version>
-    <Authors>FaNim</Authors>
-    <Description>Application to open as many as want apps using one button mainly designed for minecraft speedrun community</Description>
-    <Copyright>Copyright© 2023</Copyright>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/FaNim21/MultiOpener</RepositoryUrl>
-    <NeutralLanguage>en-001</NeutralLanguage>
-    <Title>Multi Opener</Title>
-    <PackageId>FaNimMultiOpener</PackageId>
-    <Company>FaNim</Company>
-    <Product>MultiOpener</Product>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net7.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<Version>0.4.0</Version>
+		<Authors>FaNim</Authors>
+		<Description>Application to open as many as want apps using one button mainly designed for minecraft speedrun community</Description>
+		<Copyright>Copyright© 2023</Copyright>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/FaNim21/MultiOpener</RepositoryUrl>
+		<NeutralLanguage>en-001</NeutralLanguage>
+		<Title>Multi Opener</Title>
+		<PackageId>FaNimMultiOpener</PackageId>
+		<Company>FaNim</Company>
+		<Product>MultiOpener</Product>
+		<ApplicationIcon>Icon.ico</ApplicationIcon>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Miscellaneous\Nowy folder\**" />
-    <EmbeddedResource Remove="Miscellaneous\Nowy folder\**" />
-    <None Remove="Miscellaneous\Nowy folder\**" />
-    <Page Remove="Miscellaneous\Nowy folder\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Miscellaneous\Nowy folder\**" />
+		<EmbeddedResource Remove="Miscellaneous\Nowy folder\**" />
+		<None Remove="Miscellaneous\Nowy folder\**" />
+		<Page Remove="Miscellaneous\Nowy folder\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Icon.ico" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Icon.ico" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NuGet.Versioning" Version="6.5.0" />
-    <PackageReference Include="Octokit" Version="5.0.4" />
-    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
-    <PackageReference Include="System.Management" Version="7.0.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="NuGet.Versioning" Version="6.5.0" />
+		<PackageReference Include="Octokit" Version="5.0.4" />
+		<PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+		<PackageReference Include="System.Management" Version="7.0.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
 
 </Project>

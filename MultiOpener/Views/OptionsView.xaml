@@ -149,7 +149,7 @@
                                      Background="#9E9E9E"
                                      HorizontalAlignment="Left"
                                      MaxLength="5" />
-                            <Label Content="instance finalizing data timeout"
+                            <Label Content="instance finalizing data time"
                                    Foreground="White"
                                    Height="32"
                                    FontSize="16"

@@ -29,7 +29,6 @@ namespace MultiOpener.Commands.OpenedCommands
             Start?.UpdateText($"Reseting {openedProcess.Name}");
             if (openedProcess.IsOpened())
             {
-
                 bool result = await openedProcess.Close();
 
                 if (result)
