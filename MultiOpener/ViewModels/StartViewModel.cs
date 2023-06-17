@@ -1,8 +1,6 @@
 ﻿using MultiOpener.Commands.StartCommands;
 using MultiOpener.Items;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels
@@ -57,6 +55,17 @@ namespace MultiOpener.ViewModels
             {
                 _panelInteractionText = value;
                 OnPropertyChanged(nameof(PanelInteractionText));
+            }
+        }
+
+        private string _refreshButtonName = "Refresh";
+        public string RefreshButtonName
+        {
+            get { return _refreshButtonName; }
+            set
+            {
+                _refreshButtonName = value;
+                OnPropertyChanged(nameof(RefreshButtonName));
             }
         }
 
