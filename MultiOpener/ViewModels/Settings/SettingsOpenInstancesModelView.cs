@@ -55,6 +55,19 @@ namespace MultiOpener.ViewModels.Settings
             }
         }
 
+        public override void SetOpenProperties(ref OpenItem open)
+        {
+            base.SetOpenProperties(ref open);
+            open.Type = OpenType.InstancesMultiMC;
+
+            if (open is OpenInstance openInstance)
+            {
+                openInstance.Quantity = Quantity;
+                openInstance.Names = instanceNames;
+                openInstance.DelayBetweenInstances = DelayBetweenInstances;
+            }
+        }
+
         public override void Clear()
         {
             base.Clear();

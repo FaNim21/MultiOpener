@@ -275,6 +275,16 @@ namespace MultiOpener.ViewModels
             return typeof(OpenItem);
         }
 
+        public OpenItem CreateNewOpen(Type selectedOpenType, string name)
+        {
+            return selectedOpenType.Name switch
+            {
+                nameof(OpenInstance) => new OpenInstance(name),
+                //New classes here
+                _ => new OpenItem(name),
+            };
+        }
+
         public bool OpenIsEmpty()
         {
             return Opens == null || Opens.Count == 0;

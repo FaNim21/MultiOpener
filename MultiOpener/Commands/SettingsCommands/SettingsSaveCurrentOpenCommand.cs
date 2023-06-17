@@ -1,7 +1,4 @@
-﻿using MultiOpener.Items;
-using MultiOpener.ViewModels;
-using MultiOpener.ViewModels.Settings;
-using System;
+﻿using MultiOpener.ViewModels;
 
 namespace MultiOpener.Commands.SettingsCommands
 {
@@ -15,48 +12,25 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null || Settings.CurrentChosen == null || Settings.SelectedOpenTypeViewModel == null) return;
 
-            int n = Settings.Opens.Count;
-            for (int i = 0; i < n; i++)
+            var opensCount = Settings.Opens.Count;
+            var selected = Settings.GetSelectedOpenType();
+            var currentChosenName = Settings.CurrentChosen.Name;
+
+            for (int i = 0; i < opensCount; i++)
             {
                 var open = Settings.Opens[i];
-                if (open.Name.Equals(Settings.CurrentChosen.Name))
+                if (!open.Name.Equals(currentChosenName))
+                    continue;
+
+                if (open.GetType() != selected)
                 {
-                    Type selected = Settings.GetSelectedOpenType();
-                    if (open.GetType() != Settings.GetSelectedOpenType())
-                    {
-                        if (selected == typeof(OpenInstance))
-                            Settings.Opens[i] = new OpenInstance(open.Name);
-                        else
-                            Settings.Opens[i] = new OpenItem(open.Name);
-
-                        open = Settings.Opens[i];
-                    }
-
-                    if (open.GetType() == typeof(OpenInstance))
-                    {
-                        OpenInstance instance = (OpenInstance)Settings.Opens[i];
-                        instance.Quantity = ((SettingsOpenInstancesModelView)Settings.SelectedOpenTypeViewModel).Quantity;
-                        instance.Names = ((SettingsOpenInstancesModelView)Settings.SelectedOpenTypeViewModel).instanceNames;
-                        instance.DelayBetweenInstances = ((SettingsOpenInstancesModelView)Settings.SelectedOpenTypeViewModel).DelayBetweenInstances;
-                    }
-
-                    string appPath = Settings.SelectedOpenTypeViewModel.ApplicationPathField ?? "";
-                    open.PathExe = appPath;
-                    open.Type = Settings.ChooseTypeBox;
-
-                    if (string.IsNullOrEmpty(Settings.SelectedOpenTypeViewModel.DelayBeforeTimeField))
-                        open.DelayBefore = 0;
-                    else
-                        open.DelayBefore = int.Parse(Settings.SelectedOpenTypeViewModel.DelayBeforeTimeField ?? "0");
-
-                    if (string.IsNullOrEmpty(Settings.SelectedOpenTypeViewModel.DelayAfterTimeField))
-                        open.DelayAfter = 0;
-                    else
-                        open.DelayAfter = int.Parse(Settings.SelectedOpenTypeViewModel.DelayAfterTimeField ?? "0");
-
-                    Settings.CurrentChosen = open;
-                    break;
+                    Settings.Opens[i] = Settings.CreateNewOpen(selected, open.Name);
+                    open = Settings.Opens[i];
                 }
+
+                Settings.SelectedOpenTypeViewModel.SetOpenProperties(ref open);
+                Settings.CurrentChosen = open;
+                break;
             }
         }
     }

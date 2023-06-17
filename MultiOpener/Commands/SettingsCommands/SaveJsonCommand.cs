@@ -39,17 +39,13 @@ namespace MultiOpener.Commands.SettingsCommands
                 if (!saveName.Equals(Settings.PresetName, System.StringComparison.CurrentCultureIgnoreCase))
                 {
                     MessageBoxResult result = MessageBox.Show($"Do you want save your preset to new file?\nYes - It will create new file with your preset or overwrite the existing one\nNo - It will change name of your current preset and file", $"Detected different names!", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        //empty
-                    }
+                    if (result == MessageBoxResult.Yes) { }
                     else if (result == MessageBoxResult.No)
                     {
                         string oldName = Settings.PresetName;
                         File.Delete(Settings.directoryPath + "\\" + oldName + ".json");
                     }
-                    else
-                        return;
+                    else return;
                 }
             }
             Settings.PresetName = saveName;
