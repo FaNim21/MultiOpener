@@ -83,6 +83,7 @@ public class OpenInstance : OpenItem
     public override async Task Open(OpenningProcessLoadingWindow? loading, CancellationTokenSource source, string infoText = "")
     {
         List<OpenedProcess> mcInstances = new();
+        int openedCount = 0;
         try
         {
             await Task.Delay(DelayBefore);
@@ -90,9 +91,6 @@ public class OpenInstance : OpenItem
             for (int i = 0; i < Quantity; i++)
             {
                 await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances < 500 ? 500 : DelayBetweenInstances);
-
-                if (source.IsCancellationRequested)
-                    break;
 
                 Application.Current?.Dispatcher.Invoke(delegate
                 {
@@ -106,17 +104,23 @@ public class OpenInstance : OpenItem
                     Arguments = $"--launch \"{Names[i]}\""
                 };
 
-                Process? process = Process.Start(startInfo);
-                if (process != null)
-                {
-                    process.WaitForInputIdle();
+                OpenedProcess opened = new();
+                string path = (Path.GetDirectoryName(PathExe) + "\\instances\\" + Names[i]).Replace("\\", "/");
+                opened.isMCInstance = true;
 
-                    OpenedProcess opened = new();
-                    string path = (Path.GetDirectoryName(PathExe) + "\\instances\\" + Names[i]).Replace("\\", "/");
-                    opened.Initialize(startInfo, Names[i], process.Handle, path);
-                    opened.isMCInstance = true;
-                    mcInstances.Add(opened);
+                if (source.IsCancellationRequested)
+                    opened.Initialize(startInfo, Names[i], IntPtr.Zero, path);
+                else
+                {
+                    openedCount++;
+                    Process? process = Process.Start(startInfo);
+                    if (process != null)
+                    {
+                        process.WaitForInputIdle();
+                        opened.Initialize(startInfo, Names[i], process.Handle, path);
+                    }
                 }
+                mcInstances.Add(opened);
             }
 
             Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (loading datas)"); });
@@ -130,9 +134,9 @@ public class OpenInstance : OpenItem
                 errorCount++;
                 instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
                 await Task.Delay(TimeSpan.FromMilliseconds(config.Cooldown));
-            } while (instances.Count != Quantity && errorCount < config.ErrorCount);
+            } while (instances.Count < openedCount && errorCount < config.ErrorCount);
 
-            for (int i = 0; i < mcInstances.Count; i++)
+            for (int i = 0; i < Quantity; i++)
             {
                 var current = mcInstances[i];
                 bool isFound = false;
@@ -141,7 +145,7 @@ public class OpenInstance : OpenItem
                 {
                     try
                     {
-                        bool output = current.IsInstancePathEqual(instances[i]);
+                        bool output = current.IsInstancePathEqual(instances[j]);
                         if (output)
                         {
                             isFound = true;

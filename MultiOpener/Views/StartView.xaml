@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
              xmlns:viewmodels="clr-namespace:MultiOpener.ViewModels"
              xmlns:items="clr-namespace:MultiOpener.Items"
+             xmlns:converters="clr-namespace:MultiOpener.Converters"
              d:DataContext="{d:DesignInstance Type=viewmodels:StartViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"

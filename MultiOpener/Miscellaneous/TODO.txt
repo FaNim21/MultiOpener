@@ -37,14 +37,17 @@
      i wtedy mozna bylo by wylaczyc na czas otwierania danych aplikacji taskbar buttons i dodac trzecia przemienna funkcjonalnosc dla glownego guzika w panelu start na poprostu cancel zeby zcancelowac otwieranie danego presetu w konkretnym momencie
 [ ]- Zrobic wlasny MessageBox z opcja ze jak ztrigeruje sie ten popup to zeby cale okno bylo z tym popupem OnTop
 [ ]- dodac wiecej opcji przy ustawianiu open jak: minimalize on open, skip this on open etc etc
+
 [ ]- Zrobic na shift + left click na guzik jak jest OPEN zeby odpalalo caly preset, ale w formie tylko paneli w start menu bez rzeczywistego odpalania aplikacji
-[ ]- dac na guziku NEW UPDATE okno z wszystkimi patchnote'ami od obecnej wersji do najnowszej
-[ ]- dodac jakies proste guziki w panelu info dla kazdego openedProcess jak na przyklad otworz folder gdzie znajduje sie executable itp itd
 [X]- dac opcje stop dla refresha w panelu start w tym samym guziku
+[ ]- dac na guziku NEW UPDATE okno z wszystkimi patchnote'ami od obecnej wersji do najnowszej
+
+[ ]- dodac jakies proste guziki w panelu info dla kazdego openedProcess jak na przyklad otworz folder gdzie znajduje sie executable itp itd
 [ ]- zrobic TOOLTIPY dla wiekszasci opcji, dla wiekszej jasnosci jak co dziala
+[ ]- zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
+
 [ ]- checkbox czy chcesz zeby MO minimalizowal sie po otwarciu i odswiezeniu wszystkich aplikacji z presetu (i moze dac opcje z jakim opoznieniem?)
 [ ]- wybranie miedzy wyswietlanymi nazwami jak nazwane sa w presetach, a do tego jak nazywaja sie okna (niektore aplikacje nie maja okien wiec wtedy i tak maja nazwe z presetu)
-[ ]- zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
 
 
 
@@ -65,3 +68,5 @@
 - changed informations panel to options with opening configurations and more
 - fixed few freezes with opening and canceling opening
 - fixed a lot of small errors/details
+- Added stop to refreshing as pressing the same refresh button again
+- Added option when cancelling Opens with opening instances now the rest MC instances will open as structure to open by one that instance in start menu
