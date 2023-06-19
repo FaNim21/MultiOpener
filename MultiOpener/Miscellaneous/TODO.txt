@@ -1,4 +1,4 @@
-﻿                      THATS NOT MINE
+﻿                      THAT ART IS NOT MINE
                       .,,uod8B8bou,,.
               ..,uod8BBBBBBBBBBBBBBBBRPFT?l!i:.
          ,=m8BBBBBBBBBBBBBBBRPFT?!||||||||||||||
@@ -39,7 +39,10 @@
 [ ]- dodac wiecej opcji przy ustawianiu open jak: minimalize on open, skip this on open etc etc
 
 [ ]- Zrobic na shift + left click na guzik jak jest OPEN zeby odpalalo caly preset, ale w formie tylko paneli w start menu bez rzeczywistego odpalania aplikacji
-[X]- dac opcje stop dla refresha w panelu start w tym samym guziku
+   - Albo zamiast tego dac do opcji cooldown przed rozpoczeciem otwierania i wtedy zrobic ze jak ktos canceluje to poprostu otwiera szkielety wszystkich 'open' zamiast otwierac ostatnia przed cancelem i wszystkie wczeseniej i to tyle
+[X]- Dac opcje stop dla refresha w panelu start w tym samym guziku
+[X]- Dac opcje fast refresh przy shift + left click na guzik Refresh
+
 [ ]- dac na guziku NEW UPDATE okno z wszystkimi patchnote'ami od obecnej wersji do najnowszej
 
 [ ]- dodac jakies proste guziki w panelu info dla kazdego openedProcess jak na przyklad otworz folder gdzie znajduje sie executable itp itd
@@ -70,3 +73,5 @@
 - fixed a lot of small errors/details
 - Added stop to refreshing as pressing the same refresh button again
 - Added option when cancelling Opens with opening instances now the rest MC instances will open as structure to open by one that instance in start menu
+- Added fast refresh when pressing shift key and button refresh at the same time so this fast refresh is mainly looking for ended processes that were closed outside of MultiOpener
+- 

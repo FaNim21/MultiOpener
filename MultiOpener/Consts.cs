@@ -8,6 +8,7 @@ namespace MultiOpener
         public const string Version = "v1.0.0-PREVIEW4";
 
         public static bool IsStartPanelWorkingNow { get; set; } = true;
+
         public static readonly string AppdataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MultiOpener");
     }
 }

@@ -1,6 +1,9 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Items;
+using MultiOpener.ViewModels;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace MultiOpener.Commands.StartCommands
 {
@@ -19,7 +22,10 @@ namespace MultiOpener.Commands.StartCommands
             if (Start == null) return;
 
             if (isRunning)
+            {
                 source.Cancel();
+                return;
+            }
 
             if (Start.OpenedIsEmpty() || Consts.IsStartPanelWorkingNow) return;
 
@@ -35,6 +41,13 @@ namespace MultiOpener.Commands.StartCommands
             isRunning = true;
             Start.RefreshButtonName = "Stop";
             Consts.IsStartPanelWorkingNow = true;
+            bool isShiftPressed = false;
+
+            Application.Current?.Dispatcher.Invoke(delegate
+            {
+                if (Keyboard.IsKeyDown(Key.LeftShift))
+                    isShiftPressed = true;
+            });
 
             int length = Start.Opened.Count;
             for (int i = 0; i < length; i++)
@@ -43,17 +56,12 @@ namespace MultiOpener.Commands.StartCommands
                     break;
 
                 var current = Start.Opened[i];
+                string textInfo = $"({i + 1}/{length} - {current.Name})";
 
-                Start.UpdateText($"Refreshing ({i + 1}/{length} - {current.Name})");
-
-                if (current.isMCInstance && !current.IsOpened())
-                {
-                    Start.UpdateText($"Refreshing ({i + 1}/{length} - {current.Name}) - looking for window");
-                    await current.SearchForMCInstance();
-                }
-
-                current.Update();
-                await Task.Delay(100);
+                if (isShiftPressed)
+                    await FastRefresh(current, textInfo);
+                else
+                    await NormalRefresh(current, textInfo);
             }
 
             Consts.IsStartPanelWorkingNow = false;
@@ -61,6 +69,28 @@ namespace MultiOpener.Commands.StartCommands
             source.Dispose();
             isRunning = false;
             Start.RefreshButtonName = "Refresh";
+        }
+
+        private async Task NormalRefresh(OpenedProcess current, string textInfo)
+        {
+            Start?.UpdateText($"Refreshing {textInfo}");
+
+            if (current.isMCInstance && !current.IsOpened())
+            {
+                Start?.UpdateText($"Refreshing {textInfo} - looking for window");
+                await current.SearchForMCInstance();
+            }
+
+            current.Update();
+            await Task.Delay(100);
+        }
+
+        private async Task FastRefresh(OpenedProcess current, string textInfo)
+        {
+            Start?.UpdateText($"Fast Refreshing {textInfo}");
+            current.FastUpdate();
+
+            await Task.Delay(25);
         }
     }
 }
