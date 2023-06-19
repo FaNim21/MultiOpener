@@ -32,14 +32,62 @@
 
 
 
-========== OGOLNE ===========
+========== OVERALL FEATURES ===========
+-- Start
+   - Opening presets
+   - Cancelling preset opening process
+   - Controlling "opens" within an opened preset
+     - Viewing information about the process
+       - Opening the "open" directory
+       - Performing actions based on the type of "open"
+     - Resetting the current "open"
+     - Closing/opening the current "open"
+   - Refreshing all opened preset "opens"
+     - Normal refresh: looking for the HWND of an "open" process, just looking if that process is opened in background but not detected for example by MultiOpened etc etc
+     - Fast refresh: quickly checking if an "open" process is closed or still open
+-- Presets
+   - Adding a new program/process to run as an "open"
+     - Main options: Type, App path, Delays before and after
+     - Additional options depend on the "open" type
+   - Rearranging the execution order of "open" items in the list by dragging them
+   - Clearing all "open" options
+   - Removing an "open" item
+   - Creating a new empty preset
+   - Deleting a whole preset
+   - Opening the folder containing all created presets
+   - Loading a preset
+   - Saving a preset
+     - Overwriting the currently loaded preset with a new name
+     - Creating a new preset based on the current loaded preset with a different name
+-- Options
+   - Resetting all options to default
+   - Changing general options
+     - (Empty)
+   - Changing timings
+     - Main timings
+       - Late refresh time after all "opens" in a preset have finished opening
+       - Opening timeout for each "open" process while opening the preset
+       - Opening timeout for a selected "open" process
+     - MultiMC instance timings
+       - Timeout for looking up instance data to obtain HWND for an MC instance
+       - Timeout for finalizing instance data after finding all HWNDs for all instances, allowing for a cooldown period for MCs to open
+       - Timeout for opening a single instance
+
+
+
+========== NOT SURE ABOUT THAT FEATURES ===========
 [ ]- Zrobic ewentualna zamiane z loading processes window na poprostu akcje w jednym oknie w panelu start czyli informacje byly by aktualizowane tak jak jest aktualizowane info podczas interackji z panelem czyli reset, refresh itp itd
      i wtedy mozna bylo by wylaczyc na czas otwierania danych aplikacji taskbar buttons i dodac trzecia przemienna funkcjonalnosc dla glownego guzika w panelu start na poprostu cancel zeby zcancelowac otwieranie danego presetu w konkretnym momencie
-[ ]- Zrobic wlasny MessageBox z opcja ze jak ztrigeruje sie ten popup to zeby cale okno bylo z tym popupem OnTop
-[ ]- dodac wiecej opcji przy ustawianiu open jak: minimalize on open, skip this on open etc etc
 
 [ ]- Zrobic na shift + left click na guzik jak jest OPEN zeby odpalalo caly preset, ale w formie tylko paneli w start menu bez rzeczywistego odpalania aplikacji
    - Albo zamiast tego dac do opcji cooldown przed rozpoczeciem otwierania i wtedy zrobic ze jak ktos canceluje to poprostu otwiera szkielety wszystkich 'open' zamiast otwierac ostatnia przed cancelem i wszystkie wczeseniej i to tyle
+
+
+
+=============== OGOLNE ===============
+[ ]- Zrobic wlasny MessageBox z opcja ze jak ztrigeruje sie ten popup to zeby cale okno bylo z tym popupem OnTop
+[ ]- dodac wiecej opcji przy ustawianiu open jak: minimalize on open, skip this on open etc etc
+
 [X]- Dac opcje stop dla refresha w panelu start w tym samym guziku
 [X]- Dac opcje fast refresh przy shift + left click na guzik Refresh
 
@@ -49,9 +97,8 @@
 [ ]- zrobic TOOLTIPY dla wiekszasci opcji, dla wiekszej jasnosci jak co dziala
 [ ]- zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
 
-[ ]- checkbox czy chcesz zeby MO minimalizowal sie po otwarciu i odswiezeniu wszystkich aplikacji z presetu (i moze dac opcje z jakim opoznieniem?)
+[ ]- do Options dac opcje jak: AlwayeOnTop, MinimalizeAfterPresetOpen, cooldown do MinimalizeAfterPresetOpen?, ...
 [ ]- wybranie miedzy wyswietlanymi nazwami jak nazwane sa w presetach, a do tego jak nazywaja sie okna (niektore aplikacje nie maja okien wiec wtedy i tak maja nazwe z presetu)
-
 
 
 
