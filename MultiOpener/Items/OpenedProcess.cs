@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -307,7 +308,7 @@ public class OpenedProcess : INotifyPropertyChanged
         }
     }
 
-    public async Task<bool> SearchForMCInstance()
+    public async Task<bool> SearchForMCInstance(CancellationTokenSource? source = null)
     {
         Regex mcPatternRegex = new(MCPattern);
         List<IntPtr> instances;
@@ -317,6 +318,9 @@ public class OpenedProcess : INotifyPropertyChanged
         bool isHwndFound = false;
         do
         {
+            if (source != null && source.IsCancellationRequested)
+                return false;
+
             errorCount++;
             await Task.Delay(config.Cooldown);
 

@@ -69,7 +69,7 @@ namespace MultiOpener.Commands.StartCommands
             if (current.isMCInstance && !current.IsOpened())
             {
                 Start?.UpdateText($"Refreshing {textInfo} - looking for window");
-                await current.SearchForMCInstance();
+                await current.SearchForMCInstance(source);
             }
 
             current.Update();

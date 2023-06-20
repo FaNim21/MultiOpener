@@ -68,7 +68,10 @@ public class OpenItem
     {
         try
         {
-            await Task.Delay(DelayBefore);
+            if (!source.IsCancellationRequested)
+            {
+                await Task.Delay(DelayBefore);
+            }
 
             string executable = Path.GetFileName(PathExe);
             string pathDir = Path.GetDirectoryName(PathExe) ?? "";
@@ -108,7 +111,11 @@ public class OpenItem
             {
                 ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened);
             });
-            await Task.Delay(DelayAfter);
+
+            if (!source.IsCancellationRequested)
+            {
+                await Task.Delay(DelayAfter);
+            }
         }
         catch (Exception ex)
         {

@@ -85,8 +85,6 @@
 [ ]- Zrobic ewentualna zamiane z loading processes window na poprostu akcje w jednym oknie w panelu start czyli informacje byly by aktualizowane tak jak jest aktualizowane info podczas interackji z panelem czyli reset, refresh itp itd
      i wtedy mozna bylo by wylaczyc na czas otwierania danych aplikacji taskbar buttons i dodac trzecia przemienna funkcjonalnosc dla glownego guzika w panelu start na poprostu cancel zeby zcancelowac otwieranie danego presetu w konkretnym momencie
 
-[ ]- Zrobic na shift + left click na guzik jak jest OPEN zeby odpalalo caly preset, ale w formie tylko paneli w start menu bez rzeczywistego odpalania aplikacji
-   - Albo zamiast tego dac do opcji cooldown przed rozpoczeciem otwierania i wtedy zrobic ze jak ktos canceluje to poprostu otwiera szkielety wszystkich 'open' zamiast otwierac ostatnia przed cancelem i wszystkie wczeseniej i to tyle
 
 
 
@@ -94,6 +92,7 @@
 [ ]- Zrobic wlasny MessageBox z opcja ze jak ztrigeruje sie ten popup to zeby cale okno bylo z tym popupem OnTop
 [ ]- dodac wiecej opcji przy ustawianiu open jak: minimalize on open, skip this on open etc etc
 
+[X]- Zrobic na shift + left click na guzik jak jest OPEN zeby odpalalo caly preset, ale w formie tylko paneli w start menu bez rzeczywistego odpalania aplikacji
 [X]- Dac opcje stop dla refresha w panelu start w tym samym guziku
 [X]- Dac opcje fast refresh przy shift + left click na guzik Refresh
 

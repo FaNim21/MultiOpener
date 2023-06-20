@@ -86,11 +86,17 @@ public class OpenInstance : OpenItem
         int openedCount = 0;
         try
         {
-            await Task.Delay(DelayBefore);
+            if (!source.IsCancellationRequested)
+            {
+                await Task.Delay(DelayBefore);
+            }
 
             for (int i = 0; i < Quantity; i++)
             {
-                await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances < 500 ? 500 : DelayBetweenInstances);
+                if (!source.IsCancellationRequested)
+                {
+                    await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances < 500 ? 500 : DelayBetweenInstances);
+                }
 
                 Application.Current?.Dispatcher.Invoke(delegate
                 {
@@ -123,18 +129,22 @@ public class OpenInstance : OpenItem
                 mcInstances.Add(opened);
             }
 
-            Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (loading datas)"); });
-
             Regex mcPatternRegex = new(OpenedProcess.MCPattern);
-            List<IntPtr> instances;
-            int errorCount = -1;
-            var config = new TimeoutConfigurator(App.Config.TimeoutLookingForInstancesData, 30);
-            do
+            List<IntPtr> instances = new();
+
+            if (!source.IsCancellationRequested)
             {
-                errorCount++;
-                instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
-                await Task.Delay(TimeSpan.FromMilliseconds(config.Cooldown));
-            } while (instances.Count < openedCount && errorCount < config.ErrorCount);
+                Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (loading datas)"); });
+
+                int errorCount = -1;
+                var config = new TimeoutConfigurator(App.Config.TimeoutLookingForInstancesData, 30);
+                do
+                {
+                    errorCount++;
+                    instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
+                    await Task.Delay(TimeSpan.FromMilliseconds(config.Cooldown));
+                } while (instances.Count < openedCount && errorCount < config.ErrorCount);
+            }
 
             for (int i = 0; i < Quantity; i++)
             {
@@ -162,8 +172,12 @@ public class OpenInstance : OpenItem
                 Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(current); });
             }
 
-            Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (finalizing datas)"); });
-            await Task.Delay(DelayAfter + App.Config.TimeoutInstanceFinalizingData);
+
+            if (!source.IsCancellationRequested)
+            {
+                Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (finalizing datas)"); });
+                await Task.Delay(DelayAfter + App.Config.TimeoutInstanceFinalizingData);
+            }
         }
         catch (Exception e)
         {
