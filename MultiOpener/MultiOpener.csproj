@@ -17,6 +17,7 @@
 		<Company>FaNim</Company>
 		<Product>MultiOpener</Product>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>

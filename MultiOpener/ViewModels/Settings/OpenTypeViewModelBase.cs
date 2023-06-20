@@ -42,6 +42,17 @@ namespace MultiOpener.ViewModels.Settings
             }
         }
 
+        private bool? _minimizeOnOpen;
+        public bool? MinimizeOnOpen
+        {
+            get { return _minimizeOnOpen; }
+            set
+            {
+                _minimizeOnOpen = value;
+                OnPropertyChanged(nameof(MinimizeOnOpen));
+            }
+        }
+
         public ICommand SettingsSetDirectoryPathCommand { get; set; }
 
 
@@ -55,6 +66,7 @@ namespace MultiOpener.ViewModels.Settings
             ApplicationPathField = currentChosen.PathExe;
             DelayBeforeTimeField = currentChosen.DelayBefore.ToString();
             DelayAfterTimeField = currentChosen.DelayAfter.ToString();
+            MinimizeOnOpen = currentChosen.MinimizeOnOpen;
         }
 
         public virtual void SetOpenProperties(ref OpenItem open)
@@ -71,6 +83,8 @@ namespace MultiOpener.ViewModels.Settings
                 open.DelayAfter = 0;
             else
                 open.DelayAfter = int.Parse(DelayAfterTimeField ?? "0");
+
+            open.MinimizeOnOpen = MinimizeOnOpen ?? false;
         }
 
         public virtual void Clear()
@@ -78,6 +92,7 @@ namespace MultiOpener.ViewModels.Settings
             ApplicationPathField = "";
             DelayBeforeTimeField = "0";
             DelayAfterTimeField = "0";
+            MinimizeOnOpen = false;
         }
     }
 }

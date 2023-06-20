@@ -46,7 +46,11 @@ namespace MultiOpener.Utils
         [DllImport("psapi.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, StringBuilder lpFileName, int nSize);
 
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+
+        private const int SW_SHOWMINIMIZED = 2;
         private const int WM_CLOSE = 0x0010;
         private const int SMTO_ABORTIFHUNG = 0x0002;
         #endregion
@@ -290,6 +294,13 @@ namespace MultiOpener.Utils
             }
 
             return javaLibraryPath;
+        }
+
+        public static void MinimizeWindowHwnd(IntPtr hwnd)
+        {
+            if (hwnd == IntPtr.Zero) return;
+
+            ShowWindow(hwnd, SW_SHOWMINIMIZED);
         }
     }
 }

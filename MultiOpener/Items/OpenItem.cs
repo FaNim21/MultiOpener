@@ -31,15 +31,18 @@ public class OpenItem
     public int DelayBefore { get; set; }
     public int DelayAfter { get; set; }
 
+    public bool MinimizeOnOpen { get; set; }
+
 
     [JsonConstructor]
-    public OpenItem(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default)
+    public OpenItem(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, bool MinimizeOnOpen = false)
     {
         this.Name = Name;
         this.PathExe = PathExe;
         this.DelayBefore = DelayBefore;
         this.DelayAfter = DelayAfter;
         this.Type = Type;
+        this.MinimizeOnOpen = MinimizeOnOpen;
     }
     public OpenItem(OpenItem item)
     {
@@ -48,6 +51,7 @@ public class OpenItem
         DelayBefore = item.DelayBefore;
         DelayAfter = item.DelayAfter;
         Type = item.Type;
+        MinimizeOnOpen = item.MinimizeOnOpen;
     }
 
     public virtual string Validate()
@@ -69,15 +73,13 @@ public class OpenItem
         try
         {
             if (!source.IsCancellationRequested)
-            {
                 await Task.Delay(DelayBefore);
-            }
 
             string executable = Path.GetFileName(PathExe);
             string pathDir = Path.GetDirectoryName(PathExe) ?? "";
 
             OpenedProcess opened = new();
-            ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
+            ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true};
             string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
 
             if (source.IsCancellationRequested)
@@ -107,15 +109,13 @@ public class OpenItem
                 }
             }
 
-            Application.Current?.Dispatcher.Invoke(delegate
-            {
-                ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened);
-            });
+            if(MinimizeOnOpen)
+                Win32.MinimizeWindowHwnd(opened.Hwnd);
+
+            Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });
 
             if (!source.IsCancellationRequested)
-            {
                 await Task.Delay(DelayAfter);
-            }
         }
         catch (Exception ex)
         {

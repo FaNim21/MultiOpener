@@ -114,20 +114,14 @@ namespace MultiOpener.Commands.StartCommands
 
             //Getting shift to be pressed to make structured open
             if (App.Input.IsShiftPressed)
-            {
                 source.Cancel();
-            }
 
             //Opening everything
             for (int i = 0; i < length; i++)
             {
-                //TODO: 1 Zrobic mozliwosc zrobienia quick preset open czyli poprostu startujesz i odrazu zamykasz i robi szkielety wszystkie 'open' w panelu start po to zeby moc jest wystartowac kiedy tylko sie zechce
-                //lub dac opcje na right click contextmenu zeby zrobic quick open tylko okienek z zamknietymi procesami
                 var current = Settings.Opens[i];
 
                 if (string.IsNullOrEmpty(current.PathExe)) return;
-
-                //if (source.IsCancellationRequested) break;
 
                 Application.Current?.Dispatcher.Invoke(delegate
                 {
