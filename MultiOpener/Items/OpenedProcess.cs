@@ -147,6 +147,13 @@ public class OpenedProcess : INotifyPropertyChanged
 
     public void FastUpdate()
     {
+        if (!StillExist() && Handle != IntPtr.Zero)
+        {
+            Clear();
+            UpdateStatus();
+            return;
+        }
+
         SetPid();
         UpdateStatus();
     }
@@ -265,7 +272,7 @@ public class OpenedProcess : INotifyPropertyChanged
                 SetPid();
 
                 int errors = 0;
-                var config = new TimeoutConfigurator(App.config.TimeoutSingleOpen, 15);
+                var config = new TimeoutConfigurator(App.Config.TimeoutSingleOpen, 15);
                 while (!SetHwnd() && errors < config.ErrorCount)
                 {
                     await Task.Delay(config.Cooldown);
@@ -305,7 +312,7 @@ public class OpenedProcess : INotifyPropertyChanged
         Regex mcPatternRegex = new(MCPattern);
         List<IntPtr> instances;
         int errorCount = -1;
-        var config = new TimeoutConfigurator(App.config.TimeoutLookingForSingleInstanceData, 15);
+        var config = new TimeoutConfigurator(App.Config.TimeoutLookingForSingleInstanceData, 15);
 
         bool isHwndFound = false;
         do

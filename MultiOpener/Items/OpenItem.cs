@@ -69,35 +69,45 @@ public class OpenItem
         try
         {
             await Task.Delay(DelayBefore);
+
             string executable = Path.GetFileName(PathExe);
             string pathDir = Path.GetDirectoryName(PathExe) ?? "";
 
+            OpenedProcess opened = new();
             ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
-            Process? process = Process.Start(startInfo);
+            string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
 
-            if (process != null)
+            if (source.IsCancellationRequested)
             {
-                OpenedProcess opened = new();
-                string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
-                opened.Initialize(startInfo, name!, process.Handle, PathExe);
-
-                int errors = 0;
-                var config = new TimeoutConfigurator(App.config.TimeoutOpen, 15);
-
-                while (!opened.SetHwnd() && errors < config.ErrorCount)
-                {
-                    if (source.IsCancellationRequested)
-                        break;
-
-                    await Task.Delay(config.Cooldown);
-                    errors++;
-                }
-
-                Application.Current?.Dispatcher.Invoke(delegate
-                {
-                    ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened);
-                });
+                opened.Initialize(startInfo, name!, IntPtr.Zero, PathExe);
+                opened.Clear();
             }
+            else
+            {
+                Process? process = Process.Start(startInfo!);
+                if (process != null)
+                {
+                    opened.Initialize(startInfo, name!, process.Handle, PathExe);
+
+                    int errors = 0;
+                    var config = new TimeoutConfigurator(App.Config.TimeoutOpen, 15);
+
+                    while (!opened.SetHwnd() && errors < config.ErrorCount)
+                    {
+                        if (source.IsCancellationRequested)
+                            break;
+
+                        await Task.Delay(config.Cooldown);
+                        errors++;
+                    }
+
+                }
+            }
+
+            Application.Current?.Dispatcher.Invoke(delegate
+            {
+                ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened);
+            });
             await Task.Delay(DelayAfter);
         }
         catch (Exception ex)

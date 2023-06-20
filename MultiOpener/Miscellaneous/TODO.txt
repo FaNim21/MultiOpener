@@ -31,11 +31,17 @@
                       `!^"'
 
 
+========== FUTURE IMPROVEMENTS ===========
+- Jeden glowny input controller cos jak to ze jest glowna instancja do sprawdzania input
+
+
 
 ========== OVERALL FEATURES ===========
 -- Start
    - Opening presets
+     - When opening with pressed shift it will open structure of all 'opens' in preset
    - Cancelling preset opening process
+     - After cancelling openning it will open rest of 'opens' as structured
    - Controlling "opens" within an opened preset
      - Viewing information about the process
        - Opening the "open" directory

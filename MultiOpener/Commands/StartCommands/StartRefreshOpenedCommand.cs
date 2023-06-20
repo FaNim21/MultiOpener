@@ -2,8 +2,6 @@
 using MultiOpener.ViewModels;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
 
 namespace MultiOpener.Commands.StartCommands
 {
@@ -41,13 +39,6 @@ namespace MultiOpener.Commands.StartCommands
             isRunning = true;
             Start.RefreshButtonName = "Stop";
             Consts.IsStartPanelWorkingNow = true;
-            bool isShiftPressed = false;
-
-            Application.Current?.Dispatcher.Invoke(delegate
-            {
-                if (Keyboard.IsKeyDown(Key.LeftShift))
-                    isShiftPressed = true;
-            });
 
             int length = Start.Opened.Count;
             for (int i = 0; i < length; i++)
@@ -58,7 +49,7 @@ namespace MultiOpener.Commands.StartCommands
                 var current = Start.Opened[i];
                 string textInfo = $"({i + 1}/{length} - {current.Name})";
 
-                if (isShiftPressed)
+                if (App.Input.IsShiftPressed)
                     await FastRefresh(current, textInfo);
                 else
                     await NormalRefresh(current, textInfo);

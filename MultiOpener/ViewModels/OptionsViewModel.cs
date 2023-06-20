@@ -15,7 +15,7 @@ namespace MultiOpener.ViewModels
             set
             {
                 _timeLateRefresh = value;
-                App.config.TimeLateRefresh = value;
+                App.Config.TimeLateRefresh = value;
                 OnPropertyChanged(nameof(TimeLateRefresh));
             }
         }
@@ -27,7 +27,7 @@ namespace MultiOpener.ViewModels
             set
             {
                 _timeoutOpen = value;
-                App.config.TimeoutOpen = value;
+                App.Config.TimeoutOpen = value;
                 OnPropertyChanged(nameof(TimeoutOpen));
             }
         }
@@ -39,7 +39,7 @@ namespace MultiOpener.ViewModels
             set
             {
                 _timeoutSingleOpen = value;
-                App.config.TimeoutSingleOpen = value;
+                App.Config.TimeoutSingleOpen = value;
                 OnPropertyChanged(nameof(TimeoutSingleOpen));
             }
         }
@@ -51,7 +51,7 @@ namespace MultiOpener.ViewModels
             set
             {
                 _timeoutLookingForInstancesData = value;
-                App.config.TimeoutLookingForInstancesData = value;
+                App.Config.TimeoutLookingForInstancesData = value;
                 OnPropertyChanged(nameof(TimeoutLookingForInstancesData));
             }
         }
@@ -63,7 +63,7 @@ namespace MultiOpener.ViewModels
             set
             {
                 _timeoutInstanceFinalizingData = value;
-                App.config.TimeoutInstanceFinalizingData = value;
+                App.Config.TimeoutInstanceFinalizingData = value;
                 OnPropertyChanged(nameof(TimeoutInstanceFinalizingData));
             }
         }
@@ -75,7 +75,7 @@ namespace MultiOpener.ViewModels
             set
             {
                 _timeoutLookingForSingleInstanceData = value;
-                App.config.TimeoutLookingForSingleInstanceData = value;
+                App.Config.TimeoutLookingForSingleInstanceData = value;
                 OnPropertyChanged(nameof(TimeoutLookingForSingleInstanceData));
             }
         }
@@ -88,7 +88,7 @@ namespace MultiOpener.ViewModels
         {
             ResetToDefaultCommand = new OptionsResetToDefaultCommand(this);
 
-            App.config.ResetToDefault();
+            App.Config.ResetToDefault();
 
             LoadOptions();
         }
@@ -96,7 +96,7 @@ namespace MultiOpener.ViewModels
         public void SaveOptions()
         {
             JsonSerializerOptions options = new() { WriteIndented = true, };
-            var data = JsonSerializer.Serialize(App.config, options);
+            var data = JsonSerializer.Serialize(App.Config, options);
             File.WriteAllText(Consts.AppdataPath + "\\" + _optionsSaveFileName, data);
         }
         private void LoadOptions()
@@ -113,14 +113,14 @@ namespace MultiOpener.ViewModels
             var data = JsonSerializer.Deserialize<OptionSaveItem>(text);
             if (data is { })
             {
-                App.config = data;
+                App.Config = data;
                 UpdateUIFromConfig();
             }
         }
 
         private void UpdateUIFromConfig()
         {
-            var config = App.config;
+            var config = App.Config;
             TimeLateRefresh = config.TimeLateRefresh;
             TimeoutOpen = config.TimeoutOpen;
             TimeoutSingleOpen = config.TimeoutSingleOpen;
@@ -132,7 +132,7 @@ namespace MultiOpener.ViewModels
 
         public void ResetToDefault()
         {
-            App.config.ResetToDefault();
+            App.Config.ResetToDefault();
             UpdateUIFromConfig();
         }
     }

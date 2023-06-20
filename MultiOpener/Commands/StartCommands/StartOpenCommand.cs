@@ -112,6 +112,12 @@ namespace MultiOpener.Commands.StartCommands
                 loadingProcesses.progress.Maximum = progressLength;
             });
 
+            //Getting shift to be pressed to make structured open
+            if (App.Input.IsShiftPressed)
+            {
+                source.Cancel();
+            }
+
             //Opening everything
             for (int i = 0; i < length; i++)
             {
@@ -120,7 +126,8 @@ namespace MultiOpener.Commands.StartCommands
                 var current = Settings.Opens[i];
 
                 if (string.IsNullOrEmpty(current.PathExe)) return;
-                if (source.IsCancellationRequested) break;
+
+                //if (source.IsCancellationRequested) break;
 
                 Application.Current?.Dispatcher.Invoke(delegate
                 {
@@ -155,7 +162,7 @@ namespace MultiOpener.Commands.StartCommands
             {
                 ((MainWindow)Application.Current.MainWindow).MainViewModel.start.UpdateText("Attempting to first Auto-Refresh");
             });
-            await Task.Delay(App.config.TimeLateRefresh);
+            await Task.Delay(App.Config.TimeLateRefresh);
             Application.Current?.Dispatcher.Invoke(delegate
             {
                 Consts.IsStartPanelWorkingNow = false;
