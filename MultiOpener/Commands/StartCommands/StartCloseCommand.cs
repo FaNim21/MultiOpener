@@ -1,4 +1,5 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.ViewModels;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,7 +34,7 @@ namespace MultiOpener.Commands.StartCommands
             if (isForcedToClose)
                 result = MessageBoxResult.Yes;
             else
-                result = MessageBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                result = DialogBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None);
 
             if (result == MessageBoxResult.Yes)
             {

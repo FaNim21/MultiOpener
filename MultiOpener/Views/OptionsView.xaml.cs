@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using MultiOpener.Components.Controls;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,7 +14,7 @@ namespace MultiOpener.Views
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            if (MessageBox.Show($"Do you want to open MultiOpener site to check for new updates or patch notes?", $"Opening Github Release site For MultiOpener", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (DialogBox.Show($"Do you want to open MultiOpener site to check for new updates or patch notes?", $"Opening Github Release site For MultiOpener", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 var processStart = new ProcessStartInfo(e.Uri.ToString())
                 {

@@ -1,4 +1,5 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.ViewModels;
 using System.Linq;
 using System.Windows;
 
@@ -23,7 +24,7 @@ namespace MultiOpener.Commands.SettingsCommands
                     Settings.LoadOpenList(Settings.CurrentLoadedChosen.Name);
                 else
                 {
-                    if (MessageBox.Show($"Are you sure you want to that load preset?\nYou might not saved previous!", "Loading Preset", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    if (DialogBox.Show($"Are you sure you want to that load preset?\nYou might not saved previous!", "Loading Preset", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
                         Settings.LoadOpenList(Settings.CurrentLoadedChosen.Name);
                     }

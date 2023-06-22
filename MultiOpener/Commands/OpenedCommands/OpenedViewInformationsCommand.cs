@@ -16,6 +16,8 @@ namespace MultiOpener.Commands.OpenedCommands
         {
             //TODO: 9 Panel/Okno z wyswietlanymi informacjami jak id i zeby byl w tym panelu guzik do odpalania folderu zrodla tego programu
             openedProcess.Update();
+
+            //Tu narazie zostanie messagebox z racji ze tu i tak bedzie wywolywane specjalne okno
             MessageBox.Show(openedProcess.ToString());
         }
     }

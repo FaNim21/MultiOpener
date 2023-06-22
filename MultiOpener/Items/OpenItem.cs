@@ -1,4 +1,5 @@
-﻿using MultiOpener.Utils;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.Utils;
 using MultiOpener.Windows;
 using System;
 using System.ComponentModel;
@@ -119,7 +120,7 @@ public class OpenItem
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.ToString());
+            DialogBox.Show(ex.ToString(), "", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

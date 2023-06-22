@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 using System.Windows;
+using MultiOpener.Components.Controls;
 
 namespace MultiOpener.Items;
 public class OpenInstance : OpenItem
@@ -181,7 +182,7 @@ public class OpenInstance : OpenItem
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.ToString());
+            DialogBox.Show(e.ToString(), "", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

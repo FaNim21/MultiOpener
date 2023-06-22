@@ -1,4 +1,5 @@
 ﻿using MultiOpener.Commands.OpenedCommands;
+using MultiOpener.Components.Controls;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace MultiOpener.Items;
 
@@ -303,7 +305,7 @@ public class OpenedProcess : INotifyPropertyChanged
         }
         catch (Exception e)
         {
-            MessageBox.Show($"Cannot close {WindowTitle ?? ""} \n{e}");
+            DialogBox.Show($"Cannot close {WindowTitle ?? ""} \n{e}", "", MessageBoxButton.OK, MessageBoxImage.Error);
             return false;
         }
     }
@@ -347,8 +349,8 @@ public class OpenedProcess : INotifyPropertyChanged
         if (_hwnd == IntPtr.Zero) return false;
 
         int currentPid = (int)Win32.GetPidFromHwnd(_hwnd);
-        string currentPath = Win32.GetJavaFilePath(currentPid);
-        if (currentPath.Equals(Path))
+        string? currentPath = Win32.GetJavaFilePath(currentPid);
+        if (currentPath != null && currentPath.Equals(Path))
         {
             SetHwnd(_hwnd);
             Pid = currentPid;

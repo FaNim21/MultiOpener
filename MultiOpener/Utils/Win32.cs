@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiOpener.Components.Controls;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Management;
@@ -101,7 +102,7 @@ namespace MultiOpener.Utils
                 process = Process.GetProcessById((int)processId);
                 hwnd = process.MainWindowHandle;
             }
-            catch
+            catch (ArgumentException)
             {
                 return IntPtr.Zero;
             }
@@ -143,7 +144,7 @@ namespace MultiOpener.Utils
                 process = Process.GetProcessById((int)processId);
                 hwnd = process.MainWindowHandle;
             }
-            catch
+            catch (ArgumentException)
             {
                 return IntPtr.Zero;
             }
@@ -247,26 +248,26 @@ namespace MultiOpener.Utils
             }
         }
 
-        public static string GetJavaFilePath(int pid)
+        public static string? GetJavaFilePath(int pid)
         {
             try
             {
                 Process process = Process.GetProcessById(pid);
-                string jarPath = GetJavaExecutablePathFromProcess(process);
+                string? jarPath = GetJavaExecutablePathFromProcess(process);
                 return jarPath;
             }
             catch (ArgumentException ex)
             {
-                System.Windows.MessageBox.Show("Failed to get process by ID: " + ex.Message);
+                DialogBox.Show("Failed to get process by ID: " + ex.Message, "", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Error: " + ex.Message);
+                DialogBox.Show("Error: " + ex.Message, "", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
 
             return "";
         }
-        private static string GetJavaExecutablePathFromProcess(Process process)
+        private static string? GetJavaExecutablePathFromProcess(Process process)
         {
             string? javaLibraryPath = null;
             Regex regex = new(@"-Djava\.library\.path\s*=\s*""?([^""]+)/natives""?");

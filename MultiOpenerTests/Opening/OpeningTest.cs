@@ -85,7 +85,7 @@ internal class OpeningTest
         bool result = false;
         Application.Current.Dispatcher.Invoke(delegate
         {
-            if (_mainWindow!.MainViewModel.start.Opened.Count == 7)
+            if (_mainWindow!.MainViewModel.start.Opened.Count == 6)
             {
                 bool isScriptClosed = false;
                 bool isRestOpened = false;

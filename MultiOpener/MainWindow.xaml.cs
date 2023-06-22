@@ -1,4 +1,5 @@
-﻿using MultiOpener.Properties;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.Properties;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
@@ -60,12 +61,12 @@ namespace MultiOpener
         {
             if (!MainViewModel.start.OpenedIsEmpty())
             {
-                MessageBoxResult result = MessageBox.Show($"Are you certain about closing MultiOpener? There are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener? There are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None);
                 if (result != MessageBoxResult.Yes)
                     return;
             }
 
-            if(MainViewModel.SelectedViewModel == MainViewModel.options)
+            if (MainViewModel.SelectedViewModel == MainViewModel.options)
                 MainViewModel.options.SaveOptions();
 
             Close();

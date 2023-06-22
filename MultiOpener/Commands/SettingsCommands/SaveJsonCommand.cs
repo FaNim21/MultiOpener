@@ -1,4 +1,5 @@
-﻿using MultiOpener.Utils;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System.IO;
 using System.Text.Json;
@@ -30,7 +31,7 @@ namespace MultiOpener.Commands.SettingsCommands
                 {
                     string finalName = Helper.GetFileNameWithoutExtension(item);
                     if (finalName.ToLower().Equals(saveName.ToLower()))
-                        if (MessageBox.Show($"Are you sure that you wanna overwrite {finalName}?", $"Overwriting warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                        if (DialogBox.Show($"Are you sure that you wanna overwrite {finalName}?", $"Overwriting warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                             return;
                 }
             }
@@ -38,7 +39,7 @@ namespace MultiOpener.Commands.SettingsCommands
             {
                 if (!saveName.Equals(Settings.PresetName, System.StringComparison.CurrentCultureIgnoreCase))
                 {
-                    MessageBoxResult result = MessageBox.Show($"Do you want save your preset to new file?\nYes - It will create new file with your preset or overwrite the existing one\nNo - It will change name of your current preset and file", $"Detected different names!", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                    MessageBoxResult result = DialogBox.Show($"Do you want save your preset to new file?\nYes - It will create new file with your preset or overwrite the existing one\nNo - It will change name of your current preset and file", $"Detected different names!", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                     if (result == MessageBoxResult.Yes) { }
                     else if (result == MessageBoxResult.No)
                     {

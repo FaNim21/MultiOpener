@@ -1,4 +1,5 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.ViewModels;
 using System.Windows;
 
 namespace MultiOpener.Commands.SettingsCommands
@@ -15,7 +16,7 @@ namespace MultiOpener.Commands.SettingsCommands
 
             if (Settings.OpenIsEmpty() && string.IsNullOrEmpty(Settings.PresetName)) return;
 
-            if (MessageBox.Show($"Are you sure that you want to delete {Settings.PresetName}?\nThe changes will not be able to be restored.", "Deleting currently opened preset!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (DialogBox.Show($"Are you sure that you want to delete {Settings.PresetName}?\nThe changes will not be able to be restored.", "Deleting currently opened preset!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 Settings.RemoveCurrentOpenPreset();
         }
     }

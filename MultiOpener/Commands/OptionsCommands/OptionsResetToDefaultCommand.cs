@@ -1,4 +1,5 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.ViewModels;
 using System.Windows;
 
 namespace MultiOpener.Commands.OptionsCommands;
@@ -13,7 +14,7 @@ public class OptionsResetToDefaultCommand : OptionsCommandBase
     {
         if (Options == null) return;
 
-        if(MessageBox.Show("Are you sure you want to reset all options to default?", "", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+        if (DialogBox.Show("Are you sure you want to reset all options to default?", "", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             Options.ResetToDefault();
     }
 }

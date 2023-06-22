@@ -15,6 +15,10 @@
         Title="MultiOpener"
         ResizeMode="NoResize"
         Background="#383A3C">
+    <Window.Style>
+        <Style TargetType="Window"
+               BasedOn="{StaticResource {x:Type Window}}" />
+    </Window.Style>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />

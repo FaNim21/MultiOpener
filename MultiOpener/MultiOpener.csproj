@@ -39,10 +39,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NuGet.Versioning" Version="6.5.0" />
-		<PackageReference Include="Octokit" Version="5.0.4" />
+		<PackageReference Include="NuGet.Versioning" Version="6.6.1" />
+		<PackageReference Include="Octokit" Version="6.0.0" />
 		<PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
-		<PackageReference Include="System.Management" Version="7.0.1" />
+		<PackageReference Include="System.Management" Version="7.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -58,6 +58,10 @@
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Extensions\" />
 	</ItemGroup>
 
 </Project>
