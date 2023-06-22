@@ -10,7 +10,7 @@ namespace MultiOpener.Components.Controls;
 public static class DialogBox
 {
     //TODO: 9 Rozbudowac to o wieksza mozliwosc okreslania przyciskow + dac tu mozliwosc zmiany nazwy tych guzikow
-    //TODO: 4 Dorobic tutaj wiecej rzeczy typu wybor z OctoKit sciezki do pliku exe zeby tez przyciemnialo
+    //TODO: 4 Dorobic tutaj wiecej rzeczy typu wybor z OctoKit sciezki do pliku exe zeby tez przyciemnialo main window
 
     public static MessageBoxResult Show(string text, string caption = "", MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.None, MessageBoxResult result = MessageBoxResult.None)
     {

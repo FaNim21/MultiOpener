@@ -1,4 +1,5 @@
-﻿using MultiOpener.Items;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.Items;
 using System.Windows;
 
 namespace MultiOpener.Commands.OpenedCommands
@@ -18,7 +19,7 @@ namespace MultiOpener.Commands.OpenedCommands
             openedProcess.Update();
 
             //Tu narazie zostanie messagebox z racji ze tu i tak bedzie wywolywane specjalne okno
-            MessageBox.Show(openedProcess.ToString());
+            DialogBox.Show(openedProcess.ToString());
         }
     }
 }

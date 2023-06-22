@@ -104,7 +104,7 @@ namespace MultiOpener.ViewModels
             string fileToLoad = Consts.AppdataPath + "\\" + _optionsSaveFileName;
 
             if (!File.Exists(fileToLoad))
-                return;
+                SaveOptions();
 
             string text = File.ReadAllText(fileToLoad) ?? "";
             if (string.IsNullOrEmpty(text))

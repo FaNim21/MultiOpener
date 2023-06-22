@@ -53,38 +53,41 @@
             </Grid.ColumnDefinitions>
 
             <!-- Icon -->
-            <Image x:Name="Icon"
-                   Stretch="Uniform"
-                   Height="32">
-                <Image.Style>
-                    <Style TargetType="Image">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Icon}"
-                                         Value="{x:Static MessageBoxImage.Warning}">
-                                <Setter Property="Source"
-                                        Value="{Binding Source={x:Static drawing:SystemIcons.Warning}, Converter={StaticResource IconConverter}}" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Icon}"
-                                         Value="{x:Static MessageBoxImage.Information}">
-                                <Setter Property="Source"
-                                        Value="{Binding Source={x:Static drawing:SystemIcons.Information}, Converter={StaticResource IconConverter}}" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Icon}"
-                                         Value="{x:Static MessageBoxImage.Error}">
-                                <Setter Property="Source"
-                                        Value="{Binding Source={x:Static drawing:SystemIcons.Error}, Converter={StaticResource IconConverter}}" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Icon}"
-                                         Value="{x:Static MessageBoxImage.None}">
-                                <Setter Property="Visibility"
-                                        Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Image.Style>
-            </Image>
+            <Grid Grid.Column="0">
+                <Image x:Name="Icon"
+                       Stretch="Uniform"
+                       Height="32">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Icon}"
+                                             Value="{x:Static MessageBoxImage.Warning}">
+                                    <Setter Property="Source"
+                                            Value="{Binding Source={x:Static drawing:SystemIcons.Warning}, Converter={StaticResource IconConverter}}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Icon}"
+                                             Value="{x:Static MessageBoxImage.Information}">
+                                    <Setter Property="Source"
+                                            Value="{Binding Source={x:Static drawing:SystemIcons.Information}, Converter={StaticResource IconConverter}}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Icon}"
+                                             Value="{x:Static MessageBoxImage.Error}">
+                                    <Setter Property="Source"
+                                            Value="{Binding Source={x:Static drawing:SystemIcons.Error}, Converter={StaticResource IconConverter}}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Icon}"
+                                             Value="{x:Static MessageBoxImage.None}">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Grid>
 
-            <Grid Grid.Column="1">
+            <Grid x:Name="TextGrid"
+                  Grid.Column="1">
                 <TextBox Text="{Binding Text}"
                          TextWrapping="Wrap"
                          FontSize="11"
@@ -109,7 +112,7 @@
                                             MinHeight="25"
                                             MaxWidth="80"
                                             OnCommand="{Binding DataContext.ButtonPress, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                            OnCommandParameter="{Binding Result}"/>
+                                            OnCommandParameter="{Binding Result}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>

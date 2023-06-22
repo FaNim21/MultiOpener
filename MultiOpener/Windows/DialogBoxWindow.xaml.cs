@@ -18,8 +18,10 @@ public partial class DialogBoxWindow : Window
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        SetupTextWidth();
         PlayOpeningSound();
     }
+
     private void OnClosed(object? sender, EventArgs e)
     {
         MainWindow mainWindow = ((MainWindow)Application.Current.MainWindow);
@@ -35,6 +37,14 @@ public partial class DialogBoxWindow : Window
     private void ExitButtonClick(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void SetupTextWidth()
+    {
+        if (Icon.Source != null) return;
+
+        TextGrid.Margin = new Thickness(-60, 0, 5, 0);
+        TextGrid.HorizontalAlignment = HorizontalAlignment.Center;
     }
 
     protected virtual void PlayOpeningSound()
