@@ -2,6 +2,7 @@
 using MultiOpener.Items.Options;
 using System.IO;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels
@@ -80,6 +81,31 @@ namespace MultiOpener.ViewModels
             }
         }
 
+        private bool _alwaysOnTop;
+        public bool AlwaysOnTop
+        {
+            get { return _alwaysOnTop; }
+            set
+            {
+                _alwaysOnTop = value;
+                App.Config.AlwaysOnTop = value;
+                Application.Current.MainWindow.Topmost = value;
+                OnPropertyChanged(nameof(AlwaysOnTop));
+            }
+        }
+
+        private bool _isMinimizedAfterOpen;
+        public bool IsMinimizedAfterOpen
+        {
+            get { return _isMinimizedAfterOpen; }
+            set
+            {
+                _isMinimizedAfterOpen = value;
+                App.Config.IsMinimizedAfterOpen = value;
+                OnPropertyChanged(nameof(IsMinimizedAfterOpen));
+            }
+        }
+
         public ICommand ResetToDefaultCommand { get; set; }
 
         private readonly string _optionsSaveFileName = "Options.json";
@@ -91,6 +117,8 @@ namespace MultiOpener.ViewModels
             App.Config.ResetToDefault();
 
             LoadOptions();
+
+            Application.Current.MainWindow.Topmost = App.Config.AlwaysOnTop;
         }
 
         public void SaveOptions()
@@ -114,26 +142,14 @@ namespace MultiOpener.ViewModels
             if (data is { })
             {
                 App.Config = data;
-                UpdateUIFromConfig();
+                App.Config.UpdateUIFromConfig(this);
             }
-        }
-
-        private void UpdateUIFromConfig()
-        {
-            var config = App.Config;
-            TimeLateRefresh = config.TimeLateRefresh;
-            TimeoutOpen = config.TimeoutOpen;
-            TimeoutSingleOpen = config.TimeoutSingleOpen;
-
-            TimeoutLookingForInstancesData = config.TimeoutLookingForInstancesData;
-            TimeoutInstanceFinalizingData = config.TimeoutInstanceFinalizingData;
-            TimeoutLookingForSingleInstanceData = config.TimeoutLookingForSingleInstanceData;
         }
 
         public void ResetToDefault()
         {
             App.Config.ResetToDefault();
-            UpdateUIFromConfig();
+            App.Config.UpdateUIFromConfig(this);
         }
     }
 }

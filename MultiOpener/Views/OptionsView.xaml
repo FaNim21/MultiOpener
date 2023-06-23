@@ -36,7 +36,7 @@
                                         FontSize="15"
                                         OnCommand="{Binding ResetToDefaultCommand}"
                                         Margin="0 10 10 0" />
-                    <Label Content="Jakis sobie tytuł strony pog"
+                    <Label Content="General Options and Settings"
                            FontSize="26"
                            Foreground="White"
                            HorizontalAlignment="Center"
@@ -52,21 +52,21 @@
                         <Label Foreground="Wheat"
                                FontSize="32"
                                Content="General" />
-                        <Grid>
-                            <TextBox TextWrapping="Wrap"
-                                     Text="ustawienie lol"
-                                     Width="80"
-                                     Height="20"
-                                     Background="#9E9E9E"
-                                     HorizontalAlignment="Left"
-                                     MaxLength="5" />
-                            <Label Content="cos tu kiedys bedzie"
-                                   Foreground="White"
-                                   Height="32"
-                                   FontSize="16"
-                                   Margin="80 0 0 0" />
-                        </Grid>
+                        <CheckBox IsChecked="{Binding AlwaysOnTop}"
+                                  Height="20"
+                                  Foreground="White"
+                                  Content="Always On Top"
+                                  VerticalContentAlignment="Center" />
+                        <CheckBox IsChecked="{Binding IsMinimizedAfterOpen}"
+                                  Height="20"
+                                  Foreground="White"
+                                  Content="Is Minimized after opening preset"
+                                  VerticalContentAlignment="Center" />
                     </WrapPanel>
+
+                    <Line X2="675"
+                          Stroke="#000D14"
+                          StrokeThickness="3" />
 
                     <!--TIMINGS-->
                     <WrapPanel Orientation="Vertical"
@@ -79,7 +79,7 @@
                         <Label Foreground="White"
                                FontSize="22"
                                Content="Main" />
-                        <Grid>
+                        <Grid ToolTip="Time to auto-refresh after preset open">
                             <TextBox TextWrapping="Wrap"
                                      Text="{Binding TimeLateRefresh}"
                                      Width="80"
@@ -93,7 +93,7 @@
                                    FontSize="16"
                                    Margin="80 0 0 0" />
                         </Grid>
-                        <Grid>
+                        <Grid ToolTip="The time to stop looking for a window of the opening process after it cannot be found. It is applied when opening whole preset">
                             <TextBox TextWrapping="Wrap"
                                      Text="{Binding TimeoutOpen}"
                                      Width="80"
@@ -107,7 +107,7 @@
                                    FontSize="16"
                                    Margin="80 0 0 0" />
                         </Grid>
-                        <Grid>
+                        <Grid ToolTip="The time to stop looking for a window of the opening process after it cannot be found. It is applied when opening chosen 'open' in start panel">
                             <TextBox TextWrapping="Wrap"
                                      Text="{Binding TimeoutSingleOpen}"
                                      Width="80"
@@ -127,7 +127,7 @@
                                FontSize="22"
                                Content="Instances(MultiMC)"
                                Margin="0 20 0 0" />
-                        <Grid>
+                        <Grid ToolTip="The time to stop looking for all MC instances windows after it cannot be found. It is applied when opening whole preset">
                             <TextBox TextWrapping="Wrap"
                                      Text="{Binding TimeoutLookingForInstancesData}"
                                      Width="80"
@@ -141,7 +141,7 @@
                                    FontSize="16"
                                    Margin="80 0 0 0" />
                         </Grid>
-                        <Grid>
+                        <Grid ToolTip="Safety time to give for instances after opening">
                             <TextBox TextWrapping="Wrap"
                                      Text="{Binding TimeoutInstanceFinalizingData}"
                                      Width="80"
@@ -155,7 +155,7 @@
                                    FontSize="16"
                                    Margin="80 0 0 0" />
                         </Grid>
-                        <Grid>
+                        <Grid ToolTip="The time to stop looking for MC instance window after it cannot be found. It is applied when opening chosen 'open' in start panel">
                             <TextBox TextWrapping="Wrap"
                                      Text="{Binding TimeoutLookingForSingleInstanceData}"
                                      Width="80"

@@ -11,6 +11,7 @@
              d:DesignWidth="500"
              Background="#383A3C">
     <Grid>
+        <!--GORA-->
         <Grid>
             <Label Content="Application path:"
                    Foreground="White"
@@ -41,6 +42,7 @@
                                 OnCommand="{Binding SettingsSetDirectoryPathCommand}" />
         </Grid>
 
+        <!--MIDDLE-->
         <WrapPanel Orientation="Horizontal"
                    Margin="50 60 50 0">
             <WrapPanel Orientation="Vertical"
@@ -54,7 +56,8 @@
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top" />
 
-                <WrapPanel Orientation="Horizontal">
+                <WrapPanel Orientation="Horizontal"
+                           Margin="0 0 0 5">
                     <TextBox x:Name="delayBeforeTimeField"
                              TextWrapping="Wrap"
                              Width="80"
@@ -71,7 +74,7 @@
                            Margin="5 0 0 3" />
                 </WrapPanel>
                 <WrapPanel Orientation="Horizontal"
-                           Margin="0 5">
+                           Margin="0 0 0 5">
                     <TextBox x:Name="delayAfterTimeField"
                              TextWrapping="Wrap"
                              Width="80"

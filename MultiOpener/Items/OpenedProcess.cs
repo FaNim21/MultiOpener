@@ -158,6 +158,9 @@ public class OpenedProcess : INotifyPropertyChanged
 
         SetPid();
         UpdateStatus();
+
+        if (string.IsNullOrEmpty(WindowTitle))
+            UpdateTitle();
     }
     public void Update()
     {
@@ -190,7 +193,11 @@ public class OpenedProcess : INotifyPropertyChanged
             WindowTitle = System.IO.Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
         else if (isMCInstance)
         {
-            if (Hwnd == IntPtr.Zero) return;
+            if (Hwnd == IntPtr.Zero)
+            {
+                WindowTitle = System.IO.Path.GetFileName(Path);
+                return;
+            }
 
             string title = Win32.GetWindowTitle(Hwnd);
 

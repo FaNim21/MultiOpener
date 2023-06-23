@@ -84,8 +84,11 @@ namespace MultiOpener
         public void OnShow()
         {
             Show();
-            Topmost = true;
-            Topmost = false;
+            if (!App.Config.AlwaysOnTop)
+            {
+                Topmost = true;
+                Topmost = false;
+            }
         }
 
         private async Task CheckForUpdates()

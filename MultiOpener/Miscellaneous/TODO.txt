@@ -37,6 +37,8 @@
 
 
 ========== OVERALL FEATURES ===========
+-- GENERAL
+   - Custom Dialog Boxes
 -- Start
    - Opening presets
      - When opening with pressed shift it will open structure of all 'opens' in preset
@@ -51,6 +53,7 @@
    - Refreshing all opened preset "opens"
      - Normal refresh: looking for the HWND of an "open" process, just looking if that process is opened in background but not detected for example by MultiOpened etc etc
      - Fast refresh: quickly checking if an "open" process is closed or still open
+     - Option to cancel refresh
 -- Presets
    - Adding a new program/process to run as an "open"
      - Main options: Type, App path, Delays before and after, minimize on open
@@ -85,6 +88,8 @@
 [ ]- Zrobic ewentualna zamiane z loading processes window na poprostu akcje w jednym oknie w panelu start czyli informacje byly by aktualizowane tak jak jest aktualizowane info podczas interackji z panelem czyli reset, refresh itp itd
      i wtedy mozna bylo by wylaczyc na czas otwierania danych aplikacji taskbar buttons i dodac trzecia przemienna funkcjonalnosc dla glownego guzika w panelu start na poprostu cancel zeby zcancelowac otwieranie danego presetu w konkretnym momencie
 
+[ ]- Dac na guziku NEW UPDATE okno z wszystkimi patchnote'ami od obecnej wersji do najnowszej
+
 
 
 =============== OGOLNE ===============
@@ -96,22 +101,21 @@
 [X]- Dac opcje stop dla refresha w panelu start w tym samym guziku
 [X]- Dac opcje fast refresh przy shift + left click na guzik Refresh
 
-[ ]- dac na guziku NEW UPDATE okno z wszystkimi patchnote'ami od obecnej wersji do najnowszej
+[ ]- Dodac jakies proste guziki w panelu info dla kazdego openedProcess jak na przyklad otworz folder gdzie znajduje sie executable itp itd
+[X]- Zrobic TOOLTIPY dla wiekszasci opcji, dla wiekszej jasnosci jak co dziala (prawopodobnie narazie glowie dla opcji)
+[ ]- Zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
 
-[ ]- dodac jakies proste guziki w panelu info dla kazdego openedProcess jak na przyklad otworz folder gdzie znajduje sie executable itp itd
-[ ]- zrobic TOOLTIPY dla wiekszasci opcji, dla wiekszej jasnosci jak co dziala (prawopodobnie narazie glowie dla opcji)
-[ ]- zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
+[X]- Do Options dac opcje jak: AlwayeOnTop, MinimalizeAfterPresetOpen, ...
 
-[ ]- do Options dac opcje jak: AlwayeOnTop, MinimalizeAfterPresetOpen, cooldown do MinimalizeAfterPresetOpen?, ...
-[ ]- wybranie miedzy wyswietlanymi nazwami jak nazwane sa w presetach, a do tego jak nazywaja sie okna (niektore aplikacje nie maja okien wiec wtedy i tak maja nazwe z presetu)
+[ ]- Zrobic na gornej czesci panelu start takie rzeczy jak info ile aplikacji otwartych ile zamknietych, czas otwierania presetu itp itd w postaci niskiego pasku
 
 
 
 ========== Notki do aktualizacji ===========
-- Supporty pod wiecej programow:
+- Supporty pod wiecej programow(uwzglednic przy ustawianiu scizeki po exe czy bedzie pasowac ten plik do, ktoregos z typow 'open'):
   - Reset tracker (z opcja podania sciezki albo podania klucza z opcji do spreedsheeta/strony z opcja wyboru co chce sie podac w fieldzie)
   - Auto Hotkey???? mozna by bylo, ale jeszcze nie wiem po co xD, ale z faktu duzo jest problemow z AHK wiec mozna bylo bylo podejsc inaczej do otwierania aplikacji z tym rozszerzeniem
-  - 
+  - Obs??? zeby odpalac projector jako sciane?? i ewentualnie dac opcje zakonczenia nagrywania i ewentualnie streama jako opcje do wyboru po zamknieciu presetu? to jest actually PagMan
 - Zrobic wlasny MessageBoxShow
 - Zrobic wlasny typ okna, ktory bedzie sluzyl jako panel 'info' w start menu, ktory zaleznie od typu aplikacji bedzie wyswietlac panel dla danego typu z opcjami typu guziki do przejscia na strone ze statami dla reset tracker itp itd
 - W panelu info podstawowo oprocz tych informacji co sa juz teraz dac guziki typu open exe folder, dla instancji jeszcze dodatkowo guzik na odpalenie folderu dla danej instancji itp itd
@@ -129,5 +133,5 @@
 - Added option when cancelling Opens with opening instances now the rest MC instances will open as structure to open by one that instance in start menu
 - Added fast refresh when pressing shift key and button refresh at the same time so this fast refresh is mainly looking for ended processes that were closed outside of MultiOpener
 - Added 'fast' open when opening presets with pressed shift key, fast mean not real open but just just 'open' strcture in start panel so you can manually open and that work with when you cancel opening so rest 'opens' will open as just structure
-- Added Minimize on open for normal type 'open'
+- Added Minimize on open for normal type 'open' when configuring preset
 - Added Custom DialogBox when notifying with certain user interaction
