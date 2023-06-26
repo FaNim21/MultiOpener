@@ -18,6 +18,8 @@ namespace MultiOpener.Items;
 
 public class OpenedProcess : INotifyPropertyChanged
 {
+    //TODO: 0 trzeba uwzglednic problem aspektu supporty innych aplikacji, poniewaz trzeba zrobic OpenedProcess jako bazowa klase i rozszerzac jej funkcjonalnosc nowymi klasami
+
     public const string MCPattern = @"Minecraft\*\s+(\s+-\s+instance)?\s*(?:\d+(\.\d+)+|\d+)";
 
     public string? Name { get; private set; }
@@ -30,6 +32,7 @@ public class OpenedProcess : INotifyPropertyChanged
     public ProcessStartInfo? ProcessStartInfo { get; private set; }
 
     public bool isMCInstance = false;
+    public bool isMinimizeOnOpen = false;
 
     private string? _windowTitle;
     public string? WindowTitle
@@ -85,6 +88,7 @@ public class OpenedProcess : INotifyPropertyChanged
         ResetCommand = new OpenedResetCommand(this, start);
         CloseOpenCommand = new OpenedCloseOpenCommand(this, start);
     }
+
     public void Initialize(ProcessStartInfo? processStartInfo, string name, IntPtr handle, string path)
     {
         ProcessStartInfo = processStartInfo;
@@ -135,7 +139,11 @@ public class OpenedProcess : INotifyPropertyChanged
         else
             pid = -1;
 
-        if (pid <= 0) return;
+        if (pid == 0)
+        {
+            Pid = -1;
+            return;
+        }
 
         if (pid == -1)
         {
@@ -222,7 +230,7 @@ public class OpenedProcess : INotifyPropertyChanged
 
         Application.Current?.Dispatcher.Invoke(delegate
         {
-            StatusLabelColor = new BrushConverter().ConvertFromString("#cc3300") as SolidColorBrush;
+            StatusLabelColor = new BrushConverter().ConvertFromString("#7d2625") as SolidColorBrush;
         });
         Status = "CLOSED";
     }
@@ -289,6 +297,9 @@ public class OpenedProcess : INotifyPropertyChanged
                 }
             }
         }
+
+        if (Hwnd != IntPtr.Zero && isMinimizeOnOpen)
+            Win32.MinimizeWindowHwnd(Hwnd);
 
         UpdateStatus();
     }

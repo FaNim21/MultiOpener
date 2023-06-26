@@ -13,162 +13,191 @@
     <Grid ScrollViewer.VerticalScrollBarVisibility="Visible">
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
-                <Grid>
-                    <Label Content="Made by FaNim"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Top"
-                           Padding="0"
-                           Margin="2 20 0 0" />
-                    <TextBlock HorizontalAlignment="Left"
-                               VerticalAlignment="Top"
-                               Grid.Column="1"
-                               Margin="3">
-                        <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/releases"
-                                   RequestNavigate="Hyperlink_RequestNavigate">
-                            All releases here
-                        </Hyperlink>
-                    </TextBlock>
-                    <local:ButtonNormal Width="120"
-                                        Height="30"
-                                        ContentText="Reset to default"
-                                        VerticalAlignment="Top"
-                                        HorizontalAlignment="Right"
-                                        FontSize="15"
-                                        OnCommand="{Binding ResetToDefaultCommand}"
-                                        Margin="0 10 10 0" />
-                    <Label Content="General Options and Settings"
-                           FontSize="26"
-                           Foreground="White"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Top"
-                           Height="50" />
-                </Grid>
                 <WrapPanel Orientation="Vertical"
-                           Margin="50 15 0 0">
+                           Margin="10 0 0 0">
+
                     <!--GENERAL-->
-                    <WrapPanel Orientation="Vertical"
-                               Margin="0 0 0 15">
-
-                        <Label Foreground="Wheat"
-                               FontSize="32"
-                               Content="General" />
-                        <CheckBox IsChecked="{Binding AlwaysOnTop}"
-                                  Height="20"
-                                  Foreground="White"
-                                  Content="Always On Top"
-                                  VerticalContentAlignment="Center" />
-                        <CheckBox IsChecked="{Binding IsMinimizedAfterOpen}"
-                                  Height="20"
-                                  Foreground="White"
-                                  Content="Is Minimized after opening preset"
-                                  VerticalContentAlignment="Center" />
+                    <WrapPanel Orientation="Horizontal"
+                               Width="790">
+                        <WrapPanel Orientation="Vertical"
+                                   Margin="0 0 0 15">
+                            <Label Foreground="#e1fbfc"
+                                   FontWeight="SemiBold"
+                                   FontSize="32"
+                                   Content="General" />
+                            <WrapPanel Orientation="Vertical"
+                                       Margin="7 0 0 0"
+                                       Width="640">
+                                <CheckBox IsChecked="{Binding AlwaysOnTop}"
+                                          Height="20"
+                                          Foreground="White"
+                                          Content="Always On Top"
+                                          VerticalContentAlignment="Center" />
+                                <CheckBox IsChecked="{Binding IsMinimizedAfterOpen}"
+                                          Height="20"
+                                          Foreground="White"
+                                          Content="Is Minimized after opening preset"
+                                          VerticalContentAlignment="Center" />
+                            </WrapPanel>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Vertical"
+                                   HorizontalAlignment="Right"
+                                   Margin="0 5 0 0">
+                            <local:ButtonNormal Width="120"
+                                                Height="30"
+                                                ContentText="Reset to default"
+                                                VerticalAlignment="Top"
+                                                HorizontalAlignment="Right"
+                                                FontSize="15"
+                                                OnCommand="{Binding ResetToDefaultCommand}" />
+                            <Label Content="Made by FaNim"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   Foreground="LightGray"
+                                   Padding="0"
+                                   Margin="0 5 0 0" />
+                            <TextBlock VerticalAlignment="Top"
+                                       HorizontalAlignment="Center"
+                                       Grid.Column="1">
+                            <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/releases"
+                                       RequestNavigate="OpenVersionsSite">
+                                 <Hyperlink.Style>
+                                    <Style TargetType="Hyperlink"
+                                           BasedOn="{StaticResource {x:Type Hyperlink}}">
+                                        <Setter Property="Foreground"
+                                                Value="LightSkyBlue" />
+                                        </Style>
+                                </Hyperlink.Style>
+                                All releases here
+                            </Hyperlink>
+                            </TextBlock>
+                            <TextBlock VerticalAlignment="Top"
+                                       HorizontalAlignment="Center"
+                                       Grid.Column="1">
+                            <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/discussions"
+                                       RequestNavigate="OpenFeedbackSite">
+                                 <Hyperlink.Style>
+                                    <Style TargetType="Hyperlink"
+                                           BasedOn="{StaticResource {x:Type Hyperlink}}">
+                                        <Setter Property="Foreground"
+                                                Value="LightSkyBlue" />
+                                        </Style>
+                                </Hyperlink.Style>
+                                Give feedback here
+                            </Hyperlink>
+                            </TextBlock>
+                        </WrapPanel>
                     </WrapPanel>
-
-                    <Line X2="675"
-                          Stroke="#000D14"
-                          StrokeThickness="3" />
 
                     <!--TIMINGS-->
                     <WrapPanel Orientation="Vertical"
                                Margin="0 0 0 15">
-
-                        <Label Foreground="Wheat"
+                        <Label Foreground="#e1fbfc"
+                               FontWeight="SemiBold"
                                FontSize="32"
-                               Content="Timings (1000 = 1 sec)" />
+                               Content="Timings (1000 = 1 sec)"
+                               Padding="0" />
+
                         <!--Main-->
                         <Label Foreground="White"
                                FontSize="22"
                                Content="Main" />
-                        <Grid ToolTip="Time to auto-refresh after preset open">
-                            <TextBox TextWrapping="Wrap"
-                                     Text="{Binding TimeLateRefresh}"
-                                     Width="80"
-                                     Height="20"
-                                     Background="#9E9E9E"
-                                     HorizontalAlignment="Left"
-                                     MaxLength="5" />
-                            <Label Content="Time for late refresh"
-                                   Foreground="White"
-                                   Height="32"
-                                   FontSize="16"
-                                   Margin="80 0 0 0" />
-                        </Grid>
-                        <Grid ToolTip="The time to stop looking for a window of the opening process after it cannot be found. It is applied when opening whole preset">
-                            <TextBox TextWrapping="Wrap"
-                                     Text="{Binding TimeoutOpen}"
-                                     Width="80"
-                                     Height="20"
-                                     Background="#9E9E9E"
-                                     HorizontalAlignment="Left"
-                                     MaxLength="5" />
-                            <Label Content="Opening timeout on every 'Open' in preset"
-                                   Foreground="White"
-                                   Height="32"
-                                   FontSize="16"
-                                   Margin="80 0 0 0" />
-                        </Grid>
-                        <Grid ToolTip="The time to stop looking for a window of the opening process after it cannot be found. It is applied when opening chosen 'open' in start panel">
-                            <TextBox TextWrapping="Wrap"
-                                     Text="{Binding TimeoutSingleOpen}"
-                                     Width="80"
-                                     Height="20"
-                                     Background="#9E9E9E"
-                                     HorizontalAlignment="Left"
-                                     MaxLength="5" />
-                            <Label Content="Opening timeout on chosen opening"
-                                   Foreground="White"
-                                   Height="32"
-                                   FontSize="16"
-                                   Margin="80 0 0 0" />
-                        </Grid>
+                        <WrapPanel Orientation="Vertical"
+                                   Margin="7 0 0 0">
+                            <Grid ToolTip="Time to auto-refresh after preset open">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeLateRefresh}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="Time for late refresh"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                            <Grid ToolTip="The time to stop looking for a window of the opening process after it cannot be found. It is applied when opening whole preset">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeoutOpen}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="Opening timeout on every 'Open' in preset"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                            <Grid ToolTip="The time to stop looking for a window of the opening process after it cannot be found. It is applied when opening chosen 'open' in start panel">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeoutSingleOpen}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="Opening timeout on chosen opening"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                        </WrapPanel>
 
                         <!--Instance-->
                         <Label Foreground="White"
                                FontSize="22"
                                Content="Instances(MultiMC)"
                                Margin="0 20 0 0" />
-                        <Grid ToolTip="The time to stop looking for all MC instances windows after it cannot be found. It is applied when opening whole preset">
-                            <TextBox TextWrapping="Wrap"
-                                     Text="{Binding TimeoutLookingForInstancesData}"
-                                     Width="80"
-                                     Height="20"
-                                     Background="#9E9E9E"
-                                     HorizontalAlignment="Left"
-                                     MaxLength="5" />
-                            <Label Content="Looking for instances data timeout"
-                                   Foreground="White"
-                                   Height="32"
-                                   FontSize="16"
-                                   Margin="80 0 0 0" />
-                        </Grid>
-                        <Grid ToolTip="Safety time to give for instances after opening">
-                            <TextBox TextWrapping="Wrap"
-                                     Text="{Binding TimeoutInstanceFinalizingData}"
-                                     Width="80"
-                                     Height="20"
-                                     Background="#9E9E9E"
-                                     HorizontalAlignment="Left"
-                                     MaxLength="5" />
-                            <Label Content="instance finalizing data time"
-                                   Foreground="White"
-                                   Height="32"
-                                   FontSize="16"
-                                   Margin="80 0 0 0" />
-                        </Grid>
-                        <Grid ToolTip="The time to stop looking for MC instance window after it cannot be found. It is applied when opening chosen 'open' in start panel">
-                            <TextBox TextWrapping="Wrap"
-                                     Text="{Binding TimeoutLookingForSingleInstanceData}"
-                                     Width="80"
-                                     Height="20"
-                                     Background="#9E9E9E"
-                                     HorizontalAlignment="Left"
-                                     MaxLength="5" />
-                            <Label Content="Single opening instance timeout"
-                                   Foreground="White"
-                                   Height="32"
-                                   FontSize="16"
-                                   Margin="80 0 0 0" />
-                        </Grid>
+                        <WrapPanel Orientation="Vertical"
+                                   Margin="7 0 0 0">
+                            <Grid ToolTip="The time to stop looking for all MC instances windows after it cannot be found. It is applied when opening whole preset">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeoutLookingForInstancesData}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="Looking for instances data timeout"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                            <Grid ToolTip="Safety time to give for instances after opening">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeoutInstanceFinalizingData}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="instance finalizing data time"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                            <Grid ToolTip="The time to stop looking for MC instance window after it cannot be found. It is applied when opening chosen 'open' in start panel">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeoutLookingForSingleInstanceData}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="Single opening instance timeout"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                        </WrapPanel>
                     </WrapPanel>
                 </WrapPanel>
             </StackPanel>

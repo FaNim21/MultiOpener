@@ -109,6 +109,8 @@
 
 [ ]- Zrobic na gornej czesci panelu start takie rzeczy jak info ile aplikacji otwartych ile zamknietych, czas otwierania presetu itp itd w postaci niskiego pasku
 
+[X]- Dodac feedback button w opcjach - link do github na dyskusje
+
 
 
 ========== Notki do aktualizacji ===========
@@ -124,7 +126,7 @@
 
 
 ========== PATCH NOTES 1.0.0 ============
-- Small ui changes
+- UI changes and fixes
 - some optimizations for openened processes
 - changed informations panel to options with opening configurations and more
 - fixed few freezes with opening and canceling opening

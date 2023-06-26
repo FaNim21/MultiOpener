@@ -139,7 +139,7 @@
 
                 <Label x:Name="NameLabel"
                        Content="{Binding OpenNameLabel}"
-                       Foreground="Black"
+                       Foreground="LightGray"
                        Width="275"
                        Height="50"
                        FontSize="30"
@@ -178,15 +178,6 @@
             </Grid>
         </Grid>
 
-        <Line X1="500"
-              Y1="425"
-              X2="500"
-              Y2="0"
-              Grid.Row="1"
-              Grid.ColumnSpan="2"
-              Stroke="#000D14"
-              StrokeThickness="3" />
-
         <!--PRAWA-->
         <Grid Grid.Row="1"
               Grid.Column="1">
@@ -198,7 +189,7 @@
             <Grid Grid.Column="0">
                 <ListView x:Name="itemList"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          Background="#424242"
+                          Background="#21272B"
                           BorderThickness="0"
                           AllowDrop="True"
                           ItemsSource="{Binding Opens}"
@@ -206,7 +197,9 @@
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Background"
-                                    Value="#313131" />
+                                    Value="#404447" />
+                            <Setter Property="Foreground"
+                                    Value="#bcbcbc"/>
                             <EventSetter Event="MouseMove"
                                          Handler="TextBlockMouseMove" />
                             <EventSetter Event="DragOver"
@@ -230,9 +223,12 @@
             </Grid>
 
             <!--PANEL BOCZNY-->
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1"
+                  Background="#1D2226"
+                  Width="177"
+                  Margin="3 0 0 0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="130"/>
+                    <RowDefinition Height="115"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
@@ -244,7 +240,7 @@
                            FontSize="12"
                            VerticalAlignment="Top"
                            HorizontalAlignment="Center"
-                           Margin="0 20 0 0" />
+                           Margin="0 12 0 0" />
                     <TextBox Name="AddNameField"
                              TextWrapping="NoWrap"
                              MaxLength="15"
@@ -254,7 +250,7 @@
                              Height="20"
                              Background="#9E9E9E"
                              VerticalAlignment="Top"
-                             Margin="0 45 0 0" />
+                             Margin="0 37 0 0" />
 
                     <local:ButtonNormal x:Name="AddItemTolistViewButton"
                                         Width="120"
@@ -262,7 +258,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         FontSize="16"
-                                        Margin="0 75 0 0"
+                                        Margin="0 67 0 0"
                                         ContentText="Add"
                                         OnCommand="{Binding AddNewOpenItemCommand}" />
                 </Grid>
@@ -270,7 +266,8 @@
                 <Line X1="180"
                       Grid.Row="1"
                       Stroke="#000D14"
-                      StrokeThickness="2" />
+                      StrokeThickness="2" 
+                      Margin="-2 -3 0 0"/>
 
                 <Grid Grid.Row="1">
                     <local:ButtonNormal x:Name="CreateNewPreset"
@@ -280,7 +277,7 @@
                                         VerticalAlignment="Top"
                                         FontSize="16"
                                         Grid.Column="3"
-                                        Margin="0 10 0 0"
+                                        Margin="0 15 0 0"
                                         ContentText="Create New"
                                         OnCommand="{Binding CreateNewPresetCommand}" />
                     
@@ -291,7 +288,7 @@
                                         VerticalAlignment="Top"
                                         FontSize="16"
                                         Grid.Column="3"
-                                        Margin="0 50 0 0"
+                                        Margin="0 55 0 0"
                                         ContentText="Delete Preset"
                                         OnCommand="{Binding RemovePresetCommand}" />
                     
@@ -302,7 +299,7 @@
                                         VerticalAlignment="Top"
                                         FontSize="16"
                                         Grid.Column="3"
-                                        Margin="0 90 0 0"
+                                        Margin="0 95 0 0"
                                         ContentText="Open Folder"
                                         OnCommand="{Binding OpenPresetsFolderCommand}" />
 
@@ -361,5 +358,24 @@
                 </Grid>
             </Grid>
         </Grid>
+        
+        <Line X1="499"
+              Y1="425"
+              X2="499"
+              Y2="0"
+              Grid.Row="1"
+              Grid.ColumnSpan="2"
+              Stroke="#000D14"
+              StrokeThickness="3" 
+              Opacity="1"/>
+        <Line X1="621"
+              Y1="425"
+              X2="621"
+              Y2="0"
+              Grid.Row="1"
+              Grid.ColumnSpan="2"
+              Stroke="#000D14"
+              StrokeThickness="3" 
+              Opacity="1"/>
     </Grid>
 </UserControl>

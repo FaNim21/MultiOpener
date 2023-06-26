@@ -1,6 +1,5 @@
 ﻿using MultiOpener.Components.Controls;
 using MultiOpener.Items;
-using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using MultiOpener.Windows;
 using System;
@@ -9,8 +8,6 @@ using System.Media;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Windows.Interop;
 
 namespace MultiOpener.Commands.StartCommands;
 
@@ -99,7 +96,7 @@ public class StartOpenCommand : StartCommandBase
                     }
                     catch (Exception e)
                     {
-                        DialogBox.Show(e.ToString());
+                        DialogBox.Show(e.ToString(), "", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
 

@@ -80,7 +80,7 @@ public class OpenItem
             string pathDir = Path.GetDirectoryName(PathExe) ?? "";
 
             OpenedProcess opened = new();
-            ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true};
+            ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
             string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
 
             if (source.IsCancellationRequested)
@@ -110,8 +110,11 @@ public class OpenItem
                 }
             }
 
-            if(MinimizeOnOpen)
+            if (MinimizeOnOpen)
+            {
+                opened.isMinimizeOnOpen = true;
                 Win32.MinimizeWindowHwnd(opened.Hwnd);
+            }
 
             Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });
 

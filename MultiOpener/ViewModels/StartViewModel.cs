@@ -78,6 +78,14 @@ namespace MultiOpener.ViewModels
 
             Opened = new ObservableCollection<OpenedProcess>();
 
+            /*var opened = new OpenedProcess(this);
+            for (int i = 0; i < 90; i++) //test
+            {
+                AddOpened(opened);
+                opened.FastUpdate();
+            }
+            UpdateText("Tekst aktualizacji odpalania/zamykania czy odswiezania procesow w presecie");*/
+
             UpdatePresetName();
         }
 
