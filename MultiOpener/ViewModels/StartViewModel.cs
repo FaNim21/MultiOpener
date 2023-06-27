@@ -1,12 +1,16 @@
 ﻿using MultiOpener.Commands.StartCommands;
 using MultiOpener.Items;
+using MultiOpener.ViewModels.Controls;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels
 {
     public class StartViewModel : BaseViewModel
     {
+        public ConsoleViewModel ConsoleViewModel { get; set; }
+
         public OpenedProcess? MultiMC { get; set; }
         public ObservableCollection<OpenedProcess> Opened { get; set; }
 
@@ -72,21 +76,44 @@ namespace MultiOpener.ViewModels
 
         public StartViewModel(MainWindow mainWindow)
         {
+            ConsoleViewModel = new();
+
             OpenCommand = new StartOpenCommand(this, mainWindow);
             CloseCommand = new StartCloseCommand(this);
             RefreshOpenedCommand = new StartRefreshOpenedCommand(this);
 
             Opened = new ObservableCollection<OpenedProcess>();
 
-            /*var opened = new OpenedProcess(this);
-            for (int i = 0; i < 90; i++) //test
+            //SimpleOpenedTest();
+
+            /*for (int i = 0; i < 100; i++)
             {
-                AddOpened(opened);
-                opened.FastUpdate();
-            }
-            UpdateText("Tekst aktualizacji odpalania/zamykania czy odswiezania procesow w presecie");*/
+                ProcessCommandLine("Siema error tutaj", ConsoleLineOption.Error);
+                ProcessCommandLine("Siema tutaj");
+                ProcessCommandLine("Siema warning tutaj", ConsoleLineOption.Warning);
+                ProcessCommandLine("Siema error tutaj", ConsoleLineOption.Error);
+                ProcessCommandLine("Siema tutaj");
+                ProcessCommandLine("Siema warning tutaj", ConsoleLineOption.Warning);
+                ProcessCommandLine("Siema error tutaj", ConsoleLineOption.Error);
+                ProcessCommandLine("Siema tutaj");
+                ProcessCommandLine("Siema warning tutaj", ConsoleLineOption.Warning);
+            }*/
+
+            Task task = Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(200);
+                    ProcessCommandLine("Siema tutaj");
+                }
+            });
 
             UpdatePresetName();
+        }
+
+        public void ProcessCommandLine(string text, ConsoleLineOption option = ConsoleLineOption.Normal)
+        {
+            ConsoleViewModel.ProcessCommandLine(text, option);
         }
 
         public void UpdatePresetName(string name = "Empty preset")
@@ -114,6 +141,17 @@ namespace MultiOpener.ViewModels
         public bool OpenedIsEmpty()
         {
             return Opened == null || Opened.Count == 0;
+        }
+
+        private void SimpleOpenedTest()
+        {
+            var opened = new OpenedProcess(this);
+            for (int i = 0; i < 90; i++) //test
+            {
+                AddOpened(opened);
+                opened.FastUpdate();
+            }
+            UpdateText("Tekst aktualizacji odpalania/zamykania czy odswiezania procesow w presecie");
         }
     }
 }

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
              xmlns:viewmodels="clr-namespace:MultiOpener.ViewModels"
              xmlns:items="clr-namespace:MultiOpener.Items"
+             xmlns:controls="clr-namespace:MultiOpener.Components"
              d:DataContext="{d:DesignInstance Type=viewmodels:StartViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -98,17 +99,10 @@
                                 OnCommand="{Binding RefreshOpenedCommand}"
                                 Margin="0 40 20 0" />
 
-            <TextBlock ScrollViewer.VerticalScrollBarVisibility="Auto"
-                       FontFamily="Consolas"
-                       Width="auto"
-                       Height="120"
-                       VerticalAlignment="Bottom"
-                       Background="#2d2e30"
-                       Padding="5 2"
-                       Margin="0 5">
-            <Run Text="{Binding PanelInteractionText}"
-                 Foreground="LightGray" />
-            </TextBlock>
+            <controls:ConsoleLineOutputControl DataContext="{Binding ConsoleViewModel}"
+                                               Height="120"
+                                               VerticalAlignment="Bottom"
+                                               Margin="0 5" />
         </Grid>
 
         <Line X1="0"

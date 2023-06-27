@@ -79,6 +79,8 @@ namespace MultiOpener
             Settings.Default.LastOpenedPresetName = MainViewModel.settings.PresetName;
 
             Settings.Default.Save();
+
+            MainViewModel.start.ConsoleViewModel.ConsoleLines.Clear();
         }
 
         public void OnShow()
