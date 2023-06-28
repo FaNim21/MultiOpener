@@ -96,14 +96,19 @@ public class OpenItem
                     opened.Initialize(startInfo, name!, process.Handle, PathExe);
 
                     int errors = 0;
-                    var config = new TimeoutConfigurator(App.Config.TimeoutOpen, 15);
+                    int time = App.Config.TimeoutOpen / 15;
+                    bool isHwndFound = false;
 
-                    while (!opened.SetHwnd() && errors < config.ErrorCount)
+                    while (!isHwndFound && errors < 15)
                     {
                         if (source.IsCancellationRequested)
                             break;
 
-                        await Task.Delay(config.Cooldown);
+                        isHwndFound = opened.SetHwnd();
+
+                        if (isHwndFound) break;
+
+                        await Task.Delay(time);
                         errors++;
                     }
 

@@ -139,9 +139,14 @@ public class OpenedProcess : INotifyPropertyChanged
         else
             pid = -1;
 
-        if (pid == 0)
+        if (pid <= 0)
         {
-            Pid = -1;
+            if (!Win32.ProcessExist(Pid))
+                Pid = -1;
+            else
+            {
+                SetHwnd();
+            }
             return;
         }
 

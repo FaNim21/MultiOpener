@@ -1,7 +1,9 @@
 ﻿using MultiOpener.Components.Controls;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MultiOpener.Views
 {
@@ -36,6 +38,12 @@ namespace MultiOpener.Views
                 };
                 Process.Start(processStart);
             }
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

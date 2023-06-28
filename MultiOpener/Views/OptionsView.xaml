@@ -110,6 +110,7 @@
                                          Width="80"
                                          Height="20"
                                          Background="#9E9E9E"
+                                         PreviewTextInput="NumberValidationTextBox"
                                          HorizontalAlignment="Left"
                                          MaxLength="5" />
                                 <Label Content="Time for late refresh"
@@ -125,6 +126,7 @@
                                          Height="20"
                                          Background="#9E9E9E"
                                          HorizontalAlignment="Left"
+                                         PreviewTextInput="NumberValidationTextBox"
                                          MaxLength="5" />
                                 <Label Content="Opening timeout on every 'Open' in preset"
                                        Foreground="White"
@@ -139,6 +141,7 @@
                                          Height="20"
                                          Background="#9E9E9E"
                                          HorizontalAlignment="Left"
+                                         PreviewTextInput="NumberValidationTextBox"
                                          MaxLength="5" />
                                 <Label Content="Opening timeout on chosen opening"
                                        Foreground="White"
@@ -161,6 +164,7 @@
                                          Width="80"
                                          Height="20"
                                          Background="#9E9E9E"
+                                         PreviewTextInput="NumberValidationTextBox"
                                          HorizontalAlignment="Left"
                                          MaxLength="5" />
                                 <Label Content="Looking for instances data timeout"
@@ -175,6 +179,7 @@
                                          Width="80"
                                          Height="20"
                                          Background="#9E9E9E"
+                                         PreviewTextInput="NumberValidationTextBox"
                                          HorizontalAlignment="Left"
                                          MaxLength="5" />
                                 <Label Content="instance finalizing data time"
@@ -189,6 +194,7 @@
                                          Width="80"
                                          Height="20"
                                          Background="#9E9E9E"
+                                         PreviewTextInput="NumberValidationTextBox"
                                          HorizontalAlignment="Left"
                                          MaxLength="5" />
                                 <Label Content="Single opening instance timeout"
