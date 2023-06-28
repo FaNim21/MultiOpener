@@ -53,7 +53,7 @@ public class StartOpenCommand : StartCommandBase
     {
         if (Start == null || Settings == null) return;
 
-        //TODO: Rozbic te rzeczy na exclusivy danych klasy i metod na przyklad niszczenie czy odpalanie multiMC powinno byc
+        //TODO: Rozbic te rzeczy na exclusivy danych klasy i metod na przyklad niszczenie czy odpalanie multiMC powinno byc w jakims evencie?
 
         isOpening = true;
         int length = Settings.Opens.Count;
