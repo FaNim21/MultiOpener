@@ -123,6 +123,8 @@ public class StartOpenCommand : StartCommandBase
         }
 
         //Opening everything
+        Stopwatch stopwatch = new();
+        stopwatch.Start();
         for (int i = 0; i < length; i++)
         {
             var current = Settings.Opens[i];
@@ -138,6 +140,7 @@ public class StartOpenCommand : StartCommandBase
 
             await current.Open(loadingProcesses, source, infoText);
         }
+        stopwatch.Stop();
 
         //Destroying MultiMC if there was Instances as type in Opens
         if (Start.MultiMC != null)
@@ -156,8 +159,11 @@ public class StartOpenCommand : StartCommandBase
             if (Start.OpenedIsEmpty())
                 Start.OpenButtonName = "OPEN";
         });
+        await Task.Delay(50);
 
         //Late Refresh
+        StartViewModel.Log($"Opened Preset {Settings.PresetName} in {Math.Round(stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
+        await Task.Delay(50);
         if (!isShiftPressed)
         {
             Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Log("Attempting to first Auto-Refresh", ConsoleLineOption.Warning); });

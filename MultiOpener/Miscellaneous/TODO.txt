@@ -87,8 +87,9 @@
 ========== NOT SURE ABOUT THAT FEATURES ===========
 [ ]- Zrobic ewentualna zamiane z loading processes window na poprostu akcje w jednym oknie w panelu start czyli informacje byly by aktualizowane tak jak jest aktualizowane info podczas interackji z panelem czyli reset, refresh itp itd
      i wtedy mozna bylo by wylaczyc na czas otwierania danych aplikacji taskbar buttons i dodac trzecia przemienna funkcjonalnosc dla glownego guzika w panelu start na poprostu cancel zeby zcancelowac otwieranie danego presetu w konkretnym momencie
+- To jednak zrobic w formie konsoli!!!!!!!!!!
 
-[ ]- Dac na guziku NEW UPDATE okno z wszystkimi patchnote'ami od obecnej wersji do najnowszej
+[ ]????- Dac na guziku NEW UPDATE okno z wszystkimi patchnote'ami od obecnej wersji do najnowszej
 
 
 
@@ -107,7 +108,7 @@
 
 [X]- Do Options dac opcje jak: AlwayeOnTop, MinimalizeAfterPresetOpen, ...
 
-[ ]- Zrobic na gornej czesci panelu start takie rzeczy jak info ile aplikacji otwartych ile zamknietych, czas otwierania presetu itp itd w postaci niskiego pasku
+[X]- Zrobic na gornej czesci panelu start takie rzeczy jak info ile aplikacji otwartych ile zamknietych, czas otwierania presetu itp itd w postaci niskiego pasku
 
 [X]- Dodac feedback button w opcjach - link do github na dyskusje
 
@@ -137,3 +138,4 @@
 - Added 'fast' open when opening presets with pressed shift key, fast mean not real open but just just 'open' strcture in start panel so you can manually open and that work with when you cancel opening so rest 'opens' will open as just structure
 - Added Minimize on open for normal type 'open' when configuring preset
 - Added Custom DialogBox when notifying with certain user interaction
+- Added Console and moved all text informations in start panel to it
