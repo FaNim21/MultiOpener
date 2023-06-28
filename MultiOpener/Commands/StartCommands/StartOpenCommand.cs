@@ -53,11 +53,14 @@ public class StartOpenCommand : StartCommandBase
     {
         if (Start == null || Settings == null) return;
 
+        //TODO: Rozbic te rzeczy na exclusivy danych klasy i metod na przyklad niszczenie czy odpalanie multiMC powinno byc
+
         isOpening = true;
         int length = Settings.Opens.Count;
         int progressLength = length;
         string infoText = "";
         bool isShiftPressed = false;
+        Stopwatch stopwatch = new();
 
         //Validating all Opens
         for (int i = 0; i < length; i++)
@@ -123,7 +126,6 @@ public class StartOpenCommand : StartCommandBase
         }
 
         //Opening everything
-        Stopwatch stopwatch = new();
         stopwatch.Start();
         for (int i = 0; i < length; i++)
         {

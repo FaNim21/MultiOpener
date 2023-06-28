@@ -177,6 +177,10 @@ public class OpenedProcess : INotifyPropertyChanged
     }
     public void Update()
     {
+        //TODO: 0 Zrobic update takim prawidlowym sprawdzaniem czy aplikacja instnieje, bo na ten moment to w rzeczywistosci az tak update od fastUpdate sie nie roznicy tylko fakt ze poprawiawia hwnd i pid, ale nawet nie pamietam kiedy do tego dochodzi
+        // plus roznica jest glebiej do szukania instances w multimc
+        //TAKZE TRZEBA TO CALKOWICIE PRZEBUDOWAC
+
         if (StillExist())
         {
             UpdateTitle();
