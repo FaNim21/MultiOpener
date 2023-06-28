@@ -160,17 +160,14 @@ public class StartOpenCommand : StartCommandBase
         //Late Refresh
         if (!isShiftPressed)
         {
-            Application.Current?.Dispatcher.Invoke(delegate
-            {
-                ((MainWindow)Application.Current.MainWindow).MainViewModel.start.UpdateText("Attempting to first Auto-Refresh");
-            });
+            Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Log("Attempting to first Auto-Refresh", ConsoleLineOption.Warning); });
             await Task.Delay(App.Config.TimeLateRefresh);
         }
         Application.Current?.Dispatcher.Invoke(delegate
         {
             Consts.IsStartPanelWorkingNow = false;
             bool isItOpening = true;
-            Start.RefreshOpenedCommand.Execute(new object[] { isShiftPressed, isItOpening});
+            Start.RefreshOpenedCommand.Execute(new object[] { isShiftPressed, isItOpening });
         });
 
         isOpening = false;

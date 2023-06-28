@@ -11,8 +11,7 @@ namespace MultiOpener.Utils
 
         public static void AutoScrollPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
-            ScrollViewer? scrollViewer = obj as ScrollViewer;
-            if (scrollViewer == null) return;
+            if (obj is not ScrollViewer scrollViewer) return;
 
             if ((bool)args.NewValue)
             {
@@ -41,8 +40,7 @@ namespace MultiOpener.Utils
 
         private static void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            var scrollViewer = sender as ScrollViewer;
-            if (scrollViewer != null)
+            if (sender is ScrollViewer scrollViewer)
             {
                 double scrollingFactor = 0.01;
                 scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta * scrollingFactor);

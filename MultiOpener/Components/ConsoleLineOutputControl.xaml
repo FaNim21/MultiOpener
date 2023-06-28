@@ -26,12 +26,16 @@
              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <ListBox.ItemTemplate>
             <DataTemplate>
-                <TextBlock Height="11"
+                <TextBlock Grid.Row="0"
+                           FontFamily="Consolas"
                            Focusable="False"
                            Padding="0"
-                           FontSize="9"
+                           FontSize="10"
                            Text="{Binding Text}"
-                           Foreground="{Binding Color}" />
+                           Foreground="{Binding Color}"
+                           TextWrapping="Wrap"
+                           Margin="0 0 0 -4"
+                           LineHeight="13"/>
             </DataTemplate>
         </ListBox.ItemTemplate>
         <ListBox.Resources>

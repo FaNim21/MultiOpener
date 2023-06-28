@@ -211,6 +211,7 @@ namespace MultiOpener.ViewModels
                 Opens = new ObservableCollection<OpenItem>(data ?? new ObservableCollection<OpenItem>());
 
                 string loadedName = Helper.GetFileNameWithoutExtension(presetName);
+                StartViewModel.Log($"Loaded {loadedName}");
                 PresetName = loadedName;
                 SaveNameField = loadedName;
 

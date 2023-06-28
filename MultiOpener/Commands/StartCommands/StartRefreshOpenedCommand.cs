@@ -69,7 +69,7 @@ namespace MultiOpener.Commands.StartCommands
             }
 
             Consts.IsStartPanelWorkingNow = false;
-            Start.UpdateText("");
+            Start.LogLine("Finished Refreshing");
             source.Dispose();
             isRunning = false;
             Start.RefreshButtonName = "Refresh";
@@ -88,11 +88,11 @@ namespace MultiOpener.Commands.StartCommands
 
         private async Task NormalRefresh(OpenedProcess current, string textInfo)
         {
-            Start?.UpdateText($"Refreshing {textInfo}");
+            Start?.LogLine($"Refreshing {textInfo}");
 
             if (current.isMCInstance && !current.IsOpened())
             {
-                Start?.UpdateText($"Refreshing {textInfo} - looking for window");
+                Start?.LogLine($"Refreshing {textInfo} - looking for window");
                 await current.SearchForMCInstance(source);
             }
 
@@ -102,7 +102,7 @@ namespace MultiOpener.Commands.StartCommands
 
         private async Task FastRefresh(OpenedProcess current, string textInfo)
         {
-            Start?.UpdateText($"Fast Refreshing {textInfo}");
+            Start?.LogLine($"Fast Refreshing {textInfo}");
             current.FastUpdate();
 
             await Task.Delay(25);

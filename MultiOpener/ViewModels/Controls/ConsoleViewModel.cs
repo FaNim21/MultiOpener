@@ -7,6 +7,9 @@ using System.Windows.Media;
 
 namespace MultiOpener.ViewModels.Controls;
 
+/// <summary>
+/// TODO: 1 Give console option to save logs or clear or just save and clear
+/// </summary>
 public class ConsoleViewModel : BaseViewModel
 {
     public ObservableCollection<ConsoleLine> ConsoleLines { get; set; }

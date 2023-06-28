@@ -1,4 +1,5 @@
-﻿using NuGet.Versioning;
+﻿using MultiOpener.ViewModels;
+using NuGet.Versioning;
 using Octokit;
 using System;
 using System.Linq;
@@ -24,13 +25,17 @@ namespace MultiOpener.Utils
                 var latestRelease = releases.OrderByDescending(r => r.PublishedAt).FirstOrDefault();
 
                 if (latestRelease != null && !IsUpToDate(latestRelease.TagName, version))
+                {
+                    StartViewModel.Log($"Found new update - {latestRelease.TagName}", Items.ConsoleLineOption.Warning);
                     return true;
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
 
+            StartViewModel.Log($"You are up to date - {version}");
             return false;
         }
 

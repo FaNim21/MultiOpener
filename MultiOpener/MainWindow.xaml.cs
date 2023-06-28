@@ -12,6 +12,7 @@ namespace MultiOpener
 {
     public partial class MainWindow : Window
     {
+        //TODO: 2 Sprobowac przeniesc main viewModel do App.xaml.cs na bazie tego filmiku https://www.youtube.com/watch?v=dtq6qYlolh8 w 5:00
         public MainViewModel MainViewModel { get; set; }
 
         public MainWindow()

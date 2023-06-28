@@ -9,5 +9,19 @@ namespace MultiOpener
         public static OptionSaveItem Config { get; set; } = new();
 
         public static InputController Input { get; set; } = new();
+
+        public int Elo = 10;
+
+        public App()
+        {
+            
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            //((App)Current).
+
+            base.OnStartup(e);
+        }
     }
 }

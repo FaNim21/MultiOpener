@@ -43,15 +43,23 @@ namespace MultiOpener.Commands.StartCommands
                     var current = Start.Opened[i];
                     current.FastUpdate();
 
+                    string output = "";
+                    if (current.StillExist())
+                        output += "Closed and ";
+
                     bool isSucceed = await current.Close();
                     if (isSucceed || current.Hwnd == IntPtr.Zero || !current.StillExist())
                     {
+
                         Application.Current?.Dispatcher.Invoke(delegate
                         {
                             Start.RemoveOpened(current);
                             i--;
                         });
+                        Start.LogLine($"{output}Removed {current.Name}");
                     }
+
+                    await Task.Delay(50);
                 }
 
                 if (Start.OpenedIsEmpty())

@@ -9,6 +9,8 @@ namespace MultiOpener.ViewModels
 {
     public class StartViewModel : BaseViewModel
     {
+        public static StartViewModel? Instance { get; private set; }
+
         public ConsoleViewModel ConsoleViewModel { get; set; }
 
         public OpenedProcess? MultiMC { get; set; }
@@ -51,17 +53,6 @@ namespace MultiOpener.ViewModels
             }
         }
 
-        private string? _panelInteractionText;
-        public string? PanelInteractionText
-        {
-            get { return _panelInteractionText; }
-            set
-            {
-                _panelInteractionText = value;
-                OnPropertyChanged(nameof(PanelInteractionText));
-            }
-        }
-
         private string _refreshButtonName = "Refresh";
         public string RefreshButtonName
         {
@@ -76,6 +67,8 @@ namespace MultiOpener.ViewModels
 
         public StartViewModel(MainWindow mainWindow)
         {
+            Instance = this;
+
             ConsoleViewModel = new();
 
             OpenCommand = new StartOpenCommand(this, mainWindow);
@@ -86,44 +79,21 @@ namespace MultiOpener.ViewModels
 
             //SimpleOpenedTest();
 
-            /*for (int i = 0; i < 100; i++)
-            {
-                ProcessCommandLine("Siema error tutaj", ConsoleLineOption.Error);
-                ProcessCommandLine("Siema tutaj");
-                ProcessCommandLine("Siema warning tutaj", ConsoleLineOption.Warning);
-                ProcessCommandLine("Siema error tutaj", ConsoleLineOption.Error);
-                ProcessCommandLine("Siema tutaj");
-                ProcessCommandLine("Siema warning tutaj", ConsoleLineOption.Warning);
-                ProcessCommandLine("Siema error tutaj", ConsoleLineOption.Error);
-                ProcessCommandLine("Siema tutaj");
-                ProcessCommandLine("Siema warning tutaj", ConsoleLineOption.Warning);
-            }*/
-
-            Task task = Task.Run(async () =>
-            {
-                while (true)
-                {
-                    await Task.Delay(200);
-                    ProcessCommandLine("Siema tutaj");
-                }
-            });
-
             UpdatePresetName();
         }
 
-        public void ProcessCommandLine(string text, ConsoleLineOption option = ConsoleLineOption.Normal)
+        public void LogLine(string text, ConsoleLineOption option = ConsoleLineOption.Normal)
         {
             ConsoleViewModel.ProcessCommandLine(text, option);
+        }
+        public static void Log(string text, ConsoleLineOption option = ConsoleLineOption.Normal)
+        {
+            Instance?.ConsoleViewModel.ProcessCommandLine(text, option);
         }
 
         public void UpdatePresetName(string name = "Empty preset")
         {
             PresetNameLabel = name;
-        }
-
-        public void UpdateText(string content)
-        {
-            PanelInteractionText = content;
         }
 
         public void AddOpened(OpenedProcess openedProcess)
@@ -151,7 +121,7 @@ namespace MultiOpener.ViewModels
                 AddOpened(opened);
                 opened.FastUpdate();
             }
-            UpdateText("Tekst aktualizacji odpalania/zamykania czy odswiezania procesow w presecie");
+            LogLine("Tekst aktualizacji odpalania/zamykania czy odswiezania procesow w presecie");
         }
     }
 }

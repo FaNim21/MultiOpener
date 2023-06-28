@@ -19,6 +19,8 @@ namespace MultiOpener.Commands.OpenedCommands
             if (openedProcess == null || Consts.IsStartPanelWorkingNow) return;
 
             openedProcess.Update();
+            if (!openedProcess.IsOpened()) return;
+
             Task task = Task.Run(ResetOpened);
         }
 
@@ -26,7 +28,7 @@ namespace MultiOpener.Commands.OpenedCommands
         {
             Consts.IsStartPanelWorkingNow = true;
 
-            Start?.UpdateText($"Reseting {openedProcess.Name}");
+            Start?.LogLine($"Reseting {openedProcess.Name}");
             if (openedProcess.IsOpened())
             {
                 bool result = await openedProcess.Close();
@@ -42,7 +44,7 @@ namespace MultiOpener.Commands.OpenedCommands
             }
 
             Consts.IsStartPanelWorkingNow = false;
-            Start?.UpdateText($"");
+            Start?.LogLine($"Finished reseting {openedProcess.Name}");
         }
     }
 }
