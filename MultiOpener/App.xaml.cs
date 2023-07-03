@@ -1,27 +1,26 @@
-﻿using MultiOpener.Items.Options;
+﻿using MultiOpener.Entities.Options;
 using MultiOpener.Utils;
 using System.Windows;
 
-namespace MultiOpener
+namespace MultiOpener;
+
+public partial class App : Application
 {
-    public partial class App : Application
+    public static OptionSaveItem Config { get; set; } = new();
+
+    public static InputController Input { get; set; } = new();
+
+    public int Elo = 10;
+
+    public App()
     {
-        public static OptionSaveItem Config { get; set; } = new();
+        
+    }
 
-        public static InputController Input { get; set; } = new();
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        //((App)Current).
 
-        public int Elo = 10;
-
-        public App()
-        {
-            
-        }
-
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            //((App)Current).
-
-            base.OnStartup(e);
-        }
+        base.OnStartup(e);
     }
 }

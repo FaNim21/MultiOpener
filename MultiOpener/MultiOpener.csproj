@@ -22,9 +22,13 @@
 
 	<ItemGroup>
 		<Compile Remove="Miscellaneous\Nowy folder\**" />
+		<Compile Remove="Sounds\**" />
 		<EmbeddedResource Remove="Miscellaneous\Nowy folder\**" />
+		<EmbeddedResource Remove="Sounds\**" />
 		<None Remove="Miscellaneous\Nowy folder\**" />
+		<None Remove="Sounds\**" />
 		<Page Remove="Miscellaneous\Nowy folder\**" />
+		<Page Remove="Sounds\**" />
 	</ItemGroup>
 
 	<ItemGroup>

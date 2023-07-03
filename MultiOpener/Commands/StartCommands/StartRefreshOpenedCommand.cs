@@ -1,4 +1,4 @@
-﻿using MultiOpener.Items;
+﻿using MultiOpener.Entities.Opened;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System.Threading;
@@ -90,19 +90,15 @@ namespace MultiOpener.Commands.StartCommands
         {
             Start?.LogLine($"Refreshing {textInfo}");
 
-            if (current.isMCInstance && !current.IsOpened())
-            {
-                Start?.LogLine($"Refreshing {textInfo} - looking for window");
-                await current.SearchForMCInstance(source);
-            }
-
             current.Update();
+            await current.UpdateAsync(token);
+
             await Task.Delay(100);
         }
-
         private async Task FastRefresh(OpenedProcess current, string textInfo)
         {
             Start?.LogLine($"Fast Refreshing {textInfo}");
+
             current.FastUpdate();
 
             await Task.Delay(25);

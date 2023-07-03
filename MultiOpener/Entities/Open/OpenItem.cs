@@ -1,4 +1,5 @@
 ﻿using MultiOpener.Components.Controls;
+using MultiOpener.Entities.Opened;
 using MultiOpener.Utils;
 using MultiOpener.Windows;
 using System;
@@ -10,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MultiOpener.Items;
+namespace MultiOpener.Entities.Open;
 
 public enum OpenType
 {
@@ -69,11 +70,11 @@ public class OpenItem
         return string.Empty;
     }
 
-    public virtual async Task Open(OpenningProcessLoadingWindow? loading, CancellationTokenSource source, string infoText = "")
+    public virtual async Task Open(OpenningProcessLoadingWindow? loading, CancellationToken token, string infoText = "")
     {
         try
         {
-            if (!source.IsCancellationRequested)
+            if (!token.IsCancellationRequested)
                 await Task.Delay(DelayBefore);
 
             string executable = Path.GetFileName(PathExe);
@@ -82,48 +83,16 @@ public class OpenItem
             OpenedProcess opened = new();
             ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
             string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
+            opened.Initialize(startInfo, name!, PathExe, MinimizeOnOpen);
 
-            if (source.IsCancellationRequested)
-            {
-                opened.Initialize(startInfo, name!, IntPtr.Zero, PathExe);
+            if (token.IsCancellationRequested)
                 opened.Clear();
-            }
             else
-            {
-                Process? process = Process.Start(startInfo!);
-                if (process != null)
-                {
-                    opened.Initialize(startInfo, name!, process.Handle, PathExe);
-
-                    int errors = 0;
-                    int time = App.Config.TimeoutOpen / 15;
-                    bool isHwndFound = false;
-
-                    while (!isHwndFound && errors < 15)
-                    {
-                        if (source.IsCancellationRequested)
-                            break;
-
-                        isHwndFound = opened.SetHwnd();
-
-                        if (isHwndFound) break;
-
-                        await Task.Delay(time);
-                        errors++;
-                    }
-
-                }
-            }
-
-            if (MinimizeOnOpen)
-            {
-                opened.isMinimizeOnOpen = true;
-                Win32.MinimizeWindowHwnd(opened.Hwnd);
-            }
+                await opened.OpenProcess(token);
 
             Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });
 
-            if (!source.IsCancellationRequested)
+            if (!token.IsCancellationRequested)
                 await Task.Delay(DelayAfter);
         }
         catch (Exception ex)
@@ -131,4 +100,6 @@ public class OpenItem
             DialogBox.Show(ex.ToString(), "", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+
+    public virtual ushort GetAdditionalProgressCount() => 0;
 }

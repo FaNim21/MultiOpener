@@ -1,6 +1,6 @@
 ﻿using MultiOpener.ViewModels;
 
-namespace MultiOpener.Items.Options;
+namespace MultiOpener.Entities.Options;
 
 public class OptionSaveItem
 {
@@ -12,7 +12,6 @@ public class OptionSaveItem
     //Main
     public int TimeLateRefresh { get; set; }
     public int TimeoutOpen { get; set; }
-    public int TimeoutSingleOpen { get; set; }
 
     //Instance
     public int TimeoutLookingForInstancesData { get; set; }
@@ -30,7 +29,6 @@ public class OptionSaveItem
         //Main
         TimeLateRefresh = 3500;
         TimeoutOpen = 3750;
-        TimeoutSingleOpen = 3750;
 
         //Instance
         TimeoutLookingForInstancesData = 40000;
@@ -45,7 +43,6 @@ public class OptionSaveItem
 
         viewModel.TimeLateRefresh = TimeLateRefresh;
         viewModel.TimeoutOpen = TimeoutOpen;
-        viewModel.TimeoutSingleOpen = TimeoutSingleOpen;
 
         viewModel.TimeoutLookingForInstancesData = TimeoutLookingForInstancesData;
         viewModel.TimeoutInstanceFinalizingData = TimeoutInstanceFinalizingData;

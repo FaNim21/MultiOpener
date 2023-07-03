@@ -1,5 +1,5 @@
 ﻿using MultiOpener.Commands.SettingsCommands;
-using MultiOpener.Items;
+using MultiOpener.Entities.Open;
 using System;
 using System.Windows.Input;
 

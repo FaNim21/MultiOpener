@@ -1,5 +1,5 @@
 ﻿using MultiOpener.Components.Controls;
-using MultiOpener.Items;
+using MultiOpener.Entities;
 using MultiOpener.ViewModels;
 using MultiOpener.Windows;
 using System;
@@ -18,10 +18,13 @@ public class StartOpenCommand : StartCommandBase
 
     private OpenningProcessLoadingWindow? loadingProcesses;
 
+    private Stopwatch Stopwatch { get; set; } = new();
+
     public CancellationTokenSource source = new();
     private CancellationToken token;
 
     public bool isOpening = false;
+    private bool isShiftPressed = false;
 
 
     public StartOpenCommand(StartViewModel? startViewModel, MainWindow mainWindow) : base(startViewModel)
@@ -53,59 +56,19 @@ public class StartOpenCommand : StartCommandBase
     {
         if (Start == null || Settings == null) return;
 
-        //TODO: Rozbic te rzeczy na exclusivy danych klasy i metod na przyklad niszczenie czy odpalanie multiMC powinno byc w jakims evencie?
+        int length = Settings!.Opens.Count;
 
+        Initialize(length);
+        await OpenAll(length);
+        await Finalize();
+    }
+
+    public void Initialize(int length)
+    {
         isOpening = true;
-        int length = Settings.Opens.Count;
         int progressLength = length;
-        string infoText = "";
-        bool isShiftPressed = false;
-        Stopwatch stopwatch = new();
 
-        //Validating all Opens
-        for (int i = 0; i < length; i++)
-        {
-            var current = Settings.Opens[i];
-
-            string result = current.Validate();
-            if (!string.IsNullOrEmpty(result))
-            {
-                DialogBox.Show(result, "", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                Application.Current.Dispatcher.Invoke(delegate
-                {
-                    Start.OpenButtonName = "OPEN";
-                });
-                return;
-            }
-
-            if (current.GetType() == typeof(OpenInstance))
-            {
-                if (Start.MultiMC == null)
-                {
-                    try
-                    {
-                        ProcessStartInfo startInfo = new(current.PathExe) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Minimized };
-                        Process? process = Process.Start(startInfo);
-                        if (process != null)
-                        {
-                            process.WaitForInputIdle();
-
-                            OpenedProcess open = new();
-                            open.SetHandle(process.Handle);
-                            open.SetPid();
-                            Start.MultiMC = open;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        DialogBox.Show(e.ToString(), "", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-
-                progressLength += ((OpenInstance)current).Quantity;
-            }
-        }
+        Validate(ref progressLength, length);
 
         //Initializing loading window
         Application.Current?.Dispatcher.Invoke(delegate
@@ -124,12 +87,70 @@ public class StartOpenCommand : StartCommandBase
             source.Cancel();
             isShiftPressed = true;
         }
-
-        //Opening everything
-        stopwatch.Start();
+    }
+    private void Validate(ref int progressLength, int length)
+    {
         for (int i = 0; i < length; i++)
         {
-            var current = Settings.Opens[i];
+            var current = Settings!.Opens[i];
+
+            progressLength += current.GetAdditionalProgressCount();
+
+            string result = current.Validate();
+            if (!string.IsNullOrEmpty(result))
+            {
+                DialogBox.Show(result, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Dispatcher.Invoke(delegate { Start!.OpenButtonName = "OPEN"; });
+                return;
+            }
+        }
+    }
+
+    public async Task Finalize()
+    {
+        Application.Current?.Dispatcher.Invoke(delegate
+        {
+            loadingProcesses!.Close();
+            MainWindow.OnShow();
+            loadingProcesses = null;
+
+            if (Start!.OpenedIsEmpty())
+                Start.OpenButtonName = "OPEN";
+        });
+        await Task.Delay(50);
+
+        //Late Refresh
+        StartViewModel.Log($"Opened Preset {Settings!.PresetName} in {Math.Round(Stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
+        await Task.Delay(50);
+        if (!isShiftPressed)
+        {
+            Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Log("Attempting to first Auto-Refresh", ConsoleLineOption.Warning); });
+            await Task.Delay(App.Config.TimeLateRefresh);
+        }
+
+        Application.Current?.Dispatcher.Invoke(delegate
+        {
+            Consts.IsStartPanelWorkingNow = false;
+            bool isItOpening = true;
+            Start!.RefreshOpenedCommand.Execute(new object[] { isShiftPressed, isItOpening });
+        });
+
+        source.Dispose();
+        isOpening = false;
+        isShiftPressed = false;
+        Stopwatch.Reset();
+
+        SystemSounds.Beep.Play();
+    }
+
+    public async Task OpenAll(int length)
+    {
+        string infoText = "";
+
+        Stopwatch.Start();
+        for (int i = 0; i < length; i++)
+        {
+            var current = Settings!.Opens[i];
 
             if (string.IsNullOrEmpty(current.PathExe)) return;
 
@@ -140,48 +161,8 @@ public class StartOpenCommand : StartCommandBase
                 loadingProcesses!.progress.Value++;
             });
 
-            await current.Open(loadingProcesses, source, infoText);
+            await current.Open(loadingProcesses, token, infoText);
         }
-        stopwatch.Stop();
-
-        //Destroying MultiMC if there was Instances as type in Opens
-        if (Start.MultiMC != null)
-        {
-            await Start.MultiMC.Close();
-            Start.MultiMC = null;
-        }
-
-        //Ending loading etc
-        Application.Current?.Dispatcher.Invoke(delegate
-        {
-            loadingProcesses!.Close();
-            MainWindow.OnShow();
-            loadingProcesses = null;
-
-            if (Start.OpenedIsEmpty())
-                Start.OpenButtonName = "OPEN";
-        });
-        await Task.Delay(50);
-
-        //Late Refresh
-        StartViewModel.Log($"Opened Preset {Settings.PresetName} in {Math.Round(stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
-        await Task.Delay(50);
-        if (!isShiftPressed)
-        {
-            Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Log("Attempting to first Auto-Refresh", ConsoleLineOption.Warning); });
-            await Task.Delay(App.Config.TimeLateRefresh);
-        }
-        Application.Current?.Dispatcher.Invoke(delegate
-        {
-            Consts.IsStartPanelWorkingNow = false;
-            bool isItOpening = true;
-            Start.RefreshOpenedCommand.Execute(new object[] { isShiftPressed, isItOpening });
-        });
-
-        isOpening = false;
-        source.Dispose();
-
-        //TODO: 7 narazie wrzucilem dzwiek do testu, ale trzeba tu dac cos kreatywniejszego moze
-        SystemSounds.Beep.Play();
+        Stopwatch.Stop();
     }
 }

@@ -1,4 +1,4 @@
-﻿using MultiOpener.Items;
+﻿using MultiOpener.Entities.Open;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;

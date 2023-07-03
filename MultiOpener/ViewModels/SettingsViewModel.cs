@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Commands.SettingsCommands;
-using MultiOpener.Items;
+using MultiOpener.Entities;
+using MultiOpener.Entities.Open;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels.Settings;
 using System;

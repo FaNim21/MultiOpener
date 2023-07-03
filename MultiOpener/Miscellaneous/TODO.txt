@@ -104,7 +104,7 @@
 
 [ ]- Dodac jakies proste guziki w panelu info dla kazdego openedProcess jak na przyklad otworz folder gdzie znajduje sie executable itp itd
 [X]- Zrobic TOOLTIPY dla wiekszasci opcji, dla wiekszej jasnosci jak co dziala (prawopodobnie narazie glowie dla opcji)
-[ ]- Zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
+[ ]?- Zrobic context menu dla itemow open zeby tam usunac poszczegolne panele lub je czyscic i cos tam jeszcze mozna dac wtedy sie zwolni miejsce po guzikach na dole
 
 [X]- Do Options dac opcje jak: AlwayeOnTop, MinimalizeAfterPresetOpen, ...
 
@@ -123,6 +123,10 @@
 - Zrobic wlasny typ okna, ktory bedzie sluzyl jako panel 'info' w start menu, ktory zaleznie od typu aplikacji bedzie wyswietlac panel dla danego typu z opcjami typu guziki do przejscia na strone ze statami dla reset tracker itp itd
 - W panelu info podstawowo oprocz tych informacji co sa juz teraz dac guziki typu open exe folder, dla instancji jeszcze dodatkowo guzik na odpalenie folderu dla danej instancji itp itd
 - Dodanie dzwiekow typu po otwiarciu presetu i ewntualnie po zamknieciu i jeszcze ewentualnie przy otwieraniu pojedynczynch procesow z panelu start
+- dodac wykrywanie czy wprowadzono zmiany w settings presetu zeby nie pytac za kazdym razem ze zmiany mogly zostac wprawadzone
+  - zrobic to w formie jak cos jest zmienione to bool na true, a jezeli wcisnie save to bool na false
+-- CONSOLE --
+- Uwzglednic wiecej parametrow wyswietlanych w konsoli jak bledy przy otwieraniu, udpate, czy odswiezaniu
 
 
 

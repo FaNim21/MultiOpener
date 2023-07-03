@@ -1,5 +1,5 @@
 ﻿using MultiOpener.Commands.StartCommands;
-using MultiOpener.Items;
+using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels;
 using System.Threading.Tasks;
 
@@ -27,23 +27,17 @@ namespace MultiOpener.Commands.OpenedCommands
             Consts.IsStartPanelWorkingNow = true;
 
             string output;
-            if (openedProcess.IsOpened())
+            if (openedProcess.IsOpenedFromStatus())
             {
                 output = $"Closed {openedProcess.Name}";
                 Start?.LogLine($"Closing {openedProcess.Name}");
-                bool result = await openedProcess.Close();
-
-                if (result)
-                {
-                    openedProcess.Clear();
-                    openedProcess.UpdateStatus();
-                }
+                await openedProcess.Close();
             }
             else
             {
                 output = $"Opened {openedProcess.Name}";
                 Start?.LogLine($"Opening {openedProcess.Name}");
-                await openedProcess.QuickOpen();
+                await openedProcess.OpenProcess();
             }
             await Task.Delay(100);
 

@@ -96,11 +96,11 @@ internal class OpeningTest
                     if (i == 2)
                     {
                         current.UpdateStatus();
-                        isScriptClosed = !current.IsOpened();
+                        isScriptClosed = !current.IsOpenedFromStatus();
                     }
                     else
                     {
-                        isRestOpened = current.IsOpened();
+                        isRestOpened = current.IsOpenedFromStatus();
                         if (!isRestOpened)
                             break;
                     }

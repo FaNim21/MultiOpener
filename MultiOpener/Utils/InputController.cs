@@ -36,6 +36,6 @@ public class InputController
     }
 
 
-    //TODO 9 w przyszlosci przerobic to na forme jakiejs petli/aktualizacji przy rzeczywistej potrzebie sprawdzania?
+    //TODO: 9 w przyszlosci przerobic to na forme jakiejs petli/aktualizacji przy rzeczywistej potrzebie sprawdzania?
     private void UpdateInputs() { }
 }

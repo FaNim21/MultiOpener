@@ -11,8 +11,10 @@ using System.Threading;
 using System;
 using System.Windows;
 using MultiOpener.Components.Controls;
+using MultiOpener.Entities.Opened;
 
-namespace MultiOpener.Items;
+namespace MultiOpener.Entities.Open;
+
 public class OpenInstance : OpenItem
 {
     public int DelayBetweenInstances { get; set; }
@@ -81,23 +83,20 @@ public class OpenInstance : OpenItem
         return output;
     }
 
-    public override async Task Open(OpenningProcessLoadingWindow? loading, CancellationTokenSource source, string infoText = "")
+    public override async Task Open(OpenningProcessLoadingWindow? loading, CancellationToken token, string infoText = "")
     {
-        List<OpenedProcess> mcInstances = new();
+        List<OpenedInstanceProcess> mcInstances = new();
         int openedCount = 0;
+
         try
         {
-            if (!source.IsCancellationRequested)
-            {
+            if (!token.IsCancellationRequested)
                 await Task.Delay(DelayBefore);
-            }
 
             for (int i = 0; i < Quantity; i++)
             {
-                if (!source.IsCancellationRequested)
-                {
+                if (!token.IsCancellationRequested)
                     await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances < 500 ? 500 : DelayBetweenInstances);
-                }
 
                 Application.Current?.Dispatcher.Invoke(delegate
                 {
@@ -105,35 +104,24 @@ public class OpenInstance : OpenItem
                     loading.progress.Value++;
                 });
 
-                ProcessStartInfo startInfo = new(PathExe)
-                {
-                    UseShellExecute = false,
-                    Arguments = $"--launch \"{Names[i]}\""
-                };
-
-                OpenedProcess opened = new();
+                ProcessStartInfo startInfo = new(PathExe) { UseShellExecute = false, Arguments = $"--launch \"{Names[i]}\"" };
+                OpenedInstanceProcess opened = new();
                 string path = (Path.GetDirectoryName(PathExe) + "\\instances\\" + Names[i]).Replace("\\", "/");
-                opened.isMCInstance = true;
+                opened.Initialize(startInfo, Names[i], path);
 
-                if (source.IsCancellationRequested)
-                    opened.Initialize(startInfo, Names[i], IntPtr.Zero, path);
-                else
+                if (!token.IsCancellationRequested)
                 {
                     openedCount++;
                     Process? process = Process.Start(startInfo);
-                    if (process != null)
-                    {
-                        process.WaitForInputIdle();
-                        opened.Initialize(startInfo, Names[i], process.Handle, path);
-                    }
+                    process?.WaitForInputIdle();
                 }
                 mcInstances.Add(opened);
             }
 
-            Regex mcPatternRegex = new(OpenedProcess.MCPattern);
-            List<IntPtr> instances = new();
+            Regex mcPatternRegex = OpenedInstanceProcess.MCPattern();
+            List<nint> instances = new();
 
-            if (!source.IsCancellationRequested)
+            if (!token.IsCancellationRequested)
             {
                 Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (loading datas)"); });
 
@@ -147,34 +135,17 @@ public class OpenInstance : OpenItem
                 } while (instances.Count < openedCount && errorCount < config.ErrorCount);
             }
 
+            await Task.Delay(1000);
+
             for (int i = 0; i < Quantity; i++)
             {
                 var current = mcInstances[i];
-                bool isFound = false;
-
-                for (int j = 0; j < instances.Count; j++)
-                {
-                    try
-                    {
-                        bool output = current.IsInstancePathEqual(instances[j]);
-                        if (output)
-                        {
-                            isFound = true;
-                            instances.Remove(instances[j]);
-                            break;
-                        }
-                    }
-                    catch { }
-                }
-
-                if (!isFound)
-                    current.Clear();
+                if (!current.FindInstance(instances)) current.Clear();
 
                 Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(current); });
             }
 
-
-            if (!source.IsCancellationRequested)
+            if (!token.IsCancellationRequested)
             {
                 Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (finalizing datas)"); });
                 await Task.Delay(DelayAfter + App.Config.TimeoutInstanceFinalizingData);
@@ -185,4 +156,6 @@ public class OpenInstance : OpenItem
             DialogBox.Show(e.ToString(), "", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+
+    public override ushort GetAdditionalProgressCount() => (ushort)Quantity;
 }

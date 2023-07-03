@@ -1,4 +1,4 @@
-﻿using MultiOpener.Items;
+﻿using MultiOpener.Entities.Open;
 using MultiOpener.ViewModels;
 
 namespace MultiOpener.Commands.SettingsCommands

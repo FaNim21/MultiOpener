@@ -1,4 +1,4 @@
-﻿using MultiOpener.Items;
+﻿using MultiOpener.Entities;
 using System;
 using System.Collections.ObjectModel;
 using System.Text;

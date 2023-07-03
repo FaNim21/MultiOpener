@@ -1,5 +1,5 @@
 ﻿using MultiOpener.Commands.OptionsCommands;
-using MultiOpener.Items.Options;
+using MultiOpener.Entities.Options;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -30,18 +30,6 @@ namespace MultiOpener.ViewModels
                 _timeoutOpen = value;
                 App.Config.TimeoutOpen = value;
                 OnPropertyChanged(nameof(TimeoutOpen));
-            }
-        }
-
-        private int _timeoutSingleOpen;
-        public int TimeoutSingleOpen
-        {
-            get { return _timeoutSingleOpen; }
-            set
-            {
-                _timeoutSingleOpen = value;
-                App.Config.TimeoutSingleOpen = value;
-                OnPropertyChanged(nameof(TimeoutSingleOpen));
             }
         }
 

@@ -26,7 +26,7 @@ namespace MultiOpener.Utils
 
                 if (latestRelease != null && !IsUpToDate(latestRelease.TagName, version))
                 {
-                    StartViewModel.Log($"Found new update - {latestRelease.TagName}", Items.ConsoleLineOption.Warning);
+                    StartViewModel.Log($"Found new update - {latestRelease.TagName}", Entities.ConsoleLineOption.Warning);
                     return true;
                 }
             }

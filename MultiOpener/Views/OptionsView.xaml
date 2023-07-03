@@ -119,7 +119,7 @@
                                        FontSize="16"
                                        Margin="80 0 0 0" />
                             </Grid>
-                            <Grid ToolTip="The time to stop looking for a window of the opening process after it cannot be found. It is applied when opening whole preset">
+                            <Grid ToolTip="The time to stop looking for a window of the opening process after it cannot be found. It applies when opening either the entire preset or selecting a quick opening.">
                                 <TextBox TextWrapping="Wrap"
                                          Text="{Binding TimeoutOpen}"
                                          Width="80"
@@ -128,22 +128,7 @@
                                          HorizontalAlignment="Left"
                                          PreviewTextInput="NumberValidationTextBox"
                                          MaxLength="5" />
-                                <Label Content="Opening timeout on every 'Open' in preset"
-                                       Foreground="White"
-                                       Height="32"
-                                       FontSize="16"
-                                       Margin="80 0 0 0" />
-                            </Grid>
-                            <Grid ToolTip="The time to stop looking for a window of the opening process after it cannot be found. It is applied when opening chosen 'open' in start panel">
-                                <TextBox TextWrapping="Wrap"
-                                         Text="{Binding TimeoutSingleOpen}"
-                                         Width="80"
-                                         Height="20"
-                                         Background="#9E9E9E"
-                                         HorizontalAlignment="Left"
-                                         PreviewTextInput="NumberValidationTextBox"
-                                         MaxLength="5" />
-                                <Label Content="Opening timeout on chosen opening"
+                                <Label Content="Opening timeout on default 'Open'"
                                        Foreground="White"
                                        Height="32"
                                        FontSize="16"

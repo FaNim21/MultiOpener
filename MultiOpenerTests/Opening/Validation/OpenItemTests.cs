@@ -1,4 +1,4 @@
-﻿using MultiOpener.Items;
+﻿using MultiOpener.Entities.Open;
 
 namespace MultiOpenerTests.Opening.Validation;
 

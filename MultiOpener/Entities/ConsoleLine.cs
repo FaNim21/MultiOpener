@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace MultiOpener.Items;
+namespace MultiOpener.Entities;
 
 public enum ConsoleLineOption
 {

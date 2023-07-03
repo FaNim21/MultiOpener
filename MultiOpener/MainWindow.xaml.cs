@@ -8,114 +8,113 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MultiOpener
+namespace MultiOpener;
+
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
+    //TODO: 2 Sprobowac przeniesc main viewModel do App.xaml.cs na bazie tego filmiku https://www.youtube.com/watch?v=dtq6qYlolh8 w 5:00
+    public MainViewModel MainViewModel { get; set; }
+
+    public MainWindow()
     {
-        //TODO: 2 Sprobowac przeniesc main viewModel do App.xaml.cs na bazie tego filmiku https://www.youtube.com/watch?v=dtq6qYlolh8 w 5:00
-        public MainViewModel MainViewModel { get; set; }
+        InitializeComponent();
+        labelVersion.Content = Consts.Version;
 
-        public MainWindow()
+        MainViewModel = new MainViewModel(this);
+        DataContext = MainViewModel;
+
+        if (Settings.Default.MainWindowLeft == -1 && Settings.Default.MainWindowTop == -1)
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        else
         {
-            InitializeComponent();
-            labelVersion.Content = Consts.Version;
-
-            MainViewModel = new MainViewModel(this);
-            DataContext = MainViewModel;
-
-            if (Settings.Default.MainWindowLeft == -1 && Settings.Default.MainWindowTop == -1)
-                WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            else
-            {
-                WindowStartupLocation = WindowStartupLocation.Manual;
-                Left = Settings.Default.MainWindowLeft;
-                Top = Settings.Default.MainWindowTop;
-            }
-
-            MainViewModel.settings.LoadStartUPPreset(Settings.Default.LastOpenedPresetName);
-
-            Task task = Task.Factory.StartNew(CheckForUpdates);
+            WindowStartupLocation = WindowStartupLocation.Manual;
+            Left = Settings.Default.MainWindowLeft;
+            Top = Settings.Default.MainWindowTop;
         }
 
-        public void EnableDisableChoosenHeadButton(string option)
-        {
-            StartButton.IsEnabled = true;
-            SettingsButton.IsEnabled = true;
-            OptionsButton.IsEnabled = true;
+        MainViewModel.settings.LoadStartUPPreset(Settings.Default.LastOpenedPresetName);
 
-            switch (option)
-            {
-                case "Start": StartButton.IsEnabled = false; break;
-                case "Settings": SettingsButton.IsEnabled = false; break;
-                case "Options": OptionsButton.IsEnabled = false; break;
-                default: Trace.WriteLine("Nieznana opcja: " + option); break;
-            }
+        Task task = Task.Factory.StartNew(CheckForUpdates);
+    }
+
+    public void EnableDisableChoosenHeadButton(string option)
+    {
+        StartButton.IsEnabled = true;
+        SettingsButton.IsEnabled = true;
+        OptionsButton.IsEnabled = true;
+
+        switch (option)
+        {
+            case "Start": StartButton.IsEnabled = false; break;
+            case "Settings": SettingsButton.IsEnabled = false; break;
+            case "Options": OptionsButton.IsEnabled = false; break;
+            default: Trace.WriteLine("Nieznana opcja: " + option); break;
+        }
+    }
+
+    private void HeaderMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton == MouseButton.Left)
+            DragMove();
+    }
+    private void MinimizeButtonsClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+    private void ExitButtonClick(object sender, RoutedEventArgs e)
+    {
+        if (!MainViewModel.start.OpenedIsEmpty())
+        {
+            MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener? There are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None);
+            if (result != MessageBoxResult.Yes)
+                return;
         }
 
-        private void HeaderMouseDown(object sender, MouseButtonEventArgs e)
+        if (MainViewModel.SelectedViewModel == MainViewModel.options)
+            MainViewModel.options.SaveOptions();
+
+        Close();
+    }
+
+    private void OnClosed(object sender, EventArgs e)
+    {
+        Settings.Default.MainWindowLeft = Left;
+        Settings.Default.MainWindowTop = Top;
+        Settings.Default.LastOpenedPresetName = MainViewModel.settings.PresetName;
+
+        Settings.Default.Save();
+
+        MainViewModel.start.ConsoleViewModel.ConsoleLines.Clear();
+    }
+
+    public void OnShow()
+    {
+        Show();
+        if (!App.Config.AlwaysOnTop)
         {
-            if (e.ChangedButton == MouseButton.Left)
-                DragMove();
+            Topmost = true;
+            Topmost = false;
         }
-        private void MinimizeButtonsClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
-        private void ExitButtonClick(object sender, RoutedEventArgs e)
+    }
+
+    private async Task CheckForUpdates()
+    {
+        var checker = new UpdateChecker();
+        bool output = false;
+
+        try
         {
-            if (!MainViewModel.start.OpenedIsEmpty())
-            {
-                MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener? There are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None);
-                if (result != MessageBoxResult.Yes)
-                    return;
-            }
-
-            if (MainViewModel.SelectedViewModel == MainViewModel.options)
-                MainViewModel.options.SaveOptions();
-
-            Close();
+            output = await checker.CheckForUpdates();
         }
-
-        private void OnClosed(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            Settings.Default.MainWindowLeft = Left;
-            Settings.Default.MainWindowTop = Top;
-            Settings.Default.LastOpenedPresetName = MainViewModel.settings.PresetName;
-
-            Settings.Default.Save();
-
-            MainViewModel.start.ConsoleViewModel.ConsoleLines.Clear();
+            Trace.WriteLine($"Failed to check for updates: {ex.Message}");
         }
 
-        public void OnShow()
+        Application.Current.Dispatcher.Invoke(delegate
         {
-            Show();
-            if (!App.Config.AlwaysOnTop)
-            {
-                Topmost = true;
-                Topmost = false;
-            }
-        }
-
-        private async Task CheckForUpdates()
-        {
-            var checker = new UpdateChecker();
-            bool output = false;
-
-            try
-            {
-                output = await checker.CheckForUpdates();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine($"Failed to check for updates: {ex.Message}");
-            }
-
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                UpdateButton.Visibility = output ? Visibility.Visible : Visibility.Hidden;
-            });
-        }
-        private void UpdateButtonClick(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest") { UseShellExecute = true });
-        }
+            UpdateButton.Visibility = output ? Visibility.Visible : Visibility.Hidden;
+        });
+    }
+    private void UpdateButtonClick(object sender, RoutedEventArgs e)
+    {
+        Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest") { UseShellExecute = true });
     }
 }

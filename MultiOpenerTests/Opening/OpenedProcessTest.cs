@@ -1,6 +1,6 @@
 ﻿using MultiOpener;
 using MultiOpener.Commands.OpenedCommands;
-using MultiOpener.Items;
+using MultiOpener.Entities.Opened;
 using System.Diagnostics;
 
 namespace MultiOpenerTests.Opening
@@ -27,7 +27,7 @@ namespace MultiOpenerTests.Opening
                 {
                     OpenedProcess opened = new(null);
                     string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
-                    opened.Initialize(startInfo, name!, process.Handle, _pathExe);
+                    opened.Initialize(startInfo, name!, _pathExe, process.Id);
 
                     int errors = 0;
                     while (!opened.SetHwnd() && errors < 15)

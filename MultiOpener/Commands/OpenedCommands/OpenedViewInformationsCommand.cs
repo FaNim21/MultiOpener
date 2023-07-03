@@ -1,5 +1,5 @@
 ﻿using MultiOpener.Components.Controls;
-using MultiOpener.Items;
+using MultiOpener.Entities.Opened;
 
 namespace MultiOpener.Commands.OpenedCommands
 {
