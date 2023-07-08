@@ -3,6 +3,7 @@ using MultiOpener.Entities;
 using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels.Controls;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels;
@@ -122,5 +123,14 @@ public class StartViewModel : BaseViewModel
             opened.FastUpdate();
         }
         LogLine("Tekst aktualizacji odpalania/zamykania czy odswiezania procesow w presecie");
+
+        Task.Run(async () =>
+        {
+            while (true)
+            {
+                LogLine("Tekst aktualizacji odpalania/zamykania czy odswiezania procesow w presecie");
+                await Task.Delay(200);
+            }
+        });
     }
 }

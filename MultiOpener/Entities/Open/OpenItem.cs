@@ -1,6 +1,5 @@
 ﻿using MultiOpener.Components.Controls;
 using MultiOpener.Entities.Opened;
-using MultiOpener.Utils;
 using MultiOpener.Windows;
 using System;
 using System.ComponentModel;

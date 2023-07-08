@@ -1,4 +1,5 @@
 ﻿using MultiOpener.Components.Controls;
+using MultiOpener.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -127,8 +128,16 @@ public class Win32
         {
             StringBuilder sb = new(256);
             GetWindowText(hWnd, sb, sb.Capacity);
-            if (titlePattern.IsMatch(sb.ToString()))
-                windows.Add(hWnd);
+
+            try
+            {
+                if (titlePattern.IsMatch(sb.ToString()))
+                    windows.Add(hWnd);
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                StartViewModel.Log("Error timeout while looking for window title match", Entities.ConsoleLineOption.Error);
+            }
 
             return true;
         }, IntPtr.Zero);

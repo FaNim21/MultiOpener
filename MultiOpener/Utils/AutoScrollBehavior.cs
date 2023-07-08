@@ -2,67 +2,68 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace MultiOpener.Utils
+namespace MultiOpener.Utils;
+
+public static class AutoScrollBehavior
 {
-    public static class AutoScrollBehavior
+    public static readonly DependencyProperty AutoScrollProperty =
+        DependencyProperty.RegisterAttached("AutoScroll", typeof(bool), typeof(AutoScrollBehavior), new PropertyMetadata(false, AutoScrollPropertyChanged));
+
+    private static bool userScrolledUp = false;
+
+    private static void AutoScrollPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
     {
-        public static readonly DependencyProperty AutoScrollProperty =
-            DependencyProperty.RegisterAttached("AutoScroll", typeof(bool), typeof(AutoScrollBehavior), new PropertyMetadata(false, AutoScrollPropertyChanged));
+        if (obj is not ScrollViewer scrollViewer) return;
 
-        public static void AutoScrollPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        if ((bool)args.NewValue)
         {
-            if (obj is not ScrollViewer scrollViewer) return;
+            scrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
+            scrollViewer.PreviewMouseWheel += ScrollViewer_PreviewMouseWheel;
 
-            if ((bool)args.NewValue)
-            {
-                scrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
-                scrollViewer.PreviewMouseWheel += ScrollViewer_PreviewMouseWheel;
-                if (IsScrollbarAtEnd(scrollViewer))
-                {
-                    scrollViewer.ScrollToEnd();
-                }
-            }
-            else
-            {
-                scrollViewer.ScrollChanged -= ScrollViewer_ScrollChanged;
-                scrollViewer.PreviewMouseWheel -= ScrollViewer_PreviewMouseWheel;
-            }
+            if (!userScrolledUp)
+                scrollViewer.ScrollToEnd();
         }
-
-        private static void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        else
         {
-            var scrollViewer = sender as ScrollViewer;
-            if (IsScrollbarAtEnd(scrollViewer!))
-            {
-                scrollViewer?.ScrollToBottom();
-            }
+            scrollViewer.ScrollChanged -= ScrollViewer_ScrollChanged;
+            scrollViewer.PreviewMouseWheel -= ScrollViewer_PreviewMouseWheel;
         }
+    }
 
-        private static void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (sender is ScrollViewer scrollViewer)
-            {
-                double scrollingFactor = 0.01;
-                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta * scrollingFactor);
-                e.Handled = true;
-            }
-        }
+    private static void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+    {
+        var scrollViewer = sender as ScrollViewer;
+        if (e.VerticalChange != 0)
+            userScrolledUp = UpdateUserScrollFlag(scrollViewer!);
 
-        private static bool IsScrollbarAtEnd(ScrollViewer scrollViewer)
-        {
-            double verticalOffset = scrollViewer.VerticalOffset;
-            double maxVerticalOffset = scrollViewer.ExtentHeight - scrollViewer.ViewportHeight;
-            return verticalOffset >= maxVerticalOffset - 1;
-        }
+        if (!userScrolledUp && (e.ExtentHeightChange > 0 || e.ViewportHeightChange > 0))
+            scrollViewer?.ScrollToEnd();
+    }
 
-        public static bool GetAutoScroll(DependencyObject obj)
+    private static void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        var scrollViewer = sender as ScrollViewer;
+        if (scrollViewer != null)
         {
-            return (bool)obj.GetValue(AutoScrollProperty);
-        }
+            double scrollingFactor = 0.01;
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta * scrollingFactor);
+            e.Handled = true;
 
-        public static void SetAutoScroll(DependencyObject obj, bool value)
-        {
-            obj.SetValue(AutoScrollProperty, value);
+            userScrolledUp = UpdateUserScrollFlag(scrollViewer!);
         }
+    }
+
+    private static bool UpdateUserScrollFlag(ScrollViewer scrollViewer)
+    {
+        return scrollViewer.VerticalOffset < scrollViewer.ScrollableHeight;
+    }
+
+    public static bool GetAutoScroll(DependencyObject obj)
+    {
+        return (bool)obj.GetValue(AutoScrollProperty);
+    }
+    public static void SetAutoScroll(DependencyObject obj, bool value)
+    {
+        obj.SetValue(AutoScrollProperty, value);
     }
 }

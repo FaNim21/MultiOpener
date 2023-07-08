@@ -23,6 +23,10 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
+            StartViewModel.Log("Wiadmosc Testowa 1");
+            StartViewModel.Log("Wiadmosc Testowa 2");
+            StartViewModel.Log("Wiadmosc Testowa 3");
+
             if (Start == null) return;
 
             if (isRunning)
@@ -63,7 +67,7 @@ namespace MultiOpener.Commands.StartCommands
                 string textInfo = $"({i + 1}/{length} - {current.Name})";
 
                 if (App.Input.IsShiftPressed || isShiftPressed)
-                    await FastRefresh(current, textInfo);
+                    FastRefresh(current, textInfo);
                 else
                     await NormalRefresh(current, textInfo);
             }
@@ -92,16 +96,12 @@ namespace MultiOpener.Commands.StartCommands
 
             current.Update();
             await current.UpdateAsync(token);
-
-            await Task.Delay(100);
         }
-        private async Task FastRefresh(OpenedProcess current, string textInfo)
+        private void FastRefresh(OpenedProcess current, string textInfo)
         {
             Start?.LogLine($"Fast Refreshing {textInfo}");
 
             current.FastUpdate();
-
-            await Task.Delay(25);
         }
     }
 }

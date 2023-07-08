@@ -126,6 +126,6 @@ public partial class OpenedInstanceProcess : OpenedProcess
         return false;
     }
 
-    [GeneratedRegex("Minecraft\\*\\s+(\\s+-\\s+instance)?\\s*(?:\\d+(\\.\\d+)+|\\d+)")]
+    [GeneratedRegex("Minecraft\\*\\s+(\\s+-\\s+instance)?\\s*(?:\\d+(\\.\\d+)+|\\d+)", RegexOptions.NonBacktracking | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]
     public static partial Regex MCPattern();
 }
