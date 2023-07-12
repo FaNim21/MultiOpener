@@ -23,10 +23,6 @@ namespace MultiOpener.Commands.StartCommands
 
         public override void Execute(object? parameter)
         {
-            StartViewModel.Log("Wiadmosc Testowa 1");
-            StartViewModel.Log("Wiadmosc Testowa 2");
-            StartViewModel.Log("Wiadmosc Testowa 3");
-
             if (Start == null) return;
 
             if (isRunning)

@@ -121,19 +121,16 @@ public class OpenInstance : OpenItem
             Regex mcPatternRegex = OpenedInstanceProcess.MCPattern();
             List<nint> instances = new();
 
-            if (!token.IsCancellationRequested)
-            {
-                Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (loading datas)"); });
+            Application.Current?.Dispatcher.Invoke(delegate { loading!.SetText($"{infoText} (loading datas)"); });
 
-                int errorCount = -1;
-                var config = new TimeoutConfigurator(App.Config.TimeoutLookingForInstancesData, 30);
-                do
-                {
-                    errorCount++;
-                    instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
-                    await Task.Delay(TimeSpan.FromMilliseconds(config.Cooldown));
-                } while (instances.Count < openedCount && errorCount < config.ErrorCount);
-            }
+            int errorCount = -1;
+            var config = new TimeoutConfigurator(App.Config.TimeoutLookingForInstancesData, 30);
+            do
+            {
+                errorCount++;
+                instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
+                await Task.Delay(TimeSpan.FromMilliseconds(config.Cooldown));
+            } while (instances.Count < openedCount && errorCount < config.ErrorCount);
 
             await Task.Delay(1000);
 

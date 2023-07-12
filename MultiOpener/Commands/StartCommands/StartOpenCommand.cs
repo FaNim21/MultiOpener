@@ -1,10 +1,14 @@
 ﻿using MultiOpener.Components.Controls;
 using MultiOpener.Entities;
+using MultiOpener.Entities.Open;
+using MultiOpener.Entities.Opened;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using MultiOpener.Windows;
 using System;
 using System.Diagnostics;
 using System.Media;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -41,6 +45,12 @@ public class StartOpenCommand : StartCommandBase
         if (Start.OpenButtonName.Equals("CLOSE"))
         {
             Start.CloseCommand.Execute(null);
+            return;
+        }
+
+        if (Start.OpenButtonName.Equals("START") && !Start.OpenedIsEmpty())
+        {
+            Start.OpenButtonName = "CLOSE";
             return;
         }
 
@@ -103,11 +113,52 @@ public class StartOpenCommand : StartCommandBase
                 Application.Current.Dispatcher.Invoke(delegate { Start!.OpenButtonName = "OPEN"; });
                 return;
             }
+
+            //TODO: 9 Czy to jakkolwiek jest potrzebne?????
+            if (current.GetType() == typeof(OpenInstance))
+            {
+                if (Start?.MultiMC == null)
+                {
+                    try
+                    {
+                        Process[] mc = Process.GetProcessesByName("MultiMC");
+                        if (mc != null && mc.Length > 0)
+                        {
+                            mc[0].Kill();
+                            mc[0].WaitForExit();
+                        }
+
+                        ProcessStartInfo startInfo = new(current.PathExe) { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Minimized };
+                        Process? process = Process.Start(startInfo);
+                        if (process != null)
+                        {
+                            process.WaitForInputIdle();
+
+                            OpenedProcess open = new();
+                            open.SetPid(process.Id);
+                            Start!.MultiMC = open;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        DialogBox.Show(e.ToString());
+                    }
+                }
+
+                progressLength += ((OpenInstance)current).Quantity;
+            }
         }
     }
 
     public async Task Finalize()
     {
+        //Destroying MultiMC if there was Instances as type in Opens
+        if (Start?.MultiMC != null)
+        {
+            await Start.MultiMC.Close();
+            Start.MultiMC = null;
+        }
+
         Application.Current?.Dispatcher.Invoke(delegate
         {
             loadingProcesses!.Close();
@@ -117,11 +168,9 @@ public class StartOpenCommand : StartCommandBase
             if (Start!.OpenedIsEmpty())
                 Start.OpenButtonName = "OPEN";
         });
-        await Task.Delay(50);
 
         //Late Refresh
         StartViewModel.Log($"Opened Preset {Settings!.PresetName} in {Math.Round(Stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
-        await Task.Delay(50);
         if (!isShiftPressed)
         {
             Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Log("Attempting to first Auto-Refresh", ConsoleLineOption.Warning); });
