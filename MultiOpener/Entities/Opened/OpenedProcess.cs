@@ -61,6 +61,7 @@ public class OpenedProcess : INotifyPropertyChanged
     public ICommand ViewInformationsCommand { get; private set; }
     public ICommand ResetCommand { get; private set; }
     public ICommand CloseOpenCommand { get; private set; }
+    public ICommand FocusCommand { get; private set; }
 
 
     public OpenedProcess(StartViewModel? start = null)
@@ -76,6 +77,7 @@ public class OpenedProcess : INotifyPropertyChanged
         ViewInformationsCommand = new OpenedViewInformationsCommand(this);
         ResetCommand = new OpenedResetCommand(this, start);
         CloseOpenCommand = new OpenedCloseOpenCommand(this, start);
+        FocusCommand = new OpenedFocusCommand(this, start);
     }
 
     public void Initialize(ProcessStartInfo? processStartInfo, string name, string path, bool isMinimizeOnOpen, int pid = -1)
@@ -268,9 +270,18 @@ public class OpenedProcess : INotifyPropertyChanged
 
         try
         {
-            bool output = await Win32.CloseProcessByHwnd(Hwnd);
-            if (!output)
+            bool output = false;
+
+            Process process = Process.GetProcessById(Pid);
+            if (!process.Responding)
                 output = await Win32.CloseProcessByPid(Pid);
+
+            if (!output)
+            {
+                output = await Win32.CloseProcessByHwnd(Hwnd);
+                if (!output)
+                    output = await Win32.CloseProcessByPid(Pid);
+            }
 
             Clear();
             return output;

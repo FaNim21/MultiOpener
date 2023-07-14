@@ -51,9 +51,16 @@ public class Win32
     [DllImport("user32.dll")]
     private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+    [DllImport("user32.dll")]
+    public static extern bool IsIconic(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    public static extern bool SetForegroundWindow(IntPtr hWnd);
+
 
     private const int SW_SHOWMINIMIZED = 2;
     private const int WM_CLOSE = 0x0010;
+    private const int SW_RESTORE = 0x09;
     private const int SMTO_ABORTIFHUNG = 0x0002;
     #endregion
 
@@ -258,11 +265,23 @@ public class Win32
 
         ShowWindow(hwnd, SW_SHOWMINIMIZED);
     }
+    public static void UnminimizeWindowHwnd(IntPtr hWnd)
+    {
+        if (hWnd == IntPtr.Zero) return;
+
+        if (IsIconic(hWnd))
+            ShowWindow(hWnd, SW_RESTORE);
+    }
 
     public static bool WindowExist(IntPtr hwnd)
     {
         if (hwnd == IntPtr.Zero) return false;
 
         return IsWindow(hwnd);
+    }
+
+    public static void SetFocus(IntPtr hWnd)
+    {
+        SetForegroundWindow(hWnd);
     }
 }
