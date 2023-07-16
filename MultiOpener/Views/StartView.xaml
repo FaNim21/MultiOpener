@@ -66,7 +66,9 @@
                 </Grid>
             </Border>
         </DataTemplate>
+
     </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="200" />
@@ -80,14 +82,15 @@
                    FontSize="18"
                    Height="40"
                    VerticalAlignment="top"
-                   HorizontalContentAlignment="Center" />
+                   HorizontalContentAlignment="Center"
+                   Margin="150 0 150 0" />
 
             <local:ButtonNormal x:Name="OpenButton"
                                 Width="100"
                                 Height="35"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
-                                Margin="20 35 0 0"
+                                Margin="20 10 0 0"
                                 ContentText="{Binding OpenButtonName}"
                                 IsEnabled="{Binding OpenButtonEnabled}"
                                 OnCommand="{Binding OpenCommand}"
@@ -96,11 +99,33 @@
                                 Width="100"
                                 Height="25"
                                 FontSize="17"
-                                HorizontalAlignment="Right"
+                                HorizontalAlignment="left"
                                 VerticalAlignment="Top"
                                 ContentText="{Binding RefreshButtonName}"
                                 OnCommand="{Binding RefreshOpenedCommand}"
-                                Margin="0 40 20 0" />
+                                Margin="20 45 0 0" />
+
+            <local:ButtonConsole x:Name="SaveConsole"
+                                 Width="60"
+                                 Height="20"
+                                 FontSize="12"
+                                 HorizontalAlignment="Right"
+                                 VerticalAlignment="Top"
+                                 ButtonText="SAVE"
+                                 Padding="0"
+                                 OnConsoleCommand="{Binding SaveConsoleCommand}"
+                                 Margin="0 55 70 0" />
+
+            <local:ButtonConsole x:Name="ClearConsole"
+                                 Width="60"
+                                 Height="25"
+                                 FontSize="12"
+                                 HorizontalAlignment="Right"
+                                 VerticalAlignment="Top"
+                                 ButtonText="CLEAR"
+                                 Padding="0"
+                                 OnConsoleCommand="{Binding ClearConsoleCommand}"
+                                 Margin="0 55 5 0" />
 
             <controls:ConsoleLineOutputControl DataContext="{Binding ConsoleViewModel}"
                                                Height="120"
@@ -130,6 +155,10 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </ScrollViewer>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <!-- TU BEDZIE NOWY LOADING -->
         </Grid>
     </Grid>
 </UserControl>

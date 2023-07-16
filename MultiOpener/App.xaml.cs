@@ -10,7 +10,6 @@ public partial class App : Application
 
     public static InputController Input { get; set; } = new();
 
-    public int Elo = 10;
 
     public App()
     {

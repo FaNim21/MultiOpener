@@ -52,4 +52,9 @@ public class ConsoleViewModel : BaseViewModel
             OnPropertyChanged(nameof(ConsoleLines));
         });
     }
+
+    public void Clear()
+    {
+        ConsoleLines?.Clear();
+    }
 }

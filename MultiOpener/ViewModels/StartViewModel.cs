@@ -20,6 +20,9 @@ public class StartViewModel : BaseViewModel
     public ICommand OpenCommand { get; set; }
     public ICommand CloseCommand { get; set; }
     public ICommand RefreshOpenedCommand { get; set; }
+    public ICommand SaveConsoleCommand { get; set; }
+    public ICommand ClearConsoleCommand { get; set; }
+
 
     private string _openButtonName = "OPEN";
     public string OpenButtonName
@@ -75,6 +78,8 @@ public class StartViewModel : BaseViewModel
         OpenCommand = new StartOpenCommand(this, mainWindow);
         CloseCommand = new StartCloseCommand(this);
         RefreshOpenedCommand = new StartRefreshOpenedCommand(this);
+        SaveConsoleCommand = new StartSaveConsoleCommand(this);
+        ClearConsoleCommand = new StartClearConsoleCommand(this);
 
         Opened = new ObservableCollection<OpenedProcess>();
 
