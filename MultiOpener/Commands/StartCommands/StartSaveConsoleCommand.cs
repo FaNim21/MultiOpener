@@ -10,6 +10,8 @@ class StartSaveConsoleCommand : StartCommandBase
 
     public override void Execute(object? parameter)
     {
-        //TODO: 0 zaimplementowac odswiezanie
+        if (Start == null) return;
+
+        Start.ConsoleViewModel.Save();
     }
 }

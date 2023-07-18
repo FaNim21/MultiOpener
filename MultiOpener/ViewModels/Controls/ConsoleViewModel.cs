@@ -1,22 +1,29 @@
 ﻿using MultiOpener.Entities;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
 namespace MultiOpener.ViewModels.Controls;
 
-/// <summary>
-/// TODO: 1 Give console option to save logs or clear or just save and clear
-/// </summary>
+
 public class ConsoleViewModel : BaseViewModel
 {
     public ObservableCollection<ConsoleLine> ConsoleLines { get; set; }
 
+    private readonly string logPath;
+
     public ConsoleViewModel()
     {
         ConsoleLines = new ObservableCollection<ConsoleLine>();
+
+        logPath = Path.Combine(Consts.AppdataPath, "Logs");
+
+        if (!Directory.Exists(logPath))
+            Directory.CreateDirectory(logPath);
     }
 
     public void ProcessCommandLine(string text, ConsoleLineOption option = ConsoleLineOption.Normal)
@@ -51,6 +58,28 @@ public class ConsoleViewModel : BaseViewModel
             ConsoleLines?.Add(consoleLine);
             OnPropertyChanged(nameof(ConsoleLines));
         });
+    }
+
+    public void Save()
+    {
+        string date = DateTime.Now.ToString("yyyy-MM-dd_HH.mm");
+        string fileName = $"{date}.txt";
+
+        int count = 1;
+        while (File.Exists(logPath + "\\" + fileName))
+        {
+            fileName = $"{date} [{count}].txt";
+            count++;
+        }
+
+        List<string> lines = new();
+        foreach (var line in ConsoleLines)
+        {
+            if (string.IsNullOrEmpty(line.Text)) continue;
+            lines.Add(line.Text);
+        }
+
+        File.WriteAllLines(logPath + "\\" + fileName, lines);
     }
 
     public void Clear()
