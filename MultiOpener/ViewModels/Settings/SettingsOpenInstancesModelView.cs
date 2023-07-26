@@ -18,6 +18,7 @@ namespace MultiOpener.ViewModels.Settings
             get { return _quantity; }
             set
             {
+                PresetIsNotSaved();
                 _quantity = value;
                 OnPropertyChanged(nameof(Quantity));
             }
@@ -29,6 +30,7 @@ namespace MultiOpener.ViewModels.Settings
             get { return _delayBetweenInstances; }
             set
             {
+                PresetIsNotSaved();
                 _delayBetweenInstances = value;
                 OnPropertyChanged(nameof(DelayBetweenInstances));
             }
@@ -36,7 +38,7 @@ namespace MultiOpener.ViewModels.Settings
 
         public ICommand SettingsInstanceOpenSetupCommand { get; set; }
 
-        public SettingsOpenInstancesModelView() : base()
+        public SettingsOpenInstancesModelView(SettingsViewModel settingsViewModel) : base(settingsViewModel)
         {
             SettingsInstanceOpenSetupCommand = new SettingsInstanceOpenSetupCommand(this);
 
@@ -45,14 +47,14 @@ namespace MultiOpener.ViewModels.Settings
 
         public override void UpdatePanelField(OpenItem currentChosen)
         {
-            base.UpdatePanelField(currentChosen);
-
             if (currentChosen is OpenInstance instance)
             {
                 Quantity = instance.Quantity;
                 instanceNames = instance.Names;
                 DelayBetweenInstances = instance.DelayBetweenInstances;
             }
+
+            base.UpdatePanelField(currentChosen);
         }
 
         public override void SetOpenProperties(ref OpenItem open)

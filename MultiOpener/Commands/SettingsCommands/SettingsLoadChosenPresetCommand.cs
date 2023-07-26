@@ -24,10 +24,8 @@ namespace MultiOpener.Commands.SettingsCommands
                     Settings.LoadOpenList(Settings.CurrentLoadedChosen.Name);
                 else
                 {
-                    if (DialogBox.Show($"Are you sure you want to that load preset?\nYou might not saved previous!", "Loading Preset", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                    {
+                    if (Settings.IsCurrentPresetSaved || DialogBox.Show($"Are you sure you want to load this preset?\nYou didn't save the previous one!", "Loading Preset", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                         Settings.LoadOpenList(Settings.CurrentLoadedChosen.Name);
-                    }
                 }
             }
         }

@@ -11,6 +11,9 @@ namespace MultiOpener.Entities.Opened;
 
 public partial class OpenedInstanceProcess : OpenedProcess
 {
+    public short number = -1;
+
+
     public override void FastUpdate()
     {
         base.FastUpdate();
@@ -18,21 +21,21 @@ public partial class OpenedInstanceProcess : OpenedProcess
 
     public override void Update()
     {
-        base.Update();
+        base.FastUpdate();
     }
 
     public override void UpdateTitle()
     {
         if (Hwnd == nint.Zero)
         {
-            WindowTitle = System.IO.Path.GetFileName(Path);
+            WindowTitle = $"[{number}] "+ System.IO.Path.GetFileName(Path);
             return;
         }
 
         string title = Win32.GetWindowTitle(Hwnd);
 
         if (!string.IsNullOrEmpty(title))
-            WindowTitle = title;
+            WindowTitle = $"[{number}] " + title;
 
         if (string.IsNullOrEmpty(WindowTitle))
             WindowTitle = "Unknown";
@@ -104,7 +107,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
             }
             catch
             {
-                StartViewModel.Log("Erorr at FindInstance", ConsoleLineOption.Error);
+                StartViewModel.Log("Error at FindInstance", ConsoleLineOption.Error);
             }
         }
 

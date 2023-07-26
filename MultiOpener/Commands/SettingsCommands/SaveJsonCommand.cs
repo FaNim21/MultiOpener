@@ -56,6 +56,7 @@ namespace MultiOpener.Commands.SettingsCommands
             File.WriteAllText(Settings.directoryPath + "\\" + saveName + ".json", data);
 
             Settings.UpdatePresetsComboBox(saveName + ".json");
+            Settings.IsCurrentPresetSaved = true;
         }
     }
 }

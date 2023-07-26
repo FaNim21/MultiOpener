@@ -14,7 +14,7 @@ namespace MultiOpener.Commands.SettingsCommands
         {
             if (Settings == null) return;
 
-            if (DialogBox.Show($"Are you sure you want to create empty preset?\nUnsaved changed will be lost!", $"Creating empty preset", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (Settings.IsCurrentPresetSaved || DialogBox.Show($"Are you sure you want to create empty preset?\nUnsaved changed will be lost!", $"Creating empty preset", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 Settings.CreateEmptyPreset();
         }
     }

@@ -165,6 +165,7 @@ public class OpenedProcess : INotifyPropertyChanged
             else
                 Clear();
 
+            FindProcessByStartInfo();
             //TODO: 0 Tu zrobic szukanie procesu z podobnymi danymi ProcessStartInfo
         }
 
@@ -220,6 +221,27 @@ public class OpenedProcess : INotifyPropertyChanged
         return true;
     }
 
+    public void FindProcessByStartInfo()
+    {
+        //TODO: Zrobic to kiedy indziej bo jest tu duzo zaleznosci i problemow z javaw czy wieloma procesami chrome itp itd :d
+        Process[] processes = Process.GetProcessesByName(ProcessStartInfo?.FileName);
+        foreach (Process process in processes)
+        {
+            try
+            {
+                if (process.MainModule != null && process.StartInfo.FileName == ProcessStartInfo?.FileName && process.StartInfo.Arguments == ProcessStartInfo?.Arguments)
+                {
+                    SetPid(process.Id);
+                    SetHwnd(process.MainWindowHandle);
+                }
+            }
+            catch (Exception)
+            {
+                StartViewModel.Log($"Error occurred  looking for opened {Name}", ConsoleLineOption.Error);
+            }
+        }
+    }
+
     public virtual async Task OpenProcess(CancellationToken token = default)
     {
         if (ProcessStartInfo == null) return;
@@ -273,6 +295,7 @@ public class OpenedProcess : INotifyPropertyChanged
             bool output = false;
 
             Process process = Process.GetProcessById(Pid);
+
             if (!process.Responding)
                 output = await Win32.CloseProcessByPid(Pid);
 

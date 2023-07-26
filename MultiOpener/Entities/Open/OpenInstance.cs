@@ -108,6 +108,7 @@ public class OpenInstance : OpenItem
                 OpenedInstanceProcess opened = new();
                 string path = (Path.GetDirectoryName(PathExe) + "\\instances\\" + Names[i]).Replace("\\", "/");
                 opened.Initialize(startInfo, Names[i], path);
+                opened.number = (short)(i + 1);
 
                 if (!token.IsCancellationRequested)
                 {
@@ -132,7 +133,8 @@ public class OpenInstance : OpenItem
                 await Task.Delay(TimeSpan.FromMilliseconds(config.Cooldown));
             } while (instances.Count < openedCount && errorCount < config.ErrorCount);
 
-            await Task.Delay(1000);
+            if (!token.IsCancellationRequested)
+                await Task.Delay(1000);
 
             for (int i = 0; i < Quantity; i++)
             {

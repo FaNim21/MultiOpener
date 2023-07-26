@@ -144,8 +144,6 @@ public class StartOpenCommand : StartCommandBase
                         DialogBox.Show(e.ToString());
                     }
                 }
-
-                progressLength += ((OpenInstance)current).Quantity;
             }
         }
     }

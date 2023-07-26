@@ -24,6 +24,7 @@ namespace MultiOpener.Commands.SettingsCommands
 
             Settings.AddItem(newOpen);
             Settings.AddNameField = "";
+            Settings.IsCurrentPresetSaved = false;
         }
     }
 }

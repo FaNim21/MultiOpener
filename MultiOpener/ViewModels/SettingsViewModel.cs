@@ -7,6 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels
@@ -67,12 +68,16 @@ namespace MultiOpener.ViewModels
                         }
                     }
 
+                    if(SelectedOpenTypeViewModel != null && !Consts.IsSwitchingBetweenOpensInSettings)
+                        IsCurrentPresetSaved = false;
+
                     switch (value)
                     {
-                        case OpenType.Normal: SelectedOpenTypeViewModel = new SettingsOpenNormalModelView(); break;
-                        case OpenType.InstancesMultiMC: SelectedOpenTypeViewModel = new SettingsOpenInstancesModelView(); break;
+                        case OpenType.Normal: SelectedOpenTypeViewModel = new SettingsOpenNormalModelView(this); break;
+                        case OpenType.InstancesMultiMC: SelectedOpenTypeViewModel = new SettingsOpenInstancesModelView(this); break;
                     }
                     _chooseTypeBox = value;
+                    Consts.IsSwitchingBetweenOpensInSettings = false;
                     OnPropertyChanged(nameof(ChooseTypeBox));
                 }
                 SelectedOpenTypeViewModel?.UpdatePanelField(CurrentChosen!);
@@ -120,6 +125,20 @@ namespace MultiOpener.ViewModels
             {
                 _openNameLabel = value;
                 OnPropertyChanged(nameof(OpenNameLabel));
+            }
+        }
+
+        private bool _isCurrentPresetSaved = true;
+        public bool IsCurrentPresetSaved
+        {
+            get { return _isCurrentPresetSaved; }
+            set
+            {
+                if (_isCurrentPresetSaved && !value)
+                    ((MainWindow)Application.Current.MainWindow).ChangePresetTitle("Preset*");
+                else if (!IsCurrentPresetSaved && value)
+                    ((MainWindow)Application.Current.MainWindow).ChangePresetTitle("Preset");
+                _isCurrentPresetSaved = value;
             }
         }
 

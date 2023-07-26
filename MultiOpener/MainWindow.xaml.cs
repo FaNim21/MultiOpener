@@ -62,7 +62,14 @@ public partial class MainWindow : Window
     {
         if (!MainViewModel.start.OpenedIsEmpty())
         {
-            MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener? There are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None);
+            MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener?\nThere are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None);
+            if (result != MessageBoxResult.Yes)
+                return;
+        }
+
+        if (!MainViewModel.settings.IsCurrentPresetSaved)
+        {
+            MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener?\nUnsaved changed in preset will be lost!.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None);
             if (result != MessageBoxResult.Yes)
                 return;
         }
@@ -116,5 +123,10 @@ public partial class MainWindow : Window
     private void UpdateButtonClick(object sender, RoutedEventArgs e)
     {
         Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest") { UseShellExecute = true });
+    }
+
+    public void ChangePresetTitle(string name)
+    {
+        SettingsButton.ContentText = name;
     }
 }

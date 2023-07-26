@@ -46,6 +46,7 @@ namespace MultiOpener.Views
             var item = sender as ListViewItem;
             if (item != null)
             {
+                Consts.IsSwitchingBetweenOpensInSettings = true;
                 Keyboard.Focus((IInputElement)sender);
                 OnListItemClickCommand?.Execute((OpenItem)item.DataContext);
             }

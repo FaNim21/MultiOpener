@@ -12,7 +12,10 @@ namespace MultiOpener.Commands.SettingsCommands
 
             Settings.LeftPanelGridVisibility = false;
             if (Settings.CurrentChosen != null)
+            {
                 Settings.RemoveItem(Settings.CurrentChosen);
+                Settings.IsCurrentPresetSaved = false;
+            }
         }
     }
 }

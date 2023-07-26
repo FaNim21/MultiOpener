@@ -7,7 +7,7 @@ namespace MultiOpener.ViewModels.Settings
     {
         public override Type ItemType { get; set; } = typeof(OpenItem);
 
-        public SettingsOpenNormalModelView() : base()
+        public SettingsOpenNormalModelView(SettingsViewModel settingsViewModel) : base(settingsViewModel)
         {
             
         }

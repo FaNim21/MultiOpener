@@ -15,6 +15,7 @@ namespace MultiOpener.ViewModels.Settings
             get { return _applicationPathField; }
             set
             {
+                PresetIsNotSaved();
                 _applicationPathField = value;
                 OnPropertyChanged(nameof(ApplicationPathField));
             }
@@ -26,6 +27,7 @@ namespace MultiOpener.ViewModels.Settings
             get { return _delayAfterTimeField; }
             set
             {
+                PresetIsNotSaved();
                 _delayAfterTimeField = value;
                 OnPropertyChanged(nameof(DelayAfterTimeField));
             }
@@ -37,6 +39,7 @@ namespace MultiOpener.ViewModels.Settings
             get { return _delayBeforeTimeField; }
             set
             {
+                PresetIsNotSaved();
                 _delayBeforeTimeField = value;
                 OnPropertyChanged(nameof(DelayBeforeTimeField));
             }
@@ -48,6 +51,7 @@ namespace MultiOpener.ViewModels.Settings
             get { return _minimizeOnOpen; }
             set
             {
+                PresetIsNotSaved();
                 _minimizeOnOpen = value;
                 OnPropertyChanged(nameof(MinimizeOnOpen));
             }
@@ -55,10 +59,24 @@ namespace MultiOpener.ViewModels.Settings
 
         public ICommand SettingsSetDirectoryPathCommand { get; set; }
 
+        protected SettingsViewModel settingsViewModel;
 
-        protected OpenTypeViewModelBase()
+        private bool _wasSavedPreviously = false;
+
+        protected OpenTypeViewModelBase(SettingsViewModel settingsViewModel)
         {
+            this.settingsViewModel = settingsViewModel;
+            _wasSavedPreviously = true;
+
             SettingsSetDirectoryPathCommand = new SettingsSetDirectoryPathCommand(this);
+        }
+
+        protected void PresetIsNotSaved()
+        {
+            if (_wasSavedPreviously)
+                return;
+
+            settingsViewModel.IsCurrentPresetSaved = false;
         }
 
         public virtual void UpdatePanelField(OpenItem currentChosen)
@@ -67,6 +85,8 @@ namespace MultiOpener.ViewModels.Settings
             DelayBeforeTimeField = currentChosen.DelayBefore.ToString();
             DelayAfterTimeField = currentChosen.DelayAfter.ToString();
             MinimizeOnOpen = currentChosen.MinimizeOnOpen;
+
+            _wasSavedPreviously = false;
         }
 
         public virtual void SetOpenProperties(ref OpenItem open)
