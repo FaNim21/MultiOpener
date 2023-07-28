@@ -284,4 +284,20 @@ public class Win32
     {
         SetForegroundWindow(hWnd);
     }
+
+    public static bool IsProcessResponding(int pid)
+    {
+        if (pid <= 0) return true;
+
+        try
+        {
+            Process? process = Process.GetProcessById(pid);
+            if (process != null && !process.HasExited)
+            {
+                return process.Responding;
+            }
+        }catch (Exception) { }
+
+        return false;
+    }
 }

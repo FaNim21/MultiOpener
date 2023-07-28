@@ -18,10 +18,14 @@ public partial class OpenedInstanceProcess : OpenedProcess
     {
         base.FastUpdate();
     }
-
     public override void Update()
     {
         base.FastUpdate();
+    }
+    public override async Task UpdateAsync(CancellationToken token = default)
+    {
+        if (!IsOpenedFromStatus())
+            await SearchForSingleMCInstance(token);
     }
 
     public override void UpdateTitle()
@@ -32,19 +36,15 @@ public partial class OpenedInstanceProcess : OpenedProcess
             return;
         }
 
-        string title = Win32.GetWindowTitle(Hwnd);
+        string title = $"[{number}] " + Win32.GetWindowTitle(Hwnd);
+        if (!Win32.IsProcessResponding(Pid))
+            title = "(Not Reponding)" + title;
 
         if (!string.IsNullOrEmpty(title))
-            WindowTitle = $"[{number}] " + title;
+            WindowTitle = title;
 
         if (string.IsNullOrEmpty(WindowTitle))
             WindowTitle = "Unknown";
-    }
-
-    public override async Task UpdateAsync(CancellationToken source = default)
-    {
-        if (!IsOpenedFromStatus())
-            await SearchForSingleMCInstance(source);
     }
 
     public override async Task OpenProcess(CancellationToken token = default)
@@ -83,7 +83,11 @@ public partial class OpenedInstanceProcess : OpenedProcess
             if (token.IsCancellationRequested) return false;
 
             errorCount++;
-            await Task.Delay(config.Cooldown, CancellationToken.None);
+
+            try
+            {
+                await Task.Delay(config.Cooldown, token);
+            }catch (Exception) { }
 
             instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
             isHwndFound = FindInstance(instances);

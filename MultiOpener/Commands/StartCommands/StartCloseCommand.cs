@@ -57,8 +57,7 @@ namespace MultiOpener.Commands.StartCommands
                         });
                         Start.LogLine($"{output}Removed {current.Name}");
                     }
-
-                    await Task.Delay(50);
+                    await Task.Delay(5);
                 }
 
                 if (Start.OpenedIsEmpty())

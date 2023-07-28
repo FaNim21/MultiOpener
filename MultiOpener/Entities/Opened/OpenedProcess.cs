@@ -177,7 +177,14 @@ public class OpenedProcess : INotifyPropertyChanged
     public virtual void UpdateTitle()
     {
         if (string.IsNullOrEmpty(WindowTitle))
-            WindowTitle = System.IO.Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
+        {
+            string? title = System.IO.Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
+
+            if (!Win32.IsProcessResponding(Pid))
+                title = "(Not Responding) " + title;
+
+            WindowTitle = title;
+        }
     }
     public void UpdateStatus()
     {
@@ -224,6 +231,7 @@ public class OpenedProcess : INotifyPropertyChanged
     public void FindProcessByStartInfo()
     {
         //TODO: Zrobic to kiedy indziej bo jest tu duzo zaleznosci i problemow z javaw czy wieloma procesami chrome itp itd :d
+        return;
         Process[] processes = Process.GetProcessesByName(ProcessStartInfo?.FileName);
         foreach (Process process in processes)
         {
