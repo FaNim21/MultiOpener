@@ -36,6 +36,18 @@ namespace MultiOpener.ViewModels.Settings
             }
         }
 
+        private bool _showNamesInsteadOfTitle;
+        public bool ShowNamesInsteadOfTitle
+        {
+            get { return _showNamesInsteadOfTitle; }
+            set
+            {
+                PresetIsNotSaved();
+                _showNamesInsteadOfTitle = value;
+                OnPropertyChanged(nameof(ShowNamesInsteadOfTitle));
+            }
+        }
+
         public ICommand SettingsInstanceOpenSetupCommand { get; set; }
 
         public SettingsOpenInstancesModelView(SettingsViewModel settingsViewModel) : base(settingsViewModel)
@@ -52,6 +64,7 @@ namespace MultiOpener.ViewModels.Settings
                 Quantity = instance.Quantity;
                 instanceNames = instance.Names;
                 DelayBetweenInstances = instance.DelayBetweenInstances;
+                ShowNamesInsteadOfTitle = instance.ShowNamesInsteadOfTitle;
             }
 
             base.UpdatePanelField(currentChosen);
@@ -67,6 +80,7 @@ namespace MultiOpener.ViewModels.Settings
                 openInstance.Quantity = Quantity;
                 openInstance.Names = instanceNames;
                 openInstance.DelayBetweenInstances = DelayBetweenInstances;
+                openInstance.ShowNamesInsteadOfTitle = ShowNamesInsteadOfTitle;
             }
         }
 
@@ -76,6 +90,7 @@ namespace MultiOpener.ViewModels.Settings
 
             Quantity = 0;
             DelayBetweenInstances = 0;
+            ShowNamesInsteadOfTitle = false;
         }
     }
 }

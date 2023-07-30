@@ -39,7 +39,7 @@ public class ConsoleViewModel : BaseViewModel
             if (option == ConsoleLineOption.Error)
             {
                 sb.Append(" - ERROR]> ");
-                consoleLine.Color = Brushes.Red;
+                consoleLine.Color = Brushes.LightCoral;
             }
             else if (option == ConsoleLineOption.Warning)
             {

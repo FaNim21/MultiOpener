@@ -53,23 +53,22 @@ namespace MultiOpener.Commands.StartCommands
             Start.RefreshButtonName = "Stop";
             Consts.IsStartPanelWorkingNow = true;
 
+            Start.LogLine("Refreshing started...");
+
             int length = Start.Opened.Count;
             for (int i = 0; i < length; i++)
             {
-                if (token.IsCancellationRequested)
-                    break;
-
+                if (token.IsCancellationRequested) break;
                 var current = Start.Opened[i];
-                string textInfo = $"({i + 1}/{length} - {current.Name})";
 
                 if (App.Input.IsShiftPressed || isShiftPressed)
-                    FastRefresh(current, textInfo);
+                    current.FastUpdate();
                 else
-                    await NormalRefresh(current, textInfo);
+                    await NormalRefresh(current);
             }
 
             Consts.IsStartPanelWorkingNow = false;
-            Start.LogLine("Finished Refreshing");
+            Start.LogLine("Refreshing finished!");
             source.Dispose();
             isRunning = false;
             Start.RefreshButtonName = "Refresh";
@@ -86,18 +85,10 @@ namespace MultiOpener.Commands.StartCommands
             }
         }
 
-        private async Task NormalRefresh(OpenedProcess current, string textInfo)
+        private async Task NormalRefresh(OpenedProcess current)
         {
-            Start?.LogLine($"Refreshing {textInfo}");
-
             current.Update();
             await current.UpdateAsync(token);
-        }
-        private void FastRefresh(OpenedProcess current, string textInfo)
-        {
-            Start?.LogLine($"Fast Refreshing {textInfo}");
-
-            current.FastUpdate();
         }
     }
 }

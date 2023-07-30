@@ -22,9 +22,11 @@ public class OpenInstance : OpenItem
     public int Quantity { get; set; }
     public ObservableCollection<string> Names { get; set; }
 
+    public bool ShowNamesInsteadOfTitle { get; set; }
+
 
     [JsonConstructor]
-    public OpenInstance(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, int Quantity = 0, ObservableCollection<string>? Names = null, int DelayBetweenInstances = 0) : base(Name, PathExe, DelayBefore, DelayAfter, Type)
+    public OpenInstance(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, int Quantity = 0, ObservableCollection<string>? Names = null, int DelayBetweenInstances = 0, bool ShowNamesInsteadOfTitle = false) : base(Name, PathExe, DelayBefore, DelayAfter, Type)
     {
         this.Quantity = Quantity;
         if (Names == null)
@@ -32,6 +34,7 @@ public class OpenInstance : OpenItem
         else
             this.Names = Names;
         this.DelayBetweenInstances = DelayBetweenInstances;
+        this.ShowNamesInsteadOfTitle = ShowNamesInsteadOfTitle;
     }
     public OpenInstance(OpenInstance instance) : base(instance)
     {
@@ -41,6 +44,7 @@ public class OpenInstance : OpenItem
         else
             Names = instance.Names;
         DelayBetweenInstances = instance.DelayBetweenInstances;
+        ShowNamesInsteadOfTitle = instance.ShowNamesInsteadOfTitle;
     }
 
     public override string Validate()
@@ -109,6 +113,7 @@ public class OpenInstance : OpenItem
                 string path = (Path.GetDirectoryName(PathExe) + "\\instances\\" + Names[i]).Replace("\\", "/");
                 opened.Initialize(startInfo, Names[i], path);
                 opened.number = (short)(i + 1);
+                opened.showNamesInsteadOfTitle = ShowNamesInsteadOfTitle;
 
                 if (!token.IsCancellationRequested)
                 {

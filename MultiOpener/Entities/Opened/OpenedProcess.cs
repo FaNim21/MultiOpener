@@ -163,7 +163,10 @@ public class OpenedProcess : INotifyPropertyChanged
             if (windowExist)
                 SetPid();
             else
+            {
+                StartViewModel.Log($"{Name} has been closed or could not been found", ConsoleLineOption.Warning);
                 Clear();
+            }
 
             FindProcessByStartInfo();
             //TODO: 0 Tu zrobic szukanie procesu z podobnymi danymi ProcessStartInfo
@@ -176,15 +179,14 @@ public class OpenedProcess : INotifyPropertyChanged
 
     public virtual void UpdateTitle()
     {
-        if (string.IsNullOrEmpty(WindowTitle))
-        {
-            string? title = System.IO.Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
+        if (!string.IsNullOrEmpty(WindowTitle)) return;
 
-            if (!Win32.IsProcessResponding(Pid))
-                title = "(Not Responding) " + title;
+        string? title = System.IO.Path.GetFileNameWithoutExtension(ProcessStartInfo?.FileName);
 
-            WindowTitle = title;
-        }
+        if (!Win32.IsProcessResponding(Pid))
+            title = "(Not Responding) " + title;
+
+        WindowTitle = title;
     }
     public void UpdateStatus()
     {

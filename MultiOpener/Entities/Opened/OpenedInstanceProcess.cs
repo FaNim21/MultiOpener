@@ -11,6 +11,7 @@ namespace MultiOpener.Entities.Opened;
 
 public partial class OpenedInstanceProcess : OpenedProcess
 {
+    public bool showNamesInsteadOfTitle = false;
     public short number = -1;
 
 
@@ -30,9 +31,23 @@ public partial class OpenedInstanceProcess : OpenedProcess
 
     public override void UpdateTitle()
     {
+        if (showNamesInsteadOfTitle)
+        {
+            if (string.IsNullOrEmpty(WindowTitle))
+            {
+                string? titleName = System.IO.Path.GetFileName(Path);
+                if (!Win32.IsProcessResponding(Pid))
+                    titleName = "(Not Responding) " + titleName;
+
+                WindowTitle = titleName;
+            }
+
+            return;
+        }
+
         if (Hwnd == nint.Zero)
         {
-            WindowTitle = $"[{number}] "+ System.IO.Path.GetFileName(Path);
+            WindowTitle = $"[{number}] " + System.IO.Path.GetFileName(Path);
             return;
         }
 
@@ -87,17 +102,18 @@ public partial class OpenedInstanceProcess : OpenedProcess
             try
             {
                 await Task.Delay(config.Cooldown, token);
-            }catch (Exception) { }
+            }
+            catch (Exception) { }
 
             instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
-            isHwndFound = FindInstance(instances);
+            isHwndFound = FindInstance(instances, false);
 
         } while (!isHwndFound && errorCount < config.ErrorCount);
 
         return errorCount < config.ErrorCount;
     }
 
-    public bool FindInstance(List<nint> instances)
+    public bool FindInstance(List<nint> instances, bool canRemove = true)
     {
         for (int i = instances.Count - 1; i >= 0; i--)
         {
@@ -105,13 +121,13 @@ public partial class OpenedInstanceProcess : OpenedProcess
             {
                 if (IsInstancePathEqual(instances[i]))
                 {
-                    instances.RemoveAt(i);
+                    if (canRemove) instances.RemoveAt(i);
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                StartViewModel.Log("Error at FindInstance", ConsoleLineOption.Error);
+                StartViewModel.Log(ex.ToString(), ConsoleLineOption.Error);
             }
         }
 
@@ -133,6 +149,6 @@ public partial class OpenedInstanceProcess : OpenedProcess
         return false;
     }
 
-    [GeneratedRegex("Minecraft\\*\\s+(\\s+-\\s+instance)?\\s*(?:\\d+(\\.\\d+)+|\\d+)", RegexOptions.NonBacktracking | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]
+    [GeneratedRegex("^Minecraft\\*\\s*(?:-\\s*Instance)?\\s*(\\d+(\\.\\d+)*)$", RegexOptions.NonBacktracking | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]
     public static partial Regex MCPattern();
 }
