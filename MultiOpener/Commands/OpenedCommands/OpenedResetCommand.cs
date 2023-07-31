@@ -28,7 +28,6 @@ namespace MultiOpener.Commands.OpenedCommands
         {
             Consts.IsStartPanelWorkingNow = true;
 
-            Start?.LogLine($"Reseting {openedProcess.Name}");
             if (openedProcess.IsOpenedFromStatus())
             {
                 bool result = await openedProcess.Close();
@@ -37,11 +36,17 @@ namespace MultiOpener.Commands.OpenedCommands
                 {
                     await Task.Delay(1000);
                     await openedProcess.OpenProcess();
+
+                    if (openedProcess.IsOpenedFromStatus())
+                        Start?.LogLine($"Finished resetting {openedProcess.Name}");
+                    else
+                        Start?.LogLine($"Could not open {openedProcess.Name} when resetting");
                 }
+                else
+                    Start?.LogLine($"Could not close {openedProcess.Name}");
             }
 
             Consts.IsStartPanelWorkingNow = false;
-            Start?.LogLine($"Finished reseting {openedProcess.Name}");
         }
     }
 }

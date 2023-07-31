@@ -26,23 +26,18 @@ namespace MultiOpener.Commands.OpenedCommands
         {
             Consts.IsStartPanelWorkingNow = true;
 
-            string output;
             if (openedProcess.IsOpenedFromStatus())
             {
-                output = $"Closed {openedProcess.Name}";
-                Start?.LogLine($"Closing {openedProcess.Name}");
                 await openedProcess.Close();
+                Start?.LogLine($"Closed {openedProcess.Name}");
             }
             else
             {
-                output = $"Opened {openedProcess.Name}";
-                Start?.LogLine($"Opening {openedProcess.Name}");
                 await openedProcess.OpenProcess();
+                Start?.LogLine($"Opened {openedProcess.Name}");
             }
-            await Task.Delay(100);
 
             Consts.IsStartPanelWorkingNow = false;
-            Start?.LogLine($"{output}");
         }
     }
 }
