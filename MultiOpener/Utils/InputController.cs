@@ -1,41 +1,54 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.Utils;
 
 public class InputController
 {
-    public bool IsShiftPressed
+    public static InputController Instance => instance;
+
+    private static readonly InputController instance = new();
+    private readonly HashSet<Key> pressedKeys = new();
+    private readonly HashSet<Key> previousKeys = new();
+
+    static InputController() { }
+    private InputController() { }
+
+    public void Initialize()
     {
-        get
-        {
-            bool output = false;
-            Application.Current?.Dispatcher.Invoke(delegate
-            {
-                if (Keyboard.IsKeyDown(Key.LeftShift))
-                    output = true;
-            });
-            return output;
-        }
-        private set { }
+        Application.Current.MainWindow.KeyDown += HandleKeyDown;
+        Application.Current.MainWindow.KeyUp += HandleKeyUp;
     }
 
-    public bool IsCtrlPressed
+    private void HandleKeyDown(object sender, KeyEventArgs e)
     {
-        get
-        {
-            bool output = false;
-            Application.Current?.Dispatcher.Invoke(delegate
-            {
-                if (Keyboard.IsKeyDown(Key.LeftCtrl))
-                    output = true;
-            });
-            return output;
-        }
-        private set { }
+        pressedKeys.Add(e.Key);
+    }
+    private void HandleKeyUp(object sender, KeyEventArgs e)
+    {
+        pressedKeys.Remove(e.Key);
     }
 
+    public bool GetKey(Key key)
+    {
+        return pressedKeys.Contains(key);
+    }
+    public bool GetKeyDown(Key key)
+    {
+        return pressedKeys.Contains(key) && !previousKeys.Contains(key);
+    }
 
-    //TODO: 9 w przyszlosci przerobic to na forme jakiejs petli/aktualizacji przy rzeczywistej potrzebie sprawdzania?
-    private void UpdateInputs() { }
+    public void UpdatePreviousKeys()
+    {
+        previousKeys.Clear();
+        foreach (var key in pressedKeys)
+            previousKeys.Add(key);
+    }
+
+    public void Cleanup()
+    {
+        Application.Current.MainWindow.KeyDown -= HandleKeyDown;
+        Application.Current.MainWindow.KeyUp -= HandleKeyUp;
+    }
 }

@@ -97,7 +97,6 @@ public class OpenedProcess : INotifyPropertyChanged
     public void SetPid(int pid)
     {
         Pid = pid;
-
         UpdateStatus();
     }
     public void SetPid()

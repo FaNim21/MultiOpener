@@ -8,10 +8,10 @@ using MultiOpener.Windows;
 using System;
 using System.Diagnostics;
 using System.Media;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace MultiOpener.Commands.StartCommands;
 
@@ -92,7 +92,7 @@ public class StartOpenCommand : StartCommandBase
         });
 
         //Getting shift to be pressed to make structured open
-        if (App.Input.IsShiftPressed)
+        if (InputController.Instance.GetKey(Key.LeftShift))
         {
             source.Cancel();
             isShiftPressed = true;
@@ -114,7 +114,6 @@ public class StartOpenCommand : StartCommandBase
                 return;
             }
 
-            //TODO: 9 Czy to jakkolwiek jest potrzebne?????
             if (current.GetType() == typeof(OpenInstance))
             {
                 if (Start?.MultiMC == null)

@@ -3,7 +3,9 @@ using MultiOpener.Properties;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -15,9 +17,13 @@ public partial class MainWindow : Window
     //TODO: 2 Sprobowac przeniesc main viewModel do App.xaml.cs na bazie tego filmiku https://www.youtube.com/watch?v=dtq6qYlolh8 w 5:00
     public MainViewModel MainViewModel { get; set; }
 
+    public BackgroundWorker worker;
+
     public MainWindow()
     {
         InitializeComponent();
+
+        InputController.Instance.Initialize();
         labelVersion.Content = Consts.Version;
 
         MainViewModel = new MainViewModel(this);
@@ -35,6 +41,15 @@ public partial class MainWindow : Window
         MainViewModel.settings.LoadStartUPPreset(Settings.Default.LastOpenedPresetName);
 
         Task task = Task.Factory.StartNew(CheckForUpdates);
+
+        worker = new BackgroundWorker();
+        worker.WorkerSupportsCancellation = true;
+        worker.DoWork += Worker_DoWork!;
+
+        if (!worker.IsBusy)
+        {
+            worker.RunWorkerAsync();
+        }
     }
 
     public void EnableDisableChoosenHeadButton(string option)
@@ -80,6 +95,13 @@ public partial class MainWindow : Window
         Close();
     }
 
+    protected override void OnClosing(CancelEventArgs e)
+    {
+        StopWorker();
+        worker.Dispose();
+        InputController.Instance.Cleanup();
+        base.OnClosing(e);
+    }
     private void OnClosed(object sender, EventArgs e)
     {
         Settings.Default.MainWindowLeft = Left;
@@ -128,5 +150,34 @@ public partial class MainWindow : Window
     public void ChangePresetTitle(string name)
     {
         SettingsButton.ContentText = name;
+    }
+
+    public void Update()
+    {
+        if (InputController.Instance.GetKeyDown(Key.F5) && !MainViewModel.start.OpenedIsEmpty())
+        {
+            MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { false, false });
+        }
+
+        InputController.Instance.UpdatePreviousKeys();
+    }
+
+    private async void Worker_DoWork(object sender, DoWorkEventArgs e)
+    {
+        while (!worker.CancellationPending)
+        {
+            Update();
+
+            //TODO: 2 Dodać opcję ustawienia czasu odświeżania głównej pętli
+            await Task.Delay(TimeSpan.FromMilliseconds(100));
+        }
+    }
+
+    public void StopWorker()
+    {
+        if (worker.IsBusy)
+        {
+            worker.CancelAsync();
+        }
     }
 }

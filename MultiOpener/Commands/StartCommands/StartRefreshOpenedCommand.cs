@@ -4,6 +4,7 @@ using MultiOpener.ViewModels;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 
 namespace MultiOpener.Commands.StartCommands
@@ -61,10 +62,10 @@ namespace MultiOpener.Commands.StartCommands
                 if (token.IsCancellationRequested) break;
                 var current = Start.Opened[i];
 
-                if (App.Input.IsShiftPressed || isShiftPressed)
-                    current.FastUpdate();
-                else
+                if (InputController.Instance.GetKey(Key.LeftShift) || isShiftPressed)
                     await NormalRefresh(current);
+                else
+                    current.FastUpdate();
             }
 
             Consts.IsStartPanelWorkingNow = false;
