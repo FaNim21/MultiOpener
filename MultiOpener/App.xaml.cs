@@ -1,5 +1,4 @@
 ﻿using MultiOpener.Entities.Options;
-using MultiOpener.Utils;
 using System.Threading;
 using System.Windows;
 

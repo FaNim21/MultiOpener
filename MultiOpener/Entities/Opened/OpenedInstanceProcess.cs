@@ -62,9 +62,9 @@ public partial class OpenedInstanceProcess : OpenedProcess
             WindowTitle = "Unknown";
     }
 
-    public override async Task OpenProcess(CancellationToken token = default)
+    public override async Task<bool> OpenProcess(CancellationToken token = default)
     {
-        if (ProcessStartInfo == null) return;
+        if (ProcessStartInfo == null) return false;
 
         Process? process = null;
         try
@@ -83,6 +83,8 @@ public partial class OpenedInstanceProcess : OpenedProcess
         }
 
         UpdateStatus();
+
+        return true;
     }
 
     public async Task<bool> SearchForSingleMCInstance(CancellationToken token = default)
@@ -96,7 +98,6 @@ public partial class OpenedInstanceProcess : OpenedProcess
         do
         {
             if (token.IsCancellationRequested) return false;
-
             errorCount++;
 
             try
@@ -149,6 +150,8 @@ public partial class OpenedInstanceProcess : OpenedProcess
         return false;
     }
 
-    [GeneratedRegex("^Minecraft\\*\\s*(?:-\\s*Instance)?\\s*(\\d+(\\.\\d+)*)$", RegexOptions.NonBacktracking | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]
+    [GeneratedRegex("^Minecraft\\*\\s*(?:-\\s*Instance)?\\s*((?:\\d+(?:\\.\\d+)*)?)(?:\\s*-\\s*(\\S+(?:\\s*\\S+)*))?$", RegexOptions.NonBacktracking | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]
     public static partial Regex MCPattern();
+
+
 }

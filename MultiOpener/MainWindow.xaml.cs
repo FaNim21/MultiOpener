@@ -5,7 +5,6 @@ using MultiOpener.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -47,9 +46,7 @@ public partial class MainWindow : Window
         worker.DoWork += Worker_DoWork!;
 
         if (!worker.IsBusy)
-        {
             worker.RunWorkerAsync();
-        }
     }
 
     public void EnableDisableChoosenHeadButton(string option)
@@ -155,9 +152,7 @@ public partial class MainWindow : Window
     public void Update()
     {
         if (InputController.Instance.GetKeyDown(Key.F5) && !MainViewModel.start.OpenedIsEmpty())
-        {
             MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { false, false });
-        }
 
         InputController.Instance.UpdatePreviousKeys();
     }

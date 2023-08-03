@@ -5,6 +5,7 @@ using MultiOpener.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -251,9 +252,9 @@ public class OpenedProcess : INotifyPropertyChanged
         }
     }
 
-    public virtual async Task OpenProcess(CancellationToken token = default)
+    public virtual async Task<bool> OpenProcess(CancellationToken token = default)
     {
-        if (ProcessStartInfo == null) return;
+        if (ProcessStartInfo == null) return false;
 
         Process? process = null;
         try
@@ -262,7 +263,7 @@ public class OpenedProcess : INotifyPropertyChanged
         }
         catch (Exception)
         {
-            StartViewModel.Log($"Cannot open process {Name} from {ProcessStartInfo.WorkingDirectory}", ConsoleLineOption.Error);
+            return false;
         }
 
         if (process != null)
@@ -284,12 +285,20 @@ public class OpenedProcess : INotifyPropertyChanged
                 await Task.Delay(time, CancellationToken.None);
                 errors++;
             }
+
+            if (!isHwndFound && !Win32.ProcessExist(Pid))
+            {
+                Clear();
+                return false;
+            }
         }
 
         if (Hwnd != nint.Zero && isMinimizeOnOpen)
             Win32.MinimizeWindowHwnd(Hwnd);
 
         UpdateStatus();
+
+        return true;
     }
     public async Task<bool> Close()
     {

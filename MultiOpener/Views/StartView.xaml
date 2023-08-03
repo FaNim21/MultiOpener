@@ -157,8 +157,27 @@
             </ScrollViewer>
         </Grid>
         
-        <Grid Grid.Row="1">
-            <!-- TU BEDZIE NOWY LOADING -->
+        <Grid Grid.Row="1"
+              Visibility="{Binding LoadingPanelVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}">
+            <Label x:Name="InfoText"
+                   Content="Info co sie teraz odpala"
+                   Height="125"
+                   VerticalAlignment="Top"
+                   Foreground="#76bbf4"
+                   HorizontalContentAlignment="Center"
+                   VerticalContentAlignment="Bottom"
+                   FontWeight="Medium"
+                   FontFamily="Dubai"
+                   FontSize="19" />
+            <ProgressBar x:Name="progress"
+                         Width="750"
+                         Height="30"
+                         VerticalAlignment="Bottom"
+                         Background="#7d8187"
+                         Foreground="#FF387944"
+                         BorderThickness="0"
+                         Minimum="0" 
+                         Margin="0 75"/>
         </Grid>
     </Grid>
 </UserControl>

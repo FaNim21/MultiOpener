@@ -28,13 +28,19 @@ namespace MultiOpener.Commands.OpenedCommands
 
             if (openedProcess.IsOpenedFromStatus())
             {
-                await openedProcess.Close();
-                Start?.LogLine($"Closed {openedProcess.Name}");
+                bool output = await openedProcess.Close();
+                if(output)
+                    Start?.LogLine($"Closed {openedProcess.Name}");
+                else
+                    Start?.LogLine($"Can't close {openedProcess.Name}");
             }
             else
             {
-                await openedProcess.OpenProcess();
-                Start?.LogLine($"Opened {openedProcess.Name}");
+                bool output = await openedProcess.OpenProcess();
+                if(output)
+                    Start?.LogLine($"Opened {openedProcess.Name}");
+                else
+                    Start?.LogLine($"Can't open {openedProcess.Name}");
             }
 
             Consts.IsStartPanelWorkingNow = false;

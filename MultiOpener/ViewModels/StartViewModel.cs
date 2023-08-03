@@ -69,6 +69,18 @@ public class StartViewModel : BaseViewModel
     }
 
 
+    private bool _loadingPanelVisibility = false;
+    public bool LoadingPanelVisibility
+    {
+        get { return _loadingPanelVisibility; }
+        set
+        {
+            _loadingPanelVisibility = value;
+            OnPropertyChanged(nameof(LoadingPanelVisibility));
+        }
+    }
+
+
     public StartViewModel(MainWindow mainWindow)
     {
         Instance = this;
