@@ -40,10 +40,10 @@ namespace MultiOpener.Commands.OpenedCommands
                     if (openedProcess.IsOpenedFromStatus())
                         Start?.LogLine($"Finished resetting {openedProcess.Name}");
                     else
-                        Start?.LogLine($"Could not open {openedProcess.Name} when resetting");
+                        Start?.LogLine($"Could not open {openedProcess.Name} when resetting", Entities.ConsoleLineOption.Warning);
                 }
                 else
-                    Start?.LogLine($"Could not close {openedProcess.Name}");
+                    Start?.LogLine($"Could not close {openedProcess.Name}", Entities.ConsoleLineOption.Warning);
             }
 
             Consts.IsStartPanelWorkingNow = false;

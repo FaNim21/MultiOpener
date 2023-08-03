@@ -32,7 +32,7 @@ namespace MultiOpener.Commands.OpenedCommands
                 if(output)
                     Start?.LogLine($"Closed {openedProcess.Name}");
                 else
-                    Start?.LogLine($"Can't close {openedProcess.Name}");
+                    Start?.LogLine($"Can't close {openedProcess.Name}", Entities.ConsoleLineOption.Warning);
             }
             else
             {
@@ -40,7 +40,7 @@ namespace MultiOpener.Commands.OpenedCommands
                 if(output)
                     Start?.LogLine($"Opened {openedProcess.Name}");
                 else
-                    Start?.LogLine($"Can't open {openedProcess.Name}");
+                    Start?.LogLine($"Can't open {openedProcess.Name}", Entities.ConsoleLineOption.Warning);
             }
 
             Consts.IsStartPanelWorkingNow = false;
