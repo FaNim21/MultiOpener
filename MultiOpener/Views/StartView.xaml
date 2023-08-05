@@ -158,9 +158,10 @@
         </Grid>
         
         <Grid Grid.Row="1"
-              Visibility="{Binding LoadingPanelVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}">
+              Visibility="{Binding LoadingPanelVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}"
+              Background="#4a4b4d">
             <Label x:Name="InfoText"
-                   Content="Info co sie teraz odpala"
+                   Content="{Binding LoadingInfoText}"
                    Height="125"
                    VerticalAlignment="Top"
                    Foreground="#76bbf4"
@@ -172,11 +173,13 @@
             <ProgressBar x:Name="progress"
                          Width="750"
                          Height="30"
+                         Value="{Binding LoadingBarPercentage}"
                          VerticalAlignment="Bottom"
                          Background="#7d8187"
                          Foreground="#FF387944"
                          BorderThickness="0"
                          Minimum="0" 
+                         Maximum="100"
                          Margin="0 75"/>
         </Grid>
     </Grid>

@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Components.Controls;
 using MultiOpener.Entities.Opened;
+using MultiOpener.ViewModels;
 using MultiOpener.Windows;
 using System;
 using System.ComponentModel;
@@ -69,7 +70,7 @@ public class OpenItem
         return string.Empty;
     }
 
-    public virtual async Task Open(OpenningProcessLoadingWindow? loading, CancellationToken token, string infoText = "")
+    public virtual async Task Open(StartViewModel startModel, CancellationToken token, string infoText = "")
     {
         try
         {

@@ -8,6 +8,13 @@ using System.Windows.Input;
 
 namespace MultiOpener.ViewModels;
 
+public enum StartButtonState
+{
+    open,
+    close,
+    cancel,
+}
+
 public class StartViewModel : BaseViewModel
 {
     public static StartViewModel? Instance { get; private set; }
@@ -80,6 +87,28 @@ public class StartViewModel : BaseViewModel
         }
     }
 
+    public float _loadingBarPercentage;
+    public float LoadingBarPercentage
+    {
+        get { return _loadingBarPercentage; }
+        set
+        {
+            _loadingBarPercentage = value;
+            OnPropertyChanged(nameof(LoadingBarPercentage));
+        }
+    }
+
+    public string _loadingInfoText = "Info co sie teraz odpala";
+    public string LoadingInfoText
+    {
+        get { return _loadingInfoText; }
+        set
+        {
+            _loadingInfoText = value;
+            OnPropertyChanged(nameof(LoadingInfoText));
+        }
+    }
+
 
     public StartViewModel(MainWindow mainWindow)
     {
@@ -109,9 +138,24 @@ public class StartViewModel : BaseViewModel
         Instance?.ConsoleViewModel.ProcessCommandLine(text, option);
     }
 
+    public void SetLoadingText(string text)
+    {
+        LoadingInfoText = text;
+    }
+
     public void UpdatePresetName(string name = "Empty preset")
     {
         PresetNameLabel = name;
+    }
+
+    public void SetStartButtonState(StartButtonState state)
+    {
+        if (state == StartButtonState.open)
+            _openButtonName = "OPEN";
+        else if (state == StartButtonState.close)
+            _openButtonName = "CLOSE";
+        else if (state == StartButtonState.cancel)
+            _openButtonName = "CANCEL";
     }
 
     public void AddOpened(OpenedProcess openedProcess)

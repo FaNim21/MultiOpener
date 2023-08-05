@@ -53,7 +53,6 @@ namespace MultiOpener.Commands.StartCommands
             isRunning = true;
             Start.RefreshButtonName = "Stop";
             Consts.IsStartPanelWorkingNow = true;
-
             Start.LogLine("Refreshing started...");
 
             int length = Start.Opened.Count;

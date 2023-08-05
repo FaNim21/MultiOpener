@@ -20,8 +20,6 @@ public class StartOpenCommand : StartCommandBase
     private MainWindow MainWindow { get; set; }
     private SettingsViewModel? Settings { get; set; }
 
-    private OpenningProcessLoadingWindow? loadingProcesses;
-
     private Stopwatch Stopwatch { get; set; } = new();
 
     public CancellationTokenSource source = new();
@@ -75,21 +73,18 @@ public class StartOpenCommand : StartCommandBase
 
     public void Initialize(int length)
     {
+        Application.Current?.Dispatcher.Invoke(delegate
+        {
+            if (!Application.Current.MainWindow.Topmost)
+                Application.Current.MainWindow.Topmost = true;
+        });
         isOpening = true;
         int progressLength = length;
 
         Validate(ref progressLength, length);
 
-        //Initializing loading window
-        Application.Current?.Dispatcher.Invoke(delegate
-        {
-            MainWindow.Hide();
-            float windowPositionX = (float)(MainWindow.Left + (MainWindow.Width / 2));
-            float windowPositionY = (float)(MainWindow.Top + (MainWindow.Height / 2));
-            loadingProcesses = new(this, windowPositionX, windowPositionY) { Owner = MainWindow };
-            loadingProcesses.Show();
-            loadingProcesses.progress.Maximum = progressLength;
-        });
+        Start!.LoadingPanelVisibility = true;
+        Start.SetLoadingText("");
 
         //Getting shift to be pressed to make structured open
         if (InputController.Instance.GetKey(Key.LeftShift))
@@ -110,7 +105,7 @@ public class StartOpenCommand : StartCommandBase
             if (!string.IsNullOrEmpty(result))
             {
                 DialogBox.Show(result, "", MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Dispatcher.Invoke(delegate { Start!.OpenButtonName = "OPEN"; });
+                Start!.OpenButtonName = "OPEN";
                 return;
             }
 
@@ -156,43 +151,36 @@ public class StartOpenCommand : StartCommandBase
             Start.MultiMC = null;
         }
 
-        Application.Current?.Dispatcher.Invoke(delegate
-        {
-            loadingProcesses!.Close();
-            MainWindow.OnShow();
-            loadingProcesses = null;
+        Start!.LoadingPanelVisibility = false;
+        if (Start!.OpenedIsEmpty())
+            Start.OpenButtonName = "OPEN";
 
-            if (Start!.OpenedIsEmpty())
-                Start.OpenButtonName = "OPEN";
-        });
-
-        //Late Refresh
-        StartViewModel.Log($"Opened Preset {Settings!.PresetName} in {Math.Round(Stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
         if (!isShiftPressed)
         {
-            Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Log("Attempting to first Auto-Refresh", ConsoleLineOption.Warning); });
+            StartViewModel.Log($"Opened Preset {Settings!.PresetName} in {Math.Round(Stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
+            StartViewModel.Log("Attempting to first Auto-Refresh", ConsoleLineOption.Warning);
             await Task.Delay(App.Config.TimeLateRefresh);
         }
 
-        Application.Current?.Dispatcher.Invoke(delegate
-        {
-            Consts.IsStartPanelWorkingNow = false;
-            bool isItOpening = true;
-            Start!.RefreshOpenedCommand.Execute(new object[] { isShiftPressed, isItOpening });
-        });
+        Consts.IsStartPanelWorkingNow = false;
+        bool isItOpening = true;
+        Start!.RefreshOpenedCommand.Execute(new object[] { isShiftPressed, isItOpening });
 
         source.Dispose();
         isOpening = false;
         isShiftPressed = false;
         Stopwatch.Reset();
+        Application.Current?.Dispatcher.Invoke(delegate
+        {
+            if (!App.Config.AlwaysOnTop && Application.Current.MainWindow.Topmost)
+                Application.Current.MainWindow.Topmost = false;
+        });
 
         SystemSounds.Beep.Play();
     }
 
     public async Task OpenAll(int length)
     {
-        string infoText = "";
-
         Stopwatch.Start();
         for (int i = 0; i < length; i++)
         {
@@ -200,14 +188,12 @@ public class StartOpenCommand : StartCommandBase
 
             if (string.IsNullOrEmpty(current.PathExe)) return;
 
-            Application.Current?.Dispatcher.Invoke(delegate
-            {
-                infoText = $"({i + 1}/{length}) Openning {current.Name}...";
-                loadingProcesses!.SetText(infoText);
-                loadingProcesses!.progress.Value++;
-            });
+            int count = i + 1;
+            string infoText = $"({count}/{length}) Openning {current.Name}...";
+            Start!.SetLoadingText(infoText);
+            Start!.LoadingBarPercentage = (count * 100) / length;
 
-            await current.Open(loadingProcesses, token, infoText);
+            await current.Open(Start, token, infoText);
         }
         Stopwatch.Stop();
     }
