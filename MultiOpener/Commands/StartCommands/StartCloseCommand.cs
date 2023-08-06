@@ -26,7 +26,7 @@ namespace MultiOpener.Commands.StartCommands
             if (Start == null) return;
             if (Start.OpenedIsEmpty())
             {
-                Start.OpenButtonName = "OPEN";
+                Start.SetStartButtonState(StartButtonState.open);
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace MultiOpener.Commands.StartCommands
 
                 if (Start.OpenedIsEmpty())
                 {
-                    Start.OpenButtonName = "OPEN";
+                    Start.SetStartButtonState(StartButtonState.open);
                     Consts.IsStartPanelWorkingNow = true;
                 }
             }

@@ -29,6 +29,7 @@ public class StartViewModel : BaseViewModel
     public ICommand RefreshOpenedCommand { get; set; }
     public ICommand SaveConsoleCommand { get; set; }
     public ICommand ClearConsoleCommand { get; set; }
+    public ICommand CancelCommand { get; set; }
 
 
     private string _openButtonName = "OPEN";
@@ -121,6 +122,7 @@ public class StartViewModel : BaseViewModel
         RefreshOpenedCommand = new StartRefreshOpenedCommand(this);
         SaveConsoleCommand = new StartSaveConsoleCommand(this);
         ClearConsoleCommand = new StartClearConsoleCommand(this);
+        CancelCommand = new StartCancelCommand(this);
 
         Opened = new ObservableCollection<OpenedProcess>();
 
@@ -150,12 +152,11 @@ public class StartViewModel : BaseViewModel
 
     public void SetStartButtonState(StartButtonState state)
     {
-        if (state == StartButtonState.open)
-            _openButtonName = "OPEN";
-        else if (state == StartButtonState.close)
-            _openButtonName = "CLOSE";
-        else if (state == StartButtonState.cancel)
-            _openButtonName = "CANCEL";
+        OpenButtonName = state.ToString().ToUpper();
+    }
+    public bool IsStartButtonState(StartButtonState state)
+    {
+        return state.ToString().Equals(OpenButtonName.ToLower());
     }
 
     public void AddOpened(OpenedProcess openedProcess)

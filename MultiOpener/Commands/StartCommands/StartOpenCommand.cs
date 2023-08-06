@@ -4,7 +4,6 @@ using MultiOpener.Entities.Open;
 using MultiOpener.Entities.Opened;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
-using MultiOpener.Windows;
 using System;
 using System.Diagnostics;
 using System.Media;
@@ -28,6 +27,9 @@ public class StartOpenCommand : StartCommandBase
     public bool isOpening = false;
     private bool isShiftPressed = false;
 
+    private int progressLength;
+    private int count;
+
 
     public StartOpenCommand(StartViewModel? startViewModel, MainWindow mainWindow) : base(startViewModel)
     {
@@ -40,20 +42,26 @@ public class StartOpenCommand : StartCommandBase
 
         Settings ??= MainWindow.MainViewModel.settings;
 
-        if (Start.OpenButtonName.Equals("CLOSE"))
+        if (Start.IsStartButtonState(StartButtonState.cancel))
+        {
+            Start.CancelCommand.Execute(null);
+            return;
+        }
+
+        if (Start.IsStartButtonState(StartButtonState.close))
         {
             Start.CloseCommand.Execute(null);
             return;
         }
 
-        if (Start.OpenButtonName.Equals("START") && !Start.OpenedIsEmpty())
+        if (Start.IsStartButtonState(StartButtonState.open) && !Start.OpenedIsEmpty())
         {
-            Start.OpenButtonName = "CLOSE";
+            Start.SetStartButtonState(StartButtonState.close);
             return;
         }
 
         if (!Start.OpenedIsEmpty() || Settings.OpenIsEmpty()) return;
-        Start.OpenButtonName = "CLOSE";
+        Start.SetStartButtonState(StartButtonState.cancel);
 
         source = new();
         token = source.Token;
@@ -79,9 +87,10 @@ public class StartOpenCommand : StartCommandBase
                 Application.Current.MainWindow.Topmost = true;
         });
         isOpening = true;
-        int progressLength = length;
+        progressLength = length;
+        count = 0;
 
-        Validate(ref progressLength, length);
+        Validate(length);
 
         Start!.LoadingPanelVisibility = true;
         Start.SetLoadingText("");
@@ -91,9 +100,10 @@ public class StartOpenCommand : StartCommandBase
         {
             source.Cancel();
             isShiftPressed = true;
+            Start!.LoadingPanelVisibility = false;
         }
     }
-    private void Validate(ref int progressLength, int length)
+    private void Validate(int length)
     {
         for (int i = 0; i < length; i++)
         {
@@ -105,7 +115,7 @@ public class StartOpenCommand : StartCommandBase
             if (!string.IsNullOrEmpty(result))
             {
                 DialogBox.Show(result, "", MessageBoxButton.OK, MessageBoxImage.Error);
-                Start!.OpenButtonName = "OPEN";
+                Start!.SetStartButtonState(StartButtonState.open);
                 return;
             }
 
@@ -142,9 +152,25 @@ public class StartOpenCommand : StartCommandBase
         }
     }
 
+    public async Task OpenAll(int length)
+    {
+        Stopwatch.Start();
+        for (int i = 0; i < length; i++)
+        {
+            var current = Settings!.Opens[i];
+            if (string.IsNullOrEmpty(current.PathExe)) return;
+
+            string infoText = $"({i + 1}/{length}) Openning {current.Name}...";
+            Start!.SetLoadingText(infoText);
+            UpdateProgressBar();
+
+            await current.Open(Start, token, infoText);
+        }
+        Stopwatch.Stop();
+    }
+
     public async Task Finalize()
     {
-        //Destroying MultiMC if there was Instances as type in Opens
         if (Start?.MultiMC != null)
         {
             await Start.MultiMC.Close();
@@ -153,7 +179,7 @@ public class StartOpenCommand : StartCommandBase
 
         Start!.LoadingPanelVisibility = false;
         if (Start!.OpenedIsEmpty())
-            Start.OpenButtonName = "OPEN";
+            Start.SetStartButtonState(StartButtonState.open);
 
         if (!isShiftPressed)
         {
@@ -177,24 +203,16 @@ public class StartOpenCommand : StartCommandBase
         });
 
         SystemSounds.Beep.Play();
+        Start!.SetStartButtonState(StartButtonState.close);
     }
 
-    public async Task OpenAll(int length)
+    public void UpdateCountForInstances()
     {
-        Stopwatch.Start();
-        for (int i = 0; i < length; i++)
-        {
-            var current = Settings!.Opens[i];
-
-            if (string.IsNullOrEmpty(current.PathExe)) return;
-
-            int count = i + 1;
-            string infoText = $"({count}/{length}) Openning {current.Name}...";
-            Start!.SetLoadingText(infoText);
-            Start!.LoadingBarPercentage = (count * 100) / length;
-
-            await current.Open(Start, token, infoText);
-        }
-        Stopwatch.Stop();
+        count--;
+    }
+    public void UpdateProgressBar()
+    {
+        count++;
+        Start!.LoadingBarPercentage = (count * 100) / progressLength;
     }
 }

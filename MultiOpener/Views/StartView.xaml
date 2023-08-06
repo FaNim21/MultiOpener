@@ -156,31 +156,43 @@
                 </ItemsControl>
             </ScrollViewer>
         </Grid>
-        
+
         <Grid Grid.Row="1"
               Visibility="{Binding LoadingPanelVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}"
               Background="#4a4b4d">
-            <Label x:Name="InfoText"
-                   Content="{Binding LoadingInfoText}"
-                   Height="125"
-                   VerticalAlignment="Top"
-                   Foreground="#76bbf4"
-                   HorizontalContentAlignment="Center"
-                   VerticalContentAlignment="Bottom"
-                   FontWeight="Medium"
-                   FontFamily="Dubai"
-                   FontSize="19" />
-            <ProgressBar x:Name="progress"
-                         Width="750"
-                         Height="30"
-                         Value="{Binding LoadingBarPercentage}"
-                         VerticalAlignment="Bottom"
-                         Background="#7d8187"
-                         Foreground="#FF387944"
-                         BorderThickness="0"
-                         Minimum="0" 
-                         Maximum="100"
-                         Margin="0 75"/>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <TextBlock Text="{Binding LoadingInfoText}"
+                           Foreground="#76bbf4"
+                           VerticalAlignment="Bottom"
+                           TextAlignment="Center"
+                           LineStackingStrategy="BlockLineHeight"
+                           LineHeight="27"
+                           TextWrapping="Wrap"
+                           FontWeight="Medium"
+                           FontFamily="Dubai"
+                           FontSize="21"
+                           Padding="0" 
+                           Margin="5 0 5 10"/>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <ProgressBar x:Name="progress"
+                             Width="775"
+                             Height="30"
+                             Value="{Binding LoadingBarPercentage}"
+                             VerticalAlignment="top"
+                             Background="#7d8187"
+                             Foreground="#FF387944"
+                             BorderThickness="0"
+                             Minimum="1"
+                             Maximum="100"
+                             Margin="0 0 0 0" />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

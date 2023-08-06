@@ -95,9 +95,9 @@ public class OpenItem
             if (!token.IsCancellationRequested)
                 await Task.Delay(DelayAfter);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            DialogBox.Show(ex.ToString(), "", MessageBoxButton.OK, MessageBoxImage.Error);
+            StartViewModel.Log(e.ToString(), ConsoleLineOption.Error);
         }
     }
 

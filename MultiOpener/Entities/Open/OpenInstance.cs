@@ -13,6 +13,7 @@ using System.Windows;
 using MultiOpener.Components.Controls;
 using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels;
+using MultiOpener.Commands.StartCommands;
 
 namespace MultiOpener.Entities.Open;
 
@@ -92,6 +93,7 @@ public class OpenInstance : OpenItem
     {
         List<OpenedInstanceProcess> mcInstances = new();
         int openedCount = 0;
+        ((StartOpenCommand)startModel.OpenCommand).UpdateCountForInstances();
 
         try
         {
@@ -104,7 +106,7 @@ public class OpenInstance : OpenItem
                     await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances < 500 ? 500 : DelayBetweenInstances);
 
                 startModel.SetLoadingText($"{infoText} -- Instance ({i + 1}/{Quantity})");
-                //startModel.LoadingBarPercentage++
+                ((StartOpenCommand)startModel.OpenCommand).UpdateProgressBar();
 
                 ProcessStartInfo startInfo = new(PathExe) { UseShellExecute = false, Arguments = $"--launch \"{Names[i]}\"" };
                 OpenedInstanceProcess opened = new();
@@ -157,9 +159,9 @@ public class OpenInstance : OpenItem
         }
         catch (Exception e)
         {
-            DialogBox.Show(e.ToString(), "", MessageBoxButton.OK, MessageBoxImage.Error);
+            StartViewModel.Log(e.ToString(), ConsoleLineOption.Error);
         }
     }
 
-    public override ushort GetAdditionalProgressCount() => (ushort)Quantity;
+    public override ushort GetAdditionalProgressCount() => (ushort)(Quantity - 1);
 }
