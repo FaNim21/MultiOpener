@@ -21,9 +21,9 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-
         InputController.Instance.Initialize();
         labelVersion.Content = Consts.Version;
+        HotkeySetup();
 
         MainViewModel = new MainViewModel(this);
         DataContext = MainViewModel;
@@ -151,10 +151,10 @@ public partial class MainWindow : Window
 
     public void Update()
     {
-        if (InputController.Instance.GetKeyDown(Key.F5) && !MainViewModel.start.OpenedIsEmpty())
+        /*if (InputController.Instance.GetKeyDown(Key.F5) && !MainViewModel.start.OpenedIsEmpty())
             MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { false, false });
 
-        InputController.Instance.UpdatePreviousKeys();
+        InputController.Instance.UpdatePreviousKeys();*/
     }
 
     private async void Worker_DoWork(object sender, DoWorkEventArgs e)
@@ -174,5 +174,27 @@ public partial class MainWindow : Window
         {
             worker.CancelAsync();
         }
+    }
+
+    public void HotkeySetup()
+    {
+        var refreshHotkey = new Hotkey
+        {
+            Key = Key.F5,
+            ModifierKeys = ModifierKeys.None,
+            Description = "fast refresh",
+            Action = () => { MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { false, false });}
+        };
+
+        var fastRefreshHotkey = new Hotkey
+        {
+            Key = Key.F5,
+            ModifierKeys = ModifierKeys.Shift,
+            Description = "normal refresh",
+            Action = () => { MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { true, false });}
+        };
+
+        InputController.Instance.AddHotkey(refreshHotkey);
+        InputController.Instance.AddHotkey(fastRefreshHotkey);
     }
 }

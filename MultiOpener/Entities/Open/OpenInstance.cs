@@ -1,5 +1,4 @@
 ﻿using MultiOpener.Utils;
-using MultiOpener.Windows;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -10,7 +9,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 using System.Windows;
-using MultiOpener.Components.Controls;
 using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels;
 using MultiOpener.Commands.StartCommands;
