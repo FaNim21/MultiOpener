@@ -165,6 +165,7 @@ public class StartOpenCommand : StartCommandBase
             UpdateProgressBar();
 
             await current.Open(Start, token, infoText);
+            Application.Current.Dispatcher.Invoke(delegate { Application.Current.MainWindow.Activate(); });
         }
         Stopwatch.Stop();
     }
@@ -177,12 +178,12 @@ public class StartOpenCommand : StartCommandBase
             Start.MultiMC = null;
         }
 
-        Start!.LoadingPanelVisibility = false;
         if (Start!.OpenedIsEmpty())
             Start.SetStartButtonState(StartButtonState.open);
 
         if (!isShiftPressed)
         {
+            Start!.SetLoadingText("Auto-Refreshing");
             StartViewModel.Log($"Opened Preset {Settings!.PresetName} in {Math.Round(Stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
             StartViewModel.Log("Attempting to first Auto-Refresh", ConsoleLineOption.Warning);
             await Task.Delay(App.Config.TimeLateRefresh);
@@ -192,6 +193,7 @@ public class StartOpenCommand : StartCommandBase
         bool isItOpening = true;
         Start!.RefreshOpenedCommand.Execute(new object[] { isShiftPressed, isItOpening });
 
+        Start!.LoadingPanelVisibility = false;
         source.Dispose();
         isOpening = false;
         isShiftPressed = false;
@@ -215,4 +217,5 @@ public class StartOpenCommand : StartCommandBase
         count++;
         Start!.LoadingBarPercentage = (count * 100) / progressLength;
     }
+
 }

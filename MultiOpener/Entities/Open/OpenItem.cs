@@ -88,7 +88,7 @@ public class OpenItem
             if (token.IsCancellationRequested)
                 opened.Clear();
             else
-                await opened.OpenProcess(token);
+               await opened.OpenProcess(token);
 
             Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });
 

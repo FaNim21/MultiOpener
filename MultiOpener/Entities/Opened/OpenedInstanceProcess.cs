@@ -74,6 +74,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
         catch (Exception)
         {
             StartViewModel.Log($"Cannot open MultiMC instance process {Name} from {ProcessStartInfo.WorkingDirectory}", ConsoleLineOption.Error);
+            return false;
         }
 
         if (process != null)
@@ -111,7 +112,10 @@ public partial class OpenedInstanceProcess : OpenedProcess
 
         } while (!isHwndFound && errorCount < config.ErrorCount);
 
-        return errorCount < config.ErrorCount;
+        if (!isHwndFound)
+            StartViewModel.Log("An error occurred while searching for the MultiMC instance. Please use Shift+Refresh to try finding that instance again when the instance process is open in the background.", ConsoleLineOption.Error);
+
+        return isHwndFound;
     }
 
     public bool FindInstance(List<nint> instances, bool canRemove = true)

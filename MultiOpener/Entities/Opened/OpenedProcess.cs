@@ -263,6 +263,7 @@ public class OpenedProcess : INotifyPropertyChanged
         }
         catch (Exception)
         {
+            StartViewModel.Log($"An error occurred while opening {Name}. Something went wrong using process start info", ConsoleLineOption.Error);
             return false;
         }
 
@@ -289,6 +290,7 @@ public class OpenedProcess : INotifyPropertyChanged
             if (!isHwndFound && !Win32.ProcessExist(Pid))
             {
                 Clear();
+                StartViewModel.Log($"An error occurred while opening {Name}. The Window Handle could not be found due to an incorrect process ID.", ConsoleLineOption.Error);
                 return false;
             }
         }
@@ -298,6 +300,7 @@ public class OpenedProcess : INotifyPropertyChanged
 
         UpdateStatus();
 
+        StartViewModel.Log($"Succesfully opened {Name} at process ID: {Pid}");
         return true;
     }
     public async Task<bool> Close()

@@ -151,10 +151,7 @@ public partial class MainWindow : Window
 
     public void Update()
     {
-        /*if (InputController.Instance.GetKeyDown(Key.F5) && !MainViewModel.start.OpenedIsEmpty())
-            MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { false, false });
-
-        InputController.Instance.UpdatePreviousKeys();*/
+        //TODO: 1 Zrobic tu jakies mozliwosci nieskonczonej petli poniewaz inputy ida w inna strone
     }
 
     private async void Worker_DoWork(object sender, DoWorkEventArgs e)
@@ -183,7 +180,7 @@ public partial class MainWindow : Window
             Key = Key.F5,
             ModifierKeys = ModifierKeys.None,
             Description = "fast refresh",
-            Action = () => { MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { false, false });}
+            Action = () => { MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { false, false }); }
         };
 
         var fastRefreshHotkey = new Hotkey
@@ -191,10 +188,19 @@ public partial class MainWindow : Window
             Key = Key.F5,
             ModifierKeys = ModifierKeys.Shift,
             Description = "normal refresh",
-            Action = () => { MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { true, false });}
+            Action = () => { MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { true, false }); }
+        };
+
+        var openButtonPressHotkey = new Hotkey
+        {
+            Key = Key.F8,
+            ModifierKeys = ModifierKeys.None,
+            Description = "opening, canceling and closing preset button",
+            Action = () => { Application.Current.Dispatcher.Invoke(delegate { MainViewModel.start.OpenCommand.Execute(null); }); }
         };
 
         InputController.Instance.AddHotkey(refreshHotkey);
         InputController.Instance.AddHotkey(fastRefreshHotkey);
+        InputController.Instance.AddHotkey(openButtonPressHotkey);
     }
 }

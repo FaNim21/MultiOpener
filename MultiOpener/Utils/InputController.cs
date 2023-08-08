@@ -77,6 +77,16 @@ public class InputController
         }
     }
 
+    public void UpdateHotkey(Hotkey modifiedHotkey)
+    {
+        /*var existingHotkey = hotkeys.FirstOrDefault(hotkey => hotkey.Description == modifiedHotkey.Description);
+        if (existingHotkey != null)
+        {
+            existingHotkey.Key = modifiedHotkey.Key;
+            existingHotkey.ModifierKeys = modifiedHotkey.ModifierKeys;
+        }*/
+    }
+
     private bool IsHotkeyPressed(Hotkey hotkey)
     {
         return hotkey.ModifierKeys == Keyboard.Modifiers && pressedKeys.Contains(hotkey.Key);
