@@ -164,7 +164,7 @@ public class OpenedProcess : INotifyPropertyChanged
                 SetPid();
             else
             {
-                StartViewModel.Log($"{Name} has been closed or could not been found", ConsoleLineOption.Warning);
+                StartViewModel.Log($"'{Name}' has been closed or could not been found", ConsoleLineOption.Warning);
                 Clear();
             }
 
@@ -263,7 +263,7 @@ public class OpenedProcess : INotifyPropertyChanged
         }
         catch (Exception)
         {
-            StartViewModel.Log($"An error occurred while opening {Name}. Something went wrong using process start info", ConsoleLineOption.Error);
+            StartViewModel.Log($"An error occurred while opening '{Name}'. Something went wrong using process start info", ConsoleLineOption.Error);
             return false;
         }
 
@@ -290,7 +290,7 @@ public class OpenedProcess : INotifyPropertyChanged
             if (!isHwndFound && !Win32.ProcessExist(Pid))
             {
                 Clear();
-                StartViewModel.Log($"An error occurred while opening {Name}. The Window Handle could not be found due to an incorrect process ID.", ConsoleLineOption.Error);
+                StartViewModel.Log($"An error occurred while opening '{Name}'. The Window Handle could not be found due to an incorrect process ID.", ConsoleLineOption.Error);
                 return false;
             }
         }
@@ -300,10 +300,10 @@ public class OpenedProcess : INotifyPropertyChanged
 
         UpdateStatus();
 
-        StartViewModel.Log($"Succesfully opened {Name} at process ID: {Pid}");
+        StartViewModel.Log($"Succesfully opened '{Name}' at process ID: {Pid}");
         return true;
     }
-    public async Task<bool> Close()
+    public virtual async Task<bool> Close()
     {
         if (Pid == -1)
         {
@@ -332,7 +332,7 @@ public class OpenedProcess : INotifyPropertyChanged
         }
         catch (Exception e)
         {
-            DialogBox.Show($"Cannot close {WindowTitle ?? ""} \n{e}", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            StartViewModel.Log($"Cannot close {WindowTitle ?? "?"} \n{e}", ConsoleLineOption.Error);
             return false;
         }
     }

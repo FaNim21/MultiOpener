@@ -1,6 +1,5 @@
 ﻿using MultiOpener.Utils;
 using System.Diagnostics;
-using Moq;
 
 namespace MultiOpenerTests.Opening;
 

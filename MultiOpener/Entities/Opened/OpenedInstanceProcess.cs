@@ -3,6 +3,7 @@ using MultiOpener.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
             if (string.IsNullOrEmpty(WindowTitle))
             {
                 string? titleName = System.IO.Path.GetFileName(Path);
-                if (!Win32.IsProcessResponding(Pid))
+                if (!Win32.IsProcessResponding(Pid) || !IsInstanceProcessResponding())
                     titleName = "(Not Responding) " + titleName;
 
                 WindowTitle = titleName;
@@ -52,7 +53,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
         }
 
         string title = $"[{number}] " + Win32.GetWindowTitle(Hwnd);
-        if (!Win32.IsProcessResponding(Pid))
+        if (!Win32.IsProcessResponding(Pid) || !IsInstanceProcessResponding())
             title = "(Not Reponding)" + title;
 
         if (!string.IsNullOrEmpty(title))
@@ -73,7 +74,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
         }
         catch (Exception)
         {
-            StartViewModel.Log($"Cannot open MultiMC instance process {Name} from {ProcessStartInfo.WorkingDirectory}", ConsoleLineOption.Error);
+            StartViewModel.Log($"Cannot open MultiMC instance process '{Name}' from {ProcessStartInfo.WorkingDirectory}", ConsoleLineOption.Error);
             return false;
         }
 
@@ -85,7 +86,80 @@ public partial class OpenedInstanceProcess : OpenedProcess
 
         UpdateStatus();
 
+        StartViewModel.Log($"Succesfully opened Instance '{Name}' at process ID: {Pid}");
         return true;
+    }
+
+    public override async Task<bool> Close()
+    {
+        if (Pid == -1)
+        {
+            Clear();
+            return true;
+        }
+
+        try
+        {
+            bool output = false;
+
+            if(!Win32.IsProcessResponding(Pid))
+                output = await Win32.CloseProcessByPid(Pid);
+
+            //Experimental
+            if (!IsInstanceProcessResponding() && !output)
+                output = await Win32.CloseProcessByPid(Pid);
+
+            if (!output)
+            {
+                output = await Win32.CloseProcessByHwnd(Hwnd);
+                if (!output)
+                    output = await Win32.CloseProcessByPid(Pid);
+            }
+
+            Clear();
+            return output;
+        }
+        catch (Exception e)
+        {
+            StartViewModel.Log($"Cannot close MC instance named {Name}(Title: {WindowTitle}) \n{e}", ConsoleLineOption.Error);
+            return false;
+        }
+    }
+
+    private bool IsInstanceProcessResponding()
+    {
+        string logsPath = Path + "\\.minecraft\\logs";
+        string latestLogFilePath = System.IO.Path.Combine(logsPath, "latest.log");
+
+        if (File.Exists(latestLogFilePath))
+        {
+            string lastLogLine = ReadLastLogLine(latestLogFilePath);
+            if (lastLogLine.Contains("Saving chunks") || lastLogLine.Contains("Saving the game") || lastLogLine.Contains("Saving worlds"))
+            {
+                StartViewModel.Log($"{Name} process is stuck in world saving", ConsoleLineOption.Warning);
+                return false;
+            }
+            else
+                return true;
+        }
+
+        return false;
+    }
+    private string ReadLastLogLine(string filePath)
+    {
+        string lastLine = string.Empty;
+
+        using (FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        using (StreamReader streamReader = new(fileStream))
+        {
+            string line;
+            while ((line = streamReader.ReadLine()) != null)
+            {
+                lastLine = line; // Keep overwriting with the last line until the end
+            }
+        }
+
+        return lastLine;
     }
 
     public async Task<bool> SearchForSingleMCInstance(CancellationToken token = default)
@@ -156,6 +230,4 @@ public partial class OpenedInstanceProcess : OpenedProcess
 
     [GeneratedRegex("^Minecraft\\*\\s*(?:-\\s*Instance)?\\s*((?:\\d+(?:\\.\\d+)*)?)(?:\\s*-\\s*(\\S+(?:\\s*\\S+)*))?$", RegexOptions.NonBacktracking | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]
     public static partial Regex MCPattern();
-
-
 }

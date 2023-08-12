@@ -1,61 +1,65 @@
 ﻿using MultiOpener.Components.Controls;
+using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Automation;
 
 namespace MultiOpener.Utils;
 
-public class Win32
+public partial class Win32
 {
     #region Extern methods
     [DllImport("user32.dll")]
-    private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
-    private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+    private static extern bool EnumWindows(EnumWindowsProc enumProc, nint lParam);
+    private delegate bool EnumWindowsProc(nint hWnd, nint lParam);
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+    private static extern int GetWindowText(nint hWnd, StringBuilder lpString, int nMaxCount);
 
     [DllImport("kernel32.dll")]
-    private static extern uint GetProcessId(IntPtr handle);
+    private static extern uint GetProcessId(nint handle);
 
     [DllImport("user32.dll")]
-    private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+    private static extern uint GetWindowThreadProcessId(nint hWnd, out uint lpdwProcessId);
 
     [DllImport("user32.dll")]
-    private static extern int SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+    private static extern int SendMessage(nint hWnd, int Msg, nint wParam, nint lParam);
 
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
-    private static extern IntPtr SendMessageTimeout(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam, uint fuFlags, uint uTimeout, out IntPtr lpdwResult);
+    private static extern nint SendMessageTimeout(nint hWnd, int Msg, nint wParam, nint lParam, uint fuFlags, uint uTimeout, out nint lpdwResult);
 
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, StringBuilder lpExeName, out int lpdwSize);
+    static extern bool QueryFullProcessImageName(nint hProcess, int dwFlags, StringBuilder lpExeName, out int lpdwSize);
 
     [DllImport("user32.dll")]
-    private static extern bool IsWindow(IntPtr hWnd);
+    private static extern bool IsWindow(nint hWnd);
 
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+    static extern nint OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
 
     [DllImport("kernel32.dll", SetLastError = true)]
-    static extern bool CloseHandle(IntPtr hObject);
+    static extern bool CloseHandle(nint hObject);
 
     [DllImport("psapi.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, StringBuilder lpFileName, int nSize);
+    static extern uint GetModuleFileNameEx(nint hProcess, nint hModule, StringBuilder lpFileName, int nSize);
 
     [DllImport("user32.dll")]
-    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    private static extern bool ShowWindow(nint hWnd, int nCmdShow);
 
     [DllImport("user32.dll")]
-    public static extern bool IsIconic(IntPtr hWnd);
+    public static extern bool IsIconic(nint hWnd);
 
     [DllImport("user32.dll")]
-    public static extern bool SetForegroundWindow(IntPtr hWnd);
+    public static extern bool SetForegroundWindow(nint hWnd);
 
 
     private const int SW_SHOWMINIMIZED = 2;
@@ -65,7 +69,7 @@ public class Win32
     #endregion
 
 
-    public static string GetWindowTitle(IntPtr hwnd)
+    public static string GetWindowTitle(nint hwnd)
     {
         StringBuilder sb = new(256);
         int length = GetWindowText(hwnd, sb, sb.Capacity);
@@ -74,22 +78,22 @@ public class Win32
         return "";
     }
 
-    public static int GetPidFromHwnd(IntPtr hwnd)
+    public static int GetPidFromHwnd(nint hwnd)
     {
-        if (hwnd == IntPtr.Zero) return -1;
+        if (hwnd == nint.Zero) return -1;
 
         GetWindowThreadProcessId(hwnd, out uint processId);
         return (int)processId;
     }
 
-    public static IntPtr GetHwndFromPid(int pid)
+    public static nint GetHwndFromPid(int pid)
     {
-        if (pid <= 0) return IntPtr.Zero;
+        if (pid <= 0) return nint.Zero;
 
         uint processId = (uint)pid;
 
         Process process;
-        IntPtr hwnd = IntPtr.Zero;
+        nint hwnd = nint.Zero;
 
         try
         {
@@ -98,13 +102,13 @@ public class Win32
         }
         catch (ArgumentException)
         {
-            return IntPtr.Zero;
+            return nint.Zero;
         }
 
         // If the process does not have a visible window, enumerate all top-level windows and find the one with the matching process ID
-        if (hwnd == IntPtr.Zero)
+        if (hwnd == nint.Zero)
         {
-            EnumWindows((IntPtr wnd, IntPtr param) =>
+            EnumWindows((wnd, param) =>
             {
                 GetWindowThreadProcessId(wnd, out uint thisProcessId);
                 if (thisProcessId == processId)
@@ -118,18 +122,18 @@ public class Win32
                     }
                 }
                 return true;
-            }, IntPtr.Zero);
+            }, nint.Zero);
         }
 
         if (IsWindow(hwnd))
             return hwnd;
         else
-            return IntPtr.Zero;
+            return nint.Zero;
     }
 
-    public static List<IntPtr> GetWindowsByTitlePattern(Regex titlePattern)
+    public static List<nint> GetWindowsByTitlePattern(Regex titlePattern)
     {
-        List<IntPtr> windows = new();
+        List<nint> windows = new();
 
         EnumWindows((hWnd, lParam) =>
         {
@@ -147,18 +151,18 @@ public class Win32
             }
 
             return true;
-        }, IntPtr.Zero);
+        }, nint.Zero);
 
         return windows;
     }
 
-    public static async Task<bool> CloseProcessByHwnd(IntPtr hwnd)
+    public static async Task<bool> CloseProcessByHwnd(nint hwnd)
     {
         if (IsWindow(hwnd))
         {
             Task<bool> close = Task.Run(() =>
             {
-                return SendMessageTimeout(hwnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero, SMTO_ABORTIFHUNG, 4000, out var result) != IntPtr.Zero;
+                return SendMessageTimeout(hwnd, WM_CLOSE, nint.Zero, nint.Zero, SMTO_ABORTIFHUNG, 4000, out var result) != nint.Zero;
             });
 
             return await close;
@@ -232,7 +236,8 @@ public class Win32
     private static string? GetJavaExecutablePathFromProcess(Process process)
     {
         string? javaLibraryPath = null;
-        Regex regex = new(@"-Djava\.library\.path\s*=\s*""?([^""]+)/natives""?");
+        Regex regex = JavaLibrary();
+
         using (ManagementObjectSearcher searcher = new("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id))
         using (ManagementObjectCollection objects = searcher.Get())
         {
@@ -248,41 +253,39 @@ public class Win32
                         break;
                     }
                 }
+
                 obj.Dispose();
-                if (!string.IsNullOrEmpty(javaLibraryPath))
-                {
-                    break;
-                }
+                if (!string.IsNullOrEmpty(javaLibraryPath)) break;
             }
         }
 
         return javaLibraryPath;
     }
 
-    public static void MinimizeWindowHwnd(IntPtr hwnd)
+    public static void MinimizeWindowHwnd(nint hwnd)
     {
-        if (hwnd == IntPtr.Zero) return;
+        if (hwnd == nint.Zero) return;
 
         ShowWindow(hwnd, SW_SHOWMINIMIZED);
     }
-    public static void UnminimizeWindowHwnd(IntPtr hWnd)
+    public static void UnminimizeWindowHwnd(nint hWnd)
     {
-        if (hWnd == IntPtr.Zero) return;
+        if (hWnd == nint.Zero) return;
 
         if (IsIconic(hWnd))
             ShowWindow(hWnd, SW_RESTORE);
     }
 
-    public static bool WindowExist(IntPtr hwnd)
+    public static bool WindowExist(nint hwnd)
     {
-        if (hwnd == IntPtr.Zero) return false;
+        if (hwnd == nint.Zero) return false;
 
         return IsWindow(hwnd);
     }
 
-    public static void SetFocus(IntPtr hWnd)
+    public static void SetFocus(nint hwnd)
     {
-        SetForegroundWindow(hWnd);
+        SetForegroundWindow(hwnd);
     }
 
     public static bool IsProcessResponding(int pid)
@@ -292,12 +295,14 @@ public class Win32
         try
         {
             Process? process = Process.GetProcessById(pid);
-            if (process != null && !process.HasExited)
-            {
+            if (process != null && !process.HasExited )
                 return process.Responding;
-            }
-        }catch (Exception) { }
+        }
+        catch (Exception) { }
 
         return false;
     }
+
+    [GeneratedRegex("-Djava\\.library\\.path\\s*=\\s*\"?([^\"]+)/natives\"?")]
+    private static partial Regex JavaLibrary();
 }
