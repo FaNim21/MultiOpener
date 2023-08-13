@@ -95,7 +95,6 @@ public class StartOpenCommand : StartCommandBase
         Start!.LoadingPanelVisibility = true;
         Start.SetLoadingText("");
 
-        //Getting shift to be pressed to make structured open
         if (InputController.Instance.GetKey(Key.LeftShift))
         {
             source.Cancel();
@@ -181,17 +180,17 @@ public class StartOpenCommand : StartCommandBase
         if (Start!.OpenedIsEmpty())
             Start.SetStartButtonState(StartButtonState.open);
 
+        Consts.IsStartPanelWorkingNow = false;
+        bool isItOpening = true;
+
         if (!isShiftPressed)
         {
             Start!.SetLoadingText("Auto-Refreshing");
             StartViewModel.Log($"Opened Preset {Settings!.PresetName} in {Math.Round(Stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
             StartViewModel.Log("Attempting to first Auto-Refresh", ConsoleLineOption.Warning);
             await Task.Delay(App.Config.TimeLateRefresh);
+            Start!.RefreshOpenedCommand.Execute(new object[] { isShiftPressed, isItOpening });
         }
-
-        Consts.IsStartPanelWorkingNow = false;
-        bool isItOpening = true;
-        Start!.RefreshOpenedCommand.Execute(new object[] { isShiftPressed, isItOpening });
 
         Start!.LoadingPanelVisibility = false;
         source.Dispose();

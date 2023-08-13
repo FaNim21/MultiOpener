@@ -1,7 +1,5 @@
-﻿using MultiOpener.Components.Controls;
-using MultiOpener.Entities.Opened;
+﻿using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels;
-using MultiOpener.Windows;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -74,8 +72,8 @@ public class OpenItem
     {
         try
         {
-            if (!token.IsCancellationRequested)
-                await Task.Delay(DelayBefore);
+            bool isCancelled = token.IsCancellationRequested;
+            if (!isCancelled) await Task.Delay(DelayBefore);
 
             string executable = Path.GetFileName(PathExe);
             string pathDir = Path.GetDirectoryName(PathExe) ?? "";
@@ -85,15 +83,12 @@ public class OpenItem
             string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
             opened.Initialize(startInfo, name!, PathExe, MinimizeOnOpen);
 
-            if (token.IsCancellationRequested)
-                opened.Clear();
-            else
-               await opened.OpenProcess(token);
+            if (isCancelled) opened.Clear();
+            else await opened.OpenProcess(token);
 
             Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });
 
-            if (!token.IsCancellationRequested)
-                await Task.Delay(DelayAfter);
+            if (!isCancelled) await Task.Delay(DelayAfter);
         }
         catch (Exception e)
         {

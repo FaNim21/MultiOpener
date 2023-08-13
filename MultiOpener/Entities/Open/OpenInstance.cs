@@ -91,33 +91,31 @@ public class OpenInstance : OpenItem
     {
         List<OpenedInstanceProcess> mcInstances = new();
         int openedCount = 0;
+        bool isCancelled = token.IsCancellationRequested;
         ((StartOpenCommand)startModel.OpenCommand).UpdateCountForInstances();
 
         try
         {
-            if (!token.IsCancellationRequested)
-                await Task.Delay(DelayBefore);
+            if (!isCancelled) await Task.Delay(DelayBefore);
 
             for (int i = 0; i < Quantity; i++)
             {
-                if (!token.IsCancellationRequested)
-                    await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances < 500 ? 500 : DelayBetweenInstances);
+                if (!isCancelled) await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances < 500 ? 500 : DelayBetweenInstances);
 
                 startModel.SetLoadingText($"{infoText} -- Instance ({i + 1}/{Quantity})");
                 ((StartOpenCommand)startModel.OpenCommand).UpdateProgressBar();
 
                 ProcessStartInfo startInfo = new(PathExe) { UseShellExecute = false, Arguments = $"--launch \"{Names[i]}\"" };
                 OpenedInstanceProcess opened = new();
-                string path = (Path.GetDirectoryName(PathExe) + "\\instances\\" + Names[i]).Replace("\\", "/");
+                string path = Path.Combine(Path.GetDirectoryName(PathExe)!, "instances", Names[i]).Replace(Path.DirectorySeparatorChar, '/');
                 opened.Initialize(startInfo, Names[i], path);
                 opened.number = (short)(i + 1);
                 opened.showNamesInsteadOfTitle = ShowNamesInsteadOfTitle;
 
-                if (!token.IsCancellationRequested)
+                if (!isCancelled)
                 {
                     openedCount++;
                     Process? process = Process.Start(startInfo);
-                    process?.WaitForInputIdle();
                 }
                 mcInstances.Add(opened);
             }
@@ -125,7 +123,7 @@ public class OpenInstance : OpenItem
             Regex mcPatternRegex = OpenedInstanceProcess.MCPattern();
             List<nint> instances = new();
 
-            if (!token.IsCancellationRequested)
+            if (!isCancelled)
             {
                 startModel!.SetLoadingText($"{infoText} (loading datas)");
 
@@ -134,22 +132,23 @@ public class OpenInstance : OpenItem
                 do
                 {
                     errorCount++;
+                    instances.Clear();
                     instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
                     await Task.Delay(TimeSpan.FromMilliseconds(config.Cooldown));
                 } while (instances.Count < openedCount && errorCount < config.ErrorCount);
 
-                await Task.Delay(1000);
+                await Task.Delay(TimeSpan.FromMilliseconds(1000));
+                isCancelled = token.IsCancellationRequested;
             }
 
             for (int i = 0; i < Quantity; i++)
             {
                 var current = mcInstances[i];
                 if (!current.FindInstance(instances)) current.Clear();
-
-                Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(current); });
             }
+            Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(mcInstances); });
 
-            if (!token.IsCancellationRequested)
+            if (!isCancelled)
             {
                 startModel!.SetLoadingText($"{infoText} (finalizing datas)");
                 await Task.Delay(DelayAfter + App.Config.TimeoutInstanceFinalizingData);

@@ -1,17 +1,13 @@
 ﻿using MultiOpener.Components.Controls;
-using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels;
-using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Automation;
 
 namespace MultiOpener.Utils;
 
@@ -25,32 +21,14 @@ public partial class Win32
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     private static extern int GetWindowText(nint hWnd, StringBuilder lpString, int nMaxCount);
 
-    [DllImport("kernel32.dll")]
-    private static extern uint GetProcessId(nint handle);
-
     [DllImport("user32.dll")]
     private static extern uint GetWindowThreadProcessId(nint hWnd, out uint lpdwProcessId);
-
-    [DllImport("user32.dll")]
-    private static extern int SendMessage(nint hWnd, int Msg, nint wParam, nint lParam);
 
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     private static extern nint SendMessageTimeout(nint hWnd, int Msg, nint wParam, nint lParam, uint fuFlags, uint uTimeout, out nint lpdwResult);
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    static extern bool QueryFullProcessImageName(nint hProcess, int dwFlags, StringBuilder lpExeName, out int lpdwSize);
-
     [DllImport("user32.dll")]
     private static extern bool IsWindow(nint hWnd);
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    static extern nint OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
-
-    [DllImport("kernel32.dll", SetLastError = true)]
-    static extern bool CloseHandle(nint hObject);
-
-    [DllImport("psapi.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    static extern uint GetModuleFileNameEx(nint hProcess, nint hModule, StringBuilder lpFileName, int nSize);
 
     [DllImport("user32.dll")]
     private static extern bool ShowWindow(nint hWnd, int nCmdShow);
@@ -138,7 +116,7 @@ public partial class Win32
         EnumWindows((hWnd, lParam) =>
         {
             StringBuilder sb = new(256);
-            GetWindowText(hWnd, sb, sb.Capacity);
+            _ = GetWindowText(hWnd, sb, sb.Capacity);
 
             try
             {
@@ -149,7 +127,6 @@ public partial class Win32
             {
                 StartViewModel.Log("Error timeout while looking for window title match", Entities.ConsoleLineOption.Error);
             }
-
             return true;
         }, nint.Zero);
 

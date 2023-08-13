@@ -134,13 +134,12 @@ public partial class OpenedInstanceProcess : OpenedProcess
         if (File.Exists(latestLogFilePath))
         {
             string lastLogLine = ReadLastLogLine(latestLogFilePath);
-            if (lastLogLine.Contains("Saving chunks") || lastLogLine.Contains("Saving the game") || lastLogLine.Contains("Saving worlds"))
+            if (lastLogLine.Contains("Saving the game") || lastLogLine.Contains("Saving worlds"))
             {
                 StartViewModel.Log($"{Name} process is stuck in world saving", ConsoleLineOption.Warning);
                 return false;
             }
-            else
-                return true;
+            else return true;
         }
 
         return false;
@@ -154,9 +153,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
         {
             string line;
             while ((line = streamReader.ReadLine()) != null)
-            {
-                lastLine = line; // Keep overwriting with the last line until the end
-            }
+                lastLine = line;
         }
 
         return lastLine;

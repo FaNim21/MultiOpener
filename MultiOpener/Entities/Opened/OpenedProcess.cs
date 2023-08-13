@@ -1,11 +1,9 @@
 ﻿using MultiOpener.Commands.OpenedCommands;
-using MultiOpener.Components.Controls;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;

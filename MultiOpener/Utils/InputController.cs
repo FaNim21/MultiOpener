@@ -52,13 +52,6 @@ public class InputController
         return pressedKeys.Contains(key) && !previousKeys.Contains(key);
     }
 
-    public void UpdatePreviousKeys()
-    {
-        previousKeys.Clear();
-        foreach (var key in pressedKeys)
-            previousKeys.Add(key);
-    }
-
     public void Cleanup()
     {
         Application.Current.MainWindow.KeyDown -= HandleKeyDown;

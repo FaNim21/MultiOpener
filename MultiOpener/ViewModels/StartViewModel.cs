@@ -2,6 +2,7 @@
 using MultiOpener.Entities;
 using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels.Controls;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -162,6 +163,14 @@ public class StartViewModel : BaseViewModel
     public void AddOpened(OpenedProcess openedProcess)
     {
         Opened.Add(openedProcess);
+    }
+    public void AddOpened(List<OpenedInstanceProcess> openedProcesses)
+    {
+        for (int i = 0; i < openedProcesses.Count; i++)
+        {
+            var current = openedProcesses[i];
+            Opened.Add(current);
+        }
     }
     public void RemoveOpened(OpenedProcess openedProcess)
     {
