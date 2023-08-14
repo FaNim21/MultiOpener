@@ -111,6 +111,17 @@ public class StartViewModel : BaseViewModel
         }
     }
 
+    public string _loadingDetailedInfoText = "Szczegółowe info co sie teraz odpala";
+    public string LoadingDetailedInfoText
+    {
+        get { return _loadingDetailedInfoText; }
+        set
+        {
+            _loadingDetailedInfoText = value;
+            OnPropertyChanged(nameof(LoadingDetailedInfoText));
+        }
+    }
+
 
     public StartViewModel(MainWindow mainWindow)
     {
@@ -144,6 +155,10 @@ public class StartViewModel : BaseViewModel
     public void SetLoadingText(string text)
     {
         LoadingInfoText = text;
+    }
+    public void SetDetailedLoadingText(string text)
+    {
+        LoadingDetailedInfoText = text;
     }
 
     public void UpdatePresetName(string name = "Empty preset")

@@ -178,6 +178,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
             }
             catch (Exception) { }
 
+            //TODO: Przyspieszyc to moze o aspekt  polaczenia FindInstance z Win32 po to zeby na bierzaco sprawdzac czy dana instancja mc znaleziona tam ma tą sam sciezke
             instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
             isHwndFound = FindInstance(instances, false);
 

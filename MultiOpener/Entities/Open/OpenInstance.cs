@@ -87,7 +87,7 @@ public class OpenInstance : OpenItem
         return output;
     }
 
-    public override async Task Open(StartViewModel startModel, CancellationToken token, string infoText = "")
+    public override async Task Open(StartViewModel startModel, CancellationToken token)
     {
         List<OpenedInstanceProcess> mcInstances = new();
         int openedCount = 0;
@@ -102,7 +102,7 @@ public class OpenInstance : OpenItem
             {
                 if (!isCancelled) await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances < 500 ? 500 : DelayBetweenInstances);
 
-                startModel.SetLoadingText($"{infoText} -- Instance ({i + 1}/{Quantity})");
+                startModel.SetDetailedLoadingText($"({i + 1}/{Quantity}) Instance");
                 ((StartOpenCommand)startModel.OpenCommand).UpdateProgressBar();
 
                 ProcessStartInfo startInfo = new(PathExe) { UseShellExecute = false, Arguments = $"--launch \"{Names[i]}\"" };
@@ -115,7 +115,7 @@ public class OpenInstance : OpenItem
                 if (!isCancelled)
                 {
                     openedCount++;
-                    Process? process = Process.Start(startInfo);
+                    Process.Start(startInfo);
                 }
                 mcInstances.Add(opened);
             }
@@ -125,7 +125,7 @@ public class OpenInstance : OpenItem
 
             if (!isCancelled)
             {
-                startModel!.SetLoadingText($"{infoText} (loading datas)");
+                startModel!.SetDetailedLoadingText($"Loading Datas");
 
                 int errorCount = -1;
                 var config = new TimeoutConfigurator(App.Config.TimeoutLookingForInstancesData, 30);
@@ -150,7 +150,7 @@ public class OpenInstance : OpenItem
 
             if (!isCancelled)
             {
-                startModel!.SetLoadingText($"{infoText} (finalizing datas)");
+                startModel!.SetDetailedLoadingText($"Finalizing Datas");
                 await Task.Delay(DelayAfter + App.Config.TimeoutInstanceFinalizingData);
             }
         }

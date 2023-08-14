@@ -93,7 +93,8 @@ public class StartOpenCommand : StartCommandBase
         Validate(length);
 
         Start!.LoadingPanelVisibility = true;
-        Start.SetLoadingText("");
+        Start.SetLoadingText(string.Empty);
+        Start.SetDetailedLoadingText(string.Empty);
 
         if (InputController.Instance.GetKey(Key.LeftShift))
         {
@@ -159,11 +160,11 @@ public class StartOpenCommand : StartCommandBase
             var current = Settings!.Opens[i];
             if (string.IsNullOrEmpty(current.PathExe)) return;
 
-            string infoText = $"({i + 1}/{length}) Openning {current.Name}...";
-            Start!.SetLoadingText(infoText);
+            Start!.SetDetailedLoadingText(string.Empty);
+            Start!.SetLoadingText($"({i + 1}/{length}) Openning {current.Name}...");
             UpdateProgressBar();
 
-            await current.Open(Start, token, infoText);
+            await current.Open(Start, token);
             Application.Current.Dispatcher.Invoke(delegate { Application.Current.MainWindow.Activate(); });
         }
         Stopwatch.Stop();

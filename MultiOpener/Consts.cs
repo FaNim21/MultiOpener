@@ -8,8 +8,7 @@ public static class Consts
     public const string Version = "v1.0.0-PREVIEW22";
 
     public static bool IsStartPanelWorkingNow { get; set; } = true;
+    public static bool IsSwitchingBetweenOpensInSettings { get; set; } = false;
 
     public static readonly string AppdataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MultiOpener");
-
-    public static bool IsSwitchingBetweenOpensInSettings { get; set; } = false;
 }

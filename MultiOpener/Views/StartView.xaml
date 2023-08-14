@@ -160,39 +160,42 @@
         <Grid Grid.Row="1"
               Visibility="{Binding LoadingPanelVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}"
               Background="#4a4b4d">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0">
-                <TextBlock Text="{Binding LoadingInfoText}"
-                           Foreground="#76bbf4"
-                           VerticalAlignment="Bottom"
-                           TextAlignment="Center"
-                           LineStackingStrategy="BlockLineHeight"
-                           LineHeight="27"
-                           TextWrapping="Wrap"
-                           FontWeight="Medium"
-                           FontFamily="Dubai"
-                           FontSize="21"
-                           Padding="0" 
-                           Margin="5 0 5 10"/>
-            </Grid>
-
-            <Grid Grid.Row="1">
-                <ProgressBar x:Name="progress"
-                             Width="775"
-                             Height="30"
-                             Value="{Binding LoadingBarPercentage}"
-                             VerticalAlignment="top"
-                             Background="#7d8187"
-                             Foreground="#FF387944"
-                             BorderThickness="0"
-                             Minimum="1"
-                             Maximum="100"
-                             Margin="0 0 0 0" />
-            </Grid>
+            <TextBlock Text="{Binding LoadingInfoText}"
+                       Foreground="#76bbf4"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       LineStackingStrategy="BlockLineHeight"
+                       LineHeight="27"
+                       Height="40"
+                       TextWrapping="Wrap"
+                       FontWeight="Medium"
+                       FontFamily="Dubai"
+                       FontSize="25"
+                       Padding="10"
+                       Margin="0 0 0 90"/>
+            <ProgressBar x:Name="progress"
+                         Width="775"
+                         Height="30"
+                         Value="{Binding LoadingBarPercentage}"
+                         VerticalAlignment="Center"
+                         Background="#7d8187"
+                         Foreground="#FF387944"
+                         BorderThickness="0"
+                         Minimum="1"
+                         Maximum="100"/>
+            <TextBlock Text="{Binding LoadingDetailedInfoText}"
+                       Foreground="#76bbf4"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       LineStackingStrategy="BlockLineHeight"
+                       LineHeight="27"
+                       Height="30"
+                       TextWrapping="Wrap"
+                       FontWeight="Medium"
+                       FontFamily="Dubai"
+                       FontSize="22"
+                       Padding="4"
+                       Margin="0 80 0 0" />
         </Grid>
     </Grid>
 </UserControl>

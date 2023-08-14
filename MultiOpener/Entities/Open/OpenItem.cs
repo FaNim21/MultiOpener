@@ -68,7 +68,7 @@ public class OpenItem
         return string.Empty;
     }
 
-    public virtual async Task Open(StartViewModel startModel, CancellationToken token, string infoText = "")
+    public virtual async Task Open(StartViewModel startModel, CancellationToken token)
     {
         try
         {
