@@ -57,15 +57,15 @@ namespace MultiOpener.ViewModels
             }
         }
 
-        private int _timeoutLookingForSingleInstanceData;
-        public int TimeoutLookingForSingleInstanceData
+        public int _timeoutWaitingForSingleInstanceToOpen;
+        public int TimeoutWaitingForSingleInstanceToOpen
         {
-            get { return _timeoutLookingForSingleInstanceData; }
+            get { return _timeoutWaitingForSingleInstanceToOpen; }
             set
             {
-                _timeoutLookingForSingleInstanceData = value;
-                App.Config.TimeoutLookingForSingleInstanceData = value;
-                OnPropertyChanged(nameof(TimeoutLookingForSingleInstanceData));
+                _timeoutWaitingForSingleInstanceToOpen = value;
+                App.Config.TimeoutWaitingForSingleInstanceToOpen = value;
+                OnPropertyChanged(nameof(TimeoutWaitingForSingleInstanceToOpen));
             }
         }
 
@@ -101,9 +101,7 @@ namespace MultiOpener.ViewModels
         public OptionsViewModel()
         {
             ResetToDefaultCommand = new OptionsResetToDefaultCommand(this);
-
             App.Config.ResetToDefault();
-
             LoadOptions();
 
             Application.Current.MainWindow.Topmost = App.Config.AlwaysOnTop;

@@ -16,18 +16,13 @@ public partial class OpenedInstanceProcess : OpenedProcess
     public short number = -1;
 
 
-    public override void FastUpdate()
+    public override void Update(bool lookForWindow = false)
     {
-        base.FastUpdate();
+        base.Update(lookForWindow);
     }
-    public override void Update()
+    public override void FindProcess(bool lookForWindow = false)
     {
-        base.FastUpdate();
-    }
-    public override async Task UpdateAsync(CancellationToken token = default)
-    {
-        if (!IsOpenedFromStatus())
-            await SearchForSingleMCInstance(token);
+        Win32.GetWindowByTitlePattern(MCPattern(), this);
     }
 
     public override void UpdateTitle()
@@ -67,7 +62,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
     {
         if (ProcessStartInfo == null) return false;
 
-        Process? process = null;
+        Process? process;
         try
         {
             process = Process.Start(ProcessStartInfo);
@@ -81,7 +76,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
         if (process != null)
         {
             process.WaitForInputIdle();
-            await SearchForSingleMCInstance(token);
+            await SearchForSingleMCInstance(App.Config.TimeoutWaitingForSingleInstanceToOpen, token);
         }
 
         UpdateStatus();
@@ -102,7 +97,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
         {
             bool output = false;
 
-            if(!Win32.IsProcessResponding(Pid))
+            if (!Win32.IsProcessResponding(Pid))
                 output = await Win32.CloseProcessByPid(Pid);
 
             //Experimental
@@ -152,20 +147,19 @@ public partial class OpenedInstanceProcess : OpenedProcess
         using (StreamReader streamReader = new(fileStream))
         {
             string line;
-            while ((line = streamReader.ReadLine()) != null)
+            while ((line = streamReader.ReadLine()!) != null)
                 lastLine = line;
         }
 
         return lastLine;
     }
 
-    public async Task<bool> SearchForSingleMCInstance(CancellationToken token = default)
+    public async Task<bool> SearchForSingleMCInstance(int timeout, CancellationToken token = default)
     {
-        Regex mcPatternRegex = MCPattern();
-        List<nint> instances;
-        int errorCount = -1;
-        var config = new TimeoutConfigurator(App.Config.TimeoutLookingForSingleInstanceData, 15);
         bool isHwndFound;
+        Regex mcPatternRegex = MCPattern();
+        int errorCount = -1;
+        var config = new TimeoutConfigurator(timeout, 15);
 
         do
         {
@@ -178,19 +172,16 @@ public partial class OpenedInstanceProcess : OpenedProcess
             }
             catch (Exception) { }
 
-            //TODO: Przyspieszyc to moze o aspekt  polaczenia FindInstance z Win32 po to zeby na bierzaco sprawdzac czy dana instancja mc znaleziona tam ma tą sam sciezke
-            instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
-            isHwndFound = FindInstance(instances, false);
-
+            isHwndFound = Win32.GetWindowByTitlePattern(mcPatternRegex, this);
         } while (!isHwndFound && errorCount < config.ErrorCount);
 
         if (!isHwndFound)
-            StartViewModel.Log("An error occurred while searching for the MultiMC instance. Please use Shift+Refresh to try finding that instance again when the instance process is open in the background.", ConsoleLineOption.Error);
+            StartViewModel.Log($"Could not found window for {Name} process", ConsoleLineOption.Warning);
 
         return isHwndFound;
     }
 
-    public bool FindInstance(List<nint> instances, bool canRemove = true)
+    public bool FindInstance(List<nint> instances)
     {
         for (int i = instances.Count - 1; i >= 0; i--)
         {
@@ -198,7 +189,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
             {
                 if (IsInstancePathEqual(instances[i]))
                 {
-                    if (canRemove) instances.RemoveAt(i);
+                    instances.RemoveAt(i);
                     return true;
                 }
             }

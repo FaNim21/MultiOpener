@@ -206,7 +206,7 @@ public class StartViewModel : BaseViewModel
         for (int i = 0; i < 90; i++) //test
         {
             AddOpened(opened);
-            opened.FastUpdate();
+            opened.Update();
         }
         LogLine("Tekst aktualizacji odpalania/zamykania czy odswiezania procesow w presecie");
 

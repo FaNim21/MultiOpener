@@ -175,7 +175,7 @@
                             </Grid>
                             <Grid ToolTip="The time to stop looking for MC instance window after it cannot be found. It is applied when opening chosen 'open' in start panel">
                                 <TextBox TextWrapping="Wrap"
-                                         Text="{Binding TimeoutLookingForSingleInstanceData}"
+                                         Text="{Binding TimeoutWaitingForSingleInstanceToOpen}"
                                          Width="80"
                                          Height="20"
                                          Background="#9E9E9E"

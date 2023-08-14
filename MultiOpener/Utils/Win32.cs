@@ -1,4 +1,5 @@
 ﻿using MultiOpener.Components.Controls;
+using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -131,6 +132,41 @@ public partial class Win32
         }, nint.Zero);
 
         return windows;
+    }
+    public static bool GetWindowByTitlePattern(Regex titlePattern, OpenedInstanceProcess openedInstance)
+    {
+        bool output = false;
+        EnumWindows((hWnd, lParam) =>
+        {
+            StringBuilder sb = new(256);
+            _ = GetWindowText(hWnd, sb, sb.Capacity);
+            try
+            {
+                if (titlePattern.IsMatch(sb.ToString()))
+                {
+                    int currentPid = GetPidFromHwnd(hWnd);
+                    string? currentPath = GetJavaFilePath(currentPid);
+                    if (currentPath != null && currentPath.Equals(openedInstance.Path))
+                    {
+                        openedInstance.SetHwnd(hWnd);
+                        openedInstance.SetPid(currentPid);
+                        output = true;
+                        return false;
+                    }
+                }
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                StartViewModel.Log("Error timeout while looking for window title match", Entities.ConsoleLineOption.Error);
+            }
+            catch (Exception ex)
+            {
+                StartViewModel.Log(ex.ToString(), Entities.ConsoleLineOption.Error);
+            }
+            return true;
+        }, nint.Zero);
+
+        return output;
     }
 
     public static async Task<bool> CloseProcessByHwnd(nint hwnd)
@@ -272,7 +308,7 @@ public partial class Win32
         try
         {
             Process? process = Process.GetProcessById(pid);
-            if (process != null && !process.HasExited )
+            if (process != null && !process.HasExited)
                 return process.Responding;
         }
         catch (Exception) { }

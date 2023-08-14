@@ -18,7 +18,7 @@ public class OpenedFocusCommand : StartCommandBase
     {
         if (openedProcess == null || Consts.IsStartPanelWorkingNow) return;
 
-        openedProcess.FastUpdate();
+        openedProcess.Update();
         Win32.UnminimizeWindowHwnd(openedProcess.Hwnd);
         Win32.SetFocus(openedProcess.Hwnd);
     }

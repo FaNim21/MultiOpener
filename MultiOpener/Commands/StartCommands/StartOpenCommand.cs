@@ -190,7 +190,7 @@ public class StartOpenCommand : StartCommandBase
             StartViewModel.Log($"Opened Preset {Settings!.PresetName} in {Math.Round(Stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
             StartViewModel.Log("Attempting to first Auto-Refresh", ConsoleLineOption.Warning);
             await Task.Delay(App.Config.TimeLateRefresh);
-            Start!.RefreshOpenedCommand.Execute(new object[] { isShiftPressed, isItOpening });
+            Start!.RefreshOpenedCommand.Execute(new object[] { isItOpening });
         }
 
         Start!.LoadingPanelVisibility = false;
@@ -217,5 +217,4 @@ public class StartOpenCommand : StartCommandBase
         count++;
         Start!.LoadingBarPercentage = (count * 100) / progressLength;
     }
-
 }

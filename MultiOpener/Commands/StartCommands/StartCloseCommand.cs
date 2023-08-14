@@ -41,7 +41,7 @@ namespace MultiOpener.Commands.StartCommands
                 for (int i = 0; i < Start.Opened.Count; i++)
                 {
                     var current = Start.Opened[i];
-                    current.FastUpdate();
+                    current.Update();
 
                     string output = "";
                     if (current.StillExist())

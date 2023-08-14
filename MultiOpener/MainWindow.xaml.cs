@@ -41,12 +41,10 @@ public partial class MainWindow : Window
 
         Task task = Task.Factory.StartNew(CheckForUpdates);
 
-        worker = new BackgroundWorker();
-        worker.WorkerSupportsCancellation = true;
+        worker = new() { WorkerSupportsCancellation = true };
         worker.DoWork += Worker_DoWork!;
 
-        if (!worker.IsBusy)
-            worker.RunWorkerAsync();
+        if (!worker.IsBusy) worker.RunWorkerAsync();
     }
 
     public void EnableDisableChoosenHeadButton(string option)
@@ -179,16 +177,8 @@ public partial class MainWindow : Window
         {
             Key = Key.F5,
             ModifierKeys = ModifierKeys.None,
-            Description = "fast refresh",
-            Action = () => { MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { false, false }); }
-        };
-
-        var fastRefreshHotkey = new Hotkey
-        {
-            Key = Key.F5,
-            ModifierKeys = ModifierKeys.Shift,
-            Description = "normal refresh",
-            Action = () => { MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { true, false }); }
+            Description = "Preset refreshing",
+            Action = () => { MainViewModel.start.RefreshOpenedCommand.Execute(new object[] { false }); }
         };
 
         var openButtonPressHotkey = new Hotkey
@@ -200,7 +190,6 @@ public partial class MainWindow : Window
         };
 
         InputController.Instance.AddHotkey(refreshHotkey);
-        InputController.Instance.AddHotkey(fastRefreshHotkey);
         InputController.Instance.AddHotkey(openButtonPressHotkey);
     }
 }

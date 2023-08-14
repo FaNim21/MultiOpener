@@ -18,7 +18,7 @@ namespace MultiOpener.Commands.OpenedCommands
         {
             if (openedProcess == null || Consts.IsStartPanelWorkingNow) return;
 
-            openedProcess.FastUpdate();
+            openedProcess.Update();
             Task task = Task.Run(CloseOpenOpened);
         }
 

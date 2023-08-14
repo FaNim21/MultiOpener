@@ -80,7 +80,7 @@ internal class OpenedProcessTest
     [Test, Order(2)]
     public async Task RestartOpened_Succesfully()
     {
-        opened!.FastUpdate();
+        opened!.Update();
         await ((OpenedResetCommand)opened!.ResetCommand).ResetOpened();
         bool result = !Consts.IsStartPanelWorkingNow && opened!.StillExist();
         Assert.That(result, Is.True);
@@ -89,7 +89,7 @@ internal class OpenedProcessTest
     [Test, Order(3)]
     public async Task CloseOpened_Succesfully()
     {
-        opened!.FastUpdate();
+        opened!.Update();
         await ((OpenedCloseOpenCommand)opened!.CloseOpenCommand).CloseOpenOpened();
         opened!.Update();
         bool result = !Consts.IsStartPanelWorkingNow && !opened!.StillExist();
@@ -99,7 +99,7 @@ internal class OpenedProcessTest
     [Test, Order(4)]
     public async Task OpenOpened_Succesfully()
     {
-        opened!.FastUpdate();
+        opened!.Update();
         await ((OpenedCloseOpenCommand)opened!.CloseOpenCommand).CloseOpenOpened();
         bool result = !Consts.IsStartPanelWorkingNow && opened!.StillExist();
         Assert.That(result, Is.True);

@@ -127,6 +127,9 @@ public class OpenInstance : OpenItem
             {
                 startModel!.SetDetailedLoadingText($"Loading Datas");
 
+                //TODO: 0 Dostosować to w przyszłości do tego jak działa Win32.GetWindowByTitlePattern tylko, że do tego leży problem czekania loading datas az wszystko instancje sie odpala
+                //ALE MOZLIWE ZE LEPIEJ ZEBY ZROBIC LICZENIE ILE JUZ SIE ZRESPILO INSTANCJI MC UZYWAJAC Win32.GetWindowsByTitlePattern i dopiero pozniej uzyc GetWindowByTitlePattern
+                //ale moze byc troche naduzyciem
                 int errorCount = -1;
                 var config = new TimeoutConfigurator(App.Config.TimeoutLookingForInstancesData, 30);
                 do

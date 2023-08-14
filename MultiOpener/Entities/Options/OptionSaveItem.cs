@@ -16,7 +16,7 @@ public class OptionSaveItem
     //Instance
     public int TimeoutLookingForInstancesData { get; set; }
     public int TimeoutInstanceFinalizingData { get; set; }
-    public int TimeoutLookingForSingleInstanceData { get; set; }
+    public int TimeoutWaitingForSingleInstanceToOpen { get; set; }
 
 
     public void ResetToDefault()
@@ -27,13 +27,13 @@ public class OptionSaveItem
 
         /* TIMINGS*/
         //Main
-        TimeLateRefresh = 3500;
+        TimeLateRefresh = 2000;
         TimeoutOpen = 3750;
 
         //Instance
         TimeoutLookingForInstancesData = 40000;
         TimeoutInstanceFinalizingData = 3000;
-        TimeoutLookingForSingleInstanceData = 15000;
+        TimeoutWaitingForSingleInstanceToOpen = 15000;
     }
 
     public void UpdateUIFromConfig(OptionsViewModel viewModel)
@@ -46,6 +46,6 @@ public class OptionSaveItem
 
         viewModel.TimeoutLookingForInstancesData = TimeoutLookingForInstancesData;
         viewModel.TimeoutInstanceFinalizingData = TimeoutInstanceFinalizingData;
-        viewModel.TimeoutLookingForSingleInstanceData = TimeoutLookingForSingleInstanceData;
+        viewModel.TimeoutWaitingForSingleInstanceToOpen = TimeoutWaitingForSingleInstanceToOpen;
     }
 }

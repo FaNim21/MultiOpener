@@ -136,17 +136,7 @@ public class OpenedProcess : INotifyPropertyChanged
         return true;
     }
 
-    public virtual void FastUpdate()
-    {
-        if (!StillExist())
-        {
-            Clear();
-            return;
-        }
-
-        UpdateTitle();
-    }
-    public virtual void Update()
+    public virtual void Update(bool lookForWindow = false)
     {
         bool exist = Win32.ProcessExist(Pid);
         bool windowExist = Win32.WindowExist(Hwnd);
@@ -162,18 +152,21 @@ public class OpenedProcess : INotifyPropertyChanged
                 SetPid();
             else
             {
-                StartViewModel.Log($"'{Name}' has been closed or could not been found", ConsoleLineOption.Warning);
+                StartViewModel.Log($"'{Name}' has been closed or could not been found", ConsoleLineOption.Warning); //TODO: 0 ????????????????
                 Clear();
             }
 
-            FindProcessByStartInfo();
-            //TODO: 0 Tu zrobic szukanie procesu z podobnymi danymi ProcessStartInfo
+            FindProcess(lookForWindow);
         }
 
         UpdateTitle();
         UpdateStatus();
     }
-    public virtual Task UpdateAsync(CancellationToken source = default) => Task.CompletedTask;
+    public virtual void FindProcess(bool lookForWindow = false)
+    {
+        if(lookForWindow)
+            FindProcessByStartInfo();
+    }
 
     public virtual void UpdateTitle()
     {
@@ -231,8 +224,7 @@ public class OpenedProcess : INotifyPropertyChanged
     public void FindProcessByStartInfo()
     {
         //TODO: Zrobic to kiedy indziej bo jest tu duzo zaleznosci i problemow z javaw czy wieloma procesami chrome itp itd :d
-        return;
-        Process[] processes = Process.GetProcessesByName(ProcessStartInfo?.FileName);
+        /*Process[] processes = Process.GetProcessesByName(ProcessStartInfo?.FileName);
         foreach (Process process in processes)
         {
             try
@@ -247,7 +239,7 @@ public class OpenedProcess : INotifyPropertyChanged
             {
                 StartViewModel.Log($"Error occurred  looking for opened {Name}", ConsoleLineOption.Error);
             }
-        }
+        }*/
     }
 
     public virtual async Task<bool> OpenProcess(CancellationToken token = default)
