@@ -84,7 +84,13 @@ public class OpenItem
             opened.Initialize(startInfo, name!, PathExe, MinimizeOnOpen);
 
             if (isCancelled) opened.Clear();
-            else await opened.OpenProcess(token);
+            else
+            {
+                opened.FindProcess();
+
+                if(!opened.IsOpenedFromStatus())
+                    await opened.OpenProcess(token);
+            }
 
             Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });
 

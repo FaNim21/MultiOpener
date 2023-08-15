@@ -20,7 +20,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
     {
         base.Update(lookForWindow);
     }
-    public override void FindProcess(bool lookForWindow = false)
+    public override void FindProcess()
     {
         Win32.GetWindowByTitlePattern(MCPattern(), this);
     }

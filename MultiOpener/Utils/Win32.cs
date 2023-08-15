@@ -275,6 +275,30 @@ public partial class Win32
         return javaLibraryPath;
     }
 
+    public static string? GetCommandLine(int pid)
+    {
+        using Process process = Process.GetProcessById(pid);
+        string? commandLine = string.Empty;
+
+        try
+        {
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher($"SELECT CommandLine FROM Win32_Process WHERE ProcessId = {process.Id}"))
+            {
+                foreach (ManagementObject obj in searcher.Get())
+                {
+                    commandLine = obj["CommandLine"]?.ToString();
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting command line: " + ex.Message);
+        }
+
+        return commandLine;
+    }
+
     public static void MinimizeWindowHwnd(nint hwnd)
     {
         if (hwnd == nint.Zero) return;

@@ -112,7 +112,7 @@ public class OpenedProcess : INotifyPropertyChanged
         }
 
         if (Pid <= 0 || Pid != pid)
-            Pid = pid;
+            SetPid(pid);
     }
 
     public void SetHwnd(nint hwnd)
@@ -150,22 +150,124 @@ public class OpenedProcess : INotifyPropertyChanged
         {
             if (windowExist)
                 SetPid();
-            else
+            else if (Pid != -1)
             {
-                StartViewModel.Log($"'{Name}' has been closed or could not been found", ConsoleLineOption.Warning); //TODO: 0 ????????????????
+                StartViewModel.Log($"'{Name}' has been closed or could not been found", ConsoleLineOption.Warning);
                 Clear();
             }
 
-            FindProcess(lookForWindow);
+            if (lookForWindow)
+                FindProcess();
         }
 
         UpdateTitle();
         UpdateStatus();
     }
-    public virtual void FindProcess(bool lookForWindow = false)
+    public virtual void FindProcess()
     {
-        if(lookForWindow)
-            FindProcessByStartInfo();
+        //TODO: 9 Dorobic wiecej rozszerzen
+        try
+        {
+            string extension = System.IO.Path.GetExtension(Path)!;
+            switch (extension.ToLower())
+            {
+                case ".jar":
+                    FindJavaProcess();
+                    break;
+                case ".ahk":
+                    FindAutoHotkeyProcess();
+                    break;
+                default:
+                    FindExeProcess();
+                    break;
+            }
+        }
+        catch (Exception e)
+        {
+            StartViewModel.Log($"Error occured finding process: {e}", ConsoleLineOption.Error);
+        }
+    }
+
+    private void FindJavaProcess()
+    {
+        Process[] jarProcesses = Process.GetProcessesByName("javaw");
+        if (jarProcesses == null || jarProcesses.Length == 0)
+            return;
+
+        Process java = jarProcesses[0];
+        string? workingDirectory = System.IO.Path.GetDirectoryName(java.MainModule!.FileName);
+        ProcessStartInfo processStartInfo = new(workingDirectory + "\\jps.exe")
+        {
+            Arguments = "-l",
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        Process process = new() { StartInfo = processStartInfo };
+        process.Start();
+
+        string output = process.StandardOutput.ReadToEnd();
+
+        process.WaitForExit();
+        process.Close();
+
+        string[] lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (string line in lines)
+        {
+            string[] parts = line.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length >= 2)
+            {
+                int pid = int.Parse(parts[0]);
+                string path = parts[1];
+
+                if (path.Equals(Path, StringComparison.OrdinalIgnoreCase))
+                {
+                    SetPid(pid);
+                    SetHwnd();
+                }
+            }
+        }
+    }
+    private void FindAutoHotkeyProcess()
+    {
+        Process[] ahkProcesses = Process.GetProcessesByName("AutoHotkey");
+
+        foreach (Process process in ahkProcesses)
+        {
+            string? commandLine = Win32.GetCommandLine(process.Id);
+            if (string.IsNullOrEmpty(commandLine)) break;
+
+            string[] arguments = commandLine.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (arguments.Length > 2)
+            {
+                //0 and 1 in testing was not the correct path but in the future i can compare all in arguments paths to check for correct if 2 is not the correct one every time
+                string scriptPath = arguments[2].Trim('"');
+                if (scriptPath.Equals(Path, StringComparison.OrdinalIgnoreCase))
+                {
+                    SetPid(process.Id);
+                    SetHwnd(process.MainWindowHandle);
+                }
+            }
+        }
+    }
+    private void FindExeProcess()
+    {
+        Process[] processes = Process.GetProcesses();
+        foreach (Process process in processes)
+        {
+            ProcessModule? mainModule = process.MainModule;
+            if (mainModule != null)
+            {
+                string fileName = mainModule.FileName;
+                if (fileName.Equals(Path, StringComparison.OrdinalIgnoreCase))
+                {
+                    SetPid(process.Id);
+                    SetHwnd(process.MainWindowHandle);
+                    return;
+                }
+            }
+        }
     }
 
     public virtual void UpdateTitle()
@@ -219,27 +321,6 @@ public class OpenedProcess : INotifyPropertyChanged
             return false;
 
         return true;
-    }
-
-    public void FindProcessByStartInfo()
-    {
-        //TODO: Zrobic to kiedy indziej bo jest tu duzo zaleznosci i problemow z javaw czy wieloma procesami chrome itp itd :d
-        /*Process[] processes = Process.GetProcessesByName(ProcessStartInfo?.FileName);
-        foreach (Process process in processes)
-        {
-            try
-            {
-                if (process.MainModule != null && process.StartInfo.FileName == ProcessStartInfo?.FileName && process.StartInfo.Arguments == ProcessStartInfo?.Arguments)
-                {
-                    SetPid(process.Id);
-                    SetHwnd(process.MainWindowHandle);
-                }
-            }
-            catch (Exception)
-            {
-                StartViewModel.Log($"Error occurred  looking for opened {Name}", ConsoleLineOption.Error);
-            }
-        }*/
     }
 
     public virtual async Task<bool> OpenProcess(CancellationToken token = default)

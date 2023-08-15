@@ -57,7 +57,7 @@ namespace MultiOpener.Commands.StartCommands
                 if (token.IsCancellationRequested) break;
                 var current = Start.Opened[i];
 
-                current.Update();
+                current.Update(true);
             }
 
             Consts.IsStartPanelWorkingNow = false;
