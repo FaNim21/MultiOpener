@@ -50,22 +50,22 @@ internal class OpenedProcessTest
     {
         if (opened == null) return;
 
-        if (!opened.StillExist())
+        if (!opened.IsOpenedFromStatus())
         {
             opened = null;
             return;
         }
 
         bool result = await opened.Close();
-        if (result && !opened.StillExist())
+        if (result && !opened.IsOpenedFromStatus())
             opened = null;
     }
 
 
     [Test, Order(0)]
-    public void StillExist_ReturnsTrue()
+    public void IsOpened_ReturnsTrue()
     {
-        bool result = opened!.StillExist();
+        bool result = opened!.IsOpenedFromStatus();
         Assert.That(result, Is.True);
     }
 
@@ -73,7 +73,7 @@ internal class OpenedProcessTest
     public void UpdateOpened_WorkSuccesfully()
     {
         opened!.Update();
-        bool result = opened!.StillExist();
+        bool result = opened!.IsOpenedFromStatus();
         Assert.That(result, Is.True);
     }
 
@@ -82,7 +82,7 @@ internal class OpenedProcessTest
     {
         opened!.Update();
         await ((OpenedResetCommand)opened!.ResetCommand).ResetOpened();
-        bool result = !Consts.IsStartPanelWorkingNow && opened!.StillExist();
+        bool result = !Consts.IsStartPanelWorkingNow && opened!.IsOpenedFromStatus();
         Assert.That(result, Is.True);
     }
 
@@ -92,7 +92,7 @@ internal class OpenedProcessTest
         opened!.Update();
         await ((OpenedCloseOpenCommand)opened!.CloseOpenCommand).CloseOpenOpened();
         opened!.Update();
-        bool result = !Consts.IsStartPanelWorkingNow && !opened!.StillExist();
+        bool result = !Consts.IsStartPanelWorkingNow && !opened!.IsOpenedFromStatus();
         Assert.That(result, Is.True);
     }
 
@@ -101,7 +101,7 @@ internal class OpenedProcessTest
     {
         opened!.Update();
         await ((OpenedCloseOpenCommand)opened!.CloseOpenCommand).CloseOpenOpened();
-        bool result = !Consts.IsStartPanelWorkingNow && opened!.StillExist();
+        bool result = !Consts.IsStartPanelWorkingNow && opened!.IsOpenedFromStatus();
         Assert.That(result, Is.True);
     }
 }

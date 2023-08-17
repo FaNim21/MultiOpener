@@ -165,7 +165,7 @@ public class StartOpenCommand : StartCommandBase
             UpdateProgressBar();
 
             await current.Open(Start, token);
-            Application.Current.Dispatcher.Invoke(delegate { Application.Current.MainWindow.Activate(); });
+            Application.Current.Dispatcher.Invoke(delegate { Application.Current.MainWindow?.Activate(); });
         }
         Stopwatch.Stop();
     }

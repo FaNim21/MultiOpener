@@ -81,7 +81,8 @@ public class OpenItem
             OpenedProcess opened = new();
             ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
             string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
-            opened.Initialize(startInfo, name!, PathExe, MinimizeOnOpen);
+            opened.isMinimizeOnOpen = MinimizeOnOpen;
+            opened.Initialize(startInfo, name!, PathExe);
 
             if (isCancelled) opened.Clear();
             else

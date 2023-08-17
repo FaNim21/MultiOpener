@@ -44,11 +44,11 @@ namespace MultiOpener.Commands.StartCommands
                     current.Update();
 
                     string output = "";
-                    if (current.StillExist())
+                    if (current.IsOpenedFromStatus())
                         output += "Closed and ";
 
                     bool isSucceed = await current.Close();
-                    if (isSucceed || current.Hwnd == IntPtr.Zero || !current.StillExist())
+                    if (isSucceed || current.Hwnd == IntPtr.Zero || !current.IsOpenedFromStatus())
                     {
                         Application.Current?.Dispatcher.Invoke(delegate
                         {

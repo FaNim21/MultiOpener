@@ -91,15 +91,15 @@ public class OpenInstance : OpenItem
     {
         List<OpenedInstanceProcess> mcInstances = new();
         int openedCount = 0;
-        bool isCancelled = token.IsCancellationRequested;
         ((StartOpenCommand)startModel.OpenCommand).UpdateCountForInstances();
 
         try
         {
-            if (!isCancelled) await Task.Delay(DelayBefore);
+            if (!token.IsCancellationRequested) await Task.Delay(DelayBefore);
 
             for (int i = 0; i < Quantity; i++)
             {
+                bool isCancelled = token.IsCancellationRequested;
                 if (!isCancelled) await Task.Delay(i == 0 ? 0 : i == 1 ? 5000 : DelayBetweenInstances < 500 ? 500 : DelayBetweenInstances);
 
                 startModel.SetDetailedLoadingText($"({i + 1}/{Quantity}) Instance");
@@ -123,7 +123,7 @@ public class OpenInstance : OpenItem
             Regex mcPatternRegex = OpenedInstanceProcess.MCPattern();
             List<nint> instances = new();
 
-            if (!isCancelled)
+            if (!token.IsCancellationRequested)
             {
                 startModel!.SetDetailedLoadingText($"Loading Datas");
 
@@ -141,7 +141,6 @@ public class OpenInstance : OpenItem
                 } while (instances.Count < openedCount && errorCount < config.ErrorCount);
 
                 await Task.Delay(TimeSpan.FromMilliseconds(1000));
-                isCancelled = token.IsCancellationRequested;
             }
 
             for (int i = 0; i < Quantity; i++)
@@ -151,7 +150,7 @@ public class OpenInstance : OpenItem
             }
             Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(mcInstances); });
 
-            if (!isCancelled)
+            if (!token.IsCancellationRequested)
             {
                 startModel!.SetDetailedLoadingText($"Finalizing Datas");
                 await Task.Delay(DelayAfter + App.Config.TimeoutInstanceFinalizingData);

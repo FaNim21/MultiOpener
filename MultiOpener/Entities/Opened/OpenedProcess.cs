@@ -79,11 +79,6 @@ public class OpenedProcess : INotifyPropertyChanged
         FocusCommand = new OpenedFocusCommand(this, start);
     }
 
-    public void Initialize(ProcessStartInfo? processStartInfo, string name, string path, bool isMinimizeOnOpen, int pid = -1)
-    {
-        this.isMinimizeOnOpen = isMinimizeOnOpen;
-        Initialize(processStartInfo, name, path, pid);
-    }
     public void Initialize(ProcessStartInfo? processStartInfo, string name, string path, int pid = -1)
     {
         ProcessStartInfo = processStartInfo;
@@ -160,9 +155,9 @@ public class OpenedProcess : INotifyPropertyChanged
                 FindProcess();
         }
 
-        UpdateTitle();
-        UpdateStatus();
+        UpdateUIPanel();
     }
+
     public virtual void FindProcess()
     {
         //TODO: 9 Dorobic wiecej rozszerzen
@@ -191,8 +186,7 @@ public class OpenedProcess : INotifyPropertyChanged
     private void FindJavaProcess()
     {
         Process[] jarProcesses = Process.GetProcessesByName("javaw");
-        if (jarProcesses == null || jarProcesses.Length == 0)
-            return;
+        if (jarProcesses == null || jarProcesses.Length == 0) return;
 
         Process java = jarProcesses[0];
         string? workingDirectory = System.IO.Path.GetDirectoryName(java.MainModule!.FileName);
@@ -216,58 +210,60 @@ public class OpenedProcess : INotifyPropertyChanged
         foreach (string line in lines)
         {
             string[] parts = line.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length >= 2)
-            {
-                int pid = int.Parse(parts[0]);
-                string path = parts[1];
+            if (parts.Length < 2) continue;
 
-                if (path.Equals(Path, StringComparison.OrdinalIgnoreCase))
-                {
-                    SetPid(pid);
-                    SetHwnd();
-                }
+            int pid = int.Parse(parts[0]);
+            string path = parts[1];
+
+            if (path.Equals(Path, StringComparison.OrdinalIgnoreCase))
+            {
+                SetPid(pid);
+                SetHwnd();
+                return;
             }
         }
     }
     private void FindAutoHotkeyProcess()
     {
-        Process[] ahkProcesses = Process.GetProcessesByName("AutoHotkey");
-
-        foreach (Process process in ahkProcesses)
+        foreach (Process process in Process.GetProcessesByName("AutoHotkey"))
         {
             string? commandLine = Win32.GetCommandLine(process.Id);
-            if (string.IsNullOrEmpty(commandLine)) break;
+            if (string.IsNullOrEmpty(commandLine)) continue;
 
             string[] arguments = commandLine.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            if (arguments.Length > 2)
+            if (arguments.Length <= 2) continue;
+
+            //0 and 1 in testing was not the correct path but in the future i can compare all in arguments paths to check for correct if 2 is not the correct one every time
+            string scriptPath = arguments[2].Trim('"');
+            if (scriptPath.Equals(Path, StringComparison.OrdinalIgnoreCase))
             {
-                //0 and 1 in testing was not the correct path but in the future i can compare all in arguments paths to check for correct if 2 is not the correct one every time
-                string scriptPath = arguments[2].Trim('"');
-                if (scriptPath.Equals(Path, StringComparison.OrdinalIgnoreCase))
-                {
-                    SetPid(process.Id);
-                    SetHwnd(process.MainWindowHandle);
-                }
+                SetPid(process.Id);
+                SetHwnd(process.MainWindowHandle);
+                return;
             }
         }
     }
     private void FindExeProcess()
     {
-        Process[] processes = Process.GetProcesses();
-        foreach (Process process in processes)
+        foreach (Process process in Process.GetProcesses())
         {
-            ProcessModule? mainModule = process.MainModule;
-            if (mainModule != null)
+            try
             {
-                string fileName = mainModule.FileName;
-                if (fileName.Equals(Path, StringComparison.OrdinalIgnoreCase))
-                {
-                    SetPid(process.Id);
-                    SetHwnd(process.MainWindowHandle);
-                    return;
-                }
+                if (process.MainWindowTitle.Length == 0) continue;
+                if (!process.MainModule!.FileName.Equals(Path, StringComparison.OrdinalIgnoreCase)) continue;
+
+                SetPid(process.Id);
+                SetHwnd(process.MainWindowHandle);
+                return;
             }
+            catch { }
         }
+    }
+
+    public void UpdateUIPanel()
+    {
+        UpdateTitle();
+        UpdateStatus();
     }
 
     public virtual void UpdateTitle()
@@ -285,19 +281,14 @@ public class OpenedProcess : INotifyPropertyChanged
     {
         if (Pid != -1)
         {
-            Application.Current?.Dispatcher.Invoke(delegate
-            {
-                StatusLabelColor = new BrushConverter().ConvertFromString("#33cc33") as SolidColorBrush;
-            });
+            Application.Current?.Dispatcher.Invoke(delegate { StatusLabelColor = new SolidColorBrush(Color.FromRgb(51, 204, 51)); });
             Status = "OPENED";
-            return;
         }
-
-        Application.Current?.Dispatcher.Invoke(delegate
+        else
         {
-            StatusLabelColor = new BrushConverter().ConvertFromString("#7d2625") as SolidColorBrush;
-        });
-        Status = "CLOSED";
+            Application.Current?.Dispatcher.Invoke(delegate { StatusLabelColor = new SolidColorBrush(Color.FromRgb(125, 38, 37)); });
+            Status = "CLOSED";
+        }
     }
 
     public bool IsOpenedFromStatus()
@@ -306,21 +297,6 @@ public class OpenedProcess : INotifyPropertyChanged
             return false;
 
         return Status.Equals("OPENED");
-    }
-    public bool StillExist()
-    {
-        if (!IsOpenedFromStatus())
-            return false;
-
-        SetPid();
-
-        if (Pid == -1)
-            return false;
-
-        if (!Win32.ProcessExist(Pid))
-            return false;
-
-        return true;
     }
 
     public virtual async Task<bool> OpenProcess(CancellationToken token = default)
@@ -369,7 +345,7 @@ public class OpenedProcess : INotifyPropertyChanged
         if (Hwnd != nint.Zero && isMinimizeOnOpen)
             Win32.MinimizeWindowHwnd(Hwnd);
 
-        UpdateStatus();
+        UpdateUIPanel();
 
         StartViewModel.Log($"Succesfully opened '{Name}' at process ID: {Pid}");
         return true;
