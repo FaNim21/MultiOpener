@@ -109,7 +109,7 @@ public class OpenInstance : OpenItem
                 OpenedInstanceProcess opened = new();
                 string path = Path.Combine(Path.GetDirectoryName(PathExe)!, "instances", Names[i]).Replace(Path.DirectorySeparatorChar, '/');
                 opened.Initialize(startInfo, Names[i], path);
-                opened.number = (short)(i + 1);
+                opened.Number = (short)(i + 1);
                 opened.showNamesInsteadOfTitle = ShowNamesInsteadOfTitle;
 
                 if (!isCancelled)

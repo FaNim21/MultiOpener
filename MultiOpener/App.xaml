@@ -2,8 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:MultiOpener.ViewModels"
+             xmlns:viewModels2="clr-namespace:MultiOpener.Entities.Opened"
              xmlns:settingsViewModels="clr-namespace:MultiOpener.ViewModels.Settings"
              xmlns:views="clr-namespace:MultiOpener.Views"
+             xmlns:views2="clr-namespace:MultiOpener.Views.Opened"
              xmlns:settingsViews="clr-namespace:MultiOpener.Views.SettingsOpens"
              xmlns:converters="clr-namespace:MultiOpener.Converters"
              StartupUri="MainWindow.xaml">
@@ -18,6 +20,7 @@
         <DataTemplate DataType="{x:Type viewModels:OptionsViewModel}">
             <views:OptionsView />
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type settingsViewModels:SettingsOpenNormalModelView}">
             <settingsViews:SettingsOpenNormalView />
         </DataTemplate>
@@ -25,9 +28,18 @@
             <settingsViews:SettingsOpenInstancesView />
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type viewModels2:OpenedProcess}">
+            <views2:OpenedProcessView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels2:OpenedInstanceProcess}">
+            <views2:OpenedInstanceProcessView />
+        </DataTemplate>
+
+        
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
                                               TrueValue="Visible"
                                               FalseValue="Hidden" />
+        <converters:EmptyStringConverter x:Key="EmptyStringConverter" />
 
         <Style TargetType="{x:Type ContextMenu}">
             <Setter Property="SnapsToDevicePixels"

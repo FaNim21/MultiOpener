@@ -14,7 +14,17 @@ namespace MultiOpener.Entities.Opened;
 public partial class OpenedInstanceProcess : OpenedProcess
 {
     public bool showNamesInsteadOfTitle = false;
-    public short number = -1;
+
+    private short _number;
+    public short Number
+    {
+        get { return _number; }
+        set
+        {
+            _number = value;
+            OnPropertyChanged(nameof(Number));
+        }
+    }
 
 
     public override void Update(bool lookForWindow = false)
@@ -45,11 +55,11 @@ public partial class OpenedInstanceProcess : OpenedProcess
 
         if (Hwnd == nint.Zero)
         {
-            WindowTitle = $"[{number}] " + System.IO.Path.GetFileName(Path);
+            WindowTitle = $"[{Number}] " + System.IO.Path.GetFileName(Path);
             return;
         }
 
-        string title = $"[{number}] " + Win32.GetWindowTitle(Hwnd);
+        string title = $"[{Number}] " + Win32.GetWindowTitle(Hwnd);
         if (!Win32.IsProcessResponding(Pid))
             title = "(Not Reponding)" + title;
 
