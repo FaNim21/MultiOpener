@@ -37,13 +37,7 @@ public static class DialogBox
                 DataContext = model,
                 Topmost = true,
             };
-
-            if (Application.Current?.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.Opacity = 0.75f;
-                mainWindow.Effect = new BlurEffect();
-            }
-
+            BlurMainWindow();
             messageBox?.ShowDialog();
         });
         return model.Result;
@@ -62,15 +56,9 @@ public static class DialogBox
             {
                 Owner = activeWindow,
                 DataContext = opened,
-                Topmost = true,
+                Topmost = false,
             };
-
-            if (Application.Current?.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.Opacity = 0.75f;
-                mainWindow.Effect = new BlurEffect();
-            }
-
+            BlurMainWindow();
             window?.ShowDialog();
         });
     }
@@ -100,5 +88,13 @@ public static class DialogBox
         }
 
         return Enumerable.Empty<DialogBoxButton>();
+    }
+    private static void BlurMainWindow()
+    {
+        if (Application.Current?.MainWindow is MainWindow mainWindow)
+        {
+            mainWindow.Opacity = 0.75f;
+            mainWindow.Effect = new BlurEffect();
+        }
     }
 }

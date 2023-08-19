@@ -1,4 +1,6 @@
-﻿using MultiOpener.Commands.OpenedCommands;
+﻿using MultiOpener.Commands;
+using MultiOpener.Commands.OpenedCommands;
+using MultiOpener.Properties;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
@@ -61,22 +63,21 @@ public class OpenedProcess : INotifyPropertyChanged
     public ICommand ResetCommand { get; private set; }
     public ICommand CloseOpenCommand { get; private set; }
     public ICommand FocusCommand { get; private set; }
+    public ICommand RefreshCommand { get; private set; }
+    public ICommand OpenFolderCommand { get; private set; }
 
 
     public OpenedProcess(StartViewModel? start = null)
     {
         if (start == null)
-        {
-            Application.Current?.Dispatcher.Invoke(delegate
-            {
-                start = ((MainWindow)Application.Current.MainWindow).MainViewModel.start;
-            });
-        }
+            Application.Current?.Dispatcher.Invoke(delegate { start = ((MainWindow)Application.Current.MainWindow).MainViewModel.start; });
 
         ViewInformationsCommand = new OpenedViewInformationsCommand(this);
         ResetCommand = new OpenedResetCommand(this, start);
         CloseOpenCommand = new OpenedCloseOpenCommand(this, start);
         FocusCommand = new OpenedFocusCommand(this, start);
+        RefreshCommand = new RelayCommand(() => Update(true));
+        OpenFolderCommand = new RelayCommand(OpenOpenedPathFolder);
     }
 
     public void Initialize(ProcessStartInfo? processStartInfo, string name, string path, int pid = -1)
@@ -417,6 +418,10 @@ public class OpenedProcess : INotifyPropertyChanged
         return sb.ToString();
     }
 
+    private void OpenOpenedPathFolder()
+    {
+        Process.Start("explorer.exe", System.IO.Path.GetDirectoryName(Path)!);
+    }
     protected void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

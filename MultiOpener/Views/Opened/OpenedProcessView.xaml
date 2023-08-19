@@ -12,11 +12,15 @@
              Background="#383A3C">
     <UserControl.Resources>
         <Style TargetType="TextBlock">
-            <Setter Property="FontSize" Value="9"/>
+            <Setter Property="FontSize"
+                    Value="9" />
         </Style>
     </UserControl.Resources>
     <Grid>
+        <Label Content="Time opened: 0h 0m" HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="1" Margin="2 0 0 2"/>
         <StackPanel Orientation="Vertical"
+                    HorizontalAlignment="Left"
+                    Width="350"
                     Margin="5">
             <TextBlock Foreground="Cyan"
                        Text=" -- Main -- " />
@@ -71,6 +75,45 @@
                 <Run Foreground="White"
                      Text="{Binding ProcessStartInfo.Arguments, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
+        </StackPanel>
+        <StackPanel Width="150"
+                    HorizontalAlignment="Right"
+                    Orientation="Vertical">
+            <buttons:ButtonNormal Width="100"
+                                  Height="30"
+                                  ContentText="Close/Open"
+                                  OnCommand="{Binding CloseOpenCommand}"
+                                  FontSize="15"
+                                  Margin="0 5 0 0" />
+
+            <buttons:ButtonNormal Width="100"
+                                  Height="30"
+                                  ContentText="Refresh"
+                                  OnCommand="{Binding RefreshCommand}"
+                                  FontSize="18"
+                                  Margin="0 5 0 0" />
+
+            <buttons:ButtonNormal Width="100"
+                                  Height="30"
+                                  ContentText="Focus"
+                                  OnCommand="{Binding FocusCommand}"
+                                  FontSize="18"
+                                  Margin="0 5 0 0" />
+
+            <buttons:ButtonNormal Width="100"
+                                  Height="30"
+                                  ContentText="Reset"
+                                  OnCommand="{Binding ResetCommand}"
+                                  FontSize="18"
+                                  Margin="0 5 0 0" />
+
+
+            <buttons:ButtonNormal Width="100"
+                                  Height="30"
+                                  ContentText="Open Folder"
+                                  OnCommand="{Binding OpenFolderCommand}"
+                                  FontSize="15"
+                                  Margin="0 20 0 0" />
         </StackPanel>
     </Grid>
 </UserControl>

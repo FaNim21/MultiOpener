@@ -3,8 +3,6 @@ using MultiOpener.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,9 +43,6 @@ public partial class OpenedInstanceProcess : OpenedProcess
                 string? titleName = System.IO.Path.GetFileName(Path);
                 if (!Win32.IsProcessResponding(Pid))
                     titleName = "(Not Responding) " + titleName;
-
-                if (!IsInstanceSavingWorld())
-                    titleName = "(Saving World)" + titleName;
                 WindowTitle = titleName;
             }
             return;
@@ -62,9 +57,6 @@ public partial class OpenedInstanceProcess : OpenedProcess
         string title = $"[{Number}] " + Win32.GetWindowTitle(Hwnd);
         if (!Win32.IsProcessResponding(Pid))
             title = "(Not Reponding)" + title;
-
-        if (!IsInstanceSavingWorld())
-            title = "(Saving World)" + title;
 
         if (!string.IsNullOrEmpty(title))
             WindowTitle = title;
@@ -115,10 +107,6 @@ public partial class OpenedInstanceProcess : OpenedProcess
             if (!Win32.IsProcessResponding(Pid))
                 output = await Win32.CloseProcessByPid(Pid);
 
-            //Experimental
-            if (!IsInstanceSavingWorld() && !output)
-                output = await Win32.CloseProcessByPid(Pid);
-
             if (!output)
             {
                 output = await Win32.CloseProcessByHwnd(Hwnd);
@@ -134,34 +122,6 @@ public partial class OpenedInstanceProcess : OpenedProcess
             StartViewModel.Log($"Cannot close MC instance named {Name}(Title: {WindowTitle}) \n{e}", ConsoleLineOption.Error);
             return false;
         }
-    }
-
-    private bool IsInstanceSavingWorld()
-    {
-        //TODO: 0 Pozbyc sie tego albo to naprawic, poniewaz przedluza odswiezanie jak instancje laduja swiaty
-        string logsPath = System.IO.Path.Combine(Path!, ".minecraft", "logs");
-        string latestLogFilePath = System.IO.Path.Combine(logsPath, "latest.log");
-
-        if (!File.Exists(latestLogFilePath)) return false;
-
-        string lastLogLine = ReadLastLogLine(latestLogFilePath);
-        if (lastLogLine.Contains("Saving the game") || lastLogLine.Contains("Saving worlds"))
-        {
-            StartViewModel.Log($"{Name} process is stuck in world saving", ConsoleLineOption.Warning);
-            return false;
-        }
-
-        return true;
-    }
-    private string ReadLastLogLine(string filePath)
-    {
-        string lastLine = string.Empty;
-        foreach (string line in File.ReadLines(filePath).Reverse())
-        {
-            lastLine = line;
-            break;
-        }
-        return lastLine;
     }
 
     public async Task<bool> SearchForSingleMCInstance(int timeout, CancellationToken token = default)
