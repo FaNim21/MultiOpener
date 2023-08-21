@@ -89,7 +89,7 @@ public class StartViewModel : BaseViewModel
         }
     }
 
-    public float _loadingBarPercentage;
+    private float _loadingBarPercentage;
     public float LoadingBarPercentage
     {
         get { return _loadingBarPercentage; }
@@ -100,7 +100,7 @@ public class StartViewModel : BaseViewModel
         }
     }
 
-    public string _loadingInfoText = "Info co sie teraz odpala";
+    private string _loadingInfoText = string.Empty;
     public string LoadingInfoText
     {
         get { return _loadingInfoText; }
@@ -111,7 +111,7 @@ public class StartViewModel : BaseViewModel
         }
     }
 
-    public string _loadingDetailedInfoText = "Szczegółowe info co sie teraz odpala";
+    private string _loadingDetailedInfoText = string.Empty;
     public string LoadingDetailedInfoText
     {
         get { return _loadingDetailedInfoText; }

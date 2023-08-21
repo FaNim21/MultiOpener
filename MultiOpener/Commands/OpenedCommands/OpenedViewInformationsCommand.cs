@@ -15,6 +15,8 @@ namespace MultiOpener.Commands.OpenedCommands
         public override void Execute(object? parameter)
         {
             openedProcess.Update();
+            openedProcess.InfoButtonOpenName = openedProcess.IsOpenedFromStatus() ? "Close" : "Open";
+
             DialogBox.ViewInformations(openedProcess);
         }
     }

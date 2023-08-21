@@ -35,34 +35,39 @@
                     CornerRadius="3 3 3 3"
                     Margin="5 5 0 0"
                     Padding="4 4 4 4"
-                    Background="#5b5e62"
+                    Background="#54565A"
                     ContextMenu="{StaticResource ContextMenuOpened}">
                 <Grid Width="150"
                       Height="75"
-                      Margin="-5 -5 0 0">
-                    <WrapPanel Orientation="Horizontal"
-                               HorizontalAlignment="Center">
-                        <Label Content="{Binding WindowTitle}"
-                               Height="25"
-                               FontWeight="SemiBold"
-                               Foreground="#121212"
-                               Margin="0 0 0 0" />
-                    </WrapPanel>
-                    <WrapPanel Orientation="Horizontal">
-                        <Label Height="25"
-                               Foreground="#121212"
-                               Width="76"
-                               HorizontalAlignment="left"
-                               HorizontalContentAlignment="Right"
-                               Content="STATUS: "
-                               Margin="0 25"
-                               Padding="0 4" />
-                        <Label Height="25"
-                               Foreground="{Binding Path=StatusLabelColor}"
-                               Content="{Binding Status}"
-                               Margin="0 25"
-                               Padding="0 4" />
-                    </WrapPanel>
+                      Margin="-5 -5 0 0"
+                      Background="#5b5e62">
+                    <Grid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick"
+                                      Command="{Binding ViewInformationsCommand}" />
+                    </Grid.InputBindings>
+                            <WrapPanel Orientation="Horizontal"
+                                       HorizontalAlignment="Center">
+                                <Label Content="{Binding WindowTitle}"
+                                       Height="25"
+                                       FontWeight="SemiBold"
+                                       Foreground="#c6d5e3"
+                                       Margin="0 0 0 0" />
+                            </WrapPanel>
+                            <WrapPanel Orientation="Horizontal">
+                                <Label Height="25"
+                                       Foreground="#121212"
+                                       Width="76"
+                                       HorizontalAlignment="left"
+                                       HorizontalContentAlignment="Right"
+                                       Content="STATUS: "
+                                       Margin="0 25"
+                                       Padding="0 4" />
+                                <Label Height="25"
+                                       Foreground="{Binding Path=StatusLabelColor}"
+                                       Content="{Binding Status}"
+                                       Margin="0 25"
+                                       Padding="0 4" />
+                            </WrapPanel>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -137,7 +142,7 @@
               Y1="197"
               X2="800"
               Y2="197"
-              Stroke="#000D14"
+              Stroke="#a0e3e3"
               StrokeThickness="3"
               Opacity="1" />
 
@@ -172,7 +177,7 @@
                        FontFamily="Dubai"
                        FontSize="25"
                        Padding="10"
-                       Margin="0 0 0 90"/>
+                       Margin="0 0 0 90" />
             <ProgressBar x:Name="progress"
                          Width="775"
                          Height="30"
@@ -182,7 +187,7 @@
                          Foreground="#FF387944"
                          BorderThickness="0"
                          Minimum="1"
-                         Maximum="100"/>
+                         Maximum="100" />
             <TextBlock Text="{Binding LoadingDetailedInfoText}"
                        Foreground="#76bbf4"
                        VerticalAlignment="Center"

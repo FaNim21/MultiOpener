@@ -7,13 +7,13 @@
              xmlns:buttons="clr-namespace:MultiOpener.Components.Buttons"
              d:DataContext="{d:DesignInstance Type=viewmodels:OpenedInstanceProcess}"
              mc:Ignorable="d"
-             Width="500"
-             Height="275"
+             Width="550"
+             Height="350"
              Background="#383A3C">
     <UserControl.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize"
-                    Value="9" />
+                    Value="12" />
         </Style>
     </UserControl.Resources>
     <Grid>

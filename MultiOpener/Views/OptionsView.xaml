@@ -21,7 +21,7 @@
                                Width="790">
                         <WrapPanel Orientation="Vertical"
                                    Margin="0 0 0 15">
-                            <Label Foreground="#e1fbfc"
+                            <Label Foreground="#a0e3e3"
                                    FontWeight="SemiBold"
                                    FontSize="32"
                                    Content="General" />
@@ -92,7 +92,7 @@
                     <!--TIMINGS-->
                     <WrapPanel Orientation="Vertical"
                                Margin="0 0 0 15">
-                        <Label Foreground="#e1fbfc"
+                        <Label Foreground="#a0e3e3"
                                FontWeight="SemiBold"
                                FontSize="32"
                                Content="Timings (1000 = 1 sec)"

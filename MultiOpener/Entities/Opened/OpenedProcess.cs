@@ -18,10 +18,30 @@ namespace MultiOpener.Entities.Opened;
 public class OpenedProcess : INotifyPropertyChanged
 {
     public string? Name { get; protected set; }
-    public nint Hwnd { get; protected set; } = nint.Zero;
-    public int Pid { get; protected set; } = -1;
     public string? Path { get; protected set; }
     public ProcessStartInfo? ProcessStartInfo { get; protected set; }
+
+    private nint _hwnd;
+    public nint Hwnd
+    {
+        get { return _hwnd; }
+        protected set
+        {
+            _hwnd = value;
+            OnPropertyChanged(nameof(Hwnd));
+        }
+    }
+
+    private int _pid;
+    public int Pid
+    {
+        get { return _pid; }
+        protected set
+        {
+            _pid = value;
+            OnPropertyChanged(nameof(Pid));
+        }
+    }
 
     private string? _windowTitle;
     public string? WindowTitle
@@ -56,8 +76,16 @@ public class OpenedProcess : INotifyPropertyChanged
         }
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-    public bool isMinimizeOnOpen = false;
+    private string _infoButtonOpenName = string.Empty;
+    public string InfoButtonOpenName
+    {
+        get { return _infoButtonOpenName; }
+        set
+        {
+            _infoButtonOpenName = value;
+            OnPropertyChanged(nameof(InfoButtonOpenName));
+        }
+    }
 
     public ICommand ViewInformationsCommand { get; private set; }
     public ICommand ResetCommand { get; private set; }
@@ -65,6 +93,9 @@ public class OpenedProcess : INotifyPropertyChanged
     public ICommand FocusCommand { get; private set; }
     public ICommand RefreshCommand { get; private set; }
     public ICommand OpenFolderCommand { get; private set; }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    public bool isMinimizeOnOpen = false;
 
 
     public OpenedProcess(StartViewModel? start = null)
@@ -87,6 +118,7 @@ public class OpenedProcess : INotifyPropertyChanged
         Path = path;
 
         SetPid(pid);
+        SetHwnd(nint.Zero);
     }
 
     public void SetPid(int pid)

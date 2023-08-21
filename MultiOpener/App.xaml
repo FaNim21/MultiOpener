@@ -54,7 +54,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ContextMenu}">
                         <Border x:Name="Border"
-                                Background="Gray"
+                                Background="#7f7c85"
                                 BorderThickness="1">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="Gray" />

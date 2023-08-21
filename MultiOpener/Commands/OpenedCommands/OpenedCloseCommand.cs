@@ -33,6 +33,8 @@ namespace MultiOpener.Commands.OpenedCommands
                     Start?.LogLine($"Closed {openedProcess.Name}");
                 else
                     Start?.LogLine($"Can't close {openedProcess.Name}", Entities.ConsoleLineOption.Warning);
+
+                openedProcess.InfoButtonOpenName = "Open";
             }
             else
             {
@@ -41,6 +43,8 @@ namespace MultiOpener.Commands.OpenedCommands
                     Start?.LogLine($"Opened {openedProcess.Name}");
                 else
                     Start?.LogLine($"Can't open {openedProcess.Name}", Entities.ConsoleLineOption.Warning);
+
+                openedProcess.InfoButtonOpenName = "Close";
             }
 
             Consts.IsStartPanelWorkingNow = false;

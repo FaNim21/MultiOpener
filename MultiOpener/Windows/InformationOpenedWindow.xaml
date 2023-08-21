@@ -6,8 +6,8 @@
         xmlns:buttons="clr-namespace:MultiOpener.Components.Buttons"
         mc:Ignorable="d"
         Title="OpenedInformation"
-        Width="500"
-        Height="300"
+        Width="700"
+        Height="350"
         ResizeMode="NoResize"
         WindowStyle="None"
         ShowInTaskbar="False"
@@ -22,8 +22,7 @@
         </Grid.RowDefinitions>
 
         <Grid Background="#000D14"
-              Grid.Row="0"
-              MouseDown="HeaderMouseDown">
+              Grid.Row="0">
             <buttons:ButtonTaskbar x:Name="ExitButton"
                                    Width="25"
                                    Height="25"
@@ -35,7 +34,51 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <ContentPresenter Content="{Binding}" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="150" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <ContentPresenter Content="{Binding}" />
+            </Grid>
+            <Grid Width="150"
+                  HorizontalAlignment="Right"
+                  Height="350"
+                  Grid.Column="1"
+                  Background="#1d2226">
+                <buttons:ButtonNormal Width="100"
+                                      Height="30"
+                                      ContentText="{Binding InfoButtonOpenName}"
+                                      VerticalAlignment="Top"
+                                      OnCommand="{Binding CloseOpenCommand}"
+                                      FontSize="18"
+                                      Margin="0 10 0 0" />
+
+                <buttons:ButtonNormal Width="100"
+                                      Height="30"
+                                      ContentText="Refresh"
+                                      VerticalAlignment="Top"
+                                      OnCommand="{Binding RefreshCommand}"
+                                      FontSize="18"
+                                      Margin="0 45 0 0" />
+
+                <buttons:ButtonNormal Width="100"
+                                      Height="30"
+                                      ContentText="Focus"
+                                      VerticalAlignment="Top"
+                                      OnCommand="{Binding FocusCommand}"
+                                      FontSize="18"
+                                      Margin="0 80 0 0" />
+
+                <buttons:ButtonNormal Width="100"
+                                      Height="30"
+                                      ContentText="Open Folder"
+                                      VerticalAlignment="Bottom"
+                                      OnCommand="{Binding OpenFolderCommand}"
+                                      FontSize="15"
+                                      Margin="0 0 0 35" />
+            </Grid>
         </Grid>
     </Grid>
 </Window>

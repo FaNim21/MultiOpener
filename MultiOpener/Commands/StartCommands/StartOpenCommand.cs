@@ -161,7 +161,7 @@ public class StartOpenCommand : StartCommandBase
             if (string.IsNullOrEmpty(current.PathExe)) return;
 
             Start!.SetDetailedLoadingText(string.Empty);
-            Start!.SetLoadingText($"({i + 1}/{length}) Openning {current.Name}...");
+            Start!.SetLoadingText($"({i + 1}/{length}) Opening {current.Name}...");
             UpdateProgressBar();
 
             await current.Open(Start, token);

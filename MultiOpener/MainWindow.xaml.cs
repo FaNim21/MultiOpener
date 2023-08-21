@@ -139,7 +139,12 @@ public partial class MainWindow : Window
     }
     private void UpdateButtonClick(object sender, RoutedEventArgs e)
     {
-        Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest") { UseShellExecute = true });
+        //Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest") { UseShellExecute = true });
+
+        if (DialogBox.Show("A new version of MultiOpener is available\nClick yes to automaticaly update", "New Update", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+        {
+            //TODO: 0 ZROBIC AUTO DOWNLOAD
+        }
     }
 
     public void ChangePresetTitle(string name)
