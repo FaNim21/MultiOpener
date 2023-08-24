@@ -2,7 +2,6 @@
 using NuGet.Versioning;
 using Octokit;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MultiOpener.Utils
@@ -21,8 +20,7 @@ namespace MultiOpener.Utils
             {
                 var gitHubClient = new GitHubClient(new ProductHeaderValue("MultiOpener"));
                 var releases = await gitHubClient.Repository.Release.GetAll(OWNER, REPO);
-
-                var latestRelease = releases.OrderByDescending(r => r.PublishedAt).FirstOrDefault();
+                var latestRelease = releases[0];
 
                 if (latestRelease != null && !IsUpToDate(latestRelease.TagName, version))
                 {

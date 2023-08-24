@@ -2,6 +2,7 @@
 using MultiOpener.Properties;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
+using MultiOpener.Windows;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -16,7 +17,7 @@ public partial class MainWindow : Window
     //TODO: 2 Sprobowac przeniesc main viewModel do App.xaml.cs na bazie tego filmiku https://www.youtube.com/watch?v=dtq6qYlolh8 w 5:00
     public MainViewModel MainViewModel { get; set; }
 
-    public BackgroundWorker worker;
+    //public BackgroundWorker worker;
 
     public MainWindow()
     {
@@ -41,10 +42,10 @@ public partial class MainWindow : Window
 
         Task task = Task.Factory.StartNew(CheckForUpdates);
 
-        worker = new() { WorkerSupportsCancellation = true };
+        /*worker = new() { WorkerSupportsCancellation = true };
         worker.DoWork += Worker_DoWork!;
 
-        if (!worker.IsBusy) worker.RunWorkerAsync();
+        if (!worker.IsBusy) worker.RunWorkerAsync();*/
     }
 
     public void EnableDisableChoosenHeadButton(string option)
@@ -92,9 +93,10 @@ public partial class MainWindow : Window
 
     protected override void OnClosing(CancelEventArgs e)
     {
-        StopWorker();
-        worker.Dispose();
+        //StopWorker();
+        //worker.Dispose();
         InputController.Instance.Cleanup();
+        MainViewModel.start.ConsoleViewModel.ConsoleLines.Clear();
         base.OnClosing(e);
     }
     private void OnClosed(object sender, EventArgs e)
@@ -104,8 +106,7 @@ public partial class MainWindow : Window
         Settings.Default.LastOpenedPresetName = MainViewModel.settings.PresetName;
 
         Settings.Default.Save();
-
-        MainViewModel.start.ConsoleViewModel.ConsoleLines.Clear();
+        Application.Current.Shutdown();
     }
 
     public void OnShow()
@@ -139,12 +140,13 @@ public partial class MainWindow : Window
     }
     private void UpdateButtonClick(object sender, RoutedEventArgs e)
     {
-        //Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest") { UseShellExecute = true });
+        Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest") { UseShellExecute = true });
 
-        if (DialogBox.Show("A new version of MultiOpener is available\nClick yes to automaticaly update", "New Update", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+        /*if (DialogBox.Show("A new version of MultiOpener is available\nClick yes to automaticaly update", "New Update", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
         {
             //TODO: 0 ZROBIC AUTO DOWNLOAD
-        }
+            _ = new UpdateDownloadWindow();
+        }*/
     }
 
     public void ChangePresetTitle(string name)
@@ -152,7 +154,7 @@ public partial class MainWindow : Window
         SettingsButton.ContentText = name;
     }
 
-    public void Update()
+    /*public void Update()
     {
         //TODO: 1 Zrobic tu jakies mozliwosci nieskonczonej petli poniewaz inputy ida w inna strone
     }
@@ -174,7 +176,7 @@ public partial class MainWindow : Window
         {
             worker.CancelAsync();
         }
-    }
+    }*/
 
     public void HotkeySetup()
     {
