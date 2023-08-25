@@ -366,7 +366,7 @@ public class OpenedProcess : INotifyPropertyChanged
     {
         if (ProcessStartInfo == null) return false;
 
-        Process? process = null;
+        Process? process;
         try
         {
             process = Process.Start(ProcessStartInfo);
@@ -453,37 +453,14 @@ public class OpenedProcess : INotifyPropertyChanged
         SetHwnd(nint.Zero);
     }
 
-    public override string ToString()
+    public virtual void OpenOpenedPathFolder()
     {
-        if (ProcessStartInfo == null)
-            return "";
+        if (string.IsNullOrEmpty(Path)) return;
 
-        StringBuilder sb = new();
-
-        sb.AppendLine($"Name: {Name}");
-        if (string.IsNullOrEmpty(WindowTitle))
-            sb.AppendLine($"Title: 'Not loaded yet'");
-        else if (!WindowTitle!.ToLower().Equals(Name!.ToLower()))
-            sb.AppendLine($"Title: {WindowTitle}");
-        sb.AppendLine($"Path: {Path}");
-        sb.AppendLine($"ID: {Pid}");
-        sb.AppendLine($"Hwnd: {Hwnd.ToString()}");
-        sb.AppendLine("");
-        sb.AppendLine(" -- StartInfo -- ");
-        if (!string.IsNullOrEmpty(ProcessStartInfo.FileName))
-            sb.AppendLine($"FileName: {ProcessStartInfo.FileName}");
-        if (!string.IsNullOrEmpty(ProcessStartInfo.WorkingDirectory))
-            sb.AppendLine($"WokrkingDirectory: {ProcessStartInfo.WorkingDirectory}");
-        if (!string.IsNullOrEmpty(ProcessStartInfo.Arguments))
-            sb.AppendLine($"Arguments: {ProcessStartInfo.Arguments}");
-
-        return sb.ToString();
+        string? argument = System.IO.Path.GetDirectoryName(Path);
+        Process.Start("explorer.exe", argument!);
     }
 
-    private void OpenOpenedPathFolder()
-    {
-        Process.Start("explorer.exe", System.IO.Path.GetDirectoryName(Path)!);
-    }
     protected void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

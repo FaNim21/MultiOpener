@@ -187,6 +187,15 @@ public partial class OpenedInstanceProcess : OpenedProcess
         return false;
     }
 
+    public override void OpenOpenedPathFolder()
+    {
+        if (string.IsNullOrEmpty(Path)) return;
+
+        string? argument = System.IO.Path.Combine(System.IO.Path.GetFullPath(Path), ".minecraft");
+        Process.Start("explorer.exe", argument);
+
+    }
+
     [GeneratedRegex("^Minecraft\\*\\s*(?:-\\s*Instance)?\\s*((?:\\d+(?:\\.\\d+)*)?)(?:\\s*-\\s*(\\S+(?:\\s*\\S+)*))?$", RegexOptions.NonBacktracking | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]
     public static partial Regex MCPattern();
 }

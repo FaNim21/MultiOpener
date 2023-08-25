@@ -15,30 +15,35 @@ namespace MultiOpener.Utils;
 public partial class Win32
 {
     #region Extern methods
-    [DllImport("user32.dll")]
-    private static extern bool EnumWindows(EnumWindowsProc enumProc, nint lParam);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool EnumWindows(EnumWindowsProc enumProc, nint lParam);
     private delegate bool EnumWindowsProc(nint hWnd, nint lParam);
 
-    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern int GetWindowText(nint hWnd, StringBuilder lpString, int nMaxCount);
 
-    [DllImport("user32.dll")]
-    private static extern uint GetWindowThreadProcessId(nint hWnd, out uint lpdwProcessId);
+    [LibraryImport("user32.dll")]
+    private static partial uint GetWindowThreadProcessId(nint hWnd, out uint lpdwProcessId);
 
-    [DllImport("user32.dll", CharSet = CharSet.Auto)]
-    private static extern nint SendMessageTimeout(nint hWnd, int Msg, nint wParam, nint lParam, uint fuFlags, uint uTimeout, out nint lpdwResult);
+    [LibraryImport("user32.dll", EntryPoint = "SendMessageTimeoutA")]
+    private static partial nint SendMessageTimeout(nint hWnd, int Msg, nint wParam, nint lParam, uint fuFlags, uint uTimeout, out nint lpdwResult);
 
-    [DllImport("user32.dll")]
-    private static extern bool IsWindow(nint hWnd);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool IsWindow(nint hWnd);
 
-    [DllImport("user32.dll")]
-    private static extern bool ShowWindow(nint hWnd, int nCmdShow);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool ShowWindow(nint hWnd, int nCmdShow);
 
-    [DllImport("user32.dll")]
-    public static extern bool IsIconic(nint hWnd);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool IsIconic(nint hWnd);
 
-    [DllImport("user32.dll")]
-    public static extern bool SetForegroundWindow(nint hWnd);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool SetForegroundWindow(nint hWnd);
 
 
     private const int SW_SHOWMINIMIZED = 2;
@@ -61,7 +66,7 @@ public partial class Win32
     {
         if (hwnd == nint.Zero) return -1;
 
-        GetWindowThreadProcessId(hwnd, out uint processId);
+        _ = GetWindowThreadProcessId(hwnd, out uint processId);
         return (int)processId;
     }
 
@@ -89,11 +94,11 @@ public partial class Win32
         {
             EnumWindows((wnd, param) =>
             {
-                GetWindowThreadProcessId(wnd, out uint thisProcessId);
+                _ = GetWindowThreadProcessId(wnd, out uint thisProcessId);
                 if (thisProcessId == processId)
                 {
                     StringBuilder sb = new(256);
-                    GetWindowText(wnd, sb, sb.Capacity);
+                    _ = GetWindowText(wnd, sb, sb.Capacity);
                     if (sb.ToString().Contains(process.ProcessName))
                     {
                         hwnd = wnd;

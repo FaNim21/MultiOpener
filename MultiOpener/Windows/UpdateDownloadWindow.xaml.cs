@@ -11,8 +11,8 @@ namespace MultiOpener.Windows;
 
 public partial class UpdateDownloadWindow : Window
 {
-    private readonly string GitHubApiUrl = "https://api.github.com/repos/FaNim21/MultiOpener/releases/latest";
-    private readonly string multiOpenerExePath;
+    /*private readonly string GitHubApiUrl = "https://api.github.com/repos/FaNim21/MultiOpener/releases/latest";
+    private readonly string multiOpenerExePath;*/
     private readonly string newExePath;
 
     private const string OWNER = "FaNim21";
@@ -23,7 +23,7 @@ public partial class UpdateDownloadWindow : Window
     {
         InitializeComponent();
 
-        multiOpenerExePath = Assembly.GetExecutingAssembly().Location;
+        //multiOpenerExePath = Assembly.GetExecutingAssembly().Location;
         newExePath = Path.Combine(Consts.AppdataPath, "MultiOpener.exe");
 
         if (File.Exists(newExePath))
