@@ -205,6 +205,9 @@ public class OpenedProcess : INotifyPropertyChanged
                 case ".ahk":
                     FindAutoHotkeyProcess();
                     break;
+                case ".py":
+                    FindPythonProcess();
+                    break;
                 default:
                     FindExeProcess();
                     break;
@@ -212,7 +215,7 @@ public class OpenedProcess : INotifyPropertyChanged
         }
         catch (Exception e)
         {
-            StartViewModel.Log($"Error occured finding process: {e}", ConsoleLineOption.Error);
+            StartViewModel.Log($"Error occured at {Name} when finding process: {e}", ConsoleLineOption.Error);
         }
     }
 
@@ -274,6 +277,33 @@ public class OpenedProcess : INotifyPropertyChanged
                 SetHwnd(process.MainWindowHandle);
                 return;
             }
+        }
+    }
+    private void FindPythonProcess()
+    {
+        try
+        {
+            foreach (Process process in Process.GetProcessesByName("python"))
+            {
+                string? commandLine = Win32.GetCommandLine(process.Id);
+                if (string.IsNullOrEmpty(commandLine)) continue;
+
+                string[] arguments = commandLine.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string arg in arguments)
+                {
+                    string path = arg.Trim('"');
+                    if (path.EndsWith(".py", StringComparison.OrdinalIgnoreCase) && path.Equals(Path))
+                    {
+                        SetPid(process.Id);
+                        SetHwnd(process.MainWindowHandle);
+                        return;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            StartViewModel.Log($"Error finding Python process for {Name}: {ex}", ConsoleLineOption.Error);
         }
     }
     private void FindExeProcess()
