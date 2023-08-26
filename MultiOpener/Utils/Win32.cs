@@ -115,6 +115,28 @@ public partial class Win32
             return nint.Zero;
     }
 
+    public static byte GetWindowsCountByTitlePattern(Regex titlePattern)
+    {
+        byte count = 0;
+        EnumWindows((hWnd, lParam) =>
+        {
+            StringBuilder sb = new(256);
+            _ = GetWindowText(hWnd, sb, sb.Capacity);
+
+            try
+            {
+                if (titlePattern.IsMatch(sb.ToString()))
+                    count++;
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                StartViewModel.Log("Error timeout while looking for window title match", Entities.ConsoleLineOption.Error);
+            }
+            return true;
+        }, nint.Zero);
+
+        return count;
+    }
     public static List<nint> GetWindowsByTitlePattern(Regex titlePattern)
     {
         List<nint> windows = new();
