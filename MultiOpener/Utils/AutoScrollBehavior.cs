@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MultiOpener.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -13,6 +14,17 @@ public static class AutoScrollBehavior
 
     private static void AutoScrollPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
     {
+        bool skip = false;
+        Application.Current?.Dispatcher.Invoke(delegate
+        {
+            MainViewModel mainViewModel = ((MainWindow)Application.Current.MainWindow).MainViewModel;
+
+            if (mainViewModel.SelectedViewModel != mainViewModel.start)
+                skip = true;
+        });
+
+        if (skip) return;
+
         if (obj is not ScrollViewer scrollViewer) return;
 
         if ((bool)args.NewValue)

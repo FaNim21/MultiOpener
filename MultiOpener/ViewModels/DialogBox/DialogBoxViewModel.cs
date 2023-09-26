@@ -2,34 +2,11 @@
 using MultiOpener.Components.Controls;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Input;
 
 namespace MultiOpener.ViewModels.DialogBox;
 
-public class DialogBoxViewModel : BaseViewModel
+public class DialogBoxViewModel : DialogBaseViewModel
 {
-    private string? _text;
-    public string? Text
-    {
-        get { return _text; }
-        set
-        {
-            _text = value;
-            OnPropertyChanged(nameof(Text));
-        }
-    }
-
-    private string? _caption;
-    public string? Caption
-    {
-        get { return _caption; }
-        set
-        {
-            _caption = value;
-            OnPropertyChanged(nameof(Caption));
-        }
-    }
-
     private MessageBoxImage _icon;
     public MessageBoxImage Icon
     {
@@ -38,17 +15,6 @@ public class DialogBoxViewModel : BaseViewModel
         {
             _icon = value;
             OnPropertyChanged(nameof(Icon));
-        }
-    }
-
-    private MessageBoxResult _result = MessageBoxResult.None;
-    public MessageBoxResult Result
-    {
-        get { return _result; }
-        set
-        {
-            _result = value;
-            OnPropertyChanged(nameof(Result));
         }
     }
 
@@ -62,8 +28,6 @@ public class DialogBoxViewModel : BaseViewModel
             OnPropertyChanged(nameof(Buttons));
         }
     }
-
-    public ICommand ButtonPress { get; set; }
 
     public DialogBoxViewModel()
     {

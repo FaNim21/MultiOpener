@@ -1,12 +1,10 @@
 ﻿using MultiOpener.Commands;
 using MultiOpener.Commands.OpenedCommands;
-using MultiOpener.Properties;
+using MultiOpener.Commands.UtilCommands;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,7 +13,7 @@ using System.Windows.Media;
 
 namespace MultiOpener.Entities.Opened;
 
-public class OpenedProcess : INotifyPropertyChanged
+public class OpenedProcess : BaseViewModel
 {
     public string? Name { get; protected set; }
     public string? Path { get; protected set; }
@@ -94,7 +92,8 @@ public class OpenedProcess : INotifyPropertyChanged
     public ICommand RefreshCommand { get; private set; }
     public ICommand OpenFolderCommand { get; private set; }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public ICommand? CopyTextToClipboardCommand { get; private set; }
+
     public bool isMinimizeOnOpen = false;
 
 
@@ -109,6 +108,11 @@ public class OpenedProcess : INotifyPropertyChanged
         FocusCommand = new OpenedFocusCommand(this, start);
         RefreshCommand = new RelayCommand(() => Update(true));
         OpenFolderCommand = new RelayCommand(OpenOpenedPathFolder);
+
+        Application.Current?.Dispatcher.Invoke(delegate
+        {
+            CopyTextToClipboardCommand = new CopyTextToClipboardCommand((MainWindow)Application.Current?.MainWindow!);
+        });
     }
 
     public void Initialize(ProcessStartInfo? processStartInfo, string name, string path, int pid = -1)
@@ -459,10 +463,5 @@ public class OpenedProcess : INotifyPropertyChanged
 
         string? argument = System.IO.Path.GetDirectoryName(Path);
         Process.Start("explorer.exe", argument!);
-    }
-
-    protected void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -1,14 +1,14 @@
 ﻿using MultiOpener.ViewModels.DialogBox;
-using System;
 using System.Media;
+using System;
 using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.Windows;
 
-public partial class DialogBoxWindow : Window
+public partial class InputFieldWindow : Window
 {
-    public DialogBoxWindow()
+    public InputFieldWindow()
     {
         InitializeComponent();
 
@@ -18,10 +18,9 @@ public partial class DialogBoxWindow : Window
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        SetupTextWidth();
         PlayOpeningSound();
 
-
+        inputField.Focus();
     }
 
     private void OnClosed(object? sender, EventArgs e)
@@ -39,14 +38,6 @@ public partial class DialogBoxWindow : Window
     private void ExitButtonClick(object sender, RoutedEventArgs e)
     {
         Close();
-    }
-
-    private void SetupTextWidth()
-    {
-        if (Icon.Source != null) return;
-
-        TextGrid.Margin = new Thickness(-60, 0, 5, 0);
-        TextGrid.HorizontalAlignment = HorizontalAlignment.Center;
     }
 
     protected virtual void PlayOpeningSound()

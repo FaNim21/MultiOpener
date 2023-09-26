@@ -25,6 +25,17 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
+        <Popup Name="popup"
+               Placement="Bottom">
+            <Border Background="DarkGray"
+                    CornerRadius="5"
+                    Padding="5">
+                <TextBlock Text="Text Copied to Clipboard!"
+                           Foreground="Black" />
+            </Border>
+        </Popup>
+
+
         <!--HEADER-->
         <Grid Background="#000D14"
               Grid.ColumnSpan="3"

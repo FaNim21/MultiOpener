@@ -34,7 +34,7 @@ namespace MultiOpener.Commands.StartCommands
             if (isForcedToClose)
                 result = MessageBoxResult.Yes;
             else
-                result = DialogBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None);
+                result = DialogBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {

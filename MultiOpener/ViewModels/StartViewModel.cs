@@ -1,6 +1,7 @@
 ﻿using MultiOpener.Commands.StartCommands;
 using MultiOpener.Entities;
 using MultiOpener.Entities.Opened;
+using MultiOpener.Utils.Interfaces;
 using MultiOpener.ViewModels.Controls;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -74,12 +74,13 @@ public class StartOpenCommand : StartCommandBase
 
         int length = Settings!.Opens.Count;
 
-        Initialize(length);
+        if (!Initialize(length)) return;
+
         await OpenAll(length);
         await Finalize();
     }
 
-    public void Initialize(int length)
+    public bool Initialize(int length)
     {
         Application.Current?.Dispatcher.Invoke(delegate
         {
@@ -90,7 +91,7 @@ public class StartOpenCommand : StartCommandBase
         progressLength = length;
         count = 0;
 
-        Validate(length);
+        if (!Validate(length)) return false;
 
         Start!.LoadingPanelVisibility = true;
         Start.SetLoadingText(string.Empty);
@@ -102,8 +103,9 @@ public class StartOpenCommand : StartCommandBase
             isShiftPressed = true;
             Start!.LoadingPanelVisibility = false;
         }
+        return true;
     }
-    private void Validate(int length)
+    private bool Validate(int length)
     {
         for (int i = 0; i < length; i++)
         {
@@ -116,7 +118,7 @@ public class StartOpenCommand : StartCommandBase
             {
                 DialogBox.Show(result, "", MessageBoxButton.OK, MessageBoxImage.Error);
                 Start!.SetStartButtonState(StartButtonState.open);
-                return;
+                return false;
             }
 
             if (current.GetType() == typeof(OpenInstance))
@@ -150,6 +152,7 @@ public class StartOpenCommand : StartCommandBase
                 }
             }
         }
+        return true;
     }
 
     public async Task OpenAll(int length)

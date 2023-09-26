@@ -1,21 +1,25 @@
 ﻿using MultiOpener.Components.Controls;
+using MultiOpener.Entities;
 using MultiOpener.ViewModels;
-using System.Windows;
+using System.IO;
 
-namespace MultiOpener.Commands.SettingsCommands
+namespace MultiOpener.Commands.SettingsCommands;
+
+public class SettingsCreateNewPresetCommand : SettingsCommandBase
 {
-    public class SettingsCreateNewPresetCommand : SettingsCommandBase
+    public SettingsCreateNewPresetCommand(SettingsViewModel Settings) : base(Settings) { }
+
+    public override void Execute(object? parameter)
     {
-        public SettingsCreateNewPresetCommand(SettingsViewModel Settings) : base(Settings)
-        {
-        }
+        if (Settings == null) return;
 
-        public override void Execute(object? parameter)
-        {
-            if (Settings == null) return;
+        if (parameter is not LoadedGroupItem group) return;
 
-            if (Settings.IsCurrentPresetSaved || DialogBox.Show($"Are you sure you want to create empty preset?\nUnsaved changed will be lost!", $"Creating empty preset", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                Settings.CreateEmptyPreset();
-        }
+        string name = DialogBox.ShowInputField($"Name for new preset in group '{group.Name}':", $"Naming", Settings.IsPresetNameUnique);
+        if (string.IsNullOrEmpty(name)) return;
+
+        LoadedPresetItem item = new(name);
+        group.AddPreset(item);
+        File.WriteAllText(item.GetPath(), "[]");
     }
 }

@@ -1,5 +1,4 @@
 ﻿using MultiOpener.ViewModels.DialogBox;
-using System.Linq;
 using System.Windows;
 
 namespace MultiOpener.Commands.DialogBoxCommands;
@@ -18,19 +17,18 @@ class DialogBoxButtonClickCommand : BaseCommand
         if (parameter == null) return;
 
         MessageBoxResult variable = (MessageBoxResult)parameter;
-        string output = variable.ToString();
+        string output = variable.ToString().ToLower();
         if (string.IsNullOrEmpty(output)) return;
 
         DialogBox.Result = output switch
         {
-            "Ok" => MessageBoxResult.OK,
-            "Yes" => MessageBoxResult.Yes,
-            "No" => MessageBoxResult.No,
-            "Cancel" => MessageBoxResult.Cancel,
+            "ok" => MessageBoxResult.OK,
+            "yes" => MessageBoxResult.Yes,
+            "no" => MessageBoxResult.No,
+            "cancel" => MessageBoxResult.Cancel,
             _ => MessageBoxResult.None,
         };
 
-        Window? activeWindow = Application.Current?.Windows.OfType<Window>().FirstOrDefault(x => x.IsActive);
-        activeWindow?.Close();
+        DialogBox.Close();
     }
 }

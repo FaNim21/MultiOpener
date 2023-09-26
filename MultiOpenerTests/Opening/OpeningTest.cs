@@ -59,7 +59,7 @@ internal class OpeningTest
         Thread.Sleep(250);
         Application.Current.Dispatcher.Invoke(delegate
         {
-            _mainWindow!.MainViewModel.settings.LoadOpenList("OpeningUnitTest.json");
+            _mainWindow!.MainViewModel.settings.LoadPreset("OpeningUnitTest.json");
         });
         Thread.Sleep(250);
 

@@ -16,17 +16,13 @@
         <ContextMenu x:Key="ContextMenuOpened"
                      d:DataContext="{d:DesignInstance Type=opened:OpenedProcess}">
             <MenuItem Header="Info"
-                      Command="{Binding ViewInformationsCommand}"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                      Command="{Binding ViewInformationsCommand}"/>
             <MenuItem Header="Focus"
-                      Command="{Binding FocusCommand}"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                      Command="{Binding FocusCommand}"/>
             <MenuItem Header="Restart"
-                      Command="{Binding ResetCommand}"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                      Command="{Binding ResetCommand}"/>
             <MenuItem Header="Close/Open"
-                      Command="{Binding CloseOpenCommand}"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                      Command="{Binding CloseOpenCommand}"/>
         </ContextMenu>
 
         <DataTemplate x:Key="itemsTemplate">
@@ -63,7 +59,7 @@
                                        Margin="0 25"
                                        Padding="0 4" />
                                 <Label Height="25"
-                                       Foreground="{Binding Path=StatusLabelColor}"
+                                       Foreground="{Binding StatusLabelColor}"
                                        Content="{Binding Status}"
                                        Margin="0 25"
                                        Padding="0 4" />

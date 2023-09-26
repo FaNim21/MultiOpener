@@ -21,11 +21,20 @@ public enum OpenType
 
 [JsonDerivedType(typeof(OpenItem), typeDiscriminator: "base")]
 [JsonDerivedType(typeof(OpenInstance), typeDiscriminator: "instances")]
-public class OpenItem
+public class OpenItem : BaseViewModel
 {
-    public OpenType Type { get; set; }
+    private string _name = "";
+    public string Name
+    {
+        get { return _name; }
+        set
+        {
+            _name = value;
+            OnPropertyChanged(nameof(Name));
+        }
+    }
 
-    public string Name { get; set; }
+    public OpenType Type { get; set; }
     public string PathExe { get; set; }
 
     public int DelayBefore { get; set; }
@@ -89,7 +98,7 @@ public class OpenItem
             {
                 opened.FindProcess();
 
-                if(!opened.IsOpenedFromStatus())
+                if (!opened.IsOpenedFromStatus())
                     await opened.OpenProcess(token);
             }
 

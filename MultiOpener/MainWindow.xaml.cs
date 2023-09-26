@@ -1,20 +1,21 @@
 ﻿using MultiOpener.Components.Controls;
 using MultiOpener.Properties;
 using MultiOpener.Utils;
+using MultiOpener.Utils.Interfaces;
 using MultiOpener.ViewModels;
-using MultiOpener.Windows;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace MultiOpener;
 
-public partial class MainWindow : Window
+public partial class MainWindow : Window, IClipboardService
 {
-    //TODO: 2 Sprobowac przeniesc main viewModel do App.xaml.cs na bazie tego filmiku https://www.youtube.com/watch?v=dtq6qYlolh8 w 5:00
+    //TODO: 5 Sprobowac przeniesc main viewModel do App.xaml.cs na bazie tego filmiku https://www.youtube.com/watch?v=dtq6qYlolh8 w 5:00
     public MainViewModel MainViewModel { get; set; }
 
     //public BackgroundWorker worker;
@@ -38,7 +39,7 @@ public partial class MainWindow : Window
             Top = Settings.Default.MainWindowTop;
         }
 
-        MainViewModel.settings.LoadStartUPPreset(Settings.Default.LastOpenedPresetName);
+        MainViewModel.settings.LoadStartupPreset(Settings.Default.LastOpenedPresetName);
 
         Task task = Task.Factory.StartNew(CheckForUpdates);
 
@@ -73,14 +74,14 @@ public partial class MainWindow : Window
     {
         if (!MainViewModel.start.OpenedIsEmpty())
         {
-            MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener?\nThere are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None);
+            MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener?\nThere are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result != MessageBoxResult.Yes)
                 return;
         }
 
         if (!MainViewModel.settings.IsCurrentPresetSaved)
         {
-            MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener?\nUnsaved changed in preset will be lost!.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.None);
+            MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener?\nUnsaved changed in preset will be lost!.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result != MessageBoxResult.Yes)
                 return;
         }
@@ -103,7 +104,7 @@ public partial class MainWindow : Window
     {
         Settings.Default.MainWindowLeft = Left;
         Settings.Default.MainWindowTop = Top;
-        Settings.Default.LastOpenedPresetName = MainViewModel.settings.PresetName;
+        Settings.Default.LastOpenedPresetName = MainViewModel.settings.CurrentLoadedChosenPath;
 
         Settings.Default.Save();
         Application.Current.Shutdown();
@@ -144,7 +145,7 @@ public partial class MainWindow : Window
 
         /*if (DialogBox.Show("A new version of MultiOpener is available\nClick yes to automaticaly update", "New Update", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
         {
-            //TODO: 0 ZROBIC AUTO DOWNLOAD
+            //TODO: 6 ZROBIC AUTO DOWNLOAD
             _ = new UpdateDownloadWindow();
         }*/
     }
@@ -156,7 +157,7 @@ public partial class MainWindow : Window
 
     /*public void Update()
     {
-        //TODO: 1 Zrobic tu jakies mozliwosci nieskonczonej petli poniewaz inputy ida w inna strone
+        //TODO: 7 Zrobic tu jakies mozliwosci nieskonczonej petli poniewaz inputy ida w inna strone
     }
 
     private async void Worker_DoWork(object sender, DoWorkEventArgs e)
@@ -165,7 +166,7 @@ public partial class MainWindow : Window
         {
             Update();
 
-            //TODO: 2 Dodać opcję ustawienia czasu odświeżania głównej pętli
+            //TODO: 9 Dodać opcję ustawienia czasu odświeżania głównej pętli
             await Task.Delay(TimeSpan.FromMilliseconds(100));
         }
     }
@@ -196,7 +197,41 @@ public partial class MainWindow : Window
             Action = () => { Application.Current.Dispatcher.Invoke(delegate { MainViewModel.start.OpenCommand.Execute(null); }); }
         };
 
+        var saveCurrentPreset = new Hotkey
+        {
+            Key = Key.S,
+            ModifierKeys = ModifierKeys.Control,
+            Description = "Saving edited preset in 'Presets' panel",
+            Action = () =>
+            {
+                if(MainViewModel.SelectedViewModel == MainViewModel.settings)
+                    MainViewModel.settings.SaveJsonCommand.Execute(null);
+            }
+        };
+
         InputController.Instance.AddHotkey(refreshHotkey);
         InputController.Instance.AddHotkey(openButtonPressHotkey);
+        InputController.Instance.AddHotkey(saveCurrentPreset);
+    }
+
+    public void CopyTextToClipboard(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return;
+
+        Clipboard.SetText(text);
+        ShowClipboardPopup();
+        StartViewModel.Log($"You copied to clipboard: \"{text}\"");
+    }
+
+    private void ShowClipboardPopup()
+    {
+        popup.IsOpen = true;
+        DoubleAnimation animation = new(1, 0, new Duration(TimeSpan.FromSeconds(1)));
+        animation.Completed += (sender, e) =>
+        {
+            popup.IsOpen = false;
+            popup.Opacity = 1;
+        };
+        popup.BeginAnimation(OpacityProperty, animation);
     }
 }

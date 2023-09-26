@@ -1,30 +1,22 @@
-﻿using MultiOpener.Entities.Open;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.Entities.Open;
 using MultiOpener.ViewModels;
 
-namespace MultiOpener.Commands.SettingsCommands
+namespace MultiOpener.Commands.SettingsCommands;
+
+public class SettingsAddNewOpenItemCommand : SettingsCommandBase
 {
-    public class SettingsAddNewOpenItemCommand : SettingsCommandBase
+    public SettingsAddNewOpenItemCommand(SettingsViewModel Settings) : base(Settings) { }
+
+    public override void Execute(object? parameter)
     {
-        public SettingsAddNewOpenItemCommand(SettingsViewModel Settings) : base(Settings) { }
+        if (Settings == null) return;
 
-        public override void Execute(object? parameter)
-        {
-            if (Settings == null) return;
-            if (string.IsNullOrEmpty(Settings.AddNameField))
-                return;
+        string name = DialogBox.ShowInputField($"Name for new 'Open' process in you preset:", $"Naming", Settings.IsOpenNameUnique);
+        if (string.IsNullOrEmpty(name)) return;
 
-            for (int i = 0; i < Settings.Opens.Count; i++)
-            {
-                var item = Settings.Opens[i];
-                if (item.Name == Settings.AddNameField)
-                    return;
-            }
-
-            var newOpen = new OpenItem(Settings.AddNameField);
-
-            Settings.AddItem(newOpen);
-            Settings.AddNameField = "";
-            Settings.IsCurrentPresetSaved = false;
-        }
+        var newOpen = new OpenItem(name);
+        Settings.AddItem(newOpen);
+        Settings.SetPresetAsNotSaved();
     }
 }

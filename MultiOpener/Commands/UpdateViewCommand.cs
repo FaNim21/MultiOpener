@@ -33,7 +33,8 @@ namespace MultiOpener.Commands
                 viewModel.SelectedViewModel = viewModel.options;
             else if (result.Equals("Settings"))
             {
-                viewModel.settings?.UpdatePresetsComboBox();
+                //viewModel.settings?.UpdatePresetsComboBox();
+                viewModel.settings?.SetTreeWithGroupsAndPresets();
                 viewModel.SelectedViewModel = viewModel.settings;
             }
         }

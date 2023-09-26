@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:viewmodels="clr-namespace:MultiOpener.Entities.Opened"
              xmlns:buttons="clr-namespace:MultiOpener.Components.Buttons"
              d:DataContext="{d:DesignInstance Type=viewmodels:OpenedProcess}"
@@ -36,15 +37,29 @@
                      Text="{Binding WindowTitle, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
             <TextBlock>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:InvokeCommandAction Command="{Binding CopyTextToClipboardCommand}"
+                                               CommandParameter="{Binding Text, ElementName=TextPath}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <Run Foreground="DarkGray"
                      Text="Path: " />
                 <Run Foreground="White"
+                     x:Name="TextPath"
                      Text="{Binding Path, Mode=OneWay}" />
             </TextBlock>
             <TextBlock>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:InvokeCommandAction Command="{Binding CopyTextToClipboardCommand}"
+                                               CommandParameter="{Binding Text, ElementName=TextID}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <Run Foreground="DarkGray"
                      Text="ID: " />
                 <Run Foreground="White"
+                     Name="TextID"
                      Text="{Binding Pid, Mode=OneWay}" />
             </TextBlock>
             <TextBlock>

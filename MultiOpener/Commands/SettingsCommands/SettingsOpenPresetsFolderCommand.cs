@@ -1,19 +1,18 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Entities;
+using MultiOpener.ViewModels;
 using System.Diagnostics;
 
-namespace MultiOpener.Commands.SettingsCommands
+namespace MultiOpener.Commands.SettingsCommands;
+
+public class SettingsOpenPresetsFolderCommand : SettingsCommandBase
 {
-    public class SettingsOpenPresetsFolderCommand : SettingsCommandBase
+    public SettingsOpenPresetsFolderCommand(SettingsViewModel Settings) : base(Settings) { }
+
+    public override void Execute(object? parameter)
     {
-        public SettingsOpenPresetsFolderCommand(SettingsViewModel Settings) : base(Settings)
-        {
-        }
+        if (Settings == null || parameter == null) return;
 
-        public override void Execute(object? parameter)
-        {
-            if (Settings == null) return;
-
-            Process.Start("explorer.exe", Settings.directoryPath);
-        }
+        LoadedGroupItem group = (LoadedGroupItem)parameter;
+        Process.Start("explorer.exe", group.GetPath());
     }
 }

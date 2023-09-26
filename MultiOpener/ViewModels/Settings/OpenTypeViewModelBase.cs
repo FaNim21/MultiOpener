@@ -76,7 +76,7 @@ namespace MultiOpener.ViewModels.Settings
             if (_wasSavedPreviously)
                 return;
 
-            settingsViewModel.IsCurrentPresetSaved = false;
+            settingsViewModel.SetPresetAsNotSaved();
         }
 
         public virtual void UpdatePanelField(OpenItem currentChosen)

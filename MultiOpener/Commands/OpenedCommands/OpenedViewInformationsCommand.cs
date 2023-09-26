@@ -17,7 +17,7 @@ namespace MultiOpener.Commands.OpenedCommands
             openedProcess.Update();
             openedProcess.InfoButtonOpenName = openedProcess.IsOpenedFromStatus() ? "Close" : "Open";
 
-            DialogBox.ViewInformations(openedProcess);
+            DialogBox.ShowOpenedInformations(openedProcess);
         }
     }
 }

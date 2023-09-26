@@ -4,7 +4,7 @@ namespace MultiOpener.Components.Controls;
 
 public class DialogBoxButton
 {
-    public string? Text { get; set; }
+    public string? Title { get; set; }
 
     public MessageBoxResult Result { get; set; }
 }

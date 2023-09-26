@@ -9,7 +9,6 @@ using System.Windows.Media;
 
 namespace MultiOpener.ViewModels.Controls;
 
-
 public class ConsoleViewModel : BaseViewModel
 {
     public ObservableCollection<ConsoleLine> ConsoleLines { get; set; }
