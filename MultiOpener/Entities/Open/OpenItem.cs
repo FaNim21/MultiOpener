@@ -1,4 +1,5 @@
-﻿using MultiOpener.Entities.Opened;
+﻿using MultiOpener.Entities.Interfaces;
+using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels;
 using System;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ public enum OpenType
 
 [JsonDerivedType(typeof(OpenItem), typeDiscriminator: "base")]
 [JsonDerivedType(typeof(OpenInstance), typeDiscriminator: "instances")]
-public class OpenItem : BaseViewModel
+public class OpenItem : BaseViewModel, IRenameItem
 {
     private string _name = "";
     public string Name
@@ -113,4 +114,9 @@ public class OpenItem : BaseViewModel
     }
 
     public virtual ushort GetAdditionalProgressCount() => 0;
+
+    public void ChangeName(string name)
+    {
+        Name = name;
+    }
 }

@@ -93,6 +93,7 @@
                                 VerticalAlignment="Top"
                                 Margin="20 10 0 0"
                                 ContentText="{Binding OpenButtonName}"
+                                ContentMargin="0 0 0 2"
                                 IsEnabled="{Binding OpenButtonEnabled}"
                                 OnCommand="{Binding OpenCommand}"
                                 FontSize="20" />
@@ -103,6 +104,7 @@
                                 HorizontalAlignment="left"
                                 VerticalAlignment="Top"
                                 ContentText="{Binding RefreshButtonName}"
+                                ContentMargin="0 0 0 2"
                                 OnCommand="{Binding RefreshOpenedCommand}"
                                 Margin="20 45 0 0" />
 

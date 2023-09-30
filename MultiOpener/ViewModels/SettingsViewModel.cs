@@ -1,4 +1,5 @@
-﻿using MultiOpener.Commands.SettingsCommands;
+﻿using MultiOpener.Commands;
+using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.Entities;
 using MultiOpener.Entities.Open;
 using MultiOpener.Utils;
@@ -7,12 +8,13 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels;
 
-public class SettingsViewModel : BaseViewModel
+public partial class SettingsViewModel : BaseViewModel
 {
     public MainViewModel MainViewModel { get; set; }
 
@@ -46,6 +48,7 @@ public class SettingsViewModel : BaseViewModel
                 output = "Current preset: " + value;
 
             MainViewModel.start.UpdatePresetName(output);
+            OnPropertyChanged(nameof(PresetName));
         }
     }
 
@@ -113,25 +116,38 @@ public class SettingsViewModel : BaseViewModel
     public ICommand AddNewOpenItemCommand { get; set; }
     public ICommand RemoveCurrentOpenCommand { get; set; }
     public ICommand ClearCurrentOpenCommand { get; set; }
-    public ICommand RenameCurrentOpenCommand { get; set; }
 
     public ICommand AddNewGroupItemCommand { get; set; }
     public ICommand RemoveGroupCommand { get; set; }
-    public ICommand RenameGroupCommand { get; set; }
 
     public ICommand CreateNewPresetCommand { get; set; }
     public ICommand RemovePresetCommand { get; set; }
     public ICommand LoadChosenPresetCommand { get; set; }
     public ICommand DuplicatePresetCommand { get; set; }
-    public ICommand RenamePresetCommand { get; set; }
 
     public ICommand SaveJsonCommand { get; set; }
+    public ICommand RenameItemCommand { get; set; }
 
     public ICommand InsertItemToOpenCommand { get; set; }
     public ICommand OnItemClickCommand { get; set; }
     public ICommand OpenPresetsFolderCommand { get; set; }
 
+    public ICommand RefreshTreeViewCommand { get; set; }
+
     public readonly string directoryPath;
+
+
+    private string? _lolName = "asdas";
+    public string? LolName
+    {
+        get { return _lolName; }
+        set
+        {
+            _lolName = value;
+            StartViewModel.Log($"LolName updated: {_lolName}");
+            OnPropertyChanged(nameof(LolName));
+        }
+    }
 
 
     public SettingsViewModel(MainViewModel mainViewModel)
@@ -146,23 +162,23 @@ public class SettingsViewModel : BaseViewModel
         RemoveCurrentOpenCommand = new SettingsRemoveCurrentOpenCommand(this);
         ClearCurrentOpenCommand = new SettingsClearCurrentOpenCommand(this);
         SaveCurrentOpenCommand = new SettingsSaveCurrentOpenCommand(this);
-        RenameCurrentOpenCommand = new SettingsRenameOpenItemCommand(this);
 
         AddNewGroupItemCommand = new SettingsAddNewGroupItemCommand(this);
         RemoveGroupCommand = new SettingsRemoveGroupCommand(this);
-        RenameGroupCommand = new SettingsRenameGroupCommand(this);
 
         CreateNewPresetCommand = new SettingsCreateNewPresetCommand(this);
         RemovePresetCommand = new SettingsRemovePresetCommand(this);
         LoadChosenPresetCommand = new SettingsLoadChosenPresetCommand(this);
         DuplicatePresetCommand = new SettingsDuplicatePresetCommand(this);
-        RenamePresetCommand = new SettingsRenamePresetCommand(this);
 
         SaveJsonCommand = new SaveJsonCommand(this);
+        RenameItemCommand = new SettingsRenameItemCommand(this);
 
         InsertItemToOpenCommand = new InsertItemToOpenCommand(this);
         OnItemClickCommand = new SettingsOnItemListClickCommand(this);
         OpenPresetsFolderCommand = new SettingsOpenPresetsFolderCommand(this);
+
+        RefreshTreeViewCommand = new RelayCommand(SetTreeWithGroupsAndPresets);
 
         if (!Directory.Exists(directoryPath))
             Directory.CreateDirectory(directoryPath);
@@ -173,6 +189,8 @@ public class SettingsViewModel : BaseViewModel
 
     public void SetTreeWithGroupsAndPresets()
     {
+        //TODO: 1 Zrobic zapisywania i ladowanie IsExpanded i indexu dla grup TreeView
+
         Groups?.Clear();
         Groups = new ObservableCollection<LoadedGroupItem>();
 
@@ -389,4 +407,8 @@ public class SettingsViewModel : BaseViewModel
     {
         return Opens == null || Opens.Count == 0;
     }
+
+    [GeneratedRegex("[<>:\"/\\|?*]")]
+    public static partial Regex SpecialCharacterPattern();
+
 }

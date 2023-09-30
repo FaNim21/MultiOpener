@@ -1,10 +1,12 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Entities.Interfaces;
+using MultiOpener.ViewModels;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
 
 namespace MultiOpener.Entities;
 
-public class LoadedPresetItem : BaseViewModel
+public class LoadedPresetItem : BaseViewModel, IRenameItem
 {
     private string _name = "";
     public string Name
@@ -14,6 +16,20 @@ public class LoadedPresetItem : BaseViewModel
         {
             _name = value;
             OnPropertyChanged(nameof(Name));
+        }
+    }
+
+    private bool _isExpanded;
+    public bool IsExpanded
+    {
+        get { return _isExpanded; }
+        set
+        {
+            if (_isExpanded != value)
+            {
+                _isExpanded = value;
+                OnPropertyChanged(nameof(IsExpanded));
+            }
         }
     }
 
@@ -32,6 +48,7 @@ public class LoadedPresetItem : BaseViewModel
 
         File.Move(path, newPath);
         Name = name;
+        ((MainWindow)Application.Current.MainWindow).MainViewModel.settings.SetPresetAsNotSaved();
     }
 
     public string GetPath()
@@ -40,7 +57,7 @@ public class LoadedPresetItem : BaseViewModel
     }
 }
 
-public class LoadedGroupItem : BaseViewModel
+public class LoadedGroupItem : BaseViewModel, IRenameItem
 {
     private string _name = "";
     public string Name
@@ -50,6 +67,20 @@ public class LoadedGroupItem : BaseViewModel
         {
             _name = value;
             OnPropertyChanged(nameof(Name));
+        }
+    }
+
+    private bool _isExpanded;
+    public bool IsExpanded
+    {
+        get { return _isExpanded; }
+        set
+        {
+            if (_isExpanded != value)
+            {
+                _isExpanded = value;
+                OnPropertyChanged(nameof(IsExpanded));
+            }
         }
     }
 
@@ -75,6 +106,7 @@ public class LoadedGroupItem : BaseViewModel
 
         Directory.Move(path, newPath);
         Name = name;
+        ((MainWindow)Application.Current.MainWindow).MainViewModel.settings.SetPresetAsNotSaved();
     }
 
     public string GetPath()
@@ -87,4 +119,13 @@ public class LoadedGroupItem : BaseViewModel
         return path;
     }
     public bool IsEmpty() => Presets == null || Presets.Count == 0;
+    public bool Contains(string name)
+    {
+        for (int i = 0; i < Presets.Count; i++)
+        {
+            var current = Presets[i];
+            if (current.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase)) return true;
+        }
+        return false;
+    }
 }

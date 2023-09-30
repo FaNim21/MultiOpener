@@ -1,4 +1,5 @@
-﻿using MultiOpener.Components.Controls;
+﻿using MultiOpener.Components;
+using MultiOpener.Components.Controls;
 using MultiOpener.Properties;
 using MultiOpener.Utils;
 using MultiOpener.Utils.Interfaces;
@@ -8,6 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
@@ -15,10 +17,10 @@ namespace MultiOpener;
 
 public partial class MainWindow : Window, IClipboardService
 {
-    //TODO: 5 Sprobowac przeniesc main viewModel do App.xaml.cs na bazie tego filmiku https://www.youtube.com/watch?v=dtq6qYlolh8 w 5:00
+    //TODO: 9 Sprobowac przeniesc main viewModel do App.xaml.cs na bazie tego filmiku https://www.youtube.com/watch?v=dtq6qYlolh8 w 5:00
+
     public MainViewModel MainViewModel { get; set; }
 
-    //public BackgroundWorker worker;
 
     public MainWindow()
     {
@@ -42,11 +44,6 @@ public partial class MainWindow : Window, IClipboardService
         MainViewModel.settings.LoadStartupPreset(Settings.Default.LastOpenedPresetName);
 
         Task task = Task.Factory.StartNew(CheckForUpdates);
-
-        /*worker = new() { WorkerSupportsCancellation = true };
-        worker.DoWork += Worker_DoWork!;
-
-        if (!worker.IsBusy) worker.RunWorkerAsync();*/
     }
 
     public void EnableDisableChoosenHeadButton(string option)
@@ -145,7 +142,7 @@ public partial class MainWindow : Window, IClipboardService
 
         /*if (DialogBox.Show("A new version of MultiOpener is available\nClick yes to automaticaly update", "New Update", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
         {
-            //TODO: 6 ZROBIC AUTO DOWNLOAD
+            //TODO: 9 ZROBIC AUTO DOWNLOAD
             _ = new UpdateDownloadWindow();
         }*/
     }
@@ -154,30 +151,6 @@ public partial class MainWindow : Window, IClipboardService
     {
         SettingsButton.ContentText = name;
     }
-
-    /*public void Update()
-    {
-        //TODO: 7 Zrobic tu jakies mozliwosci nieskonczonej petli poniewaz inputy ida w inna strone
-    }
-
-    private async void Worker_DoWork(object sender, DoWorkEventArgs e)
-    {
-        while (!worker.CancellationPending)
-        {
-            Update();
-
-            //TODO: 9 Dodać opcję ustawienia czasu odświeżania głównej pętli
-            await Task.Delay(TimeSpan.FromMilliseconds(100));
-        }
-    }
-
-    public void StopWorker()
-    {
-        if (worker.IsBusy)
-        {
-            worker.CancelAsync();
-        }
-    }*/
 
     public void HotkeySetup()
     {
@@ -209,9 +182,24 @@ public partial class MainWindow : Window, IClipboardService
             }
         };
 
+        var renameTextBox = new Hotkey
+        {
+            Key = Key.F2,
+            ModifierKeys = ModifierKeys.None,
+            Description = "Bind to trigger renaming elements",
+            Action = () =>
+            {
+                IInputElement focusedControl = Keyboard.FocusedElement;
+                EditableTextBlock? textBlock = Helper.FindChild<EditableTextBlock>((DependencyObject)focusedControl);
+                if(textBlock != null && textBlock.IsEditable)
+                    textBlock.IsInEditMode = true;
+            }
+        };
+
         InputController.Instance.AddHotkey(refreshHotkey);
         InputController.Instance.AddHotkey(openButtonPressHotkey);
         InputController.Instance.AddHotkey(saveCurrentPreset);
+        InputController.Instance.AddHotkey(renameTextBox);
     }
 
     public void CopyTextToClipboard(string text)
@@ -225,13 +213,18 @@ public partial class MainWindow : Window, IClipboardService
 
     private void ShowClipboardPopup()
     {
+        if (popup.IsOpen)
+            popup.IsOpen = false;
+
         popup.IsOpen = true;
+
         DoubleAnimation animation = new(1, 0, new Duration(TimeSpan.FromSeconds(1)));
         animation.Completed += (sender, e) =>
         {
             popup.IsOpen = false;
             popup.Opacity = 1;
         };
+
         popup.BeginAnimation(OpacityProperty, animation);
     }
 }

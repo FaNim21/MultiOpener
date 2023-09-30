@@ -6,6 +6,7 @@
              xmlns:viewmodels="clr-namespace:MultiOpener.ViewModels"
              xmlns:converters="clr-namespace:MultiOpener.Converters"
              xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
+             xmlns:local2="clr-namespace:MultiOpener.Components"
              xmlns:types="clr-namespace:MultiOpener.Entities"
              d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
              x:Name="settingsView"
@@ -204,7 +205,7 @@
             <MenuItem Header="Clear"
                       Command="{Binding ClearCurrentOpenCommand}" />
             <MenuItem Header="Rename"
-                      Command="{Binding RenameCurrentOpenCommand}" />
+                      Command="{Binding RenameItemCommand}" />
             <MenuItem Header="Delete"
                       Command="{Binding RemoveCurrentOpenCommand}" />
         </ContextMenu>
@@ -213,7 +214,7 @@
             <MenuItem Header="Load Preset"
                       Command="{Binding LoadChosenPresetCommand}" />
             <MenuItem Header="Rename Preset"
-                      Command="{Binding RenamePresetCommand}" />
+                      Command="{Binding RenameItemCommand}" />
             <MenuItem Header="Duplicate Preset"
                       Command="{Binding DuplicatePresetCommand}" />
             <MenuItem Header="Delete Preset"
@@ -226,7 +227,7 @@
             <MenuItem Header="Open Group Folder"
                       Command="{Binding OpenPresetsFolderCommand}" />
             <MenuItem Header="Rename Group"
-                      Command="{Binding RenameGroupCommand}" />
+                      Command="{Binding RenameItemCommand}" />
             <MenuItem Header="Delete Group"
                       Command="{Binding RemoveGroupCommand}" />
         </ContextMenu>
@@ -300,11 +301,24 @@
             <Grid Grid.Column="0"
                   Background="#21272B">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
                     <RowDefinition />
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
+                <Grid Grid.Row="0"
+                      Height="40"
+                      VerticalAlignment="Bottom"
+                      Background="#14171a">
+                    <Label Content="{Binding PresetName}"
+                           Foreground="LightGray"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="15"
+                           FontWeight="bold" />
+                </Grid>
+
+                <Grid Grid.Row="1">
                     <ListView x:Name="itemList"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                               Background="Transparent"
@@ -336,15 +350,16 @@
                                 <Grid Width="120"
                                       Height="20"
                                       HorizontalAlignment="Center">
-                                    <TextBlock HorizontalAlignment="Center"
-                                               Text="{Binding Name}" />
+                                    <local2:EditableTextBlock Text="{Binding Name}"
+                                                              HorizontalAlignment="Center"
+                                                              Margin="0 -2 0 0" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
                 </Grid>
 
-                <Grid Grid.Row="1"
+                <Grid Grid.Row="2"
                       Height="40"
                       VerticalAlignment="Bottom"
                       Background="#000D14">
@@ -359,6 +374,7 @@
                                         HorizontalAlignment="Right"
                                         Margin="0 0 5 0"
                                         ContentText="SAVE"
+                                        ContentMargin="0 0 0 2"
                                         FontSize="19"
                                         OnCommand="{Binding SaveJsonCommand}" />
                 </Grid>
@@ -367,8 +383,7 @@
             <!--GROUPY I PRESESTY-->
             <Grid Grid.Column="1"
                   Background="#1D2226"
-                  Width="180"
-                  Margin="0 0 0 0">
+                  Width="180">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="40" />
@@ -383,30 +398,52 @@
                               PreviewMouseRightButtonDown="TreeView_PreviewMouseRightButtonDown"
                               BorderThickness="0">
                         <TreeView.Resources>
+                            <Style TargetType="TreeViewItem"
+                                   x:Key="CustomTreeViewItemStyle">
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                                                     Color="#0078d7"
+                                                     Opacity="0.5" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
+                                                     Color="Black" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                                                     Color="Transparent" />
+                                </Style.Resources>
+                                <Setter Property="Padding"
+                                        Value="0" />
+                                <Setter Property="IsExpanded"
+                                        Value="{Binding IsExpanded, Mode=TwoWay}" />
+                            </Style>
+
+                            <Style TargetType="TreeViewItem"
+                                   BasedOn="{StaticResource CustomTreeViewItemStyle}" />
+
                             <!--GROUPS-->
                             <HierarchicalDataTemplate DataType="{x:Type types:LoadedGroupItem}"
                                                       ItemsSource="{Binding Presets}">
                                 <Grid Width="150"
                                       Height="20"
-                                      Background="#3280f0"
-                                      HorizontalAlignment="Center"
+                                      Background="Transparent"
                                       ContextMenu="{StaticResource GroupContextMenu}">
-                                    <TextBlock HorizontalAlignment="Center"
-                                               Foreground="White"
-                                               Text="{Binding Name}" />
+                                    <local2:EditableTextBlock Text="{Binding Name}"
+                                                              Foreground="White"
+                                                              Margin="0 -2 0 0" />
                                 </Grid>
                             </HierarchicalDataTemplate>
 
                             <!--PRESETS-->
                             <HierarchicalDataTemplate DataType="{x:Type types:LoadedPresetItem}">
-                                <Grid Width="120"
+                                <Grid Width="129"
                                       Height="20"
-                                      Background="#62f87a"
-                                      HorizontalAlignment="Center"
-                                      ContextMenu="{StaticResource PresetContextMenu}">
-                                    <TextBlock HorizontalAlignment="Center"
-                                               Foreground="White"
-                                               Text="{Binding Name}" />
+                                      ContextMenu="{StaticResource PresetContextMenu}"
+                                      Margin="2 0 0 0">
+                                    <Grid.Background>
+                                        <SolidColorBrush Color="#000d14"
+                                                         Opacity="0.45" />
+                                    </Grid.Background>
+                                    <local2:EditableTextBlock Text="{Binding Name}"
+                                                              Foreground="White"
+                                                              Margin="5 -2 0 0" />
                                 </Grid>
                             </HierarchicalDataTemplate>
                         </TreeView.Resources>
@@ -422,6 +459,17 @@
                                          OnConsoleCommand="{Binding AddNewGroupItemCommand}"
                                          Margin="5 0 0 0">
                     </local:ButtonPresets>
+
+                    <local:ButtonNormal Width="40"
+                                        Height="30"
+                                        HorizontalAlignment="Right"
+                                        Margin="0 0 5 0"
+                                        ContentText="↻"
+                                        ContentMargin="0 -10 0 0"
+                                        FontSize="32"
+                                        ToolTip="Refresh for whole tree of groups and presets"
+                                        OnCommand="{Binding RefreshTreeViewCommand}">
+                    </local:ButtonNormal>
                 </Grid>
             </Grid>
         </Grid>

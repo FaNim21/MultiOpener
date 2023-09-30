@@ -48,7 +48,7 @@
                         CornerRadius="2">
                     <ContentPresenter VerticalAlignment="Center"
                                       HorizontalAlignment="Center"
-                                      Margin="0 0 0 2" />
+                                      Margin="{Binding ContentMargin, ElementName=NormalButton}" />
                 </Border>
             </ControlTemplate>
         </Button.Template>

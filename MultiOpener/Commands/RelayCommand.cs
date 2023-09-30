@@ -16,3 +16,20 @@ public class RelayCommand : BaseCommand
         _execute();
     }
 }
+
+public class RelayCommand<T> : BaseCommand
+{
+    private readonly Action<T> _execute;
+
+    public RelayCommand(Action<T> execute)
+    {
+        _execute = execute;
+    }
+
+    public override void Execute(object? parameter)
+    {
+        if (parameter == null) return;
+
+        _execute((T)parameter);
+    }
+}

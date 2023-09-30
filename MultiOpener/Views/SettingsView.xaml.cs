@@ -83,10 +83,10 @@ public partial class SettingsView : UserControl
 
     private void TreeView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        isDragging = true;
-        if (e.OriginalSource is FrameworkElement element)
+        if (e.OriginalSource is FrameworkElement element && element.DataContext is LoadedPresetItem preset)
         {
-            draggedItem = element.DataContext;
+            isDragging = true;
+            draggedItem = preset;
             sourceGroup = FindGroupByItem(draggedItem);
             targetPreset = draggedItem as LoadedPresetItem;
             if (sourceGroup == null) isDragging = false;
@@ -124,39 +124,30 @@ public partial class SettingsView : UserControl
             if (e.OriginalSource is FrameworkElement element)
                 targetGroup = FindGroupByItem(element.DataContext);
 
-            if (targetGroup == null) return;
+            if (targetGroup == null)
+            {
+                return;
+                //TODO: 3 Tu zrobic tworzenie grupy groupless jezeli jej nie ma, a jak jest to fakt zeby dodawac tam ten preset
+            }
             if (draggedItem is not LoadedPresetItem preset) return;
 
             if (targetGroup == sourceGroup) return;
-            
+            if (targetGroup.Contains(preset.Name)) return;
+
             string oldPath = preset.GetPath();
             sourceGroup!.Presets?.Remove(preset);
             targetGroup.AddPreset(preset);
             string newPath = preset.GetPath();
 
             File.Move(oldPath, newPath);
-
-            /*else
-            {
-                int targetIndex = targetGroup.Presets?.IndexOf(targetPreset!) ?? -1;
-                if (targetIndex != -1)
-                {
-                    targetGroup.Presets?.Remove(preset);
-                    targetGroup.Presets?.Insert(targetIndex, preset);
-                }
-                else
-                {
-                    targetGroup.Presets?.Add(preset);
-                }
-            }*/
         }
     }
     private void TreeView_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         TreeViewItem? treeViewItem = GetViewItemFromMousePosition<TreeViewItem, TreeView>(sender as TreeView, e.GetPosition(sender as IInputElement));
-
         if (treeViewItem != null)
         {
+            Keyboard.Focus(treeViewItem);
             ContextMenu? contextMenu = null;
             if (treeViewItem.DataContext is LoadedGroupItem group)
             {
