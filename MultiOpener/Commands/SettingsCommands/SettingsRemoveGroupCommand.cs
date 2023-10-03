@@ -18,7 +18,7 @@ public class SettingsRemoveGroupCommand : SettingsCommandBase
 
         if (group.Name.Equals("Groupless", System.StringComparison.OrdinalIgnoreCase))
         {
-            if (DialogBox.Show($"You sure you want to delete all presets {group.Name}", "Removing Groupless presets", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (DialogBox.Show($"Are you sure you want to delete all presets {group.Name}", "Removing Groupless presets", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 int n = group.Presets.Count;
                 for (int i = 0; i < n; i++)
@@ -42,7 +42,7 @@ public class SettingsRemoveGroupCommand : SettingsCommandBase
         }
         else
         {
-            MessageBoxResult result = DialogBox.Show($"You trying to remove {group.Name} with option:\nYES - Removing only that folder and move all presets to Groupless\nNO - Removing whole folder with all presets in it", "Removing Group", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+            MessageBoxResult result = DialogBox.Show($"You are trying to remove {group.Name} with option:\nYES - Removing only that folder and move all presets to Groupless\nNO - Removing whole folder with all presets in it", "Removing Group", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {

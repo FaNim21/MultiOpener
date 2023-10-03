@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Entities;
 using MultiOpener.Entities.Open;
+using MultiOpener.ViewModels;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -124,15 +125,25 @@ public partial class SettingsView : UserControl
             if (e.OriginalSource is FrameworkElement element)
                 targetGroup = FindGroupByItem(element.DataContext);
 
-            if (targetGroup == null)
-            {
-                return;
-                //TODO: 3 Tu zrobic tworzenie grupy groupless jezeli jej nie ma, a jak jest to fakt zeby dodawac tam ten preset
-            }
             if (draggedItem is not LoadedPresetItem preset) return;
 
+            if (targetGroup == null)
+            {
+                if (e.OriginalSource is FrameworkElement element1 && element1.DataContext is SettingsViewModel settings)
+                {
+                    LoadedGroupItem? groupless = settings.GetGroupByName("Groupless");
+
+                    if (groupless == null)
+                    {
+                        groupless = new LoadedGroupItem("Groupless");
+                        settings.Groups!.Add(groupless);
+                    }
+                    targetGroup = groupless;
+                }
+            }
+
             if (targetGroup == sourceGroup) return;
-            if (targetGroup.Contains(preset.Name)) return;
+            if (targetGroup!.Contains(preset.Name)) return;
 
             string oldPath = preset.GetPath();
             sourceGroup!.Presets?.Remove(preset);

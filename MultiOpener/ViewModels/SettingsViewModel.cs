@@ -137,19 +137,6 @@ public partial class SettingsViewModel : BaseViewModel
     public readonly string directoryPath;
 
 
-    private string? _lolName = "asdas";
-    public string? LolName
-    {
-        get { return _lolName; }
-        set
-        {
-            _lolName = value;
-            StartViewModel.Log($"LolName updated: {_lolName}");
-            OnPropertyChanged(nameof(LolName));
-        }
-    }
-
-
     public SettingsViewModel(MainViewModel mainViewModel)
     {
         MainViewModel = mainViewModel;
@@ -407,8 +394,4 @@ public partial class SettingsViewModel : BaseViewModel
     {
         return Opens == null || Opens.Count == 0;
     }
-
-    [GeneratedRegex("[<>:\"/\\|?*]")]
-    public static partial Regex SpecialCharacterPattern();
-
 }

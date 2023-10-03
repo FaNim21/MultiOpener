@@ -1,6 +1,7 @@
 ﻿using MultiOpener.Entities;
 using MultiOpener.Entities.Interfaces;
 using MultiOpener.Entities.Open;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System;
 using System.Windows;
@@ -94,7 +95,7 @@ public partial class EditableTextBlock : UserControl
                     return;
                 }
 
-                if (SettingsViewModel.SpecialCharacterPattern().IsMatch(textBlock.Text))
+                if (RegexPatterns.SpecialCharacterPattern().IsMatch(textBlock.Text))
                 {
                     ShowPopup("The name cannot contain any of the following characters: \\ / : * ? \" < >", 3);
                     return;
@@ -104,21 +105,33 @@ public partial class EditableTextBlock : UserControl
                 var settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
                 if (DataContext is LoadedGroupItem)
                 {
+                    if (Text.Equals("Groupless", StringComparison.OrdinalIgnoreCase))
+                    {
+                        ShowPopup($"You can't rename group 'Groupless'", 2);
+                        return;
+                    }
+
+                    if (textBlock.Text.Equals("Groupless", StringComparison.OrdinalIgnoreCase))
+                    {
+                        ShowPopup($"You can't name group as 'Groupless'", 2);
+                        return;
+                    }
+
                     isUnique = settings.IsGroupNameUnique(textBlock.Text);
                     if (!isUnique)
-                        ShowPopup($"There already exist 'Group' item named '{textBlock.Text}'", 2);
+                        ShowPopup($"Group item named '{textBlock.Text}' already exists", 2);
                 }
                 else if (DataContext is LoadedPresetItem)
                 {
                     isUnique = settings.IsPresetNameUnique(textBlock.Text);
                     if (!isUnique)
-                        ShowPopup($"There already exist 'Preset' item named '{textBlock.Text}'", 2);
+                        ShowPopup($"Preset item named '{textBlock.Text}' already exists", 2);
                 }
                 else if (DataContext is OpenItem)
                 {
                     isUnique = settings.IsOpenNameUnique(textBlock.Text);
                     if (!isUnique)
-                        ShowPopup($"There already exist 'Open' item named '{textBlock.Text}'", 2);
+                        ShowPopup($"Open item named '{textBlock.Text}' already exists", 2);
                 }
                 if (!isUnique) return;
 

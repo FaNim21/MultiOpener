@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Windows.Media;
 using System.Windows;
+using System.Windows.Input;
 
 namespace MultiOpener.Utils;
 
@@ -49,5 +50,12 @@ public static class Helper
             current = VisualTreeHelper.GetParent(current);
         } while (current != null);
         return null;
+    }
+
+    public static T? GetFocusedUIElement<T>() where T : DependencyObject
+    {
+        IInputElement focusedControl = Keyboard.FocusedElement;
+        T? result = FindChild<T>((DependencyObject)focusedControl);
+        return result;
     }
 }

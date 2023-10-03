@@ -177,7 +177,7 @@ public partial class MainWindow : Window, IClipboardService
             Description = "Saving edited preset in 'Presets' panel",
             Action = () =>
             {
-                if(MainViewModel.SelectedViewModel == MainViewModel.settings)
+                if (MainViewModel.SelectedViewModel == MainViewModel.settings)
                     MainViewModel.settings.SaveJsonCommand.Execute(null);
             }
         };
@@ -189,9 +189,8 @@ public partial class MainWindow : Window, IClipboardService
             Description = "Bind to trigger renaming elements",
             Action = () =>
             {
-                IInputElement focusedControl = Keyboard.FocusedElement;
-                EditableTextBlock? textBlock = Helper.FindChild<EditableTextBlock>((DependencyObject)focusedControl);
-                if(textBlock != null && textBlock.IsEditable)
+                EditableTextBlock? textBlock = Helper.GetFocusedUIElement<EditableTextBlock>();
+                if (textBlock != null && textBlock.IsEditable)
                     textBlock.IsInEditMode = true;
             }
         };
