@@ -1,4 +1,5 @@
 ﻿using MultiOpener.Entities;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System.IO;
 
@@ -17,31 +18,8 @@ class SettingsDuplicatePresetCommand : SettingsCommandBase
         string oldPath = preset.GetPath();
         LoadedGroupItem group = preset.ParentGroup!;
         LoadedPresetItem newPreset = new(preset.Name);
-        string baseName = preset.Name;
-        int suffix = 1;
 
-        while (!Settings.IsPresetNameUnique(newPreset.Name))
-        {
-            if (baseName.EndsWith(")"))
-            {
-                int openParenthesisIndex = baseName.LastIndexOf('(');
-                if (openParenthesisIndex > 0)
-                {
-                    int closeParenthesisIndex = baseName.LastIndexOf(')');
-                    if (closeParenthesisIndex == baseName.Length - 1)
-                    {
-                        string suffixStr = baseName.Substring(openParenthesisIndex + 1, closeParenthesisIndex - openParenthesisIndex - 1);
-                        if (int.TryParse(suffixStr, out int existingSuffix))
-                        {
-                            suffix = existingSuffix + 1;
-                            baseName = baseName[..openParenthesisIndex].TrimEnd();
-                        }
-                    }
-                }
-            }
-
-            newPreset.Name = $"{baseName} ({suffix++})";
-        }
+        newPreset.Name = Helper.GetUniqueName(preset.Name, newPreset.Name, Settings.IsPresetNameUnique);
         group.AddPreset(newPreset);
         string newPath = newPreset.GetPath();
 

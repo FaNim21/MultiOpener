@@ -25,7 +25,10 @@ namespace MultiOpener.Commands
             if (viewModel.SelectedViewModel == viewModel.options)
                 viewModel.options.SaveOptions();
             else if (viewModel.SelectedViewModel == viewModel.settings)
+            {
                 viewModel.settings?.SaveCurrentOpenCommand?.Execute(null);
+                viewModel.settings?.SaveGroupTree();
+            }
 
             if (result.Equals("Start"))
                 viewModel.SelectedViewModel = viewModel.start;

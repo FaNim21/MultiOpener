@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Entities;
 using MultiOpener.Entities.Open;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -29,7 +30,6 @@ public partial class SettingsView : UserControl
     private bool isDragging;
     private object? draggedItem;
     private LoadedGroupItem? sourceGroup;
-    private LoadedPresetItem? targetPreset;
 
 
     public SettingsView()
@@ -49,16 +49,14 @@ public partial class SettingsView : UserControl
 
     private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
     {
-        Regex regex = new("[^0-9]+");
+        Regex regex = RegexPatterns.NumbersPattern();
         e.Handled = regex.IsMatch(e.Text);
     }
 
     private void TextBlockMouseMove(object sender, MouseEventArgs e)
     {
         if (e.LeftButton == MouseButtonState.Pressed && sender is FrameworkElement frameworkElement)
-        {
             DragDrop.DoDragDrop(frameworkElement, new DataObject(DataFormats.Serializable, frameworkElement.DataContext), DragDropEffects.Move);
-        }
     }
     private void OnItemListClick(object sender, MouseButtonEventArgs e)
     {
@@ -89,7 +87,6 @@ public partial class SettingsView : UserControl
             isDragging = true;
             draggedItem = preset;
             sourceGroup = FindGroupByItem(draggedItem);
-            targetPreset = draggedItem as LoadedPresetItem;
             if (sourceGroup == null) isDragging = false;
         }
     }
@@ -122,9 +119,7 @@ public partial class SettingsView : UserControl
         if (draggedItem != null || sourceGroup != null)
         {
             LoadedGroupItem? targetGroup = null;
-            if (e.OriginalSource is FrameworkElement element)
-                targetGroup = FindGroupByItem(element.DataContext);
-
+            if (e.OriginalSource is FrameworkElement element) targetGroup = FindGroupByItem(element.DataContext);
             if (draggedItem is not LoadedPresetItem preset) return;
 
             if (targetGroup == null)
@@ -167,10 +162,8 @@ public partial class SettingsView : UserControl
                     Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
 
                 foreach (var item in contextMenu.Items)
-                {
                     if (item is MenuItem menuItem)
                         menuItem.CommandParameter = group;
-                }
             }
             else if (treeViewItem.DataContext is LoadedPresetItem preset)
             {
@@ -179,10 +172,8 @@ public partial class SettingsView : UserControl
                     Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
 
                 foreach (var item in contextMenu.Items)
-                {
                     if (item is MenuItem menuItem)
                         menuItem.CommandParameter = preset;
-                }
             }
 
             treeViewItem.ContextMenu ??= contextMenu;
@@ -201,10 +192,8 @@ public partial class SettingsView : UserControl
 
             var currentItem = listViewItem.DataContext;
             foreach (var item in contextMenu.Items)
-            {
                 if (item is MenuItem menuItem)
                     menuItem.CommandParameter = currentItem;
-            }
 
             listViewItem.ContextMenu ??= contextMenu;
         }
@@ -212,32 +201,19 @@ public partial class SettingsView : UserControl
 
     private LoadedGroupItem? FindGroupByItem(object item)
     {
-        if (item is LoadedGroupItem group)
-            return group;
-
-        if (item is LoadedPresetItem preset)
-        {
-            targetPreset = preset;
-            return preset.ParentGroup;
-        }
-
+        if (item is LoadedGroupItem group) return group;
+        if (item is LoadedPresetItem preset) return preset.ParentGroup;
         return null;
     }
     private MenuItem? FindMenuItemByName(ItemsControl itemsControl, string menuItemName)
     {
         foreach (var item in itemsControl.Items)
         {
-            if (item is MenuItem menuItem && menuItem.Name == menuItemName)
-            {
-                return menuItem;
-            }
+            if (item is MenuItem menuItem && menuItem.Name == menuItemName) return menuItem;
             else if (item is ItemsControl subMenu)
             {
                 var foundMenuItem = FindMenuItemByName(subMenu, menuItemName);
-                if (foundMenuItem != null)
-                {
-                    return foundMenuItem;
-                }
+                if (foundMenuItem != null) return foundMenuItem;
             }
         }
         return null;

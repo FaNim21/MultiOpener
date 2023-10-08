@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using MultiOpener.Utils;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -13,7 +14,7 @@ namespace MultiOpener.Views.SettingsOpens
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new("[^0-9]+");
+            Regex regex = RegexPatterns.NumbersPattern();
             e.Handled = regex.IsMatch(e.Text);
         }
 

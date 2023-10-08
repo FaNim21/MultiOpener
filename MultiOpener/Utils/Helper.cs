@@ -2,6 +2,8 @@
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Input;
+using System;
+using MultiOpener.Properties;
 
 namespace MultiOpener.Utils;
 
@@ -57,5 +59,36 @@ public static class Helper
         IInputElement focusedControl = Keyboard.FocusedElement;
         T? result = FindChild<T>((DependencyObject)focusedControl);
         return result;
+    }
+
+    public static string GetUniqueName(string oldName, string newName, Func<string, bool> CheckIfUnique)
+    {
+        string baseName = oldName;
+        int suffix = 1;
+
+        while (!CheckIfUnique(newName))
+        {
+            if (baseName.EndsWith(")"))
+            {
+                int openParenthesisIndex = baseName.LastIndexOf('(');
+                if (openParenthesisIndex > 0)
+                {
+                    int closeParenthesisIndex = baseName.LastIndexOf(')');
+                    if (closeParenthesisIndex == baseName.Length - 1)
+                    {
+                        string suffixStr = baseName.Substring(openParenthesisIndex + 1, closeParenthesisIndex - openParenthesisIndex - 1);
+                        if (int.TryParse(suffixStr, out int existingSuffix))
+                        {
+                            suffix = existingSuffix + 1;
+                            baseName = baseName[..openParenthesisIndex].TrimEnd();
+                        }
+                    }
+                }
+            }
+
+            newName = $"{baseName} ({suffix++})";
+        }
+
+        return newName;
     }
 }

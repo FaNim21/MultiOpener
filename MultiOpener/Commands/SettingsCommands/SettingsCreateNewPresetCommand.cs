@@ -1,5 +1,5 @@
-﻿using MultiOpener.Components.Controls;
-using MultiOpener.Entities;
+﻿using MultiOpener.Entities;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 using System.IO;
 
@@ -15,8 +15,9 @@ public class SettingsCreateNewPresetCommand : SettingsCommandBase
 
         if (parameter is not LoadedGroupItem group) return;
 
-        string name = DialogBox.ShowInputField($"Name for new preset in group '{group.Name}':", $"Naming", Settings.IsPresetNameUnique);
-        if (string.IsNullOrEmpty(name)) return;
+        string name = "New Preset";
+        name = Helper.GetUniqueName(name, name, Settings.IsPresetNameUnique);
+        if (!Settings.IsPresetNameUnique(name)) return;
 
         LoadedPresetItem item = new(name);
         group.AddPreset(item);

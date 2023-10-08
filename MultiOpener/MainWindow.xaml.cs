@@ -9,7 +9,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
@@ -85,6 +84,9 @@ public partial class MainWindow : Window, IClipboardService
 
         if (MainViewModel.SelectedViewModel == MainViewModel.options)
             MainViewModel.options.SaveOptions();
+
+        if (MainViewModel.SelectedViewModel == MainViewModel.settings)
+            MainViewModel.settings.SaveGroupTree();
 
         Close();
     }

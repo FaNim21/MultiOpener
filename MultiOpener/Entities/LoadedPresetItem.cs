@@ -2,6 +2,7 @@
 using MultiOpener.ViewModels;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Text.Json.Serialization;
 using System.Windows;
 
 namespace MultiOpener.Entities;
@@ -84,6 +85,21 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
         }
     }
 
+    private int _order = -1;
+    public int Order
+    {
+        get { return _order; }
+        set
+        {
+            if (_order != value)
+            {
+                _order = value;
+                OnPropertyChanged(nameof(Order));
+            }
+        }
+    }
+
+    [JsonIgnore]
     public ObservableCollection<LoadedPresetItem> Presets { get; set; } = new();
 
 

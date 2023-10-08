@@ -1,5 +1,4 @@
-﻿using MultiOpener.Components.Controls;
-using MultiOpener.Entities;
+﻿using MultiOpener.Entities;
 using MultiOpener.ViewModels;
 
 namespace MultiOpener.Commands.SettingsCommands
@@ -14,8 +13,11 @@ namespace MultiOpener.Commands.SettingsCommands
 
             Settings.Groups ??= new();
 
-            string name = DialogBox.ShowInputField($"Name for new group:", $"Naming", Settings.IsGroupNameUnique);
-            if (string.IsNullOrEmpty(name)) return;
+            /*string name = DialogBox.ShowInputField($"Name for new group:", $"Naming", Settings.IsGroupNameUnique);
+            if (string.IsNullOrEmpty(name)) return;*/
+
+            string name = "New Group";
+            if (!Settings.IsGroupNameUnique(name)) return;
 
             Settings.Groups.Add(new LoadedGroupItem(name));
             Settings.CreateGroupFolder(name);

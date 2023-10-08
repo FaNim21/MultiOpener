@@ -8,7 +8,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 
@@ -212,6 +211,36 @@ public partial class SettingsViewModel : BaseViewModel
             Groups.Add(groupless);
 
         OnPropertyChanged(nameof(Groups));
+        LoadGroupTree();
+    }
+
+    public void LoadGroupTree()
+    {
+        if (!File.Exists(Path.Combine(Consts.AppdataPath, "Groups.json"))) return;
+
+        string text = File.ReadAllText(Path.Combine(Consts.AppdataPath, "Groups.json")) ?? string.Empty;
+        var data = JsonSerializer.Deserialize<ObservableCollection<LoadedGroupItem>?>(text);
+        if (data == null) return;
+
+        for (int i = 0; i < Groups!.Count; i++)
+        {
+            var current = Groups[i];
+            for (int j = 0; j < data.Count; j++)
+            {
+                if (current.Name.Equals(data[j].Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    current.IsExpanded = data[j].IsExpanded;
+                    current.Order = data[j].Order;
+                }
+            }
+        }
+    }
+
+    public void SaveGroupTree()
+    {
+        JsonSerializerOptions options = new() { WriteIndented = true, };
+        var data = JsonSerializer.Serialize<object>(Groups!, options);
+        File.WriteAllText(Path.Combine(Consts.AppdataPath, "Groups.json"), data);
     }
 
     public void LoadStartupPreset(string loadedPresetPath)
