@@ -1,4 +1,5 @@
 ﻿using MultiOpener.Entities.Open;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 
 namespace MultiOpener.Commands.SettingsCommands;
@@ -11,11 +12,8 @@ public class SettingsAddNewOpenItemCommand : SettingsCommandBase
     {
         if (Settings == null) return;
 
-        /*string name = DialogBox.ShowInputField($"Name for new 'Open' process in you preset:", $"Naming", Settings.IsOpenNameUnique);
-        if (string.IsNullOrEmpty(name)) return;*/
-
-        string name = "";
-        if (!Settings.IsOpenNameUnique(name)) return;
+        string name = "New Open";
+        name = Helper.GetUniqueName(name, name, Settings.IsOpenNameUnique);
 
         var newOpen = new OpenItem(name);
         Settings.AddItem(newOpen);

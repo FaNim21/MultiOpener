@@ -1,10 +1,13 @@
 ﻿using MultiOpener.Components;
 using MultiOpener.Components.Controls;
+using MultiOpener.Entities;
+using MultiOpener.Entities.Open;
 using MultiOpener.Properties;
 using MultiOpener.Utils;
 using MultiOpener.Utils.Interfaces;
 using MultiOpener.ViewModels;
 using System;
+using System.CodeDom;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -197,10 +200,31 @@ public partial class MainWindow : Window, IClipboardService
             }
         };
 
+        var deleteItem = new Hotkey
+        {
+            Key = Key.Delete,
+            ModifierKeys = ModifierKeys.None,
+            Description = "Removing item",
+            Action = () =>
+            {
+                EditableTextBlock? textBlock = Helper.GetFocusedUIElement<EditableTextBlock>();
+                if (textBlock == null) return;
+                var item = textBlock.DataContext;
+
+                if (item.GetType().Equals(typeof(OpenItem)))
+                    MainViewModel.settings.RemoveCurrentOpenCommand.Execute(item);
+                else if (item.GetType().Equals(typeof(LoadedPresetItem)))
+                    MainViewModel.settings.RemovePresetCommand.Execute(item);
+                else if (item.GetType().Equals(typeof(LoadedGroupItem)))
+                    MainViewModel.settings.RemoveGroupCommand.Execute(item);
+            }
+        };
+
         InputController.Instance.AddHotkey(refreshHotkey);
         InputController.Instance.AddHotkey(openButtonPressHotkey);
         InputController.Instance.AddHotkey(saveCurrentPreset);
         InputController.Instance.AddHotkey(renameTextBox);
+        InputController.Instance.AddHotkey(deleteItem);
     }
 
     public void CopyTextToClipboard(string text)

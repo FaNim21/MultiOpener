@@ -17,7 +17,6 @@ public class SettingsCreateNewPresetCommand : SettingsCommandBase
 
         string name = "New Preset";
         name = Helper.GetUniqueName(name, name, Settings.IsPresetNameUnique);
-        if (!Settings.IsPresetNameUnique(name)) return;
 
         LoadedPresetItem item = new(name);
         group.AddPreset(item);
