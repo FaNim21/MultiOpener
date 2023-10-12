@@ -65,7 +65,7 @@ public partial class SettingsViewModel : BaseViewModel
                     for (int i = 0; i < Opens.Count; i++)
                     {
                         var current = Opens[i];
-                        if (current.GetType().IsEquivalentTo(typeof(OpenInstance)) && CurrentChosen != current)
+                        if (current.GetType() == typeof(OpenInstance) && CurrentChosen != current)
                             return;
                     }
                 }
@@ -169,14 +169,12 @@ public partial class SettingsViewModel : BaseViewModel
         if (!Directory.Exists(directoryPath))
             Directory.CreateDirectory(directoryPath);
 
-        SetLeftPanelVisibility(false);
+        UpdateLeftPanelVisibility(false);
         SetTreeWithGroupsAndPresets();
     }
 
     public void SetTreeWithGroupsAndPresets()
     {
-        //TODO: 1 Zrobic zapisywania i ladowanie IsExpanded i indexu dla grup TreeView
-
         Groups?.Clear();
         Groups = new ObservableCollection<LoadedGroupItem>();
 
@@ -198,7 +196,7 @@ public partial class SettingsViewModel : BaseViewModel
         }
 
         //Sprawdzanie presetów poza bazową grupą
-        var grouplessFiles = Directory.GetFiles(Path.Combine(directoryPath), "*.json", SearchOption.TopDirectoryOnly).AsSpan();
+        var grouplessFiles = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
         LoadedGroupItem? groupless = new("Groupless");
         for (int i = 0; i < grouplessFiles.Length; i++)
         {
@@ -227,15 +225,13 @@ public partial class SettingsViewModel : BaseViewModel
             var current = Groups[i];
             for (int j = 0; j < data.Count; j++)
             {
-                if (current.Name.Equals(data[j].Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    current.IsExpanded = data[j].IsExpanded;
-                    current.Order = data[j].Order;
-                }
+                if (!current.Name.Equals(data[j].Name, StringComparison.OrdinalIgnoreCase)) continue;
+
+                current.IsExpanded = data[j].IsExpanded;
+                current.Order = data[j].Order;
             }
         }
     }
-
     public void SaveGroupTree()
     {
         JsonSerializerOptions options = new() { WriteIndented = true, };
@@ -252,45 +248,41 @@ public partial class SettingsViewModel : BaseViewModel
     }
     public void LoadPreset(string presetPath)
     {
-        if (!string.IsNullOrEmpty(presetPath) && File.Exists(presetPath))
-        {
-            string text = File.ReadAllText(presetPath) ?? string.Empty;
-            if (string.IsNullOrEmpty(text)) return;
+        if (string.IsNullOrEmpty(presetPath) || !File.Exists(presetPath)) return;
 
-            var data = JsonSerializer.Deserialize<ObservableCollection<OpenItem>>(text);
-            Opens.Clear();
-            Opens = new ObservableCollection<OpenItem>(data ?? new ObservableCollection<OpenItem>());
+        string text = File.ReadAllText(presetPath) ?? string.Empty;
+        if (string.IsNullOrEmpty(text)) return;
 
-            string loadedName = Helper.GetFileNameWithoutExtension(presetPath);
-            StartViewModel.Log($"Loaded {loadedName}");
-            PresetName = loadedName;
+        var data = JsonSerializer.Deserialize<ObservableCollection<OpenItem>>(text);
+        Opens.Clear();
+        Opens = new ObservableCollection<OpenItem>(data ?? new ObservableCollection<OpenItem>());
 
-            CurrentLoadedChosenPath = presetPath;
-            SetLeftPanelVisibility(false);
+        UpdateCurrentLoadedPreset(presetPath);
+        UpdateLeftPanelVisibility(false);
 
-            OnPropertyChanged(nameof(CurrentLoadedChosenPath));
-            OnPropertyChanged(nameof(Opens));
-        }
+        OnPropertyChanged(nameof(Opens));
+
+        StartViewModel.Log($"Loaded {presetPath}");
     }
 
-    public void CreateGroupFolder(string name)
+    public void UpdateCurrentLoadedPreset(string presetPath)
     {
-        Directory.CreateDirectory(Path.Combine(directoryPath, name));
+        CurrentLoadedChosenPath = presetPath;
+        string loadedName = Helper.GetFileNameWithoutExtension(presetPath);
+        PresetName = loadedName;
     }
-
-    public void SetLeftPanelVisibility(bool visibility)
-    {
-        if (LeftPanelGridVisibility == visibility) return;
-
-        LeftPanelGridVisibility = visibility;
-    }
-
     public void UpdateLeftPanelInfo()
     {
         if (CurrentChosen == null) return;
 
-        SetLeftPanelVisibility(true);
+        UpdateLeftPanelVisibility(true);
         ChooseTypeBox = CurrentChosen.Type;
+    }
+    public void UpdateLeftPanelVisibility(bool visibility)
+    {
+        if (LeftPanelGridVisibility == visibility) return;
+
+        LeftPanelGridVisibility = visibility;
     }
 
     public void RemovePreset(string name)
@@ -307,8 +299,12 @@ public partial class SettingsViewModel : BaseViewModel
                 {
                     currentGroup.Presets.Remove(current);
                     string path = current.GetPath();
-                    if (File.Exists(path))
+
+                    try
+                    {
                         File.Delete(path);
+                    }
+                    catch { }
                     return;
                 }
             }
@@ -348,7 +344,7 @@ public partial class SettingsViewModel : BaseViewModel
 
         PresetName = string.Empty;
 
-        SetLeftPanelVisibility(false);
+        UpdateLeftPanelVisibility(false);
     }
 
     public void AddItem(OpenItem item)
@@ -417,6 +413,11 @@ public partial class SettingsViewModel : BaseViewModel
             //New classes here
             _ => new OpenItem(name),
         };
+    }
+
+    public void CreateGroupFolder(string name)
+    {
+        Directory.CreateDirectory(Path.Combine(directoryPath, name));
     }
 
     public bool OpenIsEmpty()

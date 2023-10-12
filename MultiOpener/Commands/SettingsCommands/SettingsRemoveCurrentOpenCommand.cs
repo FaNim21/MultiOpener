@@ -17,7 +17,7 @@ public class SettingsRemoveCurrentOpenCommand : SettingsCommandBase
 
         if (DialogBox.Show($"Are you sure that you want to delete {item.Name}?\nThe changes will not be able to be restored.", "Deleting process!", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
 
-        Settings.SetLeftPanelVisibility(false);
+        Settings.UpdateLeftPanelVisibility(false);
         Settings.RemoveItem(item);
         Settings.SetPresetAsNotSaved();
     }
