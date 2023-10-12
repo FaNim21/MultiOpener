@@ -141,6 +141,7 @@ public partial class SettingsViewModel : BaseViewModel
         MainViewModel = mainViewModel;
 
         directoryPath = Path.Combine(Consts.AppdataPath, "Presets");
+        CurrentLoadedChosenPath = string.Empty;
 
         Opens = new ObservableCollection<OpenItem>();
 
@@ -332,6 +333,24 @@ public partial class SettingsViewModel : BaseViewModel
             var current = Groups[i];
             if (current.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 return current;
+        }
+
+        return null;
+    }
+    public LoadedPresetItem? GetPresetByName(string name)
+    {
+        if (Groups == null) return null;
+
+        for (int i = 0; i < Groups.Count; i++)
+        {
+            var group = Groups[i];
+            for (int j = 0; j < group.Presets.Count; j++)
+            {
+                var preset = group.Presets[j];
+                if (preset.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) continue;
+
+                return preset;
+            }
         }
 
         return null;

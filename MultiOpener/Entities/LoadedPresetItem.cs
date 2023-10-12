@@ -41,6 +41,7 @@ public class LoadedPresetItem : BaseViewModel, IRenameItem
 
     public void ChangeName(string name)
     {
+        SettingsViewModel settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
         string jsonName = name + ".json";
         string path = GetPath();
 
@@ -49,7 +50,8 @@ public class LoadedPresetItem : BaseViewModel, IRenameItem
 
         File.Move(path, newPath);
         Name = name;
-        ((MainWindow)Application.Current.MainWindow).MainViewModel.settings.SetPresetAsNotSaved();
+
+        settings.SetPresetAsNotSaved();
     }
 
     public string GetPath()
@@ -115,14 +117,14 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
 
     public void ChangeName(string name)
     {
+        SettingsViewModel settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
         string path = GetPath();
-
         string directoryName = Path.GetDirectoryName(path)!;
         string newPath = Path.Combine(directoryName, name);
 
         Directory.Move(path, newPath);
         Name = name;
-        ((MainWindow)Application.Current.MainWindow).MainViewModel.settings.SetPresetAsNotSaved();
+        settings.SetPresetAsNotSaved();
     }
 
     public string GetPath()
