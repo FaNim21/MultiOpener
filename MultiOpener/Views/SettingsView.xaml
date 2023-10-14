@@ -407,7 +407,7 @@
                                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
                                                      Color="Black" />
                                     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
-                                                     Color="Transparent" />
+                                                     Color="#0078d7" />
                                 </Style.Resources>
                                 <Setter Property="Padding"
                                         Value="0" />

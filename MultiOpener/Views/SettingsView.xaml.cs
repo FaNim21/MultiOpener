@@ -27,9 +27,10 @@ public partial class SettingsView : UserControl
     }
     public static readonly DependencyProperty TextBlockDragOverCommandProperty = DependencyProperty.Register("TextBlockDragOverCommand", typeof(ICommand), typeof(SettingsView), new PropertyMetadata(null));
 
-    private bool isDragging;
-    private object? draggedItem;
-    private LoadedGroupItem? sourceGroup;
+    private bool _isDragging;
+    private object? _draggedItem;
+    private LoadedGroupItem? _sourceGroup;
+    private bool _isTreeViewContextMenuOpened;
 
 
     public SettingsView()
@@ -45,6 +46,9 @@ public partial class SettingsView : UserControl
         treeView.PreviewMouseMove += TreeView_PreviewMouseMove;
         treeView.PreviewDragOver += TreeView_DragOver;
         treeView.Drop += TreeView_Drop;
+
+        treeView.ContextMenuOpening += TreeView_ContextMenuOpening;
+        treeView.ContextMenuClosing += TreeView_ContextMenuClosing;
     }
 
     private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -60,143 +64,138 @@ public partial class SettingsView : UserControl
     }
     private void OnItemListClick(object sender, MouseButtonEventArgs e)
     {
-        var item = sender as ListViewItem;
-        if (item != null)
-        {
-            Consts.IsSwitchingBetweenOpensInSettings = true;
-            Keyboard.Focus((IInputElement)sender);
-            OnListItemClickCommand?.Execute((OpenItem)item.DataContext);
-        }
+        if (sender is not ListViewItem item) return;
+
+        Consts.IsSwitchingBetweenOpensInSettings = true;
+        Keyboard.Focus((IInputElement)sender);
+        OnListItemClickCommand?.Execute((OpenItem)item.DataContext);
     }
     private void TextBlockDragOver(object sender, DragEventArgs e)
     {
-        if (sender is FrameworkElement element)
-        {
-            var targetedItem = (OpenItem)element.DataContext;
-            var insertedItem = (OpenItem)e.Data.GetData(DataFormats.Serializable);
+        if (sender is not FrameworkElement element) return;
 
-            OpenItem[] elements = new OpenItem[2] { targetedItem, insertedItem };
-            TextBlockDragOverCommand?.Execute(elements);
-        }
+        var targetedItem = (OpenItem)element.DataContext;
+        var insertedItem = (OpenItem)e.Data.GetData(DataFormats.Serializable);
+
+        OpenItem[] elements = new OpenItem[2] { targetedItem, insertedItem };
+        TextBlockDragOverCommand?.Execute(elements);
     }
 
     private void TreeView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (e.OriginalSource is FrameworkElement element && element.DataContext is LoadedPresetItem preset)
-        {
-            isDragging = true;
-            draggedItem = preset;
-            sourceGroup = FindGroupByItem(draggedItem);
-            if (sourceGroup == null) isDragging = false;
-        }
+        if (e.OriginalSource is not FrameworkElement element || element.DataContext is not LoadedPresetItem preset) return;
+
+        _isDragging = true;
+        _draggedItem = preset;
+        _sourceGroup = FindGroupByItem(_draggedItem);
+        if (_sourceGroup == null) _isDragging = false;
     }
     private void TreeView_PreviewMouseMove(object sender, MouseEventArgs e)
     {
-        if (isDragging && draggedItem != null)
-        {
-            DragDrop.DoDragDrop(treeView, draggedItem, DragDropEffects.Move);
-            isDragging = false;
-            draggedItem = null;
-            sourceGroup = null;
-        }
+        if (!_isDragging || _draggedItem == null) return;
+
+        DragDrop.DoDragDrop(treeView, _draggedItem, DragDropEffects.Move);
+        _isDragging = false;
+        _draggedItem = null;
+        _sourceGroup = null;
     }
     private void TreeView_DragOver(object sender, DragEventArgs e)
     {
-        if (draggedItem != null)
-        {
-            LoadedGroupItem? targetGroup = null;
-            if (e.OriginalSource is FrameworkElement element)
-                targetGroup = FindGroupByItem(element.DataContext);
+        if (_draggedItem == null) return;
 
-            if (targetGroup != null && targetGroup != sourceGroup)
-                e.Effects = DragDropEffects.Move;
-            else
-                e.Effects = DragDropEffects.None;
-        }
+        LoadedGroupItem? targetGroup = null;
+        if (e.OriginalSource is FrameworkElement element)
+            targetGroup = FindGroupByItem(element.DataContext);
+
+        if (targetGroup != null && targetGroup != _sourceGroup)
+            e.Effects = DragDropEffects.Move;
+        else
+            e.Effects = DragDropEffects.None;
     }
     private void TreeView_Drop(object sender, DragEventArgs e)
     {
-        if (draggedItem != null || sourceGroup != null)
+        if ((_draggedItem == null && _sourceGroup == null) || _isTreeViewContextMenuOpened) return;
+
+        LoadedGroupItem? targetGroup = null;
+        if (e.OriginalSource is FrameworkElement element) targetGroup = FindGroupByItem(element.DataContext);
+        if (_draggedItem is not LoadedPresetItem preset) return;
+
+        if (targetGroup == null && e.OriginalSource is FrameworkElement element1 && element1.DataContext is SettingsViewModel settings)
         {
-            LoadedGroupItem? targetGroup = null;
-            if (e.OriginalSource is FrameworkElement element) targetGroup = FindGroupByItem(element.DataContext);
-            if (draggedItem is not LoadedPresetItem preset) return;
-
-            if (targetGroup == null)
+            LoadedGroupItem? groupless = settings.GetGroupByName("Groupless");
+            if (groupless == null)
             {
-                if (e.OriginalSource is FrameworkElement element1 && element1.DataContext is SettingsViewModel settings)
-                {
-                    LoadedGroupItem? groupless = settings.GetGroupByName("Groupless");
-
-                    if (groupless == null)
-                    {
-                        groupless = new LoadedGroupItem("Groupless");
-                        settings.Groups!.Add(groupless);
-                    }
-                    targetGroup = groupless;
-                }
+                groupless = new LoadedGroupItem("Groupless");
+                settings.Groups!.Add(groupless);
             }
-
-            if (targetGroup == sourceGroup) return;
-            if (targetGroup!.Contains(preset.Name)) return;
-
-            string oldPath = preset.GetPath();
-            sourceGroup!.Presets?.Remove(preset);
-            targetGroup.AddPreset(preset);
-            string newPath = preset.GetPath();
-
-            File.Move(oldPath, newPath);
+            targetGroup = groupless;
         }
+
+        if (targetGroup == _sourceGroup) return;
+        if (targetGroup!.Contains(preset.Name)) return;
+
+        string oldPath = preset.GetPath();
+        _sourceGroup!.Presets?.Remove(preset);
+        targetGroup.AddPreset(preset);
+        string newPath = preset.GetPath();
+
+        File.Move(oldPath, newPath);
     }
     private void TreeView_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         TreeViewItem? treeViewItem = GetViewItemFromMousePosition<TreeViewItem, TreeView>(sender as TreeView, e.GetPosition(sender as IInputElement));
-        if (treeViewItem != null)
+        if (treeViewItem == null) return;
+
+        Keyboard.Focus(treeViewItem);
+        ContextMenu? contextMenu = null;
+        if (treeViewItem.DataContext is LoadedGroupItem group)
         {
-            Keyboard.Focus(treeViewItem);
-            ContextMenu? contextMenu = null;
-            if (treeViewItem.DataContext is LoadedGroupItem group)
-            {
-                contextMenu = (ContextMenu)FindResource("GroupContextMenu");
-                if (contextMenu.DataContext == null)
-                    Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
+            contextMenu = (ContextMenu)FindResource("GroupContextMenu");
+            if (contextMenu.DataContext == null)
+                Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
 
-                foreach (var item in contextMenu.Items)
-                    if (item is MenuItem menuItem)
-                        menuItem.CommandParameter = group;
-            }
-            else if (treeViewItem.DataContext is LoadedPresetItem preset)
-            {
-                contextMenu = (ContextMenu)FindResource("PresetContextMenu");
-                if (contextMenu.DataContext == null)
-                    Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
-
-                foreach (var item in contextMenu.Items)
-                    if (item is MenuItem menuItem)
-                        menuItem.CommandParameter = preset;
-            }
-
-            treeViewItem.ContextMenu ??= contextMenu;
+            foreach (var item in contextMenu.Items)
+                if (item is MenuItem menuItem)
+                    menuItem.CommandParameter = group;
         }
+        else if (treeViewItem.DataContext is LoadedPresetItem preset)
+        {
+            contextMenu = (ContextMenu)FindResource("PresetContextMenu");
+            if (contextMenu.DataContext == null)
+                Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
+
+            foreach (var item in contextMenu.Items)
+                if (item is MenuItem menuItem)
+                    menuItem.CommandParameter = preset;
+        }
+
+        treeViewItem.ContextMenu ??= contextMenu;
     }
 
     private void ListView_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         ListViewItem? listViewItem = GetViewItemFromMousePosition<ListViewItem, ListView>(sender as ListView, e.GetPosition(sender as IInputElement));
+        if (listViewItem == null) return;
 
-        if (listViewItem != null)
-        {
-            var contextMenu = (ContextMenu)FindResource("ListViewContextMenu");
-            if (contextMenu.DataContext == null)
-                Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
+        var contextMenu = (ContextMenu)FindResource("ListViewContextMenu");
+        if (contextMenu.DataContext == null)
+            Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
 
-            var currentItem = listViewItem.DataContext;
-            foreach (var item in contextMenu.Items)
-                if (item is MenuItem menuItem)
-                    menuItem.CommandParameter = currentItem;
+        var currentItem = listViewItem.DataContext;
+        foreach (var item in contextMenu.Items)
+            if (item is MenuItem menuItem)
+                menuItem.CommandParameter = currentItem;
 
-            listViewItem.ContextMenu ??= contextMenu;
-        }
+        listViewItem.ContextMenu ??= contextMenu;
+    }
+
+    private void TreeView_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+    {
+        _isTreeViewContextMenuOpened = true;
+    }
+    private void TreeView_ContextMenuClosing(object sender, ContextMenuEventArgs e)
+    {
+        _isTreeViewContextMenuOpened = false;
     }
 
     private LoadedGroupItem? FindGroupByItem(object item)
