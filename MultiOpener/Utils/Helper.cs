@@ -3,7 +3,6 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Input;
 using System;
-using MultiOpener.Properties;
 
 namespace MultiOpener.Utils;
 
@@ -26,6 +25,7 @@ public static class Helper
     public static T? FindChild<T>(DependencyObject parent) where T : DependencyObject
     {
         if (parent == null) return null;
+        if(parent is T _child) return _child;
 
         int childCount = VisualTreeHelper.GetChildrenCount(parent);
         for (int i = 0; i < childCount; i++)

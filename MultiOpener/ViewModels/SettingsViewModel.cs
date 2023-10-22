@@ -133,14 +133,14 @@ public partial class SettingsViewModel : BaseViewModel
 
     public ICommand RefreshTreeViewCommand { get; set; }
 
-    public readonly string directoryPath;
+    private readonly string _directoryPath;
 
 
     public SettingsViewModel(MainViewModel mainViewModel)
     {
         MainViewModel = mainViewModel;
 
-        directoryPath = Path.Combine(Consts.AppdataPath, "Presets");
+        _directoryPath = Path.Combine(Consts.AppdataPath, "Presets");
         CurrentLoadedChosenPath = string.Empty;
 
         Opens = new ObservableCollection<OpenItem>();
@@ -167,8 +167,8 @@ public partial class SettingsViewModel : BaseViewModel
 
         RefreshTreeViewCommand = new RelayCommand(SetTreeWithGroupsAndPresets);
 
-        if (!Directory.Exists(directoryPath))
-            Directory.CreateDirectory(directoryPath);
+        if (!Directory.Exists(_directoryPath))
+            Directory.CreateDirectory(_directoryPath);
 
         UpdateLeftPanelVisibility(false);
         SetTreeWithGroupsAndPresets();
@@ -179,13 +179,13 @@ public partial class SettingsViewModel : BaseViewModel
         Groups?.Clear();
         Groups = new ObservableCollection<LoadedGroupItem>();
 
-        var folders = Directory.GetDirectories(directoryPath).AsSpan();
+        var folders = Directory.GetDirectories(_directoryPath).AsSpan();
         for (int i = 0; i < folders.Length; i++)
         {
             var folderName = Path.GetFileName(folders[i]);
             LoadedGroupItem? group = new(folderName);
 
-            var files = Directory.GetFiles(Path.Combine(directoryPath, folderName), "*.json", SearchOption.TopDirectoryOnly).AsSpan();
+            var files = Directory.GetFiles(Path.Combine(_directoryPath, folderName), "*.json", SearchOption.TopDirectoryOnly).AsSpan();
             for (int j = 0; j < files.Length; j++)
             {
                 var fileName = Path.GetFileNameWithoutExtension(files[j]);
@@ -197,7 +197,7 @@ public partial class SettingsViewModel : BaseViewModel
         }
 
         //Sprawdzanie presetów poza bazową grupą
-        var grouplessFiles = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
+        var grouplessFiles = Directory.GetFiles(_directoryPath, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
         LoadedGroupItem? groupless = new("Groupless");
         for (int i = 0; i < grouplessFiles.Length; i++)
         {
@@ -361,8 +361,8 @@ public partial class SettingsViewModel : BaseViewModel
         Opens.Clear();
         OnPropertyChanged(nameof(Opens));
 
+        CurrentLoadedChosenPath = string.Empty;
         PresetName = string.Empty;
-
         UpdateLeftPanelVisibility(false);
     }
 
@@ -436,7 +436,7 @@ public partial class SettingsViewModel : BaseViewModel
 
     public void CreateGroupFolder(string name)
     {
-        Directory.CreateDirectory(Path.Combine(directoryPath, name));
+        Directory.CreateDirectory(Path.Combine(_directoryPath, name));
     }
 
     public bool OpenIsEmpty()

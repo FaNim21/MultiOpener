@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Entities.Interfaces;
 using MultiOpener.ViewModels;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json.Serialization;
@@ -41,7 +42,6 @@ public class LoadedPresetItem : BaseViewModel, IRenameItem
 
     public void ChangeName(string name)
     {
-        SettingsViewModel settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
         string jsonName = name + ".json";
         string path = GetPath();
 
@@ -50,8 +50,6 @@ public class LoadedPresetItem : BaseViewModel, IRenameItem
 
         File.Move(path, newPath);
         Name = name;
-
-        settings.SetPresetAsNotSaved();
     }
 
     public string GetPath()
@@ -124,13 +122,26 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
 
         Directory.Move(path, newPath);
         Name = name;
-        settings.SetPresetAsNotSaved();
+
+        var preset = GetPreset(settings.PresetName!);
+        if (preset != null) 
+            settings.UpdateCurrentLoadedPreset(preset.GetPath());
     }
 
+    public LoadedPresetItem? GetPreset(string name)
+    {
+        for (int i = 0; i < Presets.Count; i++)
+        {
+            var preset = Presets[i];
+            if (preset.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                return preset;
+        }
+        return null;
+    }
     public string GetPath()
     {
         string path;
-        if (Name.Equals("Groupless", System.StringComparison.OrdinalIgnoreCase))
+        if (Name.Equals("Groupless", StringComparison.OrdinalIgnoreCase))
             path = Path.Combine(Consts.AppdataPath, "Presets");
         else
             path = Path.Combine(Consts.AppdataPath, "Presets", Name);
@@ -142,7 +153,7 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
         for (int i = 0; i < Presets.Count; i++)
         {
             var current = Presets[i];
-            if (current.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase)) return true;
+            if (current.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) return true;
         }
         return false;
     }

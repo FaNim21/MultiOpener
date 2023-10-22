@@ -46,7 +46,6 @@ public partial class SettingsView : UserControl
         treeView.PreviewMouseMove += TreeView_PreviewMouseMove;
         treeView.PreviewDragOver += TreeView_DragOver;
         treeView.Drop += TreeView_Drop;
-
         treeView.ContextMenuOpening += TreeView_ContextMenuOpening;
         treeView.ContextMenuClosing += TreeView_ContextMenuClosing;
     }
@@ -83,6 +82,7 @@ public partial class SettingsView : UserControl
 
     private void TreeView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        _isTreeViewContextMenuOpened = false;
         if (e.OriginalSource is not FrameworkElement element || element.DataContext is not LoadedPresetItem preset) return;
 
         _isDragging = true;
@@ -120,13 +120,13 @@ public partial class SettingsView : UserControl
         if (e.OriginalSource is FrameworkElement element) targetGroup = FindGroupByItem(element.DataContext);
         if (_draggedItem is not LoadedPresetItem preset) return;
 
-        if (targetGroup == null && e.OriginalSource is FrameworkElement element1 && element1.DataContext is SettingsViewModel settings)
+        if (targetGroup == null && e.OriginalSource is FrameworkElement element1 && element1.DataContext is SettingsViewModel _settings)
         {
-            LoadedGroupItem? groupless = settings.GetGroupByName("Groupless");
+            LoadedGroupItem? groupless = _settings.GetGroupByName("Groupless");
             if (groupless == null)
             {
                 groupless = new LoadedGroupItem("Groupless");
-                settings.Groups!.Add(groupless);
+                _settings.Groups!.Add(groupless);
             }
             targetGroup = groupless;
         }
@@ -140,6 +140,10 @@ public partial class SettingsView : UserControl
         string newPath = preset.GetPath();
 
         File.Move(oldPath, newPath);
+
+        SettingsViewModel settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
+        if (!string.IsNullOrEmpty(settings.PresetName) && settings.PresetName.Equals(preset.Name, System.StringComparison.OrdinalIgnoreCase))
+            settings.UpdateCurrentLoadedPreset(preset.GetPath());
     }
     private void TreeView_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {

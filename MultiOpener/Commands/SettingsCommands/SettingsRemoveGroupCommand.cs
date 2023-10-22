@@ -47,10 +47,14 @@ public class SettingsRemoveGroupCommand : SettingsCommandBase
             if (result == MessageBoxResult.Yes)
             {
                 LoadedGroupItem? groupless = Settings.GetGroupByName("Groupless");
-                if (groupless == null) return;
+                if (groupless == null)
+                {
+                    groupless = new LoadedGroupItem("Groupless");
+                    Settings.Groups!.Add(groupless);
+                }
 
-                int length = group.Presets.Count;
-                for (int i = 0; i < length; i++)
+                //TODO: 0 jakies problemy z bindami tutaj przy usunieciu idk
+                for (int i = 0; i < group.Presets!.Count;)
                 {
                     var preset = group.Presets![i];
 
@@ -60,6 +64,9 @@ public class SettingsRemoveGroupCommand : SettingsCommandBase
                     string newPath = preset.GetPath();
 
                     File.Move(oldPath, newPath);
+
+                    if (!string.IsNullOrEmpty(Settings.PresetName) && Settings.PresetName.Equals(preset.Name, System.StringComparison.OrdinalIgnoreCase))
+                        Settings.UpdateCurrentLoadedPreset(preset.GetPath());
                 }
 
                 if (group.IsEmpty())

@@ -2,7 +2,6 @@
 using MultiOpener.Entities.Interfaces;
 using MultiOpener.Entities.Open;
 using MultiOpener.Utils;
-using MultiOpener.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -87,7 +86,9 @@ public partial class EditableTextBlock : UserControl
             wasEnterPressed = true;
             if (sender is TextBox textBlock)
             {
-                if(textBlock.Text.Equals(oldText, StringComparison.OrdinalIgnoreCase))
+                bool _updatePresetName = false;
+
+                if (textBlock.Text.Equals(oldText, StringComparison.OrdinalIgnoreCase))
                 {
                     Text = textBlock.Text;
                     IsInEditMode = false;
@@ -120,12 +121,16 @@ public partial class EditableTextBlock : UserControl
                     isUnique = settings.IsGroupNameUnique(textBlock.Text);
                     if (!isUnique)
                         ShowPopup($"Group item named '{textBlock.Text}' already exists", 2);
+
                 }
-                else if (DataContext is LoadedPresetItem)
+                else if (DataContext is LoadedPresetItem preset)
                 {
                     isUnique = settings.IsPresetNameUnique(textBlock.Text);
                     if (!isUnique)
                         ShowPopup($"Preset item named '{textBlock.Text}' already exists", 2);
+
+                    if (preset.Name.Equals(settings.PresetName, StringComparison.OrdinalIgnoreCase))
+                        _updatePresetName = true;
                 }
                 else if (DataContext is OpenItem)
                 {
@@ -137,7 +142,12 @@ public partial class EditableTextBlock : UserControl
 
                 IRenameItem context = (IRenameItem)DataContext;
                 if (context != null)
+                {
                     context.ChangeName(textBlock.Text);
+
+                    if(_updatePresetName && DataContext is LoadedPresetItem preset)
+                        settings.UpdateCurrentLoadedPreset(preset.GetPath());
+                }
                 else
                     Text = textBlock.Text;
 
@@ -146,13 +156,14 @@ public partial class EditableTextBlock : UserControl
 
             IsInEditMode = false;
             e.Handled = true;
-
+            Focus();
         }
         else if (e.Key == Key.Escape)
         {
             IsInEditMode = false;
             popup.IsOpen = false;
             e.Handled = true;
+            Focus();
         }
     }
 

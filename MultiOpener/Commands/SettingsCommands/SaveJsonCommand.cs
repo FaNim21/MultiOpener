@@ -10,13 +10,13 @@ public class SaveJsonCommand : SettingsCommandBase
 
     public override void Execute(object? parameter)
     {
-        if (Settings == null) return;
+        if (Settings == null || string.IsNullOrEmpty(Settings.CurrentLoadedChosenPath)) return;
 
         Settings.SaveCurrentOpenCommand.Execute(null);
 
         JsonSerializerOptions options = new() { WriteIndented = true, };
         var data = JsonSerializer.Serialize<object>(Settings.Opens, options);
-        File.WriteAllText(Settings.CurrentLoadedChosenPath!, data);
+        File.WriteAllText(Settings.CurrentLoadedChosenPath, data);
 
         Settings.IsCurrentPresetSaved = true;
     }
