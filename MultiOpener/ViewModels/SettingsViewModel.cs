@@ -18,7 +18,7 @@ public partial class SettingsViewModel : BaseViewModel
     public MainViewModel MainViewModel { get; set; }
 
     public ObservableCollection<OpenItem> Opens { get; set; }
-    public ObservableCollection<LoadedGroupItem>? Groups { get; set; }
+    public ObservableCollection<LoadedGroupItem> Groups { get; set; }
 
     public OpenItem? CurrentChosen { get; set; }
     public string? CurrentLoadedChosenPath { get; set; }
@@ -144,6 +144,7 @@ public partial class SettingsViewModel : BaseViewModel
         CurrentLoadedChosenPath = string.Empty;
 
         Opens = new ObservableCollection<OpenItem>();
+        Groups = new ObservableCollection<LoadedGroupItem>();
 
         AddNewOpenItemCommand = new SettingsAddNewOpenItemCommand(this);
         RemoveCurrentOpenCommand = new SettingsRemoveCurrentOpenCommand(this);
@@ -176,8 +177,7 @@ public partial class SettingsViewModel : BaseViewModel
 
     public void SetTreeWithGroupsAndPresets()
     {
-        Groups?.Clear();
-        Groups = new ObservableCollection<LoadedGroupItem>();
+        Groups.Clear();
 
         var folders = Directory.GetDirectories(_directoryPath).AsSpan();
         for (int i = 0; i < folders.Length; i++)
@@ -192,7 +192,6 @@ public partial class SettingsViewModel : BaseViewModel
                 var loadedPresetitem = new LoadedPresetItem(fileName);
                 group.AddPreset(loadedPresetitem);
             }
-
             Groups.Add(group);
         }
 
@@ -206,8 +205,7 @@ public partial class SettingsViewModel : BaseViewModel
             groupless.AddPreset(loadedPresetitem);
         }
 
-        if (!groupless.IsEmpty())
-            Groups.Add(groupless);
+        if (!groupless.IsEmpty()) Groups.Add(groupless);
 
         OnPropertyChanged(nameof(Groups));
         LoadGroupTree();
@@ -286,32 +284,12 @@ public partial class SettingsViewModel : BaseViewModel
         LeftPanelGridVisibility = visibility;
     }
 
-    public void RemovePreset(string name)
+    public void RemovePreset(LoadedPresetItem preset)
     {
-        int n = Groups!.Count;
-        for (int i = 0; i < n; i++)
-        {
-            var currentGroup = Groups[i];
-            int k = currentGroup.Presets.Count;
-            for (int j = 0; j < k; j++)
-            {
-                var current = currentGroup.Presets![j];
-                if (current.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                {
-                    currentGroup.Presets.Remove(current);
-                    string path = current.GetPath();
-
-                    try
-                    {
-                        File.Delete(path);
-                    }
-                    catch { }
-                    return;
-                }
-            }
-        }
+        LoadedGroupItem group = preset.ParentGroup!;
+        group.RemovePreset(preset);
     }
-    public void RemoveGroup(string name)
+    public void RemoveGroup(string name, bool recursive = false)
     {
         int n = Groups!.Count;
         for (int i = 0; i < n; i++)
@@ -320,6 +298,15 @@ public partial class SettingsViewModel : BaseViewModel
             if (current.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
             {
                 Groups.Remove(current);
+                string path = current.GetPath();
+
+                if (current.Name.Equals("Groupless", StringComparison.OrdinalIgnoreCase)) return;
+
+                try
+                {
+                    Directory.Delete(path, recursive);
+                }
+                catch { }
                 return;
             }
         }

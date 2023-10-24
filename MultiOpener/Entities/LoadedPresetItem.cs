@@ -112,6 +112,26 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
         preset.ParentGroup = this;
         Presets.Add(preset);
     }
+    public void RemovePreset(LoadedPresetItem preset)
+    {
+        SettingsViewModel settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
+        if (preset.Name.Equals(settings.PresetName, StringComparison.OrdinalIgnoreCase))
+            settings.ClearOpenedPreset();
+
+        Presets.Remove(preset);
+
+        try
+        {
+            File.Delete(preset.GetPath());
+        }
+        catch { }
+        return;
+    }
+    public void RemoveAllPresets()
+    {
+        for (int i = 0; i < Presets.Count; i++)
+            RemovePreset(Presets[i]);
+    }
 
     public void ChangeName(string name)
     {
@@ -124,7 +144,7 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
         Name = name;
 
         var preset = GetPreset(settings.PresetName!);
-        if (preset != null) 
+        if (preset != null)
             settings.UpdateCurrentLoadedPreset(preset.GetPath());
     }
 

@@ -13,21 +13,12 @@ public class SettingsRemoveGroupCommand : SettingsCommandBase
     public override void Execute(object? parameter)
     {
         if (Settings == null || parameter == null) return;
-
         if (parameter is not LoadedGroupItem group) return;
 
         if (group.Name.Equals("Groupless", System.StringComparison.OrdinalIgnoreCase))
         {
             if (DialogBox.Show($"Are you sure you want to delete all presets {group.Name}", "Removing Groupless presets", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-            {
-                int n = group.Presets.Count;
-                for (int i = 0; i < n; i++)
-                {
-                    var current = group.Presets[i];
-                    File.Delete(current.GetPath());
-                }
-            }
-            Settings.SetTreeWithGroupsAndPresets();
+                group.RemoveAllPresets();
             return;
         }
 
@@ -35,15 +26,11 @@ public class SettingsRemoveGroupCommand : SettingsCommandBase
         {
             string path = group.GetPath();
             if (!Path.GetDirectoryName(path)!.Equals("Presets", System.StringComparison.OrdinalIgnoreCase))
-            {
-                Directory.Delete(path);
                 Settings.RemoveGroup(group.Name);
-            }
         }
         else
         {
             MessageBoxResult result = DialogBox.Show($"You are trying to remove {group.Name} with option:\nYES - Removing only that folder and move all presets to Groupless\nNO - Removing whole folder with all presets in it", "Removing Group", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-
             if (result == MessageBoxResult.Yes)
             {
                 LoadedGroupItem? groupless = Settings.GetGroupByName("Groupless");
@@ -53,7 +40,6 @@ public class SettingsRemoveGroupCommand : SettingsCommandBase
                     Settings.Groups!.Add(groupless);
                 }
 
-                //TODO: 0 jakies problemy z bindami tutaj przy usunieciu idk
                 for (int i = 0; i < group.Presets!.Count;)
                 {
                     var preset = group.Presets![i];
@@ -69,17 +55,11 @@ public class SettingsRemoveGroupCommand : SettingsCommandBase
                         Settings.UpdateCurrentLoadedPreset(preset.GetPath());
                 }
 
-                if (group.IsEmpty())
-                    Directory.Delete(group.GetPath());
+                if (group.IsEmpty()) Settings.RemoveGroup(group.Name);
 
             }
             else if (result == MessageBoxResult.No)
-            {
-                Settings.RemoveGroup(group.Name);
-                Directory.Delete(group.GetPath(), true);
-            }
+                Settings.RemoveGroup(group.Name, true);
         }
-
-        Settings.SetTreeWithGroupsAndPresets();
     }
 }
