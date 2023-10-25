@@ -1,7 +1,7 @@
-﻿using MultiOpener.Entities.Opened;
+﻿using Microsoft.Win32;
+using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels.DialogBox;
 using MultiOpener.Windows;
-using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,12 +50,12 @@ public static class DialogBox
         Create<InformationOpenedWindow, OpenedProcess>(opened);
     }
 
-    public static string ShowOpenFile(bool checkFileExists, bool multiSelect)
+    public static string ShowOpenFile()
     {
-        var dialog = new VistaOpenFileDialog();
-        if (dialog.ShowDialog(GetActiveWindow()).GetValueOrDefault())
-            if (dialog.CheckPathExists && dialog.CheckFileExists == checkFileExists && dialog.Multiselect == multiSelect)
-                return dialog.FileName;
+        OpenFileDialog openFileDialog = new() { Filter = "All Files (*.*)|*.*", };
+        if (openFileDialog.ShowDialog() == true)
+            return openFileDialog.FileName;
+
         return string.Empty;
     }
 

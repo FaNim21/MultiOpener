@@ -14,7 +14,7 @@ namespace MultiOpener.Commands.SettingsCommands
 
         public override void Execute(object? parameter)
         {
-            string output = DialogBox.ShowOpenFile(true, false);
+            string output = DialogBox.ShowOpenFile();
             if (!string.IsNullOrEmpty(output))
                 OpenTypeViewModel.ApplicationPathField = output;
         }
