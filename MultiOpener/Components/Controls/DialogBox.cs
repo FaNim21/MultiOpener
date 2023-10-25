@@ -120,7 +120,7 @@ public static class DialogBox
         }
     }
 
-    private static Window? GetActiveWindow()
+    public static Window? GetActiveWindow()
     {
         Window? window = null;
         window = Application.Current?.MainWindow;

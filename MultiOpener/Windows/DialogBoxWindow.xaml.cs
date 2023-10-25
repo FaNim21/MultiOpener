@@ -20,8 +20,6 @@ public partial class DialogBoxWindow : Window
     {
         SetupTextWidth();
         PlayOpeningSound();
-
-
     }
 
     private void OnClosed(object? sender, EventArgs e)
@@ -65,5 +63,10 @@ public partial class DialogBoxWindow : Window
                 SystemSounds.Exclamation.Play();
                 break;
         }
+    }
+
+    private void WindowKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape) Close();
     }
 }

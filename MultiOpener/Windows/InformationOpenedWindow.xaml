@@ -14,7 +14,8 @@
         BorderThickness="1"
         BorderBrush="#00090e"
         WindowStartupLocation="CenterOwner"
-        Background="#383A3C">
+        Background="#383A3C"
+        PreviewKeyDown="WindowKeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />

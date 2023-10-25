@@ -56,6 +56,10 @@ public class InputController
     {
         Application.Current.MainWindow.KeyDown -= HandleKeyDown;
         Application.Current.MainWindow.KeyUp -= HandleKeyUp;
+        HotkeyPressed = null;
+
+        for (int i = 0; i < hotkeys.Count; i++)
+            hotkeys[i].Action = null;
     }
 
     private void CheckHotkeys()

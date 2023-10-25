@@ -64,8 +64,7 @@ public partial class MainWindow : Window, IClipboardService
 
     private void HeaderMouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (e.ChangedButton == MouseButton.Left)
-            DragMove();
+        if (e.ChangedButton == MouseButton.Left) DragMove();
     }
     private void MinimizeButtonsClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
     private void ExitButtonClick(object sender, RoutedEventArgs e)
@@ -95,8 +94,6 @@ public partial class MainWindow : Window, IClipboardService
 
     protected override void OnClosing(CancelEventArgs e)
     {
-        //StopWorker();
-        //worker.Dispose();
         InputController.Instance.Cleanup();
         MainViewModel.start.ConsoleViewModel.ConsoleLines.Clear();
         base.OnClosing(e);

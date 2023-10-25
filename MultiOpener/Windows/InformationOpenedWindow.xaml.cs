@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 
 namespace MultiOpener.Windows;
 
@@ -22,5 +23,10 @@ public partial class InformationOpenedWindow : Window
     private void ExitButtonClick(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void WindowKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape) Close();
     }
 }
