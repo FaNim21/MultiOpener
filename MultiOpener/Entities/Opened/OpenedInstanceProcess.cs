@@ -193,7 +193,6 @@ public partial class OpenedInstanceProcess : OpenedProcess
 
         string? argument = System.IO.Path.Combine(System.IO.Path.GetFullPath(Path), ".minecraft");
         Process.Start("explorer.exe", argument);
-
     }
 
     [GeneratedRegex("^Minecraft\\*\\s*(?:-\\s*Instance)?\\s*((?:\\d+(?:\\.\\d+)*)?)(?:\\s*-\\s*(\\S+(?:\\s*\\S+)*))?$", RegexOptions.NonBacktracking | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]

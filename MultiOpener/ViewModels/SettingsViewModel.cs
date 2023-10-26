@@ -60,6 +60,7 @@ public partial class SettingsViewModel : BaseViewModel
             if (CurrentChosen != null || SelectedOpenTypeViewModel == null)
             {
                 //Blocking to make more than one OpenInstance
+                //TODO: 0 improve this
                 if (value == OpenType.InstancesMultiMC)
                 {
                     for (int i = 0; i < Opens.Count; i++)
@@ -77,6 +78,7 @@ public partial class SettingsViewModel : BaseViewModel
                 {
                     case OpenType.Normal: SelectedOpenTypeViewModel = new SettingsOpenNormalModelView(this); break;
                     case OpenType.InstancesMultiMC: SelectedOpenTypeViewModel = new SettingsOpenInstancesModelView(this); break;
+                    case OpenType.ResetTrackerMC: SelectedOpenTypeViewModel = new SettingsOpenResetTrackerModelView(this); break;
                 }
                 _chooseTypeBox = value;
                 Consts.IsSwitchingBetweenOpensInSettings = false;
@@ -419,6 +421,7 @@ public partial class SettingsViewModel : BaseViewModel
         return selectedOpenType.Name switch
         {
             nameof(OpenInstance) => new OpenInstance(name),
+            nameof(OpenResetTracker) => new OpenResetTracker(name),
             //New classes here
             _ => new OpenItem(name),
         };

@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="MultiOpener.Views.Opened.OpenedResetTrackerProcessView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:MultiOpener.Entities.Opened"
+             xmlns:buttons="clr-namespace:MultiOpener.Components.Buttons"
+             d:DataContext="{d:DesignInstance Type=viewmodels:OpenedInstanceProcess}"
+             mc:Ignorable="d"
+             Width="550"
+             Height="350"
+             Background="#383A3C">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize"
+                    Value="12" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Label Content="RESET TRACKER"/>
+    </Grid>
+</UserControl>

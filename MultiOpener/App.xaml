@@ -27,12 +27,18 @@
         <DataTemplate DataType="{x:Type settingsViewModels:SettingsOpenInstancesModelView}">
             <settingsViews:SettingsOpenInstancesView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type settingsViewModels:SettingsOpenResetTrackerModelView}">
+            <settingsViews:SettingsOpenResetTrackerView/>
+        </DataTemplate>
 
         <DataTemplate DataType="{x:Type viewModels2:OpenedProcess}">
             <views2:OpenedProcessView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels2:OpenedInstanceProcess}">
             <views2:OpenedInstanceProcessView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels2:OpenedResetTrackerProcess}">
+            <views2:OpenedResetTrackerProcessView />
         </DataTemplate>
 
         

@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace MultiOpener.Entities.Open;
 
-public class OpenInstanceResetTracker : OpenItem
+public class OpenResetTracker : OpenItem
 {
     public bool UsingBuiltInTracker { get; set; }
 
 
     [JsonConstructor]
-    public OpenInstanceResetTracker(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, bool MinimizeOnOpen = false)
+    public OpenResetTracker(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, bool MinimizeOnOpen = false, bool UsingBuiltInTracker = true)
     {
         this.Name = Name;
         this.PathExe = PathExe;
@@ -20,8 +20,9 @@ public class OpenInstanceResetTracker : OpenItem
         this.Type = Type;
         this.MinimizeOnOpen = MinimizeOnOpen;
         //...
+        this.UsingBuiltInTracker = UsingBuiltInTracker;
     }
-    public OpenInstanceResetTracker(OpenInstanceResetTracker item)
+    public OpenResetTracker(OpenResetTracker item)
     {
         Name = item.Name;
         PathExe = item.PathExe;
@@ -30,6 +31,7 @@ public class OpenInstanceResetTracker : OpenItem
         Type = item.Type;
         MinimizeOnOpen = item.MinimizeOnOpen;
         //...
+        UsingBuiltInTracker = item.UsingBuiltInTracker;
     }
 
     public override string Validate()

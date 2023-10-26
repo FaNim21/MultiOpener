@@ -18,10 +18,13 @@ public enum OpenType
     Normal,
     [Description("Instances(MultiMC)")]
     InstancesMultiMC,
+    [Description("Reset Tracker(MC)")]
+    ResetTrackerMC,
 }
 
 [JsonDerivedType(typeof(OpenItem), typeDiscriminator: "base")]
 [JsonDerivedType(typeof(OpenInstance), typeDiscriminator: "instances")]
+[JsonDerivedType(typeof(OpenResetTracker), typeDiscriminator: "resetTracker")]
 public class OpenItem : BaseViewModel, IRenameItem
 {
     private string _name = "";
