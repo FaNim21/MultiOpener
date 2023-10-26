@@ -5,7 +5,7 @@ using System.IO;
 using System;
 using System.Reflection;
 using MultiOpener.ViewModels;
-using Octokit;
+//using Octokit;
 
 namespace MultiOpener.Windows;
 
@@ -29,10 +29,10 @@ public partial class UpdateDownloadWindow : Window
         if (File.Exists(newExePath))
             File.Delete(newExePath);
 
-        Task.Run(Initialize);
+        //Task.Run(Initialize);
     }
 
-    private async Task Initialize()
+    /*private async Task Initialize()
     {
         try
         {
@@ -58,14 +58,14 @@ public partial class UpdateDownloadWindow : Window
         {
             StartViewModel.Log($"An error occurred: {ex.Message}", Entities.ConsoleLineOption.Error);
         }
-    }
+    }*/
 
-    private async Task<Release> GetLatestReleaseInfo()
+    /*private async Task<Release> GetLatestReleaseInfo()
     {
         var gitHubClient = new GitHubClient(new ProductHeaderValue("MultiOpener"));
         var releases = await gitHubClient.Repository.Release.GetAll(OWNER, REPO);
         return releases[0];
-    }
+    }*/
 
     private async Task<byte[]> DownloadAssetBytes(string url)
     {

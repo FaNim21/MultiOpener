@@ -1,11 +1,16 @@
 ﻿using MultiOpener.ViewModels;
 using NuGet.Versioning;
-using Octokit;
-using System;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MultiOpener.Utils
 {
+    public class Release
+    {
+        public string tag_name { get; set; }
+    }
+
     public class UpdateChecker
     {
         private const string OWNER = "FaNim21";
@@ -16,21 +21,28 @@ namespace MultiOpener.Utils
             if (string.IsNullOrEmpty(version))
                 version = Consts.Version[1..];
 
-            try
+            string apiUrl = "https://api.github.com/repos/FaNim21/MultiOpener/releases";
+            using (var httpClient = new HttpClient())
             {
-                var gitHubClient = new GitHubClient(new ProductHeaderValue("MultiOpener"));
-                var releases = await gitHubClient.Repository.Release.GetAll(OWNER, REPO);
-                var latestRelease = releases[0];
+                httpClient.DefaultRequestHeaders.Add("User-Agent", REPO);
+                HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
 
-                if (latestRelease != null && !IsUpToDate(latestRelease.TagName, version))
+                if (response.IsSuccessStatusCode)
                 {
-                    StartViewModel.Log($"Found new update - {latestRelease.TagName}", Entities.ConsoleLineOption.Warning);
-                    return true;
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var releases = JsonSerializer.Deserialize<Release[]>(responseBody);
+                    var latestRelease = releases![0];
+
+                    if (latestRelease != null && !IsUpToDate(latestRelease.tag_name, version))
+                    {
+                        StartViewModel.Log($"Found new update - {latestRelease.tag_name}", Entities.ConsoleLineOption.Warning);
+                        return true;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
+                else
+                {
+                    StartViewModel.Log("Error while searching for update: " + response.StatusCode);
+                }
             }
 
             StartViewModel.Log($"You are up to date - {version}");

@@ -13,6 +13,15 @@ using System.Windows.Input;
 
 namespace MultiOpener.ViewModels;
 
+/// <summary>
+/// TODO: 0 Problemy z dodawaniem nowych typow procesu:
+/// - Robienie oddzielnie: open, opened, modelView, opeView, openedView
+/// - Dodawanie kazdego view oddzielnie za kazdym razem w App.xaml na zasadzie podlaczania viewModelu do view
+/// - Uzupelnianie dwoch switch casow w SettingsViewModel
+/// - Dbac o to zeby type = temu nowemu typowmi w SettingsModelView
+/// - 5 roznych plikow na jeden OpenType
+/// - Kolejnym problemem jest fakt ze kazdy Open ma metode Open ktora musi tworzyc instancje tego open zeby pozniej panel viewOpened byl oparty o rzeczywisty typ jak w OpenInstance
+/// </summary>
 public partial class SettingsViewModel : BaseViewModel
 {
     public MainViewModel MainViewModel { get; set; }

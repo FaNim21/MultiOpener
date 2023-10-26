@@ -201,7 +201,7 @@ public class StartViewModel : BaseViewModel
         return Opened == null || Opened.Count == 0;
     }
 
-    private void SimpleOpenedTest()
+/*    private void SimpleOpenedTest()
     {
         var opened = new OpenedProcess(this);
         for (int i = 0; i < 90; i++) //test
@@ -219,5 +219,5 @@ public class StartViewModel : BaseViewModel
                 await Task.Delay(200);
             }
         });
-    }
+    }*/
 }

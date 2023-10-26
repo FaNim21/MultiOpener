@@ -1,12 +1,18 @@
-﻿using MultiOpener.ViewModels;
+﻿using MultiOpener.Entities.Opened;
+using MultiOpener.ViewModels;
+using System.Diagnostics;
+using System;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using System.Windows;
 
 namespace MultiOpener.Entities.Open;
 
 public class OpenResetTracker : OpenItem
 {
+    //public string 
     public bool UsingBuiltInTracker { get; set; }
 
 
@@ -41,9 +47,37 @@ public class OpenResetTracker : OpenItem
 
     public override async Task Open(StartViewModel startModel, CancellationToken token)
     {
-        await Task.Delay(500);
-        await base.Open(startModel, token);
-    }
+        try
+        {
+            bool isCancelled = token.IsCancellationRequested;
+            if (!isCancelled) await Task.Delay(DelayBefore);
 
-    public override ushort GetAdditionalProgressCount() => 1;
+            string executable = Path.GetFileName(PathExe);
+            string pathDir = Path.GetDirectoryName(PathExe) ?? "";
+
+            OpenedProcess opened = new OpenedResetTrackerProcess();
+            ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
+            string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
+            //initializowanie innych zmiennych z tej klasy do OpenedResetTrackerProcess
+            opened.isMinimizeOnOpen = MinimizeOnOpen;
+            opened.Initialize(startInfo, name!, PathExe);
+
+            if (isCancelled) opened.Clear();
+            else
+            {
+                opened.FindProcess();
+
+                if (!opened.IsOpenedFromStatus())
+                    await opened.OpenProcess(token);
+            }
+
+            Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });
+
+            if (!isCancelled) await Task.Delay(DelayAfter);
+        }
+        catch (Exception e)
+        {
+            StartViewModel.Log(e.ToString(), ConsoleLineOption.Error);
+        }
+    }
 }

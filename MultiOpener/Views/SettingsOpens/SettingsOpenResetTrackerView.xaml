@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:settings="clr-namespace:MultiOpener.ViewModels.Settings"
              xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
-             d:DataContext="{d:DesignInstance Type=settings:SettingsOpenInstancesModelView}"
+             d:DataContext="{d:DesignInstance Type=settings:SettingsOpenResetTrackerModelView}"
              mc:Ignorable="d"
              d:DesignHeight="370"
              d:DesignWidth="500"

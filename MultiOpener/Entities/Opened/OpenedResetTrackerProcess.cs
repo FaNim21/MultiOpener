@@ -7,13 +7,6 @@ using System;
 
 namespace MultiOpener.Entities.Opened;
 
-/// <summary>
-/// TODO: 0 Problemy z dodawaniem nowych typow procesu:
-/// - Robienie oddzielnie: open, opened, modelView, opeView, openedView
-/// - Dodawanie kazdego view oddzielnie za kazdym razem w App.xaml na zasadzie podlaczania viewModelu do view
-/// - uzupelnianie dwoch switch casow w SettingsViewModel
-/// - 
-/// </summary>
 public class OpenedResetTrackerProcess : OpenedProcess
 {
     public override void Update(bool lookForWindow = false)

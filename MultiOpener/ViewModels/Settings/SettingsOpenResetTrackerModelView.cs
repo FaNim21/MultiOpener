@@ -24,16 +24,20 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
 
     public override void UpdatePanelField(OpenItem currentChosen)
     {
+
         base.UpdatePanelField(currentChosen);
     }
 
     public override void SetOpenProperties(ref OpenItem open)
     {
         base.SetOpenProperties(ref open);
+        open.Type = OpenType.ResetTrackerMC;
+
     }
 
     public override void Clear()
     {
         base.Clear();
+
     }
 }

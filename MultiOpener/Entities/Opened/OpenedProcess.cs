@@ -96,7 +96,7 @@ public class OpenedProcess : BaseViewModel
 
     public bool isMinimizeOnOpen = false;
 
-
+    public OpenedProcess() : this(null) { }
     public OpenedProcess(StartViewModel? start = null)
     {
         if (start == null)
