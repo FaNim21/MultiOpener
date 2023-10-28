@@ -96,8 +96,9 @@ public class OpenedProcess : BaseViewModel
 
     public bool isMinimizeOnOpen = false;
 
+
     public OpenedProcess() : this(null) { }
-    public OpenedProcess(StartViewModel? start = null)
+    public OpenedProcess(StartViewModel? start)
     {
         if (start == null)
             Application.Current?.Dispatcher.Invoke(delegate { start = ((MainWindow)Application.Current.MainWindow).MainViewModel.start; });
@@ -344,7 +345,7 @@ public class OpenedProcess : BaseViewModel
 
         WindowTitle = title;
     }
-    public void UpdateStatus()
+    public virtual void UpdateStatus()
     {
         if (Pid != -1)
         {

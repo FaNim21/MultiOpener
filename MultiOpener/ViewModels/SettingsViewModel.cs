@@ -255,7 +255,8 @@ public partial class SettingsViewModel : BaseViewModel
             LoadPreset(loadedPresetPath);
         else
         {
-            StartViewModel.Log($"Could not load previously opened: {loadedPresetPath}");
+            if (!string.IsNullOrEmpty(loadedPresetPath))
+                StartViewModel.Log($"Could not load previously opened: {loadedPresetPath}");
             PresetName = string.Empty;
         }
     }

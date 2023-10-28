@@ -1,67 +1,121 @@
 ﻿using MultiOpener.Utils;
 using MultiOpener.ViewModels;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Threading;
 using System;
+using System.Threading;
+using System.Windows;
+using System.Windows.Media;
 
 namespace MultiOpener.Entities.Opened;
 
 public class OpenedResetTrackerProcess : OpenedProcess
 {
+    public string trackerID = string.Empty;
+    public bool usingBuiltInTracker = true;
+
+    private bool _isTracking;
+    public bool IsTracking
+    {
+        get { return _isTracking; }
+        set
+        {
+            _isTracking = value;
+            OnPropertyChanged(nameof(IsTracking));
+        }
+    }
+
+    private CancellationTokenSource _source = new();
+    private CancellationToken _token;
+    private Task? _trackerTask;
+
+
+    public void ActivateTracker()
+    {
+        _source = new();
+        _token = _source.Token;
+        IsTracking = true;
+        UpdateStatus();
+
+        _trackerTask = Task.Run(TrackStats, _token);
+    }
+    public void DeactivateTracker()
+    {
+        if (_source == null || _token.IsCancellationRequested || !_isTracking) return;
+
+        _source.Cancel();
+        IsTracking = false;
+
+        if (_trackerTask != null && !_trackerTask.IsCompleted)
+            _trackerTask.Wait();
+
+        _source.Dispose();
+    }
+
+    private async Task TrackStats()
+    {
+        while (IsTracking)
+        {
+            try
+            {
+                await Task.Delay(1000, _token);
+            }
+            catch { break; }
+
+            //TODO: 0 Tracking here
+            StartViewModel.Log("Tracking...");
+
+
+        }
+    }
+
+    private void ResetStats()
+    {
+        //TODO: 0 Zrobic resetowanie wszystkich wartosci w gridzie
+    }
+
     public override void Update(bool lookForWindow = false)
     {
         base.Update(lookForWindow);
     }
-    public override void FindProcess()
-    {
-
-    }
 
     public override void UpdateTitle()
     {
-        if (Hwnd == nint.Zero)
+        //TODO: 0 Tu bedzie dzialac tytul w formie informowania czy to jest wbudowany tracker czy zewntetrzny i wtedy jego nazwa? :d
+        if (!usingBuiltInTracker)
         {
-            WindowTitle = System.IO.Path.GetFileName(Path);
+            base.UpdateTitle();
             return;
         }
 
-        string title = Win32.GetWindowTitle(Hwnd);
-        if (!Win32.IsProcessResponding(Pid))
-            title = "(Not Reponding)" + title;
-
-        if (!string.IsNullOrEmpty(title))
-            WindowTitle = title;
-
-        if (string.IsNullOrEmpty(WindowTitle))
-            WindowTitle = "Unknown";
+        if (!string.IsNullOrEmpty(WindowTitle)) return;
+        WindowTitle = Name;
+    }
+    public override void UpdateStatus()
+    {
+        if ((usingBuiltInTracker && IsTracking) || Pid != -1)
+        {
+            Application.Current?.Dispatcher.Invoke(delegate { StatusLabelColor = new SolidColorBrush(Color.FromRgb(51, 204, 51)); });
+            Status = "OPENED";
+        }
+        else
+        {
+            Application.Current?.Dispatcher.Invoke(delegate { StatusLabelColor = new SolidColorBrush(Color.FromRgb(125, 38, 37)); });
+            Status = "CLOSED";
+        }
     }
 
-    public override async Task<bool> OpenProcess(CancellationToken token = default)
+    public override Task<bool> OpenProcess(CancellationToken token = default)
     {
-        if (ProcessStartInfo == null) return false;
+        if (!usingBuiltInTracker)
+            return base.OpenProcess(token);
 
-        await Task.Delay(100);
-
-        Process? process;
-        try
-        {
-            process = Process.Start(ProcessStartInfo);
-        }
-        catch (Exception)
-        {
-            StartViewModel.Log($"Cannot open MultiMC instance process '{Name}' from {ProcessStartInfo.WorkingDirectory}", ConsoleLineOption.Error);
-            return false;
-        }
-        UpdateStatus();
-
-        StartViewModel.Log($"Succesfully opened Reset Tracker '{Name}' at process ID: {Pid}");
-        return true;
+        ActivateTracker();
+        return Task.FromResult(true);
     }
 
     public override async Task<bool> Close()
     {
-        //TODO: uwzglednic zatrzymywanie reset trackera jak jest uzywany wewnetrzny, a w przeciwnym przypadku zamyka proces klasycznie
+        DeactivateTracker();
 
         if (Pid == -1)
         {

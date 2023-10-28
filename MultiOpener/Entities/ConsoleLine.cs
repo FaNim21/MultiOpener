@@ -9,8 +9,8 @@ public enum ConsoleLineOption
     Warning,
 }
 
-public class ConsoleLine
+public struct ConsoleLine
 {
-    public string? Text { get; set; }
-    public Brush? Color { get; set; }
+    public string Text { get; set; }
+    public Brush Color { get; set; }
 }

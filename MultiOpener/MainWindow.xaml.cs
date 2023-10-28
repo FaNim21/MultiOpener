@@ -138,12 +138,6 @@ public partial class MainWindow : Window, IClipboardService
     private void UpdateButtonClick(object sender, RoutedEventArgs e)
     {
         Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest") { UseShellExecute = true });
-
-        /*if (DialogBox.Show("A new version of MultiOpener is available\nClick yes to automaticaly update", "New Update", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-        {
-            //TODO: 9 ZROBIC AUTO DOWNLOAD
-            _ = new UpdateDownloadWindow();
-        }*/
     }
 
     public void ChangePresetTitle(string name)

@@ -1,11 +1,9 @@
 ﻿using MultiOpener.Commands.StartCommands;
 using MultiOpener.Entities;
 using MultiOpener.Entities.Opened;
-using MultiOpener.Utils.Interfaces;
 using MultiOpener.ViewModels.Controls;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels;
@@ -200,24 +198,4 @@ public class StartViewModel : BaseViewModel
     {
         return Opened == null || Opened.Count == 0;
     }
-
-/*    private void SimpleOpenedTest()
-    {
-        var opened = new OpenedProcess(this);
-        for (int i = 0; i < 90; i++) //test
-        {
-            AddOpened(opened);
-            opened.Update();
-        }
-        LogLine("Tekst aktualizacji odpalania/zamykania czy odswiezania procesow w presecie");
-
-        Task.Run(async () =>
-        {
-            while (true)
-            {
-                LogLine("Tekst aktualizacji odpalania/zamykania czy odswiezania procesow w presecie");
-                await Task.Delay(200);
-            }
-        });
-    }*/
 }
