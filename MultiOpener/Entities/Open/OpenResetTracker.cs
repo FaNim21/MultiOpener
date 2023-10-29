@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace MultiOpener.Entities.Open;
 
-public class OpenResetTracker : OpenItem
+public sealed class OpenResetTracker : OpenItem
 {
     public string TrackerID { get; set; }
     public bool UsingBuiltInTracker { get; set; }

@@ -8,7 +8,13 @@ using System.Windows.Media;
 
 namespace MultiOpener.Entities.Opened;
 
-public class OpenedResetTrackerProcess : OpenedProcess
+public struct ResetStats
+{
+    public int NetherEntersCount { get; set; }
+    public int NetherEntersTime { get; set; }
+}
+
+public sealed class OpenedResetTrackerProcess : OpenedProcess
 {
     public string trackerID = string.Empty;
     public bool usingBuiltInTracker = true;
@@ -23,6 +29,18 @@ public class OpenedResetTrackerProcess : OpenedProcess
             OnPropertyChanged(nameof(IsTracking));
         }
     }
+
+    public string NetherEntersTime
+    {
+        get
+        {
+            //Nie wiem jeszcze w jakiej architekturze to zrobic
+
+            return "";
+        }
+    }
+
+    private ResetStats _resetStats = new();
 
     private CancellationTokenSource _source = new();
     private CancellationToken _token;

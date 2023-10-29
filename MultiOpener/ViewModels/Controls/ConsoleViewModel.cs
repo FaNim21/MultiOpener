@@ -15,6 +15,7 @@ public class ConsoleViewModel : BaseViewModel
 
     private readonly string logPath;
 
+
     public ConsoleViewModel()
     {
         ConsoleLines = new ObservableCollection<ConsoleLine>();
@@ -29,31 +30,30 @@ public class ConsoleViewModel : BaseViewModel
     {
         Application.Current?.Dispatcher.Invoke(delegate
         {
-            var consoleLine = new ConsoleLine();
-
+            SolidColorBrush brush;
             StringBuilder sb = new();
+
             var time = DateTime.Now.ToString("HH:mm:ss");
             sb.Append("[" + time);
 
             if (option == ConsoleLineOption.Error)
             {
                 sb.Append(" - ERROR]> ");
-                consoleLine.Color = Brushes.LightCoral;
+                brush = Brushes.LightCoral;
             }
             else if (option == ConsoleLineOption.Warning)
             {
                 sb.Append(" - WARNING]> ");
-                consoleLine.Color = Brushes.Yellow;
+                brush = Brushes.Yellow;
             }
             else
             {
                 sb.Append("]> ");
-                consoleLine.Color = Brushes.White;
+                brush = Brushes.White;
             }
-
             sb.Append(text);
-            consoleLine.Text = sb.ToString();
 
+            var consoleLine = new ConsoleLine() { Text = sb.ToString(), Color = brush };
             ConsoleLines?.Add(consoleLine);
             OnPropertyChanged(nameof(ConsoleLines));
         });
