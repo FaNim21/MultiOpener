@@ -14,8 +14,21 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
         get { return _trackerSheetID; }
         set
         {
+            PresetIsNotSaved();
             _trackerSheetID = value;
             OnPropertyChanged(nameof(TrackerSheetID));
+        }
+    }
+
+    private bool _usingBuiltInTracker = true;
+    public bool UsingBuiltInTracker
+    {
+        get { return _usingBuiltInTracker; }
+        set
+        {
+            PresetIsNotSaved();
+            _usingBuiltInTracker = value;
+            OnPropertyChanged(nameof(UsingBuiltInTracker));
         }
     }
 
@@ -24,6 +37,11 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
 
     public override void UpdatePanelField(OpenItem currentChosen)
     {
+        if (currentChosen is OpenResetTracker openTracker)
+        {
+            TrackerSheetID = openTracker.TrackerID;
+            UsingBuiltInTracker = openTracker.UsingBuiltInTracker;
+        }
 
         base.UpdatePanelField(currentChosen);
     }
@@ -33,11 +51,19 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
         base.SetOpenProperties(ref open);
         open.Type = OpenType.ResetTrackerMC;
 
+        if (open is OpenResetTracker openTracker)
+        {
+            openTracker.TrackerID = TrackerSheetID;
+            openTracker.UsingBuiltInTracker = UsingBuiltInTracker;
+        }
     }
 
     public override void Clear()
     {
         base.Clear();
+
+        TrackerSheetID = string.Empty;
+        UsingBuiltInTracker = true;
 
     }
 }

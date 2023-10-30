@@ -5,19 +5,261 @@ using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
+using System.Net.Http;
+using System.Text.Json;
+using System.Collections.Generic;
 
 namespace MultiOpener.Entities.Opened;
 
-public struct ResetStats
+
+public class ResetStats : BaseViewModel
 {
-    public int NetherEntersCount { get; set; }
-    public int NetherEntersTime { get; set; }
+    public bool UsingBuiltIn { get; set; }
+
+    //NETHER
+    private int _netherEntersCount;
+    public int NetherEntersCount
+    {
+        get { return _netherEntersCount; }
+        set
+        {
+            _netherEntersCount = value;
+            OnPropertyChanged(nameof(NetherEntersCount));
+        }
+    }
+
+    private int _netherEntersTime;
+    public int NetherEntersTime
+    {
+        get { return _netherEntersTime; }
+        set { _netherEntersTime = value; }
+    }
+
+    public string NetherEnterAverageTime
+    {
+        get
+        {
+            float miliseconds;
+            if (UsingBuiltIn) miliseconds = NetherEntersCount == 0 ? 0 : NetherEntersTime / NetherEntersCount;
+            else miliseconds = NetherEntersTime;
+            TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
+            string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
+            return formattedTime;
+        }
+    }
+
+
+    //STRUCTURE 1
+    private int _firstStructureEntersCount;
+    public int FirstStructureEntersCount
+    {
+        get { return _firstStructureEntersCount; }
+        set
+        {
+            _firstStructureEntersCount = value;
+            OnPropertyChanged(nameof(FirstStructureEntersCount));
+        }
+    }
+
+    private int _firstStructureEntersTime;
+    public int FirstStructureEntersTime
+    {
+        get { return _firstStructureEntersTime; }
+        set { _firstStructureEntersTime = value; }
+    }
+
+    public string FirstStructureEnterAverageTime
+    {
+        get
+        {
+            float miliseconds;
+            if (UsingBuiltIn) miliseconds = FirstStructureEntersCount == 0 ? 0 : FirstStructureEntersTime / FirstStructureEntersCount;
+            else miliseconds = FirstStructureEntersTime;
+            TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
+            string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
+            return formattedTime;
+        }
+    }
+
+
+    //STRUCTURE 1
+    private int _secondStructureEntersCount;
+    public int SecondStructureEntersCount
+    {
+        get { return _secondStructureEntersCount; }
+        set
+        {
+            _secondStructureEntersCount = value;
+            OnPropertyChanged(nameof(SecondStructureEntersCount));
+        }
+    }
+
+    private int _secondStructureEntersTime;
+    public int SecondStructureEntersTime
+    {
+        get { return _secondStructureEntersTime; }
+        set { _secondStructureEntersTime = value; }
+    }
+
+    public string SecondStructureEnterAverageTime
+    {
+        get
+        {
+            float miliseconds;
+            if (UsingBuiltIn) miliseconds = SecondStructureEntersCount == 0 ? 0 : SecondStructureEntersTime / SecondStructureEntersCount;
+            else miliseconds = SecondStructureEntersTime;
+            TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
+            string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
+            return formattedTime;
+        }
+    }
+
+
+    //NETHER EXIT
+    private int _netherExitEntersCount;
+    public int NetherExitEntersCount
+    {
+        get { return _netherExitEntersCount; }
+        set
+        {
+            _netherExitEntersCount = value;
+            OnPropertyChanged(nameof(NetherExitEntersCount));
+        }
+    }
+
+    private int _netherExitEntersTime;
+    public int NetherExitEntersTime
+    {
+        get { return _netherExitEntersTime; }
+        set { _netherExitEntersTime = value; }
+    }
+
+    public string NetherExitEnterAverageTime
+    {
+        get
+        {
+            float miliseconds;
+            if (UsingBuiltIn) miliseconds = NetherExitEntersCount == 0 ? 0 : NetherExitEntersTime / NetherExitEntersCount;
+            else miliseconds = NetherExitEntersTime;
+            TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
+            string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
+            return formattedTime;
+        }
+    }
+
+
+    //STRONGHOLD
+    private int _strongholdEntersCount;
+    public int StrongholdEntersCount
+    {
+        get { return _strongholdEntersCount; }
+        set
+        {
+            _strongholdEntersCount = value;
+            OnPropertyChanged(nameof(StrongholdEntersCount));
+        }
+    }
+
+    private int _strongholdEntersTime;
+    public int StrongholdEntersTime
+    {
+        get { return _strongholdEntersTime; }
+        set { _strongholdEntersTime = value; }
+    }
+
+    public string StrongholdEnterAverageTime
+    {
+        get
+        {
+            float miliseconds;
+            if (UsingBuiltIn) miliseconds = StrongholdEntersCount == 0 ? 0 : StrongholdEntersTime / StrongholdEntersCount;
+            else miliseconds = StrongholdEntersTime;
+            TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
+            string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
+            return formattedTime;
+        }
+    }
+
+
+    //END
+    private int _endEntersCount;
+    public int EndEntersCount
+    {
+        get { return _endEntersCount; }
+        set
+        {
+            _endEntersCount = value;
+            OnPropertyChanged(nameof(EndEntersCount));
+        }
+    }
+
+    private int _endEntersTime;
+    public int EndEntersTime
+    {
+        get { return _endEntersTime; }
+        set { _endEntersTime = value; }
+    }
+
+    public string EndEnterAverageTime
+    {
+        get
+        {
+            float miliseconds;
+            if (UsingBuiltIn) miliseconds = EndEntersCount == 0 ? 0 : EndEntersTime / EndEntersCount;
+            else miliseconds = EndEntersTime;
+            TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
+            string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
+            return formattedTime;
+        }
+    }
+
+
+    public void Reset()
+    {
+        NetherEntersCount = 0;
+        NetherEntersTime = 0;
+
+        FirstStructureEntersCount = 0;
+        FirstStructureEntersTime = 0;
+
+        SecondStructureEntersCount = 0;
+        SecondStructureEntersTime = 0;
+
+        NetherExitEntersCount = 0;
+        NetherExitEntersTime = 0;
+
+        StrongholdEntersCount = 0;
+        StrongholdEntersTime = 0;
+
+        EndEntersCount = 0;
+        EndEntersTime = 0;
+    }
 }
 
 public sealed class OpenedResetTrackerProcess : OpenedProcess
 {
-    public string trackerID = string.Empty;
-    public bool usingBuiltInTracker = true;
+    private readonly struct ResetAnalyticsResponse
+    {
+        public bool success { get; init; }
+        public List<Session> session { get; init; }
+    }
+    private readonly struct Session
+    {
+        public Ops ops { get; init; }
+    }
+    private readonly struct Ops
+    {
+        public Tl[] tl { get; init; }
+    }
+    private readonly struct Tl
+    {
+        public int time { get; init; }
+        public int total { get; init; }
+    }
+
+
+    private string trackerID = string.Empty;
+    private bool usingBuiltInTracker = true;
 
     private bool _isTracking;
     public bool IsTracking
@@ -30,27 +272,31 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         }
     }
 
-    public string NetherEntersTime
-    {
-        get
-        {
-            //Nie wiem jeszcze w jakiej architekturze to zrobic
-
-            return "";
-        }
-    }
-
-    private ResetStats _resetStats = new();
+    public ResetStats ResetData { get; set; } = new();
 
     private CancellationTokenSource _source = new();
     private CancellationToken _token;
     private Task? _trackerTask;
 
+    public void Setup(string trackerID, bool usingBuiltInTracker)
+    {
+        this.trackerID = trackerID;
+        this.usingBuiltInTracker = usingBuiltInTracker;
+        ResetData.UsingBuiltIn = usingBuiltInTracker;
+    }
 
     public void ActivateTracker()
     {
+        if (IsTracking) return;
+
+        if (usingBuiltInTracker)
+        {
+            //TODO: 0 usuwaj zawartosci folderu Records
+        }
+
         _source = new();
         _token = _source.Token;
+
         IsTracking = true;
         UpdateStatus();
 
@@ -67,6 +313,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
             _trackerTask.Wait();
 
         _source.Dispose();
+        ResetStatsData();
     }
 
     private async Task TrackStats()
@@ -75,20 +322,75 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         {
             try
             {
-                await Task.Delay(1000, _token);
+                await Task.Delay(10000, _token);
             }
             catch { break; }
 
-            //TODO: 0 Tracking here
+            if (usingBuiltInTracker)
+                await OnBuiltInTracker();
+            else
+                await OnOutsideTracker();
+
             StartViewModel.Log("Tracking...");
-
-
         }
     }
 
-    private void ResetStats()
+    private async Task OnBuiltInTracker()
     {
-        //TODO: 0 Zrobic resetowanie wszystkich wartosci w gridzie
+        //TODO: 0 Wlasny Tracker
+    }
+
+    private async Task OnOutsideTracker()
+    {
+        string apiUrl = $"https://reset-analytics.vercel.app/api/sheet/{trackerID}";
+
+        try
+        {
+
+            using var httpClient = new HttpClient();
+            HttpResponseMessage response = await httpClient.GetAsync(apiUrl, _token);
+            if (response.IsSuccessStatusCode)
+            {
+                string responseBody = await response.Content.ReadAsStringAsync(_token);
+                ResetAnalyticsResponse apiResponse = JsonSerializer.Deserialize<ResetAnalyticsResponse>(responseBody)!;
+
+                if (apiResponse.success)
+                {
+                    Tl[] tl = apiResponse.session[0].ops.tl;
+
+                    ResetData.NetherEntersCount = tl[3].total;
+                    ResetData.NetherEntersTime = tl[3].time;
+
+                    ResetData.FirstStructureEntersCount = tl[4].total;
+                    ResetData.FirstStructureEntersTime = tl[4].time;
+
+                    ResetData.SecondStructureEntersCount = tl[5].total;
+                    ResetData.SecondStructureEntersTime = tl[5].time;
+
+                    ResetData.NetherExitEntersCount = tl[6].total;
+                    ResetData.NetherExitEntersTime = tl[6].time;
+
+                    ResetData.StrongholdEntersCount = tl[7].total;
+                    ResetData.StrongholdEntersTime = tl[7].time;
+
+                    ResetData.EndEntersCount = tl[8].total;
+                    ResetData.EndEntersTime = tl[8].time;
+                }
+            }
+            else
+            {
+                StartViewModel.Log("Error fetching stats: " + response.StatusCode, ConsoleLineOption.Error);
+            }
+        }
+        catch
+        {
+            StartViewModel.Log("Error fetching stats", ConsoleLineOption.Error);
+        }
+    }
+
+    private void ResetStatsData()
+    {
+        ResetData.Reset();
     }
 
     public override void Update(bool lookForWindow = false)
@@ -98,7 +400,6 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
     public override void UpdateTitle()
     {
-        //TODO: 0 Tu bedzie dzialac tytul w formie informowania czy to jest wbudowany tracker czy zewntetrzny i wtedy jego nazwa? :d
         if (!usingBuiltInTracker)
         {
             base.UpdateTitle();
@@ -122,13 +423,13 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         }
     }
 
-    public override Task<bool> OpenProcess(CancellationToken token = default)
+    public override async Task<bool> OpenProcess(CancellationToken token = default)
     {
         if (!usingBuiltInTracker)
-            return base.OpenProcess(token);
+            await base.OpenProcess(token);
 
         ActivateTracker();
-        return Task.FromResult(true);
+        return await Task.FromResult(true);
     }
 
     public override async Task<bool> Close()

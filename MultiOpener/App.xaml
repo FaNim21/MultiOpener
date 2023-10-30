@@ -20,7 +20,7 @@
         <DataTemplate DataType="{x:Type viewModels:OptionsViewModel}">
             <views:OptionsView />
         </DataTemplate>
-        
+
         <DataTemplate DataType="{x:Type settingsViewModels:SettingsOpenNormalModelView}">
             <settingsViews:SettingsOpenNormalView />
         </DataTemplate>
@@ -28,7 +28,7 @@
             <settingsViews:SettingsOpenInstancesView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type settingsViewModels:SettingsOpenResetTrackerModelView}">
-            <settingsViews:SettingsOpenResetTrackerView/>
+            <settingsViews:SettingsOpenResetTrackerView />
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type viewModels2:OpenedProcess}">
@@ -41,10 +41,11 @@
             <views2:OpenedResetTrackerProcessView />
         </DataTemplate>
 
-        
+
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
                                               TrueValue="Visible"
                                               FalseValue="Hidden" />
+        <converters:BoolReverseConverter x:Key="BoolReverseConverter" />
         <converters:EmptyStringConverter x:Key="EmptyStringConverter" />
 
         <Style TargetType="{x:Type ContextMenu}">

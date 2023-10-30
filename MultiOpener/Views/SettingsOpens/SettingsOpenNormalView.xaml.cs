@@ -4,9 +4,6 @@ using System.Windows.Input;
 
 namespace MultiOpener.Views.SettingsOpens
 {
-    /// <summary>
-    /// Logika interakcji dla klasy SettingsOpenNormalView.xaml
-    /// </summary>
     public partial class SettingsOpenNormalView : UserControl
     {
         public SettingsOpenNormalView()

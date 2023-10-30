@@ -34,6 +34,8 @@ public sealed class OpenResetTracker : OpenItem
 
     public override string Validate()
     {
+        //TODO: 0 walidować trackerID
+
         return base.Validate();
     }
 
@@ -42,11 +44,15 @@ public sealed class OpenResetTracker : OpenItem
         OpenedResetTrackerProcess opened = new();
         bool isCancelled = token.IsCancellationRequested;
 
+        string executable = Path.GetFileName(PathExe);
+        string pathDir = Path.GetDirectoryName(PathExe) ?? "";
+        ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
+
         if (UsingBuiltInTracker)
         {
-            opened.Initialize(null, "Tracker", string.Empty);
-            opened.usingBuiltInTracker = UsingBuiltInTracker;
-            opened.trackerID = TrackerID;
+            opened.Initialize(startInfo, "Tracker", PathExe);
+            opened.Setup(TrackerID, UsingBuiltInTracker);
+            opened.isMinimizeOnOpen = MinimizeOnOpen;
         }
         else
         {
@@ -54,14 +60,11 @@ public sealed class OpenResetTracker : OpenItem
             {
                 if (!isCancelled) await Task.Delay(DelayBefore);
 
-                string executable = Path.GetFileName(PathExe);
-                string pathDir = Path.GetDirectoryName(PathExe) ?? "";
 
-                ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
                 string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
-                //initializowanie innych zmiennych z tej klasy do OpenedResetTrackerProcess
-                opened.isMinimizeOnOpen = MinimizeOnOpen;
                 opened.Initialize(startInfo, name!, PathExe);
+                opened.Setup(TrackerID, UsingBuiltInTracker);
+                opened.isMinimizeOnOpen = MinimizeOnOpen;
 
                 if (isCancelled) opened.Clear();
                 else
@@ -80,6 +83,7 @@ public sealed class OpenResetTracker : OpenItem
                 StartViewModel.Log(e.ToString(), ConsoleLineOption.Error);
             }
         }
+
         if (!isCancelled)
             opened.ActivateTracker();
         Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });

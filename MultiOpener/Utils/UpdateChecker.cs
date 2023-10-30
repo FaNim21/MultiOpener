@@ -4,57 +4,56 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace MultiOpener.Utils
+namespace MultiOpener.Utils;
+
+public class Release
 {
-    public class Release
-    {
-        public string tag_name { get; set; }
-    }
+    public string tag_name { get; set; }
+}
 
-    public class UpdateChecker
-    {
-        private const string OWNER = "FaNim21";
-        private const string REPO = "MultiOpener";
+public class UpdateChecker
+{
+    private const string OWNER = "FaNim21";
+    private const string REPO = "MultiOpener";
 
-        public async Task<bool> CheckForUpdates(string? version = null)
+    public async Task<bool> CheckForUpdates(string? version = null)
+    {
+        if (string.IsNullOrEmpty(version))
+            version = Consts.Version[1..];
+
+        string apiUrl = "https://api.github.com/repos/FaNim21/MultiOpener/releases";
+        using (var httpClient = new HttpClient())
         {
-            if (string.IsNullOrEmpty(version))
-                version = Consts.Version[1..];
+            httpClient.DefaultRequestHeaders.Add("User-Agent", REPO);
+            HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
 
-            string apiUrl = "https://api.github.com/repos/FaNim21/MultiOpener/releases";
-            using (var httpClient = new HttpClient())
+            if (response.IsSuccessStatusCode)
             {
-                httpClient.DefaultRequestHeaders.Add("User-Agent", REPO);
-                HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var releases = JsonSerializer.Deserialize<Release[]>(responseBody);
+                var latestRelease = releases![0];
 
-                if (response.IsSuccessStatusCode)
+                if (latestRelease != null && !IsUpToDate(latestRelease.tag_name, version))
                 {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    var releases = JsonSerializer.Deserialize<Release[]>(responseBody);
-                    var latestRelease = releases![0];
-
-                    if (latestRelease != null && !IsUpToDate(latestRelease.tag_name, version))
-                    {
-                        StartViewModel.Log($"Found new update - {latestRelease.tag_name}", Entities.ConsoleLineOption.Warning);
-                        return true;
-                    }
-                }
-                else
-                {
-                    StartViewModel.Log("Error while searching for update: " + response.StatusCode);
+                    StartViewModel.Log($"Found new update - {latestRelease.tag_name}", Entities.ConsoleLineOption.Warning);
+                    return true;
                 }
             }
-
-            StartViewModel.Log($"You are up to date - {version}");
-            return false;
+            else
+            {
+                StartViewModel.Log("Error while searching for update: " + response.StatusCode);
+            }
         }
 
-        private bool IsUpToDate(string latestTag, string currentTag)
-        {
-            NuGetVersion latest = new(latestTag);
-            NuGetVersion current = new(currentTag);
+        StartViewModel.Log($"You are up to date - {version}");
+        return false;
+    }
 
-            return latest <= current;
-        }
+    private bool IsUpToDate(string latestTag, string currentTag)
+    {
+        NuGetVersion latest = new(latestTag);
+        NuGetVersion current = new(currentTag);
+
+        return latest <= current;
     }
 }

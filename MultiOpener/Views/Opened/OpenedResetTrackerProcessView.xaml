@@ -51,6 +51,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0"
@@ -67,46 +68,71 @@
                            Grid.Column="5">End</TextBlock>
 
                 <TextBlock Grid.Row="1"
-                           Grid.Column="0">0:00.0</TextBlock>
+                           Grid.Column="0"
+                           Text="{Binding ResetData.NetherEntersCount}" />
                 <TextBlock Grid.Row="1"
-                           Grid.Column="1">0:00.0</TextBlock>
+                           Grid.Column="1"
+                           Text="{Binding ResetData.FirstStructureEntersCount}" />
                 <TextBlock Grid.Row="1"
-                           Grid.Column="2">0:00.0</TextBlock>
+                           Grid.Column="2"
+                           Text="{Binding ResetData.SecondStructureEntersCount}" />
                 <TextBlock Grid.Row="1"
-                           Grid.Column="3">0:00.0</TextBlock>
+                           Grid.Column="3"
+                           Text="{Binding ResetData.NetherEntersCount}" />
                 <TextBlock Grid.Row="1"
-                           Grid.Column="4">0:00.0</TextBlock>
+                           Grid.Column="4"
+                           Text="{Binding ResetData.StrongholdEntersCount}" />
                 <TextBlock Grid.Row="1"
-                           Grid.Column="5">0:00.0</TextBlock>
+                           Grid.Column="5"
+                           Text="{Binding ResetData.EndEntersCount}" />
+
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Text="{Binding ResetData.NetherEnterAverageTime}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Text="{Binding ResetData.FirstStructureEnterAverageTime}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="2"
+                           Text="{Binding ResetData.SecondStructureEnterAverageTime}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="3"
+                           Text="{Binding ResetData.NetherExitEnterAverageTime}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="4"
+                           Text="{Binding ResetData.StrongholdEnterAverageTime}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="5"
+                           Text="{Binding ResetData.EndEnterAverageTime}" />
 
                 <Border Grid.Row="0"
                         Grid.Column="0"
-                        Grid.RowSpan="2"
+                        Grid.RowSpan="3"
                         BorderThickness="1 0 0 0"
                         BorderBrush="Black" />
                 <Border Grid.Row="0"
                         Grid.Column="1"
-                        Grid.RowSpan="2"
+                        Grid.RowSpan="3"
                         BorderThickness="1 0 0 0"
                         BorderBrush="Black" />
                 <Border Grid.Row="0"
                         Grid.Column="2"
-                        Grid.RowSpan="2"
+                        Grid.RowSpan="3"
                         BorderThickness="1 0 0 0"
                         BorderBrush="Black" />
                 <Border Grid.Row="0"
                         Grid.Column="3"
-                        Grid.RowSpan="2"
+                        Grid.RowSpan="3"
                         BorderThickness="1 0 0 0"
                         BorderBrush="Black" />
                 <Border Grid.Row="0"
                         Grid.Column="4"
-                        Grid.RowSpan="2"
+                        Grid.RowSpan="3"
                         BorderThickness="1 0 0 0"
                         BorderBrush="Black" />
                 <Border Grid.Row="0"
                         Grid.Column="5"
-                        Grid.RowSpan="2"
+                        Grid.RowSpan="3"
                         BorderThickness="1 0 1 0"
                         BorderBrush="Black" />
                 <Border Grid.Row="0"
@@ -114,10 +140,10 @@
                         Grid.ColumnSpan="6"
                         BorderThickness="0,1,0,1"
                         BorderBrush="Black" />
-                <Border Grid.Row="1"
+                <Border Grid.Row="2"
                         Grid.Column="0"
                         Grid.ColumnSpan="6"
-                        BorderThickness="0,0,0,1"
+                        BorderThickness="0 1 0 1"
                         BorderBrush="Black" />
             </Grid>
 
