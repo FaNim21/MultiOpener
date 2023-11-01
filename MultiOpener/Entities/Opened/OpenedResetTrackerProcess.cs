@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Net.Http;
 using System.Text.Json;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MultiOpener.Entities.Opened;
 
@@ -258,9 +259,6 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     }
 
 
-    private string trackerID = string.Empty;
-    private bool usingBuiltInTracker = true;
-
     private bool _isTracking;
     public bool IsTracking
     {
@@ -272,11 +270,18 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         }
     }
 
+
+    private string trackerID = string.Empty;
+    private bool usingBuiltInTracker = true;
+
     public ResetStats ResetData { get; set; } = new();
 
     private CancellationTokenSource _source = new();
     private CancellationToken _token;
     private Task? _trackerTask;
+
+    private string? _recordsFolder;
+
 
     public void Setup(string trackerID, bool usingBuiltInTracker)
     {
@@ -291,7 +296,27 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
         if (usingBuiltInTracker)
         {
-            //TODO: 0 usuwaj zawartosci folderu Records
+            try
+            {
+                _recordsFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "speedrunigt", "records");
+                if (Directory.Exists(_recordsFolder))
+                {
+                    string[] entries = Directory.GetFileSystemEntries(_recordsFolder);
+
+                    if(entries.Length != 0)
+                    {
+                        Directory.Delete(_recordsFolder, true);
+                        Directory.CreateDirectory(_recordsFolder);
+                        StartViewModel.Log($"Cleared folder: {_recordsFolder}");
+                    }
+                }
+                else
+                    _recordsFolder = string.Empty;
+            }
+            catch (Exception)
+            {
+                StartViewModel.Log($"Error with clearing {_recordsFolder}", ConsoleLineOption.Error);
+            }
         }
 
         _source = new();
@@ -322,7 +347,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         {
             try
             {
-                await Task.Delay(10000, _token);
+                await Task.Delay(45000, _token);
             }
             catch { break; }
 

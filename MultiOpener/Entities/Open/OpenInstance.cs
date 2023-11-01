@@ -36,6 +36,7 @@ public class OpenInstance : OpenItem
         this.DelayBetweenInstances = DelayBetweenInstances;
         this.ShowNamesInsteadOfTitle = ShowNamesInsteadOfTitle;
     }
+    public OpenInstance(string Name) : this(Name, "", 0, 0, OpenType.InstancesMultiMC, 0, null, 0, false) { }
     public OpenInstance(OpenInstance instance) : base(instance)
     {
         Quantity = instance.Quantity;

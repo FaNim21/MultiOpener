@@ -57,15 +57,8 @@ public class OpenItem : BaseViewModel, IRenameItem
         this.Type = Type;
         this.MinimizeOnOpen = MinimizeOnOpen;
     }
-    public OpenItem(OpenItem item)
-    {
-        Name = item.Name;
-        PathExe = item.PathExe;
-        DelayBefore = item.DelayBefore;
-        DelayAfter = item.DelayAfter;
-        Type = item.Type;
-        MinimizeOnOpen = item.MinimizeOnOpen;
-    }
+    public OpenItem(string Name) : this(Name, "", 0, 0, OpenType.Normal, false) { }
+    public OpenItem(OpenItem item) : this(item.Name, item.PathExe, item.DelayBefore, item.DelayAfter, item.Type, item.MinimizeOnOpen) { }
 
     public virtual string Validate()
     {

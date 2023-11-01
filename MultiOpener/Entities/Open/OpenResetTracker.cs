@@ -29,8 +29,8 @@ public sealed class OpenResetTracker : OpenItem
         this.UsingBuiltInTracker = UsingBuiltInTracker;
         this.TrackerID = TrackerID;
     }
-    public OpenResetTracker(OpenResetTracker item)
-    : this(item.Name, item.PathExe, item.DelayBefore, item.DelayAfter, item.Type, item.MinimizeOnOpen, item.UsingBuiltInTracker, item.TrackerID) { }
+    public OpenResetTracker(string Name) : this(Name, "", 0, 0, OpenType.Normal, false, true, "") { }
+    public OpenResetTracker(OpenResetTracker item) : this(item.Name, item.PathExe, item.DelayBefore, item.DelayAfter, item.Type, item.MinimizeOnOpen, item.UsingBuiltInTracker, item.TrackerID) { }
 
     public override string Validate()
     {

@@ -33,11 +33,14 @@
             <Grid x:Name="StatsTable"
                   Width="500"
                   HorizontalAlignment="Left"
+                  Background="Gray"
                   Margin="0 5 0 0">
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
                         <Setter Property="Margin"
                                 Value="4 1 0 2" />
+                        <Setter Property="Foreground"
+                                Value="White" />
                     </Style>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
@@ -78,7 +81,7 @@
                            Text="{Binding ResetData.SecondStructureEntersCount}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="3"
-                           Text="{Binding ResetData.NetherEntersCount}" />
+                           Text="{Binding ResetData.NetherExitEntersCount}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="4"
                            Text="{Binding ResetData.StrongholdEntersCount}" />
