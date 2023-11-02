@@ -18,6 +18,9 @@ public class OptionSaveItem
     public int TimeoutInstanceFinalizingData { get; set; }
     public int TimeoutWaitingForSingleInstanceToOpen { get; set; }
 
+    //Reset Tracker
+    public int UpdateResetTrackerFrequency { get; set; }
+
 
     public void ResetToDefault()
     {
@@ -34,6 +37,9 @@ public class OptionSaveItem
         TimeoutLookingForInstancesData = 40000;
         TimeoutInstanceFinalizingData = 3000;
         TimeoutWaitingForSingleInstanceToOpen = 15000;
+
+        //Reset Tracker
+        UpdateResetTrackerFrequency = 30000;
     }
 
     public void UpdateUIFromConfig(OptionsViewModel viewModel)
@@ -47,5 +53,7 @@ public class OptionSaveItem
         viewModel.TimeoutLookingForInstancesData = TimeoutLookingForInstancesData;
         viewModel.TimeoutInstanceFinalizingData = TimeoutInstanceFinalizingData;
         viewModel.TimeoutWaitingForSingleInstanceToOpen = TimeoutWaitingForSingleInstanceToOpen;
+
+        viewModel.UpdateResetTrackerFrequency = UpdateResetTrackerFrequency;
     }
 }

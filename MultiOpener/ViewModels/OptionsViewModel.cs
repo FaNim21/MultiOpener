@@ -69,6 +69,20 @@ namespace MultiOpener.ViewModels
             }
         }
 
+        public int _updateResetTrackerFrequency;
+        public int UpdateResetTrackerFrequency
+        {
+            get { return _updateResetTrackerFrequency; }
+            set
+            {
+                if (value < 10000)
+                    value = 10000;
+                _updateResetTrackerFrequency = value;
+                App.Config.UpdateResetTrackerFrequency = value;
+                OnPropertyChanged(nameof(UpdateResetTrackerFrequency));
+            }
+        }
+
         private bool _alwaysOnTop;
         public bool AlwaysOnTop
         {

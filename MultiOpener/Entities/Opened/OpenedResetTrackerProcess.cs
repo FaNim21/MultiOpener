@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Collections.Generic;
 using System.IO;
+using MultiOpener.Entities.Misc;
 
 namespace MultiOpener.Entities.Opened;
 
@@ -16,6 +17,8 @@ namespace MultiOpener.Entities.Opened;
 public class ResetStats : BaseViewModel
 {
     public bool UsingBuiltIn { get; set; }
+
+    public int WallResets { get; set; }
 
     //NETHER
     private int _netherEntersCount;
@@ -292,31 +295,13 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
     public void ActivateTracker()
     {
+        //TODO: 0 przenies activate do po refreshu na koncu odpalania
         if (IsTracking) return;
 
         if (usingBuiltInTracker)
         {
-            try
-            {
-                _recordsFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "speedrunigt", "records");
-                if (Directory.Exists(_recordsFolder))
-                {
-                    string[] entries = Directory.GetFileSystemEntries(_recordsFolder);
-
-                    if(entries.Length != 0)
-                    {
-                        Directory.Delete(_recordsFolder, true);
-                        Directory.CreateDirectory(_recordsFolder);
-                        StartViewModel.Log($"Cleared folder: {_recordsFolder}");
-                    }
-                }
-                else
-                    _recordsFolder = string.Empty;
-            }
-            catch (Exception)
-            {
-                StartViewModel.Log($"Error with clearing {_recordsFolder}", ConsoleLineOption.Error);
-            }
+            _recordsFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "speedrunigt", "records");
+            ClearResetFolder();
         }
 
         _source = new();
@@ -347,7 +332,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         {
             try
             {
-                await Task.Delay(45000, _token);
+                await Task.Delay(App.Config.UpdateResetTrackerFrequency, _token);
             }
             catch { break; }
 
@@ -362,7 +347,18 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
     private async Task OnBuiltInTracker()
     {
-        //TODO: 0 Wlasny Tracker
+        if (string.IsNullOrEmpty(_recordsFolder)) return;
+
+        //bez sensu metoda od wyciagania listy (od cholery GC), ale to i tak narazie
+        List<RecordData> data = GetRecords();
+        if (data == null) return;
+
+        for (int i = 0; i < data.Count; i++)
+        {
+
+        }
+
+        ClearResetFolder();
     }
 
     private async Task OnOutsideTracker()
@@ -411,11 +407,6 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         {
             StartViewModel.Log("Error fetching stats", ConsoleLineOption.Error);
         }
-    }
-
-    private void ResetStatsData()
-    {
-        ResetData.Reset();
     }
 
     public override void Update(bool lookForWindow = false)
@@ -489,5 +480,75 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
             StartViewModel.Log($"Cannot close MC instance named {Name}(Title: {WindowTitle}) \n{e}", ConsoleLineOption.Error);
             return false;
         }
+    }
+
+    private List<RecordData> GetRecords()
+    {
+        List<RecordData> datas = new();
+
+        var records = Directory.GetFiles(_recordsFolder!, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
+        for (int i = 0; i < records.Length; i++)
+        {
+            string text = File.ReadAllText(records[i]) ?? string.Empty;
+            try
+            {
+                if (string.IsNullOrEmpty(text)) continue;
+
+                RecordData? data = JsonSerializer.Deserialize<RecordData>(text);
+                if (data != null)
+                {
+                    if (!data.Type.Equals("random_seed")) continue;
+                    if (data.Stats == null || data.Stats.Count == 0) continue;
+
+                    if (data.FinalRTA == 0)
+                    {
+                        ResetData.WallResets += 1;
+                        continue;
+                    }
+
+                    //TODO: 0 Need to make reading fast reseting not in wall
+
+
+
+
+                    datas.Add(data);
+                }
+            }
+            catch (JsonException ex)
+            {
+                StartViewModel.Log($"Error deserializing {records[i]}: {ex.Message}", ConsoleLineOption.Error);
+            }
+        }
+
+        return datas;
+
+    }
+
+    private void ResetStatsData()
+    {
+        ResetData.Reset();
+    }
+    private void ClearResetFolder()
+    {
+        /*try
+        {
+            if (Directory.Exists(_recordsFolder))
+            {
+                string[] entries = Directory.GetFileSystemEntries(_recordsFolder);
+
+                if (entries.Length != 0)
+                {
+                    Directory.Delete(_recordsFolder, true);
+                    Directory.CreateDirectory(_recordsFolder);
+                    StartViewModel.Log($"Cleared folder: {_recordsFolder}");
+                }
+            }
+            else
+                _recordsFolder = string.Empty;
+        }
+        catch (Exception)
+        {
+            StartViewModel.Log($"Error with clearing {_recordsFolder}", ConsoleLineOption.Error);
+        }*/
     }
 }
