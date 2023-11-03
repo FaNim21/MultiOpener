@@ -14,11 +14,59 @@ using MultiOpener.Entities.Misc;
 namespace MultiOpener.Entities.Opened;
 
 
+/// <summary>
+/// For this moment i would like to make main json that contains all runs collected by built it tracker
+/// But main points for now in tracker are:
+/// - It only track nether enter runs, because of no need to check for iron/wood stats tbh
+/// - It not track which type of biomes you spawn or you enter to nether and with no enter types
+/// - 
+/// 
+/// Stats Example to do:
+/// - Time needed to enter nether
+/// - Average for all splits
+/// </summary>
 public class ResetStats : BaseViewModel
 {
+    public long LastFileDateRead { get; set; }
+
     public bool UsingBuiltIn { get; set; }
 
-    public int WallResets { get; set; }
+    private int _wallResets;
+    public int WallResets
+    {
+        get { return _wallResets; }
+        set
+        {
+            _wallResets = value;
+            OnPropertyChanged(nameof(Resets));
+        }
+    }
+
+    private int _noNetherEnterResets;
+    public int NoNetherEnterResets
+    {
+        get { return _noNetherEnterResets; }
+        set
+        {
+            _noNetherEnterResets = value;
+            OnPropertyChanged(nameof(Resets));
+        }
+    }
+
+    private int _splitlessResets;
+    public int SplitlessResets
+    {
+        get { return _splitlessResets; }
+        set
+        {
+            _splitlessResets = value;
+            OnPropertyChanged(nameof(Resets));
+        }
+    }
+
+
+    public int Resets { get { return WallResets + NoNetherEnterResets + SplitlessResets; } }
+
 
     //NETHER
     private int _netherEntersCount;
@@ -32,11 +80,15 @@ public class ResetStats : BaseViewModel
         }
     }
 
-    private int _netherEntersTime;
-    public int NetherEntersTime
+    private long _netherEntersTime;
+    public long NetherEntersTime
     {
         get { return _netherEntersTime; }
-        set { _netherEntersTime = value; }
+        set
+        {
+            _netherEntersTime = value;
+            OnPropertyChanged(nameof(NetherEnterAverageTime));
+        }
     }
 
     public string NetherEnterAverageTime
@@ -65,11 +117,15 @@ public class ResetStats : BaseViewModel
         }
     }
 
-    private int _firstStructureEntersTime;
-    public int FirstStructureEntersTime
+    private long _firstStructureEntersTime;
+    public long FirstStructureEntersTime
     {
         get { return _firstStructureEntersTime; }
-        set { _firstStructureEntersTime = value; }
+        set
+        {
+            _firstStructureEntersTime = value;
+            OnPropertyChanged(nameof(FirstStructureEnterAverageTime));
+        }
     }
 
     public string FirstStructureEnterAverageTime
@@ -98,11 +154,15 @@ public class ResetStats : BaseViewModel
         }
     }
 
-    private int _secondStructureEntersTime;
-    public int SecondStructureEntersTime
+    private long _secondStructureEntersTime;
+    public long SecondStructureEntersTime
     {
         get { return _secondStructureEntersTime; }
-        set { _secondStructureEntersTime = value; }
+        set
+        {
+            _secondStructureEntersTime = value;
+            OnPropertyChanged(nameof(SecondStructureEnterAverageTime));
+        }
     }
 
     public string SecondStructureEnterAverageTime
@@ -131,11 +191,15 @@ public class ResetStats : BaseViewModel
         }
     }
 
-    private int _netherExitEntersTime;
-    public int NetherExitEntersTime
+    private long _netherExitEntersTime;
+    public long NetherExitEntersTime
     {
         get { return _netherExitEntersTime; }
-        set { _netherExitEntersTime = value; }
+        set
+        {
+            _netherExitEntersTime = value;
+            OnPropertyChanged(nameof(NetherExitEnterAverageTime));
+        }
     }
 
     public string NetherExitEnterAverageTime
@@ -164,11 +228,15 @@ public class ResetStats : BaseViewModel
         }
     }
 
-    private int _strongholdEntersTime;
-    public int StrongholdEntersTime
+    private long _strongholdEntersTime;
+    public long StrongholdEntersTime
     {
         get { return _strongholdEntersTime; }
-        set { _strongholdEntersTime = value; }
+        set
+        {
+            _strongholdEntersTime = value;
+            OnPropertyChanged(nameof(StrongholdEnterAverageTime));
+        }
     }
 
     public string StrongholdEnterAverageTime
@@ -197,11 +265,15 @@ public class ResetStats : BaseViewModel
         }
     }
 
-    private int _endEntersTime;
-    public int EndEntersTime
+    private long _endEntersTime;
+    public long EndEntersTime
     {
         get { return _endEntersTime; }
-        set { _endEntersTime = value; }
+        set
+        {
+            _endEntersTime = value;
+            OnPropertyChanged(nameof(EndEnterAverageTime));
+        }
     }
 
     public string EndEnterAverageTime
@@ -218,8 +290,51 @@ public class ResetStats : BaseViewModel
     }
 
 
-    public void Reset()
+    public void UpdateSplit(string splitName, long time)
     {
+        /*TimeSpan time = TimeSpan.FromMilliseconds(current.IGT);
+        StartViewModel.Log($"time: {time.Minutes}:{time.Seconds}.{time.Milliseconds}", ConsoleLineOption.Warning);*/
+
+        if (splitName.Equals("enter_nether"))
+        {
+            NetherEntersCount += 1;
+            NetherEntersTime += time;
+        }
+        if (splitName.Equals("enter_bastion"))
+        {
+            FirstStructureEntersCount += 1;
+            FirstStructureEntersTime += time;
+        }
+        if (splitName.Equals("enter_fortress"))
+        {
+            SecondStructureEntersCount += 1;
+            SecondStructureEntersTime += time;
+        }
+        if (splitName.Equals("nether_travel"))
+        {
+            NetherExitEntersCount += 1;
+            NetherExitEntersTime += time;
+        }
+        if (splitName.Equals("enter_stronghold"))
+        {
+            StrongholdEntersCount += 1;
+            StrongholdEntersTime += time;
+        }
+        if (splitName.Equals("enter_end"))
+        {
+            EndEntersCount += 1;
+            EndEntersTime += time;
+        }
+    }
+
+    public void Clear()
+    {
+        LastFileDateRead = 0;
+
+        NoNetherEnterResets = 0;
+        WallResets = 0;
+
+
         NetherEntersCount = 0;
         NetherEntersTime = 0;
 
@@ -254,12 +369,15 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     private readonly struct Ops
     {
         public Tl[] tl { get; init; }
+        public int rc { get; init; }
+
     }
     private readonly struct Tl
     {
         public int time { get; init; }
         public int total { get; init; }
     }
+
 
 
     private bool _isTracking;
@@ -310,6 +428,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         IsTracking = true;
         UpdateStatus();
 
+        StartViewModel.Log("Activated Tracker");
         _trackerTask = Task.Run(TrackStats, _token);
     }
     public void DeactivateTracker()
@@ -324,6 +443,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
         _source.Dispose();
         ResetStatsData();
+        StartViewModel.Log("Deactivated Tracker");
     }
 
     private async Task TrackStats()
@@ -337,7 +457,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
             catch { break; }
 
             if (usingBuiltInTracker)
-                await OnBuiltInTracker();
+                OnBuiltInTracker();
             else
                 await OnOutsideTracker();
 
@@ -345,20 +465,79 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         }
     }
 
-    private async Task OnBuiltInTracker()
+    private void OnBuiltInTracker()
     {
         if (string.IsNullOrEmpty(_recordsFolder)) return;
 
-        //bez sensu metoda od wyciagania listy (od cholery GC), ale to i tak narazie
-        List<RecordData> data = GetRecords();
-        if (data == null) return;
-
-        for (int i = 0; i < data.Count; i++)
+        long lastFileOpenedRead = ResetData.LastFileDateRead;
+        var records = Directory.GetFiles(_recordsFolder!, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
+        for (int i = 0; i < records.Length; i++)
         {
+            string text = File.ReadAllText(records[i]) ?? string.Empty;
+            try
+            {
+                if (string.IsNullOrEmpty(text)) continue;
+                RecordData? data = JsonSerializer.Deserialize<RecordData>(text);
 
+                if (data != null)
+                {
+                    if (data.Date <= ResetData.LastFileDateRead) continue;
+                    if (data.Date >= lastFileOpenedRead)
+                        lastFileOpenedRead = data.Date;
+
+                    if (!data.Type.Equals("random_seed")) continue;
+                    if (data.Stats == null || data.Stats.Count == 0) continue;
+
+                    //TODO: 0 Resets doesn't work i got like 3XX when on specnr tracker i can see 1999
+                    if (data.FinalRTA == 0)
+                    {
+                        ResetData.WallResets += 1;
+                        continue;
+                    }
+
+                    if (data.Timelines == null || data.Timelines.Length == 0)
+                    {
+                        ResetData.NoNetherEnterResets += 1;
+                        continue;
+                    }
+
+                    //TODO: 2 here i need to see if every type of timelines will be sorted properly to splits
+                    for (int j = 0; j < data.Timelines.Length; j++)
+                    {
+                        RecordTimelinesData? prev = j - 1 >= 0 ? data.Timelines[j - 1] : null;
+                        RecordTimelinesData? current = data.Timelines[j];
+                        RecordTimelinesData? next = j + 1 < data.Timelines.Length ? data.Timelines[j + 1] : null;
+                        string name = current.Name!;
+
+                        if (data.OpenLanTime != null)
+                        {
+                            string? lan = data.OpenLanTime.ToString();
+                            if(!string.IsNullOrEmpty(lan))
+                            {
+                                long lanTime = long.Parse(lan);
+                                if (lanTime < current.RTA)
+                                {
+                                    ResetData.SplitlessResets += 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (name.Equals("enter_fortress") && prev != null && prev.Name!.Equals("enter_nether"))
+                            name = "enter_bastion";
+                        else if (name.Equals("enter_bastion") && prev != null && prev.Name!.Equals("enter_fortress"))
+                            name = "enter_fortress";
+
+                        ResetData.UpdateSplit(name, current.IGT);
+                    }
+                }
+            }
+            catch (JsonException ex)
+            {
+                StartViewModel.Log($"Error deserializing {records[i]}: {ex.Message}", ConsoleLineOption.Error);
+            }
         }
-
-        ClearResetFolder();
+        ResetData.LastFileDateRead = lastFileOpenedRead;
     }
 
     private async Task OnOutsideTracker()
@@ -377,7 +556,10 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
                 if (apiResponse.success)
                 {
-                    Tl[] tl = apiResponse.session[0].ops.tl;
+                    Ops ops = apiResponse.session[0].ops;
+                    ResetData.WallResets = ops.rc;
+
+                    Tl[] tl = ops.tl;
 
                     ResetData.NetherEntersCount = tl[3].total;
                     ResetData.NetherEntersTime = tl[3].time;
@@ -482,51 +664,9 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         }
     }
 
-    private List<RecordData> GetRecords()
-    {
-        List<RecordData> datas = new();
-
-        var records = Directory.GetFiles(_recordsFolder!, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
-        for (int i = 0; i < records.Length; i++)
-        {
-            string text = File.ReadAllText(records[i]) ?? string.Empty;
-            try
-            {
-                if (string.IsNullOrEmpty(text)) continue;
-
-                RecordData? data = JsonSerializer.Deserialize<RecordData>(text);
-                if (data != null)
-                {
-                    if (!data.Type.Equals("random_seed")) continue;
-                    if (data.Stats == null || data.Stats.Count == 0) continue;
-
-                    if (data.FinalRTA == 0)
-                    {
-                        ResetData.WallResets += 1;
-                        continue;
-                    }
-
-                    //TODO: 0 Need to make reading fast reseting not in wall
-
-
-
-
-                    datas.Add(data);
-                }
-            }
-            catch (JsonException ex)
-            {
-                StartViewModel.Log($"Error deserializing {records[i]}: {ex.Message}", ConsoleLineOption.Error);
-            }
-        }
-
-        return datas;
-
-    }
-
     private void ResetStatsData()
     {
-        ResetData.Reset();
+        ResetData.Clear();
     }
     private void ClearResetFolder()
     {

@@ -34,8 +34,6 @@ public sealed class OpenResetTracker : OpenItem
 
     public override string Validate()
     {
-        //TODO: 0 walidować trackerID
-
         return base.Validate();
     }
 
@@ -53,6 +51,7 @@ public sealed class OpenResetTracker : OpenItem
             opened.Initialize(startInfo, "Tracker", PathExe);
             opened.Setup(TrackerID, UsingBuiltInTracker);
             opened.isMinimizeOnOpen = MinimizeOnOpen;
+            opened.ActivateTracker();
         }
         else
         {
@@ -84,8 +83,6 @@ public sealed class OpenResetTracker : OpenItem
             }
         }
 
-        if (!isCancelled)
-            opened.ActivateTracker();
         Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });
     }
 }

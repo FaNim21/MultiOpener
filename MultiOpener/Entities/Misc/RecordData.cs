@@ -9,9 +9,9 @@ public class RecordTimelinesData
     [JsonPropertyName("name")]
     public string? Name { get; set; }
     [JsonPropertyName("igt")]
-    public int IGT { get; set; }
+    public long IGT { get; set; }
     [JsonPropertyName("rta")]
-    public int RTA { get; set; }
+    public long RTA { get; set; }
 }
 
 public class RecordData
@@ -21,20 +21,23 @@ public class RecordData
     [JsonPropertyName("run_type")]
     public string Type { get; set; }
 
+    [JsonPropertyName("date")]
+    public long Date {  get; set; }
+
     [JsonPropertyName("open_lan")]
     public object? OpenLanTime { get; set; }
 
     [JsonPropertyName("retimed_igt")]
-    public int RetimedIGT { get; set; }
+    public long RetimedIGT { get; set; }
     [JsonPropertyName("final_igt")]
-    public int FinalIGT { get; set; }
+    public long FinalIGT { get; set; }
     [JsonPropertyName("final_rta")]
-    public int FinalRTA { get; set; }
+    public long FinalRTA { get; set; }
 
     [JsonPropertyName("timelines")]
     public RecordTimelinesData[]? Timelines { get; set; }
     [JsonPropertyName("advancements")]
-    public object[]? Advancements { get; set; }
+    public Dictionary<string, object>? Advancements { get; set; }
     [JsonPropertyName("stats")]
     public Dictionary<string, object>? Stats { get; set; }
 }

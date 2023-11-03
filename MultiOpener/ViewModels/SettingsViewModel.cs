@@ -14,7 +14,7 @@ using System.Windows.Input;
 namespace MultiOpener.ViewModels;
 
 /// <summary>
-/// TODO: 0 Problemy z dodawaniem nowych typow procesu:
+/// TODO: 10 Problemy z dodawaniem nowych typow procesu:
 /// - Robienie oddzielnie: open, opened, modelView, opeView, openedView
 /// - Dodawanie kazdego view oddzielnie za kazdym razem w App.xaml na zasadzie podlaczania viewModelu do view
 /// - Uzupelnianie ChooseTypeBox switch case w SettingsViewModel

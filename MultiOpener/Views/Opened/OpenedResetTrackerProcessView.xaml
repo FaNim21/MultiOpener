@@ -25,6 +25,12 @@
                        Text=" -- Minecraft Reset Tracker Analytics-- " />
             <TextBlock>
                 <Run Foreground="DarkGray"
+                     Text="External tracker: " />
+                <Run Foreground="White"
+                     Text="{Binding ResetData.UsingBuiltIn, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}" />
+            </TextBlock>
+            <TextBlock>
+                <Run Foreground="DarkGray"
                      Text="Is Tracking: " />
                 <Run Foreground="White"
                      Text="{Binding IsTracking, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
@@ -33,14 +39,14 @@
             <Grid x:Name="StatsTable"
                   Width="500"
                   HorizontalAlignment="Left"
-                  Background="Gray"
+                  Background="LightGray"
                   Margin="0 5 0 0">
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
                         <Setter Property="Margin"
                                 Value="4 1 0 2" />
                         <Setter Property="Foreground"
-                                Value="White" />
+                                Value="Black" />
                     </Style>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
@@ -149,6 +155,13 @@
                         BorderThickness="0 1 0 1"
                         BorderBrush="Black" />
             </Grid>
+
+            <TextBlock>
+                <Run Foreground="DarkGray"
+                     Text="Resets: " />
+                <Run Foreground="White"
+                     Text="{Binding ResetData.Resets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+            </TextBlock>
 
             <!--
             <TextBlock>
