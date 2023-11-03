@@ -83,6 +83,18 @@ namespace MultiOpener.ViewModels
             }
         }
 
+        public bool _deleteAllRecordOnActivating;
+        public bool DeleteAllRecordOnActivating
+        {
+            get { return _deleteAllRecordOnActivating; }
+            set
+            {
+                _deleteAllRecordOnActivating = value;
+                App.Config.DeleteAllRecordOnActivating = value;
+                OnPropertyChanged(nameof(DeleteAllRecordOnActivating));
+            }
+        }
+
         private bool _alwaysOnTop;
         public bool AlwaysOnTop
         {

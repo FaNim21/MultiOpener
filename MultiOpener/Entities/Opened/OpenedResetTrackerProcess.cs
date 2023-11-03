@@ -413,13 +413,13 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
     public void ActivateTracker()
     {
-        //TODO: 0 przenies activate do po refreshu na koncu odpalania
         if (IsTracking) return;
 
         if (usingBuiltInTracker)
         {
             _recordsFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "speedrunigt", "records");
-            ClearResetFolder();
+            if (App.Config.DeleteAllRecordOnActivating)
+                ClearResetFolder();
         }
 
         _source = new();
@@ -482,13 +482,9 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
                 if (data != null)
                 {
                     if (data.Date <= ResetData.LastFileDateRead) continue;
-                    if (data.Date >= lastFileOpenedRead)
-                        lastFileOpenedRead = data.Date;
+                    if (data.Date >= lastFileOpenedRead) lastFileOpenedRead = data.Date;
 
                     if (!data.Type.Equals("random_seed")) continue;
-                    if (data.Stats == null || data.Stats.Count == 0) continue;
-
-                    //TODO: 0 Resets doesn't work i got like 3XX when on specnr tracker i can see 1999
                     if (data.FinalRTA == 0)
                     {
                         ResetData.WallResets += 1;
@@ -512,7 +508,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
                         if (data.OpenLanTime != null)
                         {
                             string? lan = data.OpenLanTime.ToString();
-                            if(!string.IsNullOrEmpty(lan))
+                            if (!string.IsNullOrEmpty(lan))
                             {
                                 long lanTime = long.Parse(lan);
                                 if (lanTime < current.RTA)
@@ -670,7 +666,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     }
     private void ClearResetFolder()
     {
-        /*try
+        try
         {
             if (Directory.Exists(_recordsFolder))
             {
@@ -689,6 +685,6 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         catch (Exception)
         {
             StartViewModel.Log($"Error with clearing {_recordsFolder}", ConsoleLineOption.Error);
-        }*/
+        }
     }
 }

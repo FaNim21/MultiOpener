@@ -190,13 +190,20 @@
                             </Grid>
                         </WrapPanel>
 
-                        <!--Instance-->
+                        <!--Reset Tracker-->
                         <Label Foreground="White"
                                FontSize="22"
                                Content="Reset Tracker"
                                Margin="0 20 0 0" />
                         <WrapPanel Orientation="Vertical"
                                    Margin="7 0 0 0">
+                            <Grid ToolTip="On checked it deletes all runs files in igt records folder when activating tracker">
+                                <CheckBox IsChecked="{Binding DeleteAllRecordOnActivating}"
+                                          Height="20"
+                                          Foreground="White"
+                                          Content="Delete all record files on activating"
+                                          VerticalContentAlignment="Center" />
+                            </Grid>
                             <Grid ToolTip="The time that takes to update your runs into reset tracker(min. 10000ms)">
                                 <TextBox TextWrapping="Wrap"
                                          Text="{Binding UpdateResetTrackerFrequency}"

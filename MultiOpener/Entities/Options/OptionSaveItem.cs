@@ -20,6 +20,7 @@ public class OptionSaveItem
 
     //Reset Tracker
     public int UpdateResetTrackerFrequency { get; set; }
+    public bool DeleteAllRecordOnActivating { get; set; }
 
 
     public void ResetToDefault()
@@ -40,6 +41,7 @@ public class OptionSaveItem
 
         //Reset Tracker
         UpdateResetTrackerFrequency = 30000;
+        DeleteAllRecordOnActivating = true;
     }
 
     public void UpdateUIFromConfig(OptionsViewModel viewModel)
@@ -55,5 +57,6 @@ public class OptionSaveItem
         viewModel.TimeoutWaitingForSingleInstanceToOpen = TimeoutWaitingForSingleInstanceToOpen;
 
         viewModel.UpdateResetTrackerFrequency = UpdateResetTrackerFrequency;
+        viewModel.DeleteAllRecordOnActivating = DeleteAllRecordOnActivating;
     }
 }
