@@ -161,7 +161,6 @@ public class StartOpenCommand : StartCommandBase
         for (int i = 0; i < length; i++)
         {
             var current = Settings!.Opens[i];
-            if (string.IsNullOrEmpty(current.PathExe)) return;
 
             Start!.SetLoadingText($"({i + 1}/{length}) Opening {current.Name}...");
             UpdateProgressBar();

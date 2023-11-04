@@ -3,29 +3,28 @@ using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace MultiOpener.Views.SettingsOpens
+namespace MultiOpener.Views.SettingsOpens;
+
+public partial class SettingsOpenInstancesView : UserControl
 {
-    public partial class SettingsOpenInstancesView : UserControl
+    public SettingsOpenInstancesView()
     {
-        public SettingsOpenInstancesView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            Regex regex = RegexPatterns.NumbersPattern();
-            e.Handled = regex.IsMatch(e.Text);
-        }
+    private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+    {
+        Regex regex = RegexPatterns.NumbersPattern();
+        e.Handled = regex.IsMatch(e.Text);
+    }
 
-        private void InstanceNumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = !IsValid(((TextBox)sender).Text + e.Text);
-        }
+    private void InstanceNumberValidationTextBox(object sender, TextCompositionEventArgs e)
+    {
+        e.Handled = !IsValid(((TextBox)sender).Text + e.Text);
+    }
 
-        public static bool IsValid(string str)
-        {
-            return int.TryParse(str, out int i) && i >= 1 && i <= 32;
-        }
+    public static bool IsValid(string str)
+    {
+        return int.TryParse(str, out int i) && i >= 1 && i <= 32;
     }
 }

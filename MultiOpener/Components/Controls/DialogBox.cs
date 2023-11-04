@@ -69,7 +69,6 @@ public static class DialogBox
             {
                 Owner = activeWindow,
                 DataContext = model,
-                Topmost = true,
             };
             BlurMainWindow();
             window?.ShowDialog();

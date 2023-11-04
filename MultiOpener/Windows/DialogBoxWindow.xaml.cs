@@ -15,6 +15,14 @@ public partial class DialogBoxWindow : Window
         Loaded += OnLoaded;
         Closed += OnClosed;
     }
+    ~DialogBoxWindow()
+    {
+        Application.Current.Dispatcher.Invoke(delegate
+        {
+            Loaded -= OnLoaded;
+            Closed -= OnClosed;
+        });
+    }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {

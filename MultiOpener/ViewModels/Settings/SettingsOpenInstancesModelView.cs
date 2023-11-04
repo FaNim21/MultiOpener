@@ -48,6 +48,31 @@ namespace MultiOpener.ViewModels.Settings
             }
         }
 
+        private bool _offlineMode;
+        public bool OfflineMode
+        {
+            get { return _offlineMode; }
+            set
+            {
+                PresetIsNotSaved();
+                _offlineMode = value;
+                OnPropertyChanged(nameof(OfflineMode));
+            }
+        }
+
+        private string? _offlineModeName;
+        public string? OfflineModeName
+        {
+            get { return _offlineModeName; }
+            set
+            {
+                PresetIsNotSaved();
+                _offlineModeName = value;
+                OnPropertyChanged(nameof(OfflineModeName));
+            }
+        }
+
+
         public ICommand SettingsInstanceOpenSetupCommand { get; set; }
 
         public SettingsOpenInstancesModelView(SettingsViewModel settingsViewModel) : base(settingsViewModel)
@@ -65,6 +90,8 @@ namespace MultiOpener.ViewModels.Settings
                 instanceNames = instance.Names;
                 DelayBetweenInstances = instance.DelayBetweenInstances;
                 ShowNamesInsteadOfTitle = instance.ShowNamesInsteadOfTitle;
+                OfflineMode = instance.OfflineMode;
+                OfflineModeName = instance.OfflineModeName;
             }
 
             base.UpdatePanelField(currentChosen);
@@ -81,6 +108,8 @@ namespace MultiOpener.ViewModels.Settings
                 openInstance.Names = instanceNames;
                 openInstance.DelayBetweenInstances = DelayBetweenInstances;
                 openInstance.ShowNamesInsteadOfTitle = ShowNamesInsteadOfTitle;
+                openInstance.OfflineMode = OfflineMode;
+                openInstance.OfflineModeName = OfflineModeName;
             }
         }
 
@@ -91,6 +120,8 @@ namespace MultiOpener.ViewModels.Settings
             Quantity = 0;
             DelayBetweenInstances = 0;
             ShowNamesInsteadOfTitle = false;
+            OfflineMode = false;
+            OfflineModeName = string.Empty;
         }
     }
 }

@@ -13,6 +13,8 @@ public partial class OpenedInstanceProcess : OpenedProcess
 {
     public bool showNamesInsteadOfTitle = false;
 
+    public bool isInOfflineMode = false;
+
     private short _number;
     public short Number
     {

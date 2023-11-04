@@ -34,6 +34,16 @@ public sealed class OpenResetTracker : OpenItem
 
     public override string Validate()
     {
+        if (UsingBuiltInTracker)
+        {
+            if (DelayAfter < 0 || DelayBefore < 0)
+                return $"You set delay lower than 0 in {Name}";
+
+            if (DelayAfter > 999999 || DelayBefore > 99999)
+                return $"Your delay can't be higher than 99999 in {Name}";
+            return string.Empty;
+        }
+
         return base.Validate();
     }
 
@@ -42,16 +52,13 @@ public sealed class OpenResetTracker : OpenItem
         OpenedResetTrackerProcess opened = new();
         bool isCancelled = token.IsCancellationRequested;
 
-        string executable = Path.GetFileName(PathExe);
-        string pathDir = Path.GetDirectoryName(PathExe) ?? "";
-        ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
-
         if (UsingBuiltInTracker)
         {
-            opened.Initialize(startInfo, "Tracker", PathExe);
+            opened.Initialize(null, "Tracker", string.Empty);
             opened.Setup(TrackerID, UsingBuiltInTracker);
             opened.isMinimizeOnOpen = MinimizeOnOpen;
-            opened.ActivateTracker();
+            if (!isCancelled)
+                opened.ActivateTracker();
         }
         else
         {
@@ -59,7 +66,9 @@ public sealed class OpenResetTracker : OpenItem
             {
                 if (!isCancelled) await Task.Delay(DelayBefore);
 
-
+                string executable = Path.GetFileName(PathExe);
+                string pathDir = Path.GetDirectoryName(PathExe) ?? "";
+                ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
                 string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
                 opened.Initialize(startInfo, name!, PathExe);
                 opened.Setup(TrackerID, UsingBuiltInTracker);

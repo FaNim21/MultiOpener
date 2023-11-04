@@ -24,9 +24,12 @@ public class OpenInstance : OpenItem
 
     public bool ShowNamesInsteadOfTitle { get; set; }
 
+    public string OfflineModeName { get; set; }
+    public bool OfflineMode { get; set; }
+
 
     [JsonConstructor]
-    public OpenInstance(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, int Quantity = 0, ObservableCollection<string>? Names = null, int DelayBetweenInstances = 0, bool ShowNamesInsteadOfTitle = false) : base(Name, PathExe, DelayBefore, DelayAfter, Type)
+    public OpenInstance(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, int Quantity = 0, ObservableCollection<string>? Names = null, int DelayBetweenInstances = 0, bool ShowNamesInsteadOfTitle = false, bool OfflineMode = false, string OfflineModeName = "") : base(Name, PathExe, DelayBefore, DelayAfter, Type)
     {
         this.Quantity = Quantity;
         if (Names == null)
@@ -35,8 +38,10 @@ public class OpenInstance : OpenItem
             this.Names = Names;
         this.DelayBetweenInstances = DelayBetweenInstances;
         this.ShowNamesInsteadOfTitle = ShowNamesInsteadOfTitle;
+        this.OfflineMode = OfflineMode;
+        this.OfflineModeName = OfflineModeName;
     }
-    public OpenInstance(string Name) : this(Name, "", 0, 0, OpenType.InstancesMultiMC, 0, null, 0, false) { }
+    public OpenInstance(string Name) : this(Name, "", 0, 0, OpenType.InstancesMultiMC, 0, null, 0, false, false, "") { }
     public OpenInstance(OpenInstance instance) : base(instance)
     {
         Quantity = instance.Quantity;
@@ -46,6 +51,8 @@ public class OpenInstance : OpenItem
             Names = instance.Names;
         DelayBetweenInstances = instance.DelayBetweenInstances;
         ShowNamesInsteadOfTitle = instance.ShowNamesInsteadOfTitle;
+        OfflineMode = instance.OfflineMode;
+        OfflineModeName = instance.OfflineModeName;
     }
 
     public override string Validate()
@@ -107,6 +114,8 @@ public class OpenInstance : OpenItem
                 ((StartOpenCommand)startModel.OpenCommand).UpdateProgressBar();
 
                 ProcessStartInfo startInfo = new(PathExe) { UseShellExecute = false, Arguments = $"--launch \"{Names[i]}\"" };
+                if (OfflineMode) startInfo.Arguments = $"--launch \"{Names[i]}\" -o -n \"{OfflineModeName}\"";
+
                 OpenedInstanceProcess opened = new();
                 string path = Path.Combine(Path.GetDirectoryName(PathExe)!, "instances", Names[i]).Replace(Path.DirectorySeparatorChar, '/');
                 opened.Initialize(startInfo, Names[i], path);

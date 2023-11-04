@@ -25,7 +25,7 @@ namespace MultiOpener.Entities.Opened;
 /// - Time needed to enter nether
 /// - Average for all splits
 /// </summary>
-public class ResetStats : BaseViewModel
+public class ResetStatsViewModel : BaseViewModel
 {
     public long LastFileDateRead { get; set; }
 
@@ -292,9 +292,6 @@ public class ResetStats : BaseViewModel
 
     public void UpdateSplit(string splitName, long time)
     {
-        /*TimeSpan time = TimeSpan.FromMilliseconds(current.IGT);
-        StartViewModel.Log($"time: {time.Minutes}:{time.Seconds}.{time.Milliseconds}", ConsoleLineOption.Warning);*/
-
         if (splitName.Equals("enter_nether"))
         {
             NetherEntersCount += 1;
@@ -379,7 +376,6 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     }
 
 
-
     private bool _isTracking;
     public bool IsTracking
     {
@@ -395,7 +391,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     private string trackerID = string.Empty;
     private bool usingBuiltInTracker = true;
 
-    public ResetStats ResetData { get; set; } = new();
+    public ResetStatsViewModel ResetData { get; set; } = new();
 
     private CancellationTokenSource _source = new();
     private CancellationToken _token;
@@ -502,7 +498,6 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
                     {
                         RecordTimelinesData? prev = j - 1 >= 0 ? data.Timelines[j - 1] : null;
                         RecordTimelinesData? current = data.Timelines[j];
-                        RecordTimelinesData? next = j + 1 < data.Timelines.Length ? data.Timelines[j + 1] : null;
                         string name = current.Name!;
 
                         if (data.OpenLanTime != null)

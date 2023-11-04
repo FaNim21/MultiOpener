@@ -12,6 +12,13 @@ public partial class InformationOpenedWindow : Window
 
         Closed += OnClosed;
     }
+    ~InformationOpenedWindow()
+    {
+        Application.Current.Dispatcher.Invoke(delegate
+        {
+            Closed -= OnClosed;
+        });
+    }
 
     private void OnClosed(object? sender, EventArgs e)
     {

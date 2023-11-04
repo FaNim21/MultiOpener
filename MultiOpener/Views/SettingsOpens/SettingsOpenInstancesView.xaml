@@ -11,165 +11,189 @@
              d:DesignWidth="500"
              Background="#383A3C">
     <Grid>
-        <!--GORA-->
-        <Grid>
-            <Label Content="Application path:"
-                   Foreground="White"
-                   Width="350"
-                   Height="31"
-                   FontSize="16"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   Margin="50 0 0 0" />
-            <TextBox x:Name="AppDirectoryPathField"
-                     TextWrapping="NoWrap"
-                     Width="350"
-                     Height="20"
-                     Text="{Binding ApplicationPathField}"
-                     Background="#9E9E9E"
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Top"
-                     Margin="50 30 0 0"
-                     IsReadOnly="True" />
-            <local:ButtonNormal x:Name="SetAppPath"
-                                Width="40"
-                                Height="20"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Top"
-                                FontSize="14"
-                                ContentText="SET"
-                                Margin="390 30 30 0"
-                                OnCommand="{Binding SettingsSetDirectoryPathCommand}" />
-        </Grid>
-
-        <!--MIDDLE-->
-        <WrapPanel Orientation="Horizontal"
-                   Margin="50 60 50 0">
-            <WrapPanel Orientation="Vertical"
-                       HorizontalAlignment="Left"
-                       Width="200">
-                <Label Content="Delays (1000 - 1 sec):"
+        <WrapPanel Orientation="Vertical"
+                   Margin="50 0 0 0">
+            <!--GORA-->
+            <WrapPanel VerticalAlignment="Top">
+                <Label Content="Application path:"
                        Foreground="White"
-                       Width="200"
+                       Width="350"
                        Height="31"
                        FontSize="16"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top" />
-
-                <WrapPanel Orientation="Horizontal"
-                           Margin="0 0 0 5">
-                    <TextBox x:Name="delayBeforeTimeField"
-                             TextWrapping="Wrap"
-                             Width="80"
-                             Height="20"
-                             Text="{Binding DelayBeforeTimeField}"
-                             PreviewTextInput="NumberValidationTextBox"
-                             Background="#9E9E9E"
-                             MaxLength="5" />
-                    <Label Content="Before"
-                           Foreground="White"
-                           Height="18"
-                           FontSize="16"
-                           Padding="0"
-                           Margin="5 0 0 3" />
-                </WrapPanel>
-                <WrapPanel Orientation="Horizontal"
-                           Margin="0 0 0 5">
-                    <TextBox x:Name="delayAfterTimeField"
-                             TextWrapping="Wrap"
-                             Width="80"
-                             Height="20"
-                             Text="{Binding DelayAfterTimeField}"
-                             PreviewTextInput="NumberValidationTextBox"
-                             Background="#9E9E9E"
-                             MaxLength="5"
-                             HorizontalAlignment="Left"
-                             VerticalAlignment="Top" />
-                    <Label Content="After"
-                           Foreground="White"
-                           Height="17"
-                           FontSize="16"
-                           Padding="0"
-                           Margin="5 0 0 3" />
-                </WrapPanel>
-                <WrapPanel Orientation="Horizontal"
-                           Margin="0 0 0 5">
-                    <TextBox x:Name="DelayBetweenInstances"
+                <Grid>
+                    <TextBox x:Name="AppDirectoryPathField"
                              TextWrapping="NoWrap"
-                             Width="80"
+                             Width="350"
                              Height="20"
-                             Text="{Binding DelayBetweenInstances}"
-                             PreviewTextInput="NumberValidationTextBox"
+                             Text="{Binding ApplicationPathField}"
                              Background="#9E9E9E"
-                             MaxLength="5"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             IsReadOnly="True" />
+                    <local:ButtonNormal x:Name="SetAppPath"
+                                        Width="40"
+                                        Height="20"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        FontSize="14"
+                                        ContentText="SET"
+                                        Margin="360 0 00 0"
+                                        OnCommand="{Binding SettingsSetDirectoryPathCommand}" />
+                </Grid>
+
+                <WrapPanel IsEnabled="{Binding OfflineMode}">
+                    <Label Content="Offline Mode Name:"
+                           Foreground="White"
+                           Width="350"
+                           Height="31"
+                           FontSize="16"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top" />
+                    <TextBox TextWrapping="NoWrap"
+                             Width="350"
+                             Height="20"
+                             Text="{Binding OfflineModeName}"
+                             Background="#9E9E9E"
                              HorizontalAlignment="Left"
                              VerticalAlignment="Top" />
-                    <Label Content="Between"
-                           Foreground="White"
-                           Height="17"
-                           FontSize="16"
-                           Padding="0"
-                           Margin="5 0 0 3" />
                 </WrapPanel>
             </WrapPanel>
-            <WrapPanel Orientation="Vertical"
-                       HorizontalAlignment="Left"
-                       Width="200">
-                <Label Content="Selections:"
+
+            <!--MIDDLE-->
+            <WrapPanel Orientation="Horizontal">
+                <WrapPanel Orientation="Vertical"
+                           HorizontalAlignment="Left"
+                           Width="200">
+                    <Label Content="Delays (1000 - 1 sec):"
+                           Foreground="White"
+                           Width="200"
+                           Height="31"
+                           FontSize="16"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top" />
+
+                    <WrapPanel Orientation="Horizontal"
+                               Margin="0 0 0 5">
+                        <TextBox x:Name="delayBeforeTimeField"
+                                 TextWrapping="Wrap"
+                                 Width="80"
+                                 Height="20"
+                                 Text="{Binding DelayBeforeTimeField}"
+                                 PreviewTextInput="NumberValidationTextBox"
+                                 Background="#9E9E9E"
+                                 MaxLength="5" />
+                        <Label Content="Before"
+                               Foreground="White"
+                               Height="18"
+                               FontSize="16"
+                               Padding="0"
+                               Margin="5 0 0 3" />
+                    </WrapPanel>
+                    <WrapPanel Orientation="Horizontal"
+                               Margin="0 0 0 5">
+                        <TextBox x:Name="delayAfterTimeField"
+                                 TextWrapping="Wrap"
+                                 Width="80"
+                                 Height="20"
+                                 Text="{Binding DelayAfterTimeField}"
+                                 PreviewTextInput="NumberValidationTextBox"
+                                 Background="#9E9E9E"
+                                 MaxLength="5"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Top" />
+                        <Label Content="After"
+                               Foreground="White"
+                               Height="17"
+                               FontSize="16"
+                               Padding="0"
+                               Margin="5 0 0 3" />
+                    </WrapPanel>
+                    <WrapPanel Orientation="Horizontal"
+                               Margin="0 0 0 5">
+                        <TextBox x:Name="DelayBetweenInstances"
+                                 TextWrapping="NoWrap"
+                                 Width="80"
+                                 Height="20"
+                                 Text="{Binding DelayBetweenInstances}"
+                                 PreviewTextInput="NumberValidationTextBox"
+                                 Background="#9E9E9E"
+                                 MaxLength="5"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Top" />
+                        <Label Content="Between"
+                               Foreground="White"
+                               Height="17"
+                               FontSize="16"
+                               Padding="0"
+                               Margin="5 0 0 3" />
+                    </WrapPanel>
+                </WrapPanel>
+                <WrapPanel Orientation="Vertical"
+                           HorizontalAlignment="Left"
+                           Width="200">
+                    <Label Content="Selections:"
+                           Foreground="White"
+                           Height="31"
+                           FontSize="16"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top" />
+
+                    <CheckBox IsChecked="{Binding ShowNamesInsteadOfTitle}"
+                              Height="20"
+                              Foreground="White"
+                              Content="Names instead of windows titles"
+                              VerticalContentAlignment="Center"
+                              ToolTip="This option will display folder names of instances from MultiMC in the start panel.&#x0a;
+                                   If it's not checked, the panel will show the current window title as usual upon refreshes." />
+                    <CheckBox IsChecked="{Binding OfflineMode}"
+                              Height="20"
+                              Foreground="White"
+                              Content="Offline Mode"
+                              VerticalContentAlignment="Center"
+                              ToolTip="Set Offline mode for all instances" />
+                </WrapPanel>
+            </WrapPanel>
+
+            <!--DOL-->
+            <Grid>
+                <Label Content="Number of instances"
                        Foreground="White"
+                       Width="350"
                        Height="31"
                        FontSize="16"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top" />
+                <TextBox x:Name="InstancesNumber"
+                         TextWrapping="NoWrap"
+                         Width="50"
+                         Height="20"
+                         Text="{Binding Quantity}"
+                         PreviewTextInput="InstanceNumberValidationTextBox"
+                         Background="#9E9E9E"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Top"
+                         Margin="0 30 300 0" />
+                <Label Content="(1-32)"
+                       Foreground="White"
+                       Height="30"
+                       FontSize="16"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Margin="50 23 200 0" />
 
-                <CheckBox IsChecked="{Binding ShowNamesInsteadOfTitle}"
-                          Height="20"
-                          Foreground="White"
-                          Content="Names instead of windows titles"
-                          VerticalContentAlignment="Center"
-                          ToolTip="This option will display folder names of instances from MultiMC in the start panel.&#x0a;
-                                   If it's not checked, the panel will show the current window title as usual upon refreshes." />
-            </WrapPanel>
+
+                <local:ButtonNormal x:Name="SetupInstanceButton"
+                                    Width="125"
+                                    Height="25"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    FontSize="16"
+                                    ContentText="Setup Instances"
+                                    Margin="0 60 0 0"
+                                    OnCommand="{Binding SettingsInstanceOpenSetupCommand}" />
+            </Grid>
         </WrapPanel>
-
-        <!--DOL-->
-        <Grid>
-            <Label Content="Number of instances"
-                   Foreground="White"
-                   Width="350"
-                   Height="31"
-                   FontSize="16"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   Margin="50 170 0 0" />
-            <TextBox x:Name="InstancesNumber"
-                     TextWrapping="NoWrap"
-                     Width="50"
-                     Height="20"
-                     Text="{Binding Quantity}"
-                     PreviewTextInput="InstanceNumberValidationTextBox"
-                     Background="#9E9E9E"
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Top"
-                     Margin="50 200 300 0" />
-            <Label Content="(1-32)"
-                   Foreground="White"
-                   Height="30"
-                   FontSize="16"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   Margin="100 193 200 0" />
-
-
-            <local:ButtonNormal x:Name="SetupInstanceButton"
-                                Width="125"
-                                Height="25"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top"
-                                FontSize="16"
-                                ContentText="Setup Instances"
-                                Margin="50 230 0 0"
-                                OnCommand="{Binding SettingsInstanceOpenSetupCommand}" />
-        </Grid>
     </Grid>
 </UserControl>
