@@ -10,7 +10,7 @@ public class SettingsAddNewOpenItemCommand : SettingsCommandBase
 
     public override void Execute(object? parameter)
     {
-        if (Settings == null) return;
+        if (Settings == null || string.IsNullOrEmpty(Settings.CurrentLoadedChosenPath)) return;
 
         string name = "New Open";
         name = Helper.GetUniqueName(name, name, Settings.IsOpenNameUnique);

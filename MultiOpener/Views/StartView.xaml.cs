@@ -1,12 +1,11 @@
 ﻿using System.Windows.Controls;
 
-namespace MultiOpener.Views
+namespace MultiOpener.Views;
+
+public partial class StartView : UserControl
 {
-    public partial class StartView : UserControl
+    public StartView()
     {
-        public StartView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

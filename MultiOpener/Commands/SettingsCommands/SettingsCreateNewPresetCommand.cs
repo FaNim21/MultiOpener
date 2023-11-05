@@ -20,6 +20,7 @@ public class SettingsCreateNewPresetCommand : SettingsCommandBase
 
         LoadedPresetItem item = new(name);
         group.AddPreset(item);
+        group.IsExpanded = true;
         File.WriteAllText(item.GetPath(), "[]");
     }
 }

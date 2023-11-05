@@ -22,6 +22,8 @@ namespace MultiOpener.Entities.Opened;
 /// - 
 /// 
 /// Stats Example to do:
+/// - Time in wall
+/// - Time playing
 /// - Time needed to enter nether
 /// - Average for all splits
 /// </summary>

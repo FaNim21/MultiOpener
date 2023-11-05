@@ -178,9 +178,6 @@ public partial class SettingsViewModel : BaseViewModel
 
         RefreshTreeViewCommand = new RelayCommand(SetTreeWithGroupsAndPresets);
 
-        if (!Directory.Exists(_directoryPath))
-            Directory.CreateDirectory(_directoryPath);
-
         UpdateLeftPanelVisibility(false);
         SetTreeWithGroupsAndPresets();
     }
@@ -188,6 +185,13 @@ public partial class SettingsViewModel : BaseViewModel
     public void SetTreeWithGroupsAndPresets()
     {
         Groups.Clear();
+
+        try
+        {
+            if (!Directory.Exists(_directoryPath))
+                Directory.CreateDirectory(_directoryPath);
+        }
+        catch { }
 
         var folders = Directory.GetDirectories(_directoryPath).AsSpan();
         for (int i = 0; i < folders.Length; i++)

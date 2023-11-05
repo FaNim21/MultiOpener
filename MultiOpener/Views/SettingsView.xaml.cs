@@ -37,10 +37,7 @@ public partial class SettingsView : UserControl
     {
         InitializeComponent();
 
-        Application.Current?.Dispatcher.Invoke(delegate
-        {
-            DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
-        });
+        Application.Current?.Dispatcher.Invoke(delegate { DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
 
         treeView.PreviewMouseLeftButtonDown += TreeView_PreviewMouseLeftButtonDown;
         treeView.PreviewMouseMove += TreeView_PreviewMouseMove;
@@ -141,7 +138,7 @@ public partial class SettingsView : UserControl
 
         File.Move(oldPath, newPath);
 
-        SettingsViewModel settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
+        SettingsViewModel settings = (SettingsViewModel)DataContext;
         if (!string.IsNullOrEmpty(settings.PresetName) && settings.PresetName.Equals(preset.Name, System.StringComparison.OrdinalIgnoreCase))
             settings.UpdateCurrentLoadedPreset(preset.GetPath());
     }
@@ -155,8 +152,7 @@ public partial class SettingsView : UserControl
         if (treeViewItem.DataContext is LoadedGroupItem group)
         {
             contextMenu = (ContextMenu)FindResource("GroupContextMenu");
-            if (contextMenu.DataContext == null)
-                Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
+            contextMenu.DataContext ??= DataContext;
 
             foreach (var item in contextMenu.Items)
                 if (item is MenuItem menuItem)
@@ -165,8 +161,7 @@ public partial class SettingsView : UserControl
         else if (treeViewItem.DataContext is LoadedPresetItem preset)
         {
             contextMenu = (ContextMenu)FindResource("PresetContextMenu");
-            if (contextMenu.DataContext == null)
-                Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
+            contextMenu.DataContext ??= DataContext;
 
             foreach (var item in contextMenu.Items)
                 if (item is MenuItem menuItem)
@@ -182,8 +177,7 @@ public partial class SettingsView : UserControl
         if (listViewItem == null) return;
 
         var contextMenu = (ContextMenu)FindResource("ListViewContextMenu");
-        if (contextMenu.DataContext == null)
-            Application.Current?.Dispatcher.Invoke(delegate { contextMenu.DataContext = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings; });
+        contextMenu.DataContext ??= DataContext;
 
         var currentItem = listViewItem.DataContext;
         foreach (var item in contextMenu.Items)

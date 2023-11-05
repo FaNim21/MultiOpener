@@ -10,7 +10,7 @@ public class SaveJsonCommand : SettingsCommandBase
 
     public override void Execute(object? parameter)
     {
-        if (Settings == null) return;
+        if (Settings == null || string.IsNullOrEmpty(Settings.CurrentLoadedChosenPath)) return;
 
         Settings.SaveCurrentOpenCommand.Execute(null);
 
