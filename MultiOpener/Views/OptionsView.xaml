@@ -10,6 +10,24 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              Background="#383A3C">
+    <UserControl.Resources>
+        <Style TargetType="ToggleButton">
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+                         Value="True">
+                    <Setter Property="Background" Value="Transparent"/>
+                </Trigger>
+            </Style.Triggers>
+            <!--TODO: 0 Zrobic wlasny toggle button z animacja-->
+        </Style>
+
+
+
+
+
+    </UserControl.Resources>
     <Grid ScrollViewer.VerticalScrollBarVisibility="Visible">
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
@@ -28,11 +46,18 @@
                             <WrapPanel Orientation="Vertical"
                                        Margin="7 0 0 0"
                                        Width="640">
+                                <ToggleButton IsChecked="{Binding AlwaysOnTop}"
+                                              Height="20"
+                                              Foreground="White"
+                                              Content="Always On Top"
+                                              VerticalContentAlignment="Center" />
+                                <!--
                                 <CheckBox IsChecked="{Binding AlwaysOnTop}"
                                           Height="20"
                                           Foreground="White"
                                           Content="Always On Top"
                                           VerticalContentAlignment="Center" />
+                                -->
                                 <CheckBox IsChecked="{Binding IsMinimizedAfterOpen}"
                                           Height="20"
                                           Foreground="White"
