@@ -11,18 +11,181 @@
              d:DesignWidth="800"
              Background="#383A3C">
     <UserControl.Resources>
-        <Style TargetType="ToggleButton">
+        <Style x:Key="asd"
+               TargetType="ToggleButton">
             <Setter Property="Background"
                     Value="Transparent" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver"
                          Value="True">
-                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Background"
+                            Value="Transparent" />
                 </Trigger>
             </Style.Triggers>
             <!--TODO: 0 Zrobic wlasny toggle button z animacja-->
         </Style>
 
+        <Style TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid x:Name="RootGrid">
+                            <Border x:Name="border1"
+                                    Width="30"
+                                    Height="15"
+                                    HorizontalAlignment="Left"
+                                    Background="#9e9e9e"
+                                    BorderBrush="Black"
+                                    BorderThickness="0.9"
+                                    Padding="3 0 3 0"
+                                    CornerRadius="8">
+                                <Border x:Name="border2"
+                                        Background="#5d636b"
+                                        CornerRadius="10"
+                                        HorizontalAlignment="Left"
+                                        Width="8"
+                                        Height="8">
+                                </Border>
+                            </Border>
+                            <TextBlock Text="{Binding Path=Content, RelativeSource={RelativeSource AncestorType =ToggleButton}}"
+                                       Margin="34 2 0 0" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked"
+                                     Value="True">
+                                <Setter TargetName="border2"
+                                        Property="HorizontalAlignment"
+                                        Value="Left" />
+                                <Setter TargetName="border1"
+                                        Property="Background"
+                                        Value="#71b0b0" />
+                                <Setter TargetName="border2"
+                                        Property="Background"
+                                        Value="white" />
+                                <Setter TargetName="border1"
+                                        Property="Padding"
+                                        Value="3 0 3 0" />
+                                <Setter TargetName="border2"
+                                        Property="Width"
+                                        Value="8" />
+                                <Setter TargetName="border2"
+                                        Property="Height"
+                                        Value="8" />
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ThicknessAnimation Storyboard.TargetName="border2"
+                                                                Storyboard.TargetProperty="(Border.Margin)"
+                                                                To="14 0 0 0"
+                                                                Duration="0:0:0.2" />
+                                            <ThicknessAnimation Storyboard.TargetName="border2"
+                                                                Storyboard.TargetProperty="(Border.Margin)"
+                                                                To="14 0 0 0"
+                                                                Duration="0:0:0.2" />
+                                            <ThicknessAnimation Storyboard.TargetName="border1"
+                                                                Storyboard.TargetProperty="(Border.Padding)"
+                                                                To="0 0 0 0"
+                                                                Duration="0:0:0.1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ThicknessAnimation Storyboard.TargetName="border2"
+                                                                Storyboard.TargetProperty="(Border.Margin)"
+                                                                To="0 0 0 0"
+                                                                Duration="0:0:0.2" />
+                                            <ThicknessAnimation Storyboard.TargetName="border2"
+                                                                Storyboard.TargetProperty="(Border.Margin)"
+                                                                To="0 0 0 0"
+                                                                Duration="0:0:0.2" />
+                                            <ThicknessAnimation Storyboard.TargetName="border1"
+                                                                Storyboard.TargetProperty="(Border.Padding)"
+                                                                To="3 0 3 0"
+                                                                Duration="0:0:0.1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed"
+                                     Value="True">
+                                <Setter TargetName="border1"
+                                        Property="Padding"
+                                        Value="0 0 0 0" />
+                                <Setter TargetName="border2"
+                                        Property="Width"
+                                        Value="13" />
+                                <Setter TargetName="border2"
+                                        Property="Height"
+                                        Value="13" />
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="border1"
+                                                                              Storyboard.TargetProperty="(Border.Padding)"
+                                                                              Duration="0:0:0.3">
+                                                <LinearThicknessKeyFrame Value="3 0 3 0"
+                                                                         KeyTime="0:0:0.0" />
+                                                <LinearThicknessKeyFrame Value="0 0 0 0"
+                                                                         KeyTime="0:0:0.1" />
+                                            </ThicknessAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="border2"
+                                                                           Storyboard.TargetProperty="(Border.Width)"
+                                                                           Duration="0:0:0.3">
+                                                <LinearDoubleKeyFrame Value="8"
+                                                                      KeyTime="0:0:0.0" />
+                                                <LinearDoubleKeyFrame Value="13"
+                                                                      KeyTime="0:0:0.1" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="border2"
+                                                                           Storyboard.TargetProperty="(Border.Height)"
+                                                                           Duration="0:0:0.3">
+                                                <LinearDoubleKeyFrame Value="8"
+                                                                      KeyTime="0:0:0.0" />
+                                                <LinearDoubleKeyFrame Value="13"
+                                                                      KeyTime="0:0:0.1" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="border1"
+                                                                              Storyboard.TargetProperty="(Border.Padding)"
+                                                                              Duration="0:0:0.3">
+                                                <LinearThicknessKeyFrame Value="0 0 0 0"
+                                                                         KeyTime="0:0:0.2" />
+                                                <LinearThicknessKeyFrame Value="3 0 3 0"
+                                                                         KeyTime="0:0:0.3" />
+                                            </ThicknessAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="border2"
+                                                                           Storyboard.TargetProperty="(Border.Width)"
+                                                                           Duration="0:0:0.3">
+                                                <LinearDoubleKeyFrame Value="13"
+                                                                      KeyTime="0:0:0.2" />
+                                                <LinearDoubleKeyFrame Value="8"
+                                                                      KeyTime="0:0:0.3" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="border2"
+                                                                           Storyboard.TargetProperty="(Border.Height)"
+                                                                           Duration="0:0:0.3">
+                                                <LinearDoubleKeyFrame Value="13"
+                                                                      KeyTime="0:0:0.2" />
+                                                <LinearDoubleKeyFrame Value="8"
+                                                                      KeyTime="0:0:0.3" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
 
 
@@ -51,18 +214,24 @@
                                               Foreground="White"
                                               Content="Always On Top"
                                               VerticalContentAlignment="Center" />
+
+                                <ToggleButton IsChecked="{Binding IsMinimizedAfterOpen}"
+                                              Height="20"
+                                              Foreground="White"
+                                              Content="Is Minimized after opening preset"
+                                              VerticalContentAlignment="Center" />
                                 <!--
                                 <CheckBox IsChecked="{Binding AlwaysOnTop}"
                                           Height="20"
                                           Foreground="White"
                                           Content="Always On Top"
                                           VerticalContentAlignment="Center" />
-                                -->
                                 <CheckBox IsChecked="{Binding IsMinimizedAfterOpen}"
                                           Height="20"
                                           Foreground="White"
                                           Content="Is Minimized after opening preset"
                                           VerticalContentAlignment="Center" />
+                                -->
                             </WrapPanel>
                         </WrapPanel>
                         <WrapPanel Orientation="Vertical"
