@@ -132,7 +132,7 @@
                 </WrapPanel>
                 <WrapPanel Orientation="Vertical"
                            HorizontalAlignment="Left"
-                           Width="200">
+                           Width="250">
                     <Label Content="Selections:"
                            Foreground="White"
                            Height="31"
@@ -140,14 +140,14 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top" />
 
-                    <CheckBox IsChecked="{Binding ShowNamesInsteadOfTitle}"
+                    <ToggleButton IsChecked="{Binding ShowNamesInsteadOfTitle}"
                               Height="20"
                               Foreground="White"
                               Content="Names instead of windows titles"
                               VerticalContentAlignment="Center"
                               ToolTip="This option will display folder names of instances from MultiMC in the start panel.&#x0a;
                                    If it's not checked, the panel will show the current window title as usual upon refreshes." />
-                    <CheckBox IsChecked="{Binding OfflineMode}"
+                    <ToggleButton IsChecked="{Binding OfflineMode}"
                               Height="20"
                               Foreground="White"
                               Content="Offline Mode"

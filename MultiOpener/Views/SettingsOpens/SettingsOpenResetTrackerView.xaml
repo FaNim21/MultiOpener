@@ -60,7 +60,7 @@
                          Text="{Binding TrackerSheetID}"
                          Background="#9E9E9E"
                          HorizontalAlignment="Left"
-                         VerticalAlignment="Top"/>
+                         VerticalAlignment="Top" />
             </WrapPanel>
 
             <!--MIDDLE-->
@@ -123,11 +123,11 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top" />
 
-                    <CheckBox IsChecked="{Binding UsingBuiltInTracker}"
-                              Height="20"
-                              Foreground="White"
-                              Content="Use built in tracker"
-                              VerticalContentAlignment="Center" />
+                    <ToggleButton IsChecked="{Binding UsingBuiltInTracker}"
+                                  Height="20"
+                                  Foreground="White"
+                                  Content="Use built in tracker"
+                                  VerticalContentAlignment="Center" />
                 </WrapPanel>
             </WrapPanel>
         </WrapPanel>

@@ -20,7 +20,7 @@
                        Height="31"
                        FontSize="16"
                        HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
+                       VerticalAlignment="Top" />
 
                 <Grid>
                     <TextBox x:Name="AppDirectoryPathField"
@@ -104,11 +104,11 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top" />
 
-                    <CheckBox IsChecked="{Binding MinimizeOnOpen}"
-                              Height="20"
-                              Foreground="White"
-                              Content="Minimize on open"
-                              VerticalContentAlignment="Center" />
+                    <ToggleButton IsChecked="{Binding MinimizeOnOpen}"
+                                  Height="20"
+                                  Foreground="White"
+                                  Content="Minimize on open"
+                                  VerticalContentAlignment="Center" />
                 </WrapPanel>
             </WrapPanel>
         </WrapPanel>
