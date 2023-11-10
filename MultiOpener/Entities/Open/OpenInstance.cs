@@ -29,7 +29,7 @@ public class OpenInstance : OpenItem
 
 
     [JsonConstructor]
-    public OpenInstance(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, int Quantity = 0, ObservableCollection<string>? Names = null, int DelayBetweenInstances = 0, bool ShowNamesInsteadOfTitle = false, bool OfflineMode = false, string OfflineModeName = "") : base(Name, PathExe, DelayBefore, DelayAfter, Type)
+    public OpenInstance(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = OpenType.InstancesMultiMC, int Quantity = 0, ObservableCollection<string>? Names = null, int DelayBetweenInstances = 0, bool ShowNamesInsteadOfTitle = false, bool OfflineMode = false, string OfflineModeName = "") : base(Name, PathExe, DelayBefore, DelayAfter, Type)
     {
         this.Quantity = Quantity;
         if (Names == null)
@@ -41,7 +41,7 @@ public class OpenInstance : OpenItem
         this.OfflineMode = OfflineMode;
         this.OfflineModeName = OfflineModeName;
     }
-    public OpenInstance(string Name) : this(Name, "", 0, 0, OpenType.InstancesMultiMC, 0, null, 0, false, false, "") { }
+    public OpenInstance(string Name) : this(Name, "") { }
     public OpenInstance(OpenInstance instance) : base(instance)
     {
         Quantity = instance.Quantity;

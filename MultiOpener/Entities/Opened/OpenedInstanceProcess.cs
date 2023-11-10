@@ -36,7 +36,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
         Win32.GetWindowByTitlePattern(MCPattern(), this);
     }
 
-    public override void UpdateTitle()
+    protected override void UpdateTitle()
     {
         if (showNamesInsteadOfTitle)
         {
@@ -189,7 +189,7 @@ public partial class OpenedInstanceProcess : OpenedProcess
         return false;
     }
 
-    public override void OpenOpenedPathFolder()
+    protected override void OpenOpenedPathFolder()
     {
         if (string.IsNullOrEmpty(Path)) return;
 

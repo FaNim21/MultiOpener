@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace MultiOpener.Windows;
 
-public partial class DialogBoxWindow : Window
+public sealed partial class DialogBoxWindow : Window
 {
     public DialogBoxWindow()
     {
@@ -55,7 +55,7 @@ public partial class DialogBoxWindow : Window
         TextGrid.HorizontalAlignment = HorizontalAlignment.Center;
     }
 
-    protected virtual void PlayOpeningSound()
+    private void PlayOpeningSound()
     {
         if (DataContext is not DialogBoxViewModel dialogBox) return;
 

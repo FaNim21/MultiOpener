@@ -1,5 +1,4 @@
-﻿using MultiOpener.ViewModels;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -10,21 +9,22 @@ public static class AutoScrollBehavior
     public static readonly DependencyProperty AutoScrollProperty =
         DependencyProperty.RegisterAttached("AutoScroll", typeof(bool), typeof(AutoScrollBehavior), new PropertyMetadata(false, AutoScrollPropertyChanged));
 
-    private static bool userScrolledUp = false;
+    private static bool _userScrolledUp;
+    private const double _scrollingFactor = 0.01;
+
 
     private static void AutoScrollPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
     {
         bool skip = false;
         Application.Current?.Dispatcher.Invoke(delegate
         {
-            MainViewModel mainViewModel = ((MainWindow)Application.Current.MainWindow).MainViewModel;
+            var mainViewModel = ((MainWindow)Application.Current.MainWindow!).MainViewModel;
 
             if (mainViewModel.SelectedViewModel != mainViewModel.start)
                 skip = true;
         });
 
         if (skip) return;
-
         if (obj is not ScrollViewer scrollViewer) return;
 
         if ((bool)args.NewValue)
@@ -32,8 +32,7 @@ public static class AutoScrollBehavior
             scrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
             scrollViewer.PreviewMouseWheel += ScrollViewer_PreviewMouseWheel;
 
-            if (!userScrolledUp)
-                scrollViewer.ScrollToEnd();
+            if (!_userScrolledUp) scrollViewer.ScrollToEnd();
         }
         else
         {
@@ -46,23 +45,20 @@ public static class AutoScrollBehavior
     {
         var scrollViewer = sender as ScrollViewer;
         if (e.VerticalChange != 0)
-            userScrolledUp = UpdateUserScrollFlag(scrollViewer!);
+            _userScrolledUp = UpdateUserScrollFlag(scrollViewer!);
 
-        if (!userScrolledUp && (e.ExtentHeightChange > 0 || e.ViewportHeightChange > 0))
+        if (!_userScrolledUp && (e.ExtentHeightChange > 0 || e.ViewportHeightChange > 0))
             scrollViewer?.ScrollToEnd();
     }
 
     private static void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
-        var scrollViewer = sender as ScrollViewer;
-        if (scrollViewer != null)
-        {
-            double scrollingFactor = 0.01;
-            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta * scrollingFactor);
-            e.Handled = true;
+        if (sender is not ScrollViewer scrollViewer) return;
 
-            userScrolledUp = UpdateUserScrollFlag(scrollViewer!);
-        }
+        scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta * _scrollingFactor);
+        e.Handled = true;
+
+        _userScrolledUp = UpdateUserScrollFlag(scrollViewer!);
     }
 
     private static bool UpdateUserScrollFlag(ScrollViewer scrollViewer)

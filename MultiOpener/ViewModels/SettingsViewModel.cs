@@ -21,7 +21,7 @@ namespace MultiOpener.ViewModels;
 /// - 5 roznych plikow na jeden OpenType
 /// - Kolejnym problemem jest fakt ze kazdy Open ma metode Open ktora musi tworzyc instancje tego open zeby pozniej panel viewOpened byl oparty o rzeczywisty typ jak w OpenInstance
 /// </summary>
-public partial class SettingsViewModel : BaseViewModel
+public sealed class SettingsViewModel : BaseViewModel
 {
     public MainViewModel MainViewModel { get; set; }
 
@@ -225,7 +225,7 @@ public partial class SettingsViewModel : BaseViewModel
         LoadGroupTree();
     }
 
-    public void LoadGroupTree()
+    private void LoadGroupTree()
     {
         if (!File.Exists(Path.Combine(Consts.AppdataPath, "Groups.json"))) return;
 
@@ -302,9 +302,9 @@ public partial class SettingsViewModel : BaseViewModel
         LeftPanelGridVisibility = visibility;
     }
 
-    public void RemovePreset(LoadedPresetItem preset)
+    public static void RemovePreset(LoadedPresetItem preset)
     {
-        LoadedGroupItem group = preset.ParentGroup!;
+        var group = preset.ParentGroup!;
         group.RemovePreset(preset);
     }
     public void RemoveGroup(string name, bool recursive = false)
@@ -338,24 +338,6 @@ public partial class SettingsViewModel : BaseViewModel
             var current = Groups[i];
             if (current.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 return current;
-        }
-
-        return null;
-    }
-    public LoadedPresetItem? GetPresetByName(string name)
-    {
-        if (Groups == null) return null;
-
-        for (int i = 0; i < Groups.Count; i++)
-        {
-            var group = Groups[i];
-            for (int j = 0; j < group.Presets.Count; j++)
-            {
-                var preset = group.Presets[j];
-                if (preset.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) continue;
-
-                return preset;
-            }
         }
 
         return null;

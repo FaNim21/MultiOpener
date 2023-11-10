@@ -9,7 +9,7 @@ public class DialogBaseViewModel : BaseViewModel
     private string? _text;
     public string? Text
     {
-        get { return _text; }
+        get => _text;
         set
         {
             _text = value;
@@ -17,11 +17,11 @@ public class DialogBaseViewModel : BaseViewModel
         }
     }
 
-    private string? _caption;
+    private readonly string? _caption;
     public string? Caption
     {
-        get { return _caption; }
-        set
+        get => _caption;
+        init
         {
             _caption = value;
             OnPropertyChanged(nameof(Caption));
@@ -31,7 +31,7 @@ public class DialogBaseViewModel : BaseViewModel
     private MessageBoxResult _result = MessageBoxResult.None;
     public MessageBoxResult Result
     {
-        get { return _result; }
+        get => _result;
         set
         {
             _result = value;
@@ -44,7 +44,7 @@ public class DialogBaseViewModel : BaseViewModel
     
     public void Close()
     {
-        Window? activeWindow = Application.Current?.Windows.OfType<Window>().FirstOrDefault(x => x.IsActive);
+        var activeWindow = Application.Current?.Windows.OfType<Window>().FirstOrDefault(x => x.IsActive);
         activeWindow?.Close();
     }
 }

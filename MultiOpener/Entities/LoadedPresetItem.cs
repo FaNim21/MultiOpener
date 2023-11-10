@@ -13,7 +13,7 @@ public class LoadedPresetItem : BaseViewModel, IRenameItem
     private string _name = "";
     public string Name
     {
-        get { return _name; }
+        get => _name;
         set
         {
             _name = value;
@@ -24,14 +24,12 @@ public class LoadedPresetItem : BaseViewModel, IRenameItem
     private bool _isExpanded;
     public bool IsExpanded
     {
-        get { return _isExpanded; }
+        get => _isExpanded;
         set
         {
-            if (_isExpanded != value)
-            {
-                _isExpanded = value;
-                OnPropertyChanged(nameof(IsExpanded));
-            }
+            if (_isExpanded == value) return;
+            _isExpanded = value;
+            OnPropertyChanged(nameof(IsExpanded));
         }
     }
 
@@ -42,11 +40,11 @@ public class LoadedPresetItem : BaseViewModel, IRenameItem
 
     public void ChangeName(string name)
     {
-        string jsonName = name + ".json";
-        string path = GetPath();
+        var jsonName = name + ".json";
+        var path = GetPath();
 
-        string directoryName = Path.GetDirectoryName(path)!;
-        string newPath = Path.Combine(directoryName, jsonName);
+        var directoryName = Path.GetDirectoryName(path)!;
+        var newPath = Path.Combine(directoryName, jsonName);
 
         File.Move(path, newPath);
         Name = name;
@@ -63,7 +61,7 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
     private string _name = "";
     public string Name
     {
-        get { return _name; }
+        get => _name;
         set
         {
             _name = value;
@@ -74,28 +72,25 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
     private bool _isExpanded;
     public bool IsExpanded
     {
-        get { return _isExpanded; }
+        get => _isExpanded;
         set
         {
-            if (_isExpanded != value)
-            {
-                _isExpanded = value;
-                OnPropertyChanged(nameof(IsExpanded));
-            }
+            if (_isExpanded == value) return;
+            _isExpanded = value;
+            OnPropertyChanged(nameof(IsExpanded));
         }
     }
 
     private int _order = -1;
     public int Order
     {
-        get { return _order; }
+        get => _order;
         set
         {
-            if (_order != value)
-            {
-                _order = value;
-                OnPropertyChanged(nameof(Order));
-            }
+            if (_order == value) return;
+            _order = value;
+            OnPropertyChanged(nameof(Order));
+            OnPropertyChanged(nameof(Order));
         }
     }
 
@@ -107,14 +102,12 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
 
     public void AddPreset(LoadedPresetItem preset)
     {
-        Presets ??= new();
-
         preset.ParentGroup = this;
         Presets.Add(preset);
     }
     public void RemovePreset(LoadedPresetItem preset)
     {
-        SettingsViewModel settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
+        var settings = ((MainWindow)Application.Current?.MainWindow!).MainViewModel.settings;
         if (preset.Name.Equals(settings.PresetName, StringComparison.OrdinalIgnoreCase))
             settings.ClearOpenedPreset();
 
@@ -125,7 +118,6 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
             File.Delete(preset.GetPath());
         }
         catch { }
-        return;
     }
     public void RemoveAllPresets()
     {
@@ -135,17 +127,16 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
 
     public void ChangeName(string name)
     {
-        SettingsViewModel settings = ((MainWindow)Application.Current.MainWindow).MainViewModel.settings;
-        string path = GetPath();
-        string directoryName = Path.GetDirectoryName(path)!;
-        string newPath = Path.Combine(directoryName, name);
+        var settings = ((MainWindow)Application.Current?.MainWindow!).MainViewModel.settings;
+        var path = GetPath();
+        var directoryName = Path.GetDirectoryName(path)!;
+        var newPath = Path.Combine(directoryName, name);
 
         Directory.Move(path, newPath);
         Name = name;
 
         var preset = GetPreset(settings.PresetName!);
-        if (preset != null)
-            settings.UpdateCurrentLoadedPreset(preset.GetPath());
+        if (preset != null) settings.UpdateCurrentLoadedPreset(preset.GetPath());
     }
 
     public LoadedPresetItem? GetPreset(string name)

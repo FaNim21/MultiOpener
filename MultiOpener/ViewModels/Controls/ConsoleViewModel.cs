@@ -11,19 +11,17 @@ namespace MultiOpener.ViewModels.Controls;
 
 public class ConsoleViewModel : BaseViewModel
 {
-    public ObservableCollection<ConsoleLine> ConsoleLines { get; set; }
+    public ObservableCollection<ConsoleLine> ConsoleLines { get; init; }
 
-    private readonly string logPath;
+    private readonly string _logPath;
 
 
     public ConsoleViewModel()
     {
         ConsoleLines = new ObservableCollection<ConsoleLine>();
 
-        logPath = Path.Combine(Consts.AppdataPath, "Logs");
-
-        if (!Directory.Exists(logPath))
-            Directory.CreateDirectory(logPath);
+        _logPath = Path.Combine(Consts.AppdataPath, "Logs");
+        if (!Directory.Exists(_logPath)) Directory.CreateDirectory(_logPath);
     }
 
     public void ProcessCommandLine(string text, ConsoleLineOption option = ConsoleLineOption.Normal)
@@ -36,27 +34,29 @@ public class ConsoleViewModel : BaseViewModel
             var time = DateTime.Now.ToString("HH:mm:ss");
             sb.Append("[" + time);
 
-            if (option == ConsoleLineOption.Error)
+            switch (option)
             {
-                sb.Append(" - ERROR]> ");
-                brush = Brushes.LightCoral;
-            }
-            else if (option == ConsoleLineOption.Warning)
-            {
-                sb.Append(" - WARNING]> ");
-                brush = Brushes.Yellow;
-            }
-            else
-            {
-                sb.Append("]> ");
-                brush = Brushes.White;
+                case ConsoleLineOption.Error:
+                    sb.Append(" - ERROR]> ");
+                    brush = Brushes.LightCoral;
+                    break;
+                case ConsoleLineOption.Warning:
+                    sb.Append(" - WARNING]> ");
+                    brush = Brushes.Yellow;
+                    break;
+                case ConsoleLineOption.Normal:
+                default:
+                    sb.Append("]> ");
+                    brush = Brushes.White;
+                    break;
             }
             sb.Append(text);
 
             var consoleLine = new ConsoleLine() { Text = sb.ToString(), Color = brush };
-            ConsoleLines?.Add(consoleLine);
-            OnPropertyChanged(nameof(ConsoleLines));
+            ConsoleLines.Add(consoleLine);
         });
+
+        OnPropertyChanged(nameof(ConsoleLines));
     }
 
     public void Save()
@@ -65,7 +65,7 @@ public class ConsoleViewModel : BaseViewModel
         string fileName = $"{date}.txt";
 
         int count = 1;
-        while (File.Exists(logPath + "\\" + fileName))
+        while (File.Exists(_logPath + "\\" + fileName))
         {
             fileName = $"{date} [{count}].txt";
             count++;
@@ -78,11 +78,11 @@ public class ConsoleViewModel : BaseViewModel
             lines.Add(line.Text);
         }
 
-        File.WriteAllLines(logPath + "\\" + fileName, lines);
+        File.WriteAllLines(_logPath + "\\" + fileName, lines);
     }
 
     public void Clear()
     {
-        ConsoleLines?.Clear();
+        ConsoleLines.Clear();
     }
 }

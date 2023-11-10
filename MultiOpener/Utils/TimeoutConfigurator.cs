@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MultiOpener.Utils;
+﻿namespace MultiOpener.Utils;
 
 public class TimeoutConfigurator
 {

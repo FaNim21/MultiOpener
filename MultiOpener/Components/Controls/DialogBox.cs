@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media.Effects;
+using MultiOpener.ViewModels;
 
 namespace MultiOpener.Components.Controls;
 
@@ -30,6 +31,7 @@ public static class DialogBox
         return model.Result;
     }
 
+    [Obsolete]
     public static string ShowInputField(string text, string caption = "", ValidateInputFieldAccept validate = null!)
     {
         InputFieldViewModel model = new(validate)
@@ -53,61 +55,61 @@ public static class DialogBox
     public static string ShowOpenFile()
     {
         OpenFileDialog openFileDialog = new() { Filter = "All Files (*.*)|*.*", };
-        if (openFileDialog.ShowDialog() == true)
-            return openFileDialog.FileName;
-
-        return string.Empty;
+        return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : string.Empty;
     }
 
-    private static void Create<T, U>(U model) where T : Window, new()
+    private static void Create<T, TU>(TU model) where T : Window, new() where TU : BaseViewModel
     {
-        T? window = null;
+        T? window;
+        Window? activeWindow;
+
         Application.Current?.Dispatcher.Invoke(delegate
         {
-            Window? activeWindow = GetActiveWindow();
+            activeWindow = GetActiveWindow();
             window = new T()
             {
                 Owner = activeWindow,
                 DataContext = model,
             };
             BlurMainWindow();
-            window?.ShowDialog();
+            window.ShowDialog();
         });
     }
-    private static IEnumerable<DialogBoxButton> CreateButtons(MessageBoxButton buttons, params string?[] names)
+    private static IEnumerable<DialogBoxButton> CreateButtons(MessageBoxButton buttons, params string?[]? names)
     {
         if (names == null || names.Length < 3)
         {
-            string?[] defaultNames = new string?[] { null, null, null };
-            if (names != null && names.Length > 0)
+            var defaultNames = new string?[] { null, null, null };
+            if (names is { Length: > 0 })
                 Array.Copy(names, defaultNames, names.Length);
 
             names = defaultNames;
         }
 
-        switch (buttons)
+        return buttons switch
         {
-            case MessageBoxButton.OK:
-                return new DialogBoxButton[] {
-                    new DialogBoxButton() { Title= names[0] ?? "Ok", Result = MessageBoxResult.OK } };
-            case MessageBoxButton.OKCancel:
-                return new DialogBoxButton[] {
-                    new DialogBoxButton() { Title= names[0] ?? "Ok", Result = MessageBoxResult.OK },
-                    new DialogBoxButton() { Title= names[1] ?? "Cancel", Result = MessageBoxResult.Cancel } };
-            case MessageBoxButton.YesNo:
-                return new DialogBoxButton[] {
-                    new DialogBoxButton() { Title= names[0] ?? "Yes", Result = MessageBoxResult.Yes },
-                    new DialogBoxButton() { Title= names[1] ?? "No", Result = MessageBoxResult.No } };
-            case MessageBoxButton.YesNoCancel:
-                return new DialogBoxButton[] {
-                    new DialogBoxButton() { Title= names[0] ?? "Yes", Result = MessageBoxResult.Yes },
-                    new DialogBoxButton() { Title= names[1] ?? "No", Result = MessageBoxResult.No },
-                    new DialogBoxButton() { Title= names[2] ?? "Cancel", Result = MessageBoxResult.Cancel } };
-            default:
-                break;
-        }
-
-        return Enumerable.Empty<DialogBoxButton>();
+            MessageBoxButton.OK => new DialogBoxButton[]
+            {
+                new() { Title = names[0] ?? "Ok", Result = MessageBoxResult.OK }
+            },
+            MessageBoxButton.OKCancel => new DialogBoxButton[]
+            {
+                new() { Title = names[0] ?? "Ok", Result = MessageBoxResult.OK },
+                new() { Title = names[1] ?? "Cancel", Result = MessageBoxResult.Cancel }
+            },
+            MessageBoxButton.YesNo => new DialogBoxButton[]
+            {
+                new() { Title = names[0] ?? "Yes", Result = MessageBoxResult.Yes },
+                new() { Title = names[1] ?? "No", Result = MessageBoxResult.No }
+            },
+            MessageBoxButton.YesNoCancel => new DialogBoxButton[]
+            {
+                new() { Title = names[0] ?? "Yes", Result = MessageBoxResult.Yes },
+                new() { Title = names[1] ?? "No", Result = MessageBoxResult.No },
+                new() { Title = names[2] ?? "Cancel", Result = MessageBoxResult.Cancel }
+            },
+            _ => Enumerable.Empty<DialogBoxButton>()
+        };
     }
 
     private static void BlurMainWindow()
@@ -119,7 +121,7 @@ public static class DialogBox
         }
     }
 
-    public static Window? GetActiveWindow()
+    private static Window? GetActiveWindow()
     {
         Window? window = null;
         window = Application.Current?.MainWindow;

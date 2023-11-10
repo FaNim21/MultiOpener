@@ -69,7 +69,7 @@ public partial class MainWindow : Window, IClipboardService
     {
         if (!MainViewModel.start.OpenedIsEmpty())
         {
-            MessageBoxResult result = DialogBox.Show($"Are you certain about closing MultiOpener?\nThere are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            var result = DialogBox.Show($"Are you certain about closing MultiOpener?\nThere are still some processes that haven't been closed yet.", $"Closing!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result != MessageBoxResult.Yes)
                 return;
         }
@@ -106,16 +106,6 @@ public partial class MainWindow : Window, IClipboardService
         Application.Current.Shutdown();
     }
 
-    public void OnShow()
-    {
-        Show();
-        if (!App.Config.AlwaysOnTop)
-        {
-            Topmost = true;
-            Topmost = false;
-        }
-    }
-
     private async Task CheckForUpdates()
     {
         var checker = new UpdateChecker();
@@ -145,7 +135,7 @@ public partial class MainWindow : Window, IClipboardService
         SettingsButton.ContentText = name;
     }
 
-    public void HotkeySetup()
+    private void HotkeySetup()
     {
         var refreshHotkey = new Hotkey
         {
@@ -182,8 +172,8 @@ public partial class MainWindow : Window, IClipboardService
             Description = "Bind to trigger renaming elements",
             Action = () =>
             {
-                EditableTextBlock? textBlock = Helper.GetFocusedUIElement<EditableTextBlock>();
-                if (textBlock != null && textBlock.IsEditable)
+                var textBlock = Helper.GetFocusedUIElement<EditableTextBlock>();
+                if (textBlock is { IsEditable: true })
                     textBlock.IsInEditMode = true;
             }
         };
@@ -195,15 +185,15 @@ public partial class MainWindow : Window, IClipboardService
             Description = "Removing item",
             Action = () =>
             {
-                EditableTextBlock? textBlock = Helper.GetFocusedUIElement<EditableTextBlock>();
+                var textBlock = Helper.GetFocusedUIElement<EditableTextBlock>();
                 if (textBlock == null) return;
                 var item = textBlock.DataContext;
 
-                if (item.GetType().Equals(typeof(OpenItem)))
+                if (item.GetType() == typeof(OpenItem))
                     MainViewModel.settings.RemoveCurrentOpenCommand.Execute(item);
-                else if (item.GetType().Equals(typeof(LoadedPresetItem)))
+                else if (item.GetType() == typeof(LoadedPresetItem))
                     MainViewModel.settings.RemovePresetCommand.Execute(item);
-                else if (item.GetType().Equals(typeof(LoadedGroupItem)))
+                else if (item.GetType() == typeof(LoadedGroupItem))
                     MainViewModel.settings.RemoveGroupCommand.Execute(item);
             }
         };

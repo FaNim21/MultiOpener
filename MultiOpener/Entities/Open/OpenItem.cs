@@ -48,7 +48,7 @@ public class OpenItem : BaseViewModel, IRenameItem
 
 
     [JsonConstructor]
-    public OpenItem(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, bool MinimizeOnOpen = false)
+    public OpenItem(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = OpenType.Normal, bool MinimizeOnOpen = false)
     {
         this.Name = Name;
         this.PathExe = PathExe;
@@ -57,7 +57,7 @@ public class OpenItem : BaseViewModel, IRenameItem
         this.Type = Type;
         this.MinimizeOnOpen = MinimizeOnOpen;
     }
-    public OpenItem(string Name) : this(Name, "", 0, 0, OpenType.Normal, false) { }
+    public OpenItem(string Name) : this(Name, "") { }
     public OpenItem(OpenItem item) : this(item.Name, item.PathExe, item.DelayBefore, item.DelayAfter, item.Type, item.MinimizeOnOpen) { }
 
     public virtual string Validate()

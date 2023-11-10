@@ -15,7 +15,7 @@ public enum StartButtonState
     cancel,
 }
 
-public class StartViewModel : BaseViewModel
+public sealed class StartViewModel : BaseViewModel
 {
     public static StartViewModel? Instance { get; private set; }
 
@@ -77,7 +77,7 @@ public class StartViewModel : BaseViewModel
     }
 
 
-    private bool _loadingPanelVisibility = false;
+    private bool _loadingPanelVisibility;
     public bool LoadingPanelVisibility
     {
         get { return _loadingPanelVisibility; }

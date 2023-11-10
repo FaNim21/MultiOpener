@@ -67,7 +67,7 @@ public class ResetStatsViewModel : BaseViewModel
     }
 
 
-    public int Resets { get { return WallResets + NoNetherEnterResets + SplitlessResets; } }
+    public int Resets => WallResets + NoNetherEnterResets + SplitlessResets;
 
 
     //NETHER
@@ -381,7 +381,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     private bool _isTracking;
     public bool IsTracking
     {
-        get { return _isTracking; }
+        get => _isTracking;
         set
         {
             _isTracking = value;
@@ -389,9 +389,8 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         }
     }
 
-
-    private string trackerID = string.Empty;
-    private bool usingBuiltInTracker = true;
+    private string _trackerId = string.Empty;
+    private bool _usingBuiltInTracker = true;
 
     public ResetStatsViewModel ResetData { get; set; } = new();
 
@@ -404,8 +403,8 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
     public void Setup(string trackerID, bool usingBuiltInTracker)
     {
-        this.trackerID = trackerID;
-        this.usingBuiltInTracker = usingBuiltInTracker;
+        this._trackerId = trackerID;
+        this._usingBuiltInTracker = usingBuiltInTracker;
         ResetData.UsingBuiltIn = usingBuiltInTracker;
     }
 
@@ -413,7 +412,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     {
         if (IsTracking) return;
 
-        if (usingBuiltInTracker)
+        if (_usingBuiltInTracker)
         {
             _recordsFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "speedrunigt", "records");
             if (App.Config.DeleteAllRecordOnActivating)
@@ -431,13 +430,13 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     }
     public void DeactivateTracker()
     {
-        if (_source == null || _token.IsCancellationRequested || !_isTracking) return;
+        if (_token.IsCancellationRequested || !_isTracking) return;
 
         _source.Cancel();
         IsTracking = false;
 
-        if (_trackerTask != null && !_trackerTask.IsCompleted)
-            _trackerTask.Wait();
+        if (_trackerTask is { IsCompleted: false })
+            _trackerTask.Wait(_token);
 
         _source.Dispose();
         ResetStatsData();
@@ -454,7 +453,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
             }
             catch { break; }
 
-            if (usingBuiltInTracker)
+            if (_usingBuiltInTracker)
                 OnBuiltInTracker();
             else
                 await OnOutsideTracker();
@@ -535,7 +534,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
     private async Task OnOutsideTracker()
     {
-        string apiUrl = $"https://reset-analytics.vercel.app/api/sheet/{trackerID}";
+        string apiUrl = $"https://reset-analytics.vercel.app/api/sheet/{_trackerId}";
 
         try
         {
@@ -584,14 +583,9 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         }
     }
 
-    public override void Update(bool lookForWindow = false)
+    protected override void UpdateTitle()
     {
-        base.Update(lookForWindow);
-    }
-
-    public override void UpdateTitle()
-    {
-        if (!usingBuiltInTracker)
+        if (!_usingBuiltInTracker)
         {
             base.UpdateTitle();
             return;
@@ -602,7 +596,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     }
     public override void UpdateStatus()
     {
-        if ((usingBuiltInTracker && IsTracking) || Pid != -1)
+        if ((_usingBuiltInTracker && IsTracking) || Pid != -1)
         {
             Application.Current?.Dispatcher.Invoke(delegate { StatusLabelColor = new SolidColorBrush(Color.FromRgb(51, 204, 51)); });
             Status = "OPENED";
@@ -616,7 +610,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
     public override async Task<bool> OpenProcess(CancellationToken token = default)
     {
-        if (!usingBuiltInTracker)
+        if (!_usingBuiltInTracker)
             await base.OpenProcess(token);
 
         ActivateTracker();
@@ -668,13 +662,11 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
             if (Directory.Exists(_recordsFolder))
             {
                 string[] entries = Directory.GetFileSystemEntries(_recordsFolder);
+                if (entries.Length == 0) return;
 
-                if (entries.Length != 0)
-                {
-                    Directory.Delete(_recordsFolder, true);
-                    Directory.CreateDirectory(_recordsFolder);
-                    StartViewModel.Log($"Cleared folder: {_recordsFolder}");
-                }
+                Directory.Delete(_recordsFolder, true);
+                Directory.CreateDirectory(_recordsFolder);
+                StartViewModel.Log($"Cleared folder: {_recordsFolder}");
             }
             else
                 _recordsFolder = string.Empty;

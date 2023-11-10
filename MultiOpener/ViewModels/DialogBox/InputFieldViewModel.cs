@@ -6,10 +6,10 @@ namespace MultiOpener.ViewModels.DialogBox;
 
 public class InputFieldViewModel : DialogBaseViewModel
 {
-    public string? _output;
+    private string? _output;
     public string? Output
     {
-        get { return _output; }
+        get => _output;
         set
         {
             _output = value;
@@ -17,10 +17,10 @@ public class InputFieldViewModel : DialogBaseViewModel
         }
     }
 
-    public string? _errorMessage;
+    private string? _errorMessage;
     public string? ErrorMessage
     {
-        get { return _errorMessage; }
+        get => _errorMessage;
         set
         {
             _errorMessage = value;

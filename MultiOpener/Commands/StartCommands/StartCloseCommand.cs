@@ -16,10 +16,10 @@ public class StartCloseCommand : StartCommandBase
     {
         if (Consts.IsStartPanelWorkingNow) return;
 
-        Task task = Task.Run(Close);
+        var task = Task.Run(Close);
     }
 
-    public async Task Close()
+    private async Task Close()
     {
         if (Start == null) return;
         if (Start.OpenedIsEmpty())
@@ -28,20 +28,15 @@ public class StartCloseCommand : StartCommandBase
             return;
         }
 
-        MessageBoxResult? result = null;
-        if (isForcedToClose)
-            result = MessageBoxResult.Yes;
-        else
-            result = DialogBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
+        MessageBoxResult? result = isForcedToClose ? MessageBoxResult.Yes : DialogBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (result == MessageBoxResult.Yes)
         {
+            var output = "";
             for (int i = 0; i < Start.Opened.Count; i++)
             {
                 var current = Start.Opened[i];
                 current.Update();
 
-                string output = "";
                 if (current.IsOpenedFromStatus())
                     output += "Closed and ";
 

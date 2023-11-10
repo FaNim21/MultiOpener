@@ -11,7 +11,7 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
     private string _trackerSheetID = string.Empty;
     public string TrackerSheetID
     {
-        get { return _trackerSheetID; }
+        get => _trackerSheetID;
         set
         {
             PresetIsNotSaved();
@@ -23,7 +23,7 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
     private bool _usingBuiltInTracker = true;
     public bool UsingBuiltInTracker
     {
-        get { return _usingBuiltInTracker; }
+        get => _usingBuiltInTracker;
         set
         {
             PresetIsNotSaved();

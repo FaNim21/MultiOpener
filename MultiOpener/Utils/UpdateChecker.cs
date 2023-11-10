@@ -21,11 +21,11 @@ public class UpdateChecker
         if (string.IsNullOrEmpty(version))
             version = Consts.Version[1..];
 
-        string apiUrl = "https://api.github.com/repos/FaNim21/MultiOpener/releases";
+        const string apiUrl = "https://api.github.com/repos/FaNim21/MultiOpener/releases";
         using (var httpClient = new HttpClient())
         {
             httpClient.DefaultRequestHeaders.Add("User-Agent", REPO);
-            HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
+            var response = await httpClient.GetAsync(apiUrl);
 
             if (response.IsSuccessStatusCode)
             {

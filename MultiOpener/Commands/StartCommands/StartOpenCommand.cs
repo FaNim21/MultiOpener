@@ -22,13 +22,13 @@ public class StartOpenCommand : StartCommandBase
     private Stopwatch Stopwatch { get; set; } = new();
 
     public CancellationTokenSource source = new();
-    private CancellationToken token;
+    private CancellationToken _token;
 
     public bool isOpening = false;
-    private bool isShiftPressed = false;
+    private bool _isShiftPressed = false;
 
-    private int progressLength;
-    private int count;
+    private int _progressLength;
+    private int _count;
 
 
     public StartOpenCommand(StartViewModel? startViewModel, MainWindow mainWindow) : base(startViewModel)
@@ -64,8 +64,8 @@ public class StartOpenCommand : StartCommandBase
         Start.SetStartButtonState(StartButtonState.cancel);
 
         source = new();
-        token = source.Token;
-        Task task = Task.Run(OpenProgramsList, token);
+        _token = source.Token;
+        Task task = Task.Run(OpenProgramsList, _token);
     }
 
     private async Task OpenProgramsList()
@@ -80,16 +80,16 @@ public class StartOpenCommand : StartCommandBase
         await Finalize();
     }
 
-    public bool Initialize(int length)
+    private bool Initialize(int length)
     {
         Application.Current?.Dispatcher.Invoke(delegate
         {
-            if (!Application.Current.MainWindow.Topmost)
+            if (!Application.Current.MainWindow!.Topmost)
                 Application.Current.MainWindow.Topmost = true;
         });
         isOpening = true;
-        progressLength = length;
-        count = 0;
+        _progressLength = length;
+        _count = 0;
 
         if (!Validate(length)) return false;
 
@@ -100,7 +100,7 @@ public class StartOpenCommand : StartCommandBase
         if (InputController.Instance.GetKey(Key.LeftShift))
         {
             source.Cancel();
-            isShiftPressed = true;
+            _isShiftPressed = true;
             Start!.LoadingPanelVisibility = false;
         }
         return true;
@@ -111,7 +111,7 @@ public class StartOpenCommand : StartCommandBase
         {
             var current = Settings!.Opens[i];
 
-            progressLength += current.GetAdditionalProgressCount();
+            _progressLength += current.GetAdditionalProgressCount();
 
             string result = current.Validate();
             if (!string.IsNullOrEmpty(result))
@@ -155,7 +155,7 @@ public class StartOpenCommand : StartCommandBase
         return true;
     }
 
-    public async Task OpenAll(int length)
+    private async Task OpenAll(int length)
     {
         Stopwatch.Start();
         for (int i = 0; i < length; i++)
@@ -165,7 +165,7 @@ public class StartOpenCommand : StartCommandBase
             Start!.SetLoadingText($"({i + 1}/{length}) Opening {current.Name}...");
             UpdateProgressBar();
 
-            await current.Open(Start, token);
+            await current.Open(Start, _token);
             Start!.SetDetailedLoadingText(string.Empty);
 
             Application.Current.Dispatcher.Invoke(delegate { Application.Current.MainWindow?.Activate(); });
@@ -173,7 +173,7 @@ public class StartOpenCommand : StartCommandBase
         Stopwatch.Stop();
     }
 
-    public async Task Finalize()
+    private async Task Finalize()
     {
         if (Start?.MultiMC != null)
         {
@@ -185,9 +185,9 @@ public class StartOpenCommand : StartCommandBase
             Start.SetStartButtonState(StartButtonState.open);
 
         Consts.IsStartPanelWorkingNow = false;
-        bool isItOpening = true;
+        const bool isItOpening = true;
 
-        if (!isShiftPressed)
+        if (!_isShiftPressed)
         {
             Start!.SetLoadingText("Auto-Refreshing");
             StartViewModel.Log($"Opened Preset {Settings!.PresetName} in {Math.Round(Stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
@@ -199,11 +199,11 @@ public class StartOpenCommand : StartCommandBase
         Start!.LoadingPanelVisibility = false;
         source.Dispose();
         isOpening = false;
-        isShiftPressed = false;
+        _isShiftPressed = false;
         Stopwatch.Reset();
         Application.Current?.Dispatcher.Invoke(delegate
         {
-            if (!App.Config.AlwaysOnTop && Application.Current.MainWindow.Topmost)
+            if (!App.Config.AlwaysOnTop && Application.Current.MainWindow!.Topmost)
                 Application.Current.MainWindow.Topmost = false;
         });
 
@@ -213,11 +213,11 @@ public class StartOpenCommand : StartCommandBase
 
     public void UpdateCountForInstances()
     {
-        count--;
+        _count--;
     }
     public void UpdateProgressBar()
     {
-        count++;
-        Start!.LoadingBarPercentage = (count * 100) / progressLength;
+        _count++;
+        Start!.LoadingBarPercentage = (_count * 100f) / _progressLength;
     }
 }

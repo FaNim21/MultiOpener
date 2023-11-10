@@ -57,9 +57,7 @@ public partial class Win32
     {
         StringBuilder sb = new(256);
         int length = GetWindowText(hwnd, sb, sb.Capacity);
-        if (length > 0)
-            return sb.ToString();
-        return "";
+        return length > 0 ? sb.ToString() : "";
     }
 
     public static int GetPidFromHwnd(nint hwnd)
@@ -95,24 +93,19 @@ public partial class Win32
             EnumWindows((wnd, param) =>
             {
                 _ = GetWindowThreadProcessId(wnd, out uint thisProcessId);
-                if (thisProcessId == processId)
-                {
-                    StringBuilder sb = new(256);
-                    _ = GetWindowText(wnd, sb, sb.Capacity);
-                    if (sb.ToString().Contains(process.ProcessName))
-                    {
-                        hwnd = wnd;
-                        return false;
-                    }
-                }
-                return true;
+                if (thisProcessId != processId) return true;
+
+                StringBuilder sb = new(256);
+                _ = GetWindowText(wnd, sb, sb.Capacity);
+
+                if (!sb.ToString().Contains(process.ProcessName)) return true;
+
+                hwnd = wnd;
+                return false;
             }, nint.Zero);
         }
 
-        if (IsWindow(hwnd))
-            return hwnd;
-        else
-            return nint.Zero;
+        return IsWindow(hwnd) ? hwnd : nint.Zero;
     }
 
     public static byte GetWindowsCountByTitlePattern(Regex titlePattern)
@@ -198,17 +191,15 @@ public partial class Win32
 
     public static async Task<bool> CloseProcessByHwnd(nint hwnd)
     {
-        if (IsWindow(hwnd))
+        if (!IsWindow(hwnd)) return false;
+
+        Task<bool> close = Task.Run(() =>
         {
-            Task<bool> close = Task.Run(() =>
-            {
-                return SendMessageTimeout(hwnd, WM_CLOSE, nint.Zero, nint.Zero, SMTO_ABORTIFHUNG, 4000, out var result) != nint.Zero;
-            });
+            return SendMessageTimeout(hwnd, WM_CLOSE, nint.Zero, nint.Zero, SMTO_ABORTIFHUNG, 4000, out var result) != nint.Zero;
+        });
 
-            return await close;
-        }
+        return await close;
 
-        return false;
     }
     public static async Task<bool> CloseProcessByPid(int pid)
     {
@@ -222,21 +213,16 @@ public partial class Win32
             return false;
         }
 
-        if (process != null)
-        {
-            if (process.HasExited)
-                return true;
-
-            await Task.Run(() =>
-            {
-                process.Kill();
-                process.WaitForExit();
-            });
+        if (process == null) return false;
+        if (process.HasExited)
             return true;
-        }
-        else
-            return false;
 
+        await Task.Run(() =>
+        {
+            process.Kill();
+            process.WaitForExit();
+        });
+        return true;
     }
 
     public static bool ProcessExist(int pid)
@@ -245,7 +231,7 @@ public partial class Win32
 
         try
         {
-            Process process = Process.GetProcessById(pid);
+            Process.GetProcessById(pid);
             return true;
         }
         catch (ArgumentException)
@@ -278,7 +264,7 @@ public partial class Win32
         string? javaLibraryPath = null;
         Regex regex = JavaLibrary();
 
-        using (ManagementObjectSearcher searcher = new("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id))
+        using ManagementObjectSearcher searcher = new("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id);
         using (ManagementObjectCollection objects = searcher.Get())
         {
             foreach (ManagementObject obj in objects)
@@ -309,13 +295,12 @@ public partial class Win32
 
         try
         {
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher($"SELECT CommandLine FROM Win32_Process WHERE ProcessId = {process.Id}"))
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher($"SELECT CommandLine FROM Win32_Process WHERE ProcessId = {process.Id}");
+
+            foreach (ManagementObject obj in searcher.Get())
             {
-                foreach (ManagementObject obj in searcher.Get())
-                {
-                    commandLine = obj["CommandLine"]?.ToString();
-                    break;
-                }
+                commandLine = obj["CommandLine"]?.ToString();
+                break;
             }
         }
         catch (Exception ex)
@@ -336,8 +321,7 @@ public partial class Win32
     {
         if (hWnd == nint.Zero) return;
 
-        if (IsIconic(hWnd))
-            ShowWindow(hWnd, SW_RESTORE);
+        if (IsIconic(hWnd)) ShowWindow(hWnd, SW_RESTORE);
     }
 
     public static bool WindowExist(nint hwnd)

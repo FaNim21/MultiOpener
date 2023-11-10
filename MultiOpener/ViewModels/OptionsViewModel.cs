@@ -12,7 +12,7 @@ namespace MultiOpener.ViewModels
         private int _timeLateRefresh;
         public int TimeLateRefresh
         {
-            get { return _timeLateRefresh; }
+            get => _timeLateRefresh;
             set
             {
                 _timeLateRefresh = value;
@@ -24,7 +24,7 @@ namespace MultiOpener.ViewModels
         private int _timeoutOpen;
         public int TimeoutOpen
         {
-            get { return _timeoutOpen; }
+            get => _timeoutOpen;
             set
             {
                 _timeoutOpen = value;
@@ -36,7 +36,7 @@ namespace MultiOpener.ViewModels
         private int _timeoutLookingForInstancesData;
         public int TimeoutLookingForInstancesData
         {
-            get { return _timeoutLookingForInstancesData; }
+            get => _timeoutLookingForInstancesData;
             set
             {
                 _timeoutLookingForInstancesData = value;
@@ -48,7 +48,7 @@ namespace MultiOpener.ViewModels
         private int _timeoutInstanceFinalizingData;
         public int TimeoutInstanceFinalizingData
         {
-            get { return _timeoutInstanceFinalizingData; }
+            get => _timeoutInstanceFinalizingData;
             set
             {
                 _timeoutInstanceFinalizingData = value;
@@ -57,10 +57,10 @@ namespace MultiOpener.ViewModels
             }
         }
 
-        public int _timeoutWaitingForSingleInstanceToOpen;
+        private int _timeoutWaitingForSingleInstanceToOpen;
         public int TimeoutWaitingForSingleInstanceToOpen
         {
-            get { return _timeoutWaitingForSingleInstanceToOpen; }
+            get => _timeoutWaitingForSingleInstanceToOpen;
             set
             {
                 _timeoutWaitingForSingleInstanceToOpen = value;
@@ -69,10 +69,10 @@ namespace MultiOpener.ViewModels
             }
         }
 
-        public int _updateResetTrackerFrequency;
+        private int _updateResetTrackerFrequency;
         public int UpdateResetTrackerFrequency
         {
-            get { return _updateResetTrackerFrequency; }
+            get => _updateResetTrackerFrequency;
             set
             {
                 if (value < 10000)
@@ -83,10 +83,10 @@ namespace MultiOpener.ViewModels
             }
         }
 
-        public bool _deleteAllRecordOnActivating;
+        private bool _deleteAllRecordOnActivating;
         public bool DeleteAllRecordOnActivating
         {
-            get { return _deleteAllRecordOnActivating; }
+            get => _deleteAllRecordOnActivating;
             set
             {
                 _deleteAllRecordOnActivating = value;
@@ -98,7 +98,7 @@ namespace MultiOpener.ViewModels
         private bool _alwaysOnTop;
         public bool AlwaysOnTop
         {
-            get { return _alwaysOnTop; }
+            get => _alwaysOnTop;
             set
             {
                 _alwaysOnTop = value;
@@ -111,7 +111,7 @@ namespace MultiOpener.ViewModels
         private bool _isMinimizedAfterOpen;
         public bool IsMinimizedAfterOpen
         {
-            get { return _isMinimizedAfterOpen; }
+            get => _isMinimizedAfterOpen;
             set
             {
                 _isMinimizedAfterOpen = value;
@@ -122,7 +122,8 @@ namespace MultiOpener.ViewModels
 
         public ICommand ResetToDefaultCommand { get; set; }
 
-        private readonly string _optionsSaveFileName = "Options.json";
+        private const string _optionsSaveFileName = "Options.json";
+
 
         public OptionsViewModel()
         {

@@ -17,7 +17,7 @@ public sealed class OpenResetTracker : OpenItem
 
 
     [JsonConstructor]
-    public OpenResetTracker(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = default, bool MinimizeOnOpen = false, bool UsingBuiltInTracker = true, string TrackerID = "")
+    public OpenResetTracker(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = OpenType.ResetTrackerMC, bool MinimizeOnOpen = false, bool UsingBuiltInTracker = true, string TrackerID = "")
     {
         this.Name = Name;
         this.PathExe = PathExe;
@@ -29,7 +29,7 @@ public sealed class OpenResetTracker : OpenItem
         this.UsingBuiltInTracker = UsingBuiltInTracker;
         this.TrackerID = TrackerID;
     }
-    public OpenResetTracker(string Name) : this(Name, "", 0, 0, OpenType.Normal, false, true, "") { }
+    public OpenResetTracker(string Name) : this(Name, "") { }
     public OpenResetTracker(OpenResetTracker item) : this(item.Name, item.PathExe, item.DelayBefore, item.DelayAfter, item.Type, item.MinimizeOnOpen, item.UsingBuiltInTracker, item.TrackerID) { }
 
     public override string Validate()

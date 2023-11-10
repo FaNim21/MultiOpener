@@ -17,12 +17,12 @@ public class OpenedProcess : BaseViewModel
 {
     public string? Name { get; protected set; }
     public string? Path { get; protected set; }
-    public ProcessStartInfo? ProcessStartInfo { get; protected set; }
+    protected ProcessStartInfo? ProcessStartInfo { get; set; }
 
     private nint _hwnd;
     public nint Hwnd
     {
-        get { return _hwnd; }
+        get => _hwnd;
         protected set
         {
             _hwnd = value;
@@ -33,7 +33,7 @@ public class OpenedProcess : BaseViewModel
     private int _pid;
     public int Pid
     {
-        get { return _pid; }
+        get => _pid;
         protected set
         {
             _pid = value;
@@ -44,7 +44,7 @@ public class OpenedProcess : BaseViewModel
     private string? _windowTitle;
     public string? WindowTitle
     {
-        get { return _windowTitle; }
+        get => _windowTitle;
         protected set
         {
             _windowTitle = value;
@@ -52,10 +52,10 @@ public class OpenedProcess : BaseViewModel
         }
     }
 
-    public string? _status;
+    private string? _status;
     public string? Status
     {
-        get { return _status; }
+        get => _status;
         set
         {
             _status = value;
@@ -66,7 +66,7 @@ public class OpenedProcess : BaseViewModel
     private Brush? _color;
     public Brush? StatusLabelColor
     {
-        get { return _color; }
+        get => _color;
         set
         {
             _color = value;
@@ -77,7 +77,7 @@ public class OpenedProcess : BaseViewModel
     private string _infoButtonOpenName = string.Empty;
     public string InfoButtonOpenName
     {
-        get { return _infoButtonOpenName; }
+        get => _infoButtonOpenName;
         set
         {
             _infoButtonOpenName = value;
@@ -328,13 +328,13 @@ public class OpenedProcess : BaseViewModel
         }
     }
 
-    public void UpdateUIPanel()
+    private void UpdateUIPanel()
     {
         UpdateTitle();
         UpdateStatus();
     }
 
-    public virtual void UpdateTitle()
+    protected virtual void UpdateTitle()
     {
         if (!string.IsNullOrEmpty(WindowTitle)) return;
 
@@ -458,7 +458,7 @@ public class OpenedProcess : BaseViewModel
         SetHwnd(nint.Zero);
     }
 
-    public virtual void OpenOpenedPathFolder()
+    protected virtual void OpenOpenedPathFolder()
     {
         if (string.IsNullOrEmpty(Path)) return;
 

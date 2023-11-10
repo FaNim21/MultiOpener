@@ -1,6 +1,7 @@
 ﻿using MultiOpener.Commands.DialogBoxCommands;
 using MultiOpener.Components.Controls;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace MultiOpener.ViewModels.DialogBox;
@@ -10,7 +11,7 @@ public class DialogBoxViewModel : DialogBaseViewModel
     private MessageBoxImage _icon;
     public MessageBoxImage Icon
     {
-        get { return _icon; }
+        get => _icon;
         set
         {
             _icon = value;
@@ -21,8 +22,8 @@ public class DialogBoxViewModel : DialogBaseViewModel
     private IEnumerable<DialogBoxButton> _buttons = new List<DialogBoxButton>();
     public IEnumerable<DialogBoxButton> Buttons
     {
-        get { return _buttons; }
-        set
+        get => _buttons;
+        init
         {
             _buttons = value;
             OnPropertyChanged(nameof(Buttons));
@@ -32,5 +33,9 @@ public class DialogBoxViewModel : DialogBaseViewModel
     public DialogBoxViewModel()
     {
         ButtonPress = new DialogBoxButtonClickCommand(this);
+    }
+    ~DialogBoxViewModel()
+    {
+        _buttons = Enumerable.Empty<DialogBoxButton>();
     }
 }
