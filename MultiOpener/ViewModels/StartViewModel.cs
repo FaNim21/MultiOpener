@@ -19,10 +19,10 @@ public sealed class StartViewModel : BaseViewModel
 {
     public static StartViewModel? Instance { get; private set; }
 
-    public ConsoleViewModel ConsoleViewModel { get; set; }
+    public ConsoleViewModel ConsoleViewModel { get; }
 
     public OpenedProcess? MultiMC { get; set; }
-    public ObservableCollection<OpenedProcess> Opened { get; set; }
+    public ObservableCollection<OpenedProcess> Opened { get; }
 
     public ICommand OpenCommand { get; set; }
     public ICommand CloseCommand { get; set; }
@@ -126,7 +126,8 @@ public sealed class StartViewModel : BaseViewModel
     {
         Instance = this;
 
-        ConsoleViewModel = new();
+        ConsoleViewModel = new ConsoleViewModel();
+        Opened = new ObservableCollection<OpenedProcess>();
 
         OpenCommand = new StartOpenCommand(this, mainWindow);
         CloseCommand = new StartCloseCommand(this);
@@ -134,8 +135,6 @@ public sealed class StartViewModel : BaseViewModel
         SaveConsoleCommand = new StartSaveConsoleCommand(this);
         ClearConsoleCommand = new StartClearConsoleCommand(this);
         CancelCommand = new StartCancelCommand(this);
-
-        Opened = new ObservableCollection<OpenedProcess>();
 
         //SimpleOpenedTest();
 

@@ -436,7 +436,13 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         IsTracking = false;
 
         if (_trackerTask is { IsCompleted: false })
-            _trackerTask.Wait(_token);
+        {
+            try
+            {
+                _trackerTask.Wait(_token);
+            }
+            catch { }
+        }
 
         _source.Dispose();
         ResetStatsData();

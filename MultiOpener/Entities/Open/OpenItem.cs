@@ -99,7 +99,7 @@ public class OpenItem : BaseViewModel, IRenameItem
                     await opened.OpenProcess(token);
             }
 
-            Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });
+            Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Instance?.AddOpened(opened); });
 
             if (!isCancelled) await Task.Delay(DelayAfter);
         }

@@ -297,10 +297,12 @@
                                         <Storyboard>
                                             <ThicknessAnimation Storyboard.TargetName="border2"
                                                                 Storyboard.TargetProperty="(Border.Margin)"
+                                                                From="14 0 0 0"
                                                                 To="0 0 0 0"
                                                                 Duration="0:0:0.2" />
                                             <ThicknessAnimation Storyboard.TargetName="border2"
                                                                 Storyboard.TargetProperty="(Border.Margin)"
+                                                                From="14 0 0 0"
                                                                 To="0 0 0 0"
                                                                 Duration="0:0:0.2" />
                                         </Storyboard>

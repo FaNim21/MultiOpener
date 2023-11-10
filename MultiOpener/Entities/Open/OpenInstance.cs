@@ -160,7 +160,7 @@ public class OpenInstance : OpenItem
                 if (current.IsOpenedFromStatus()) continue;
                 if (!current.FindInstance(instances)) current.Clear();
             }
-            Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(mcInstances); });
+            Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Instance?.AddOpened(mcInstances); });
 
             if (!token.IsCancellationRequested)
             {

@@ -83,7 +83,6 @@ public sealed class OpenResetTracker : OpenItem
                         await opened.OpenProcess(token);
                 }
 
-
                 if (!isCancelled) await Task.Delay(DelayAfter);
             }
             catch (Exception e)
@@ -92,6 +91,6 @@ public sealed class OpenResetTracker : OpenItem
             }
         }
 
-        Application.Current?.Dispatcher.Invoke(delegate { ((MainWindow)Application.Current.MainWindow).MainViewModel.start.AddOpened(opened); });
+        Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Instance?.AddOpened(opened); });
     }
 }

@@ -101,7 +101,7 @@ public class OpenedProcess : BaseViewModel
     public OpenedProcess(StartViewModel? start)
     {
         if (start == null)
-            Application.Current?.Dispatcher.Invoke(delegate { start = ((MainWindow)Application.Current.MainWindow).MainViewModel.start; });
+            Application.Current?.Dispatcher.Invoke(delegate { start = StartViewModel.Instance; });
 
         ViewInformationsCommand = new OpenedViewInformationsCommand(this);
         ResetCommand = new OpenedResetCommand(this, start);
@@ -112,7 +112,7 @@ public class OpenedProcess : BaseViewModel
 
         Application.Current?.Dispatcher.Invoke(delegate
         {
-            CopyTextToClipboardCommand = new CopyTextToClipboardCommand((MainWindow)Application.Current?.MainWindow!);
+            CopyTextToClipboardCommand = new CopyTextToClipboardCommand((MainWindow)Application.Current.MainWindow!);
         });
     }
 
