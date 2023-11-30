@@ -416,7 +416,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         {
             _recordsFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "speedrunigt", "records");
             if (App.Config.DeleteAllRecordOnActivating)
-                ClearResetFolder();
+                ClearRecordsFolder();
         }
 
         _source = new();
@@ -661,21 +661,38 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     {
         ResetData.Clear();
     }
-    private void ClearResetFolder()
+    private void ClearRecordsFolder()
     {
+        StartViewModel.Log("Clearing records folder for tracking");
         try
         {
             if (Directory.Exists(_recordsFolder))
             {
-                string[] entries = Directory.GetFileSystemEntries(_recordsFolder);
-                if (entries.Length == 0) return;
+                DirectoryInfo directoryInfo = new(_recordsFolder);
 
-                Directory.Delete(_recordsFolder, true);
-                Directory.CreateDirectory(_recordsFolder);
+                FileInfo[] files = directoryInfo.GetFiles();
+                int fileCount = files.Length;
+
+                long totalSize = 0;
+                foreach (FileInfo file in files)
+                    totalSize += file.Length;
+
+                StartViewModel.Log($"Folder {_recordsFolder} contains {fileCount} files.");
+                StartViewModel.Log($"Total size of files in {_recordsFolder}: {totalSize} bytes.");
+
+                if (fileCount == 0) return;
+
+                foreach (FileInfo file in files)
+                    file.Delete();
+
+                directoryInfo.Refresh();
                 StartViewModel.Log($"Cleared folder: {_recordsFolder}");
             }
             else
+            {
+                StartViewModel.Log($"Folder {_recordsFolder} does not exist.");
                 _recordsFolder = string.Empty;
+            }
         }
         catch (Exception)
         {
