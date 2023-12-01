@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
@@ -45,19 +46,15 @@ public partial class MainWindow : Window, IClipboardService
         Task task = Task.Factory.StartNew(CheckForUpdates);
     }
 
-    public void EnableDisableChoosenHeadButton(string option)
+    private void MenuItemClick(object sender, RoutedEventArgs e)
     {
-        /*StartButton.IsEnabled = true;
-        SettingsButton.IsEnabled = true;
-        OptionsButton.IsEnabled = true;
+        if (sender is not MenuItem clickedMenuItem) return;
 
-        switch (option)
+        foreach (MenuItem menuItem in ((Menu)clickedMenuItem.Parent).Items)
         {
-            case "Start": StartButton.IsEnabled = false; break;
-            case "Settings": SettingsButton.IsEnabled = false; break;
-            case "Options": OptionsButton.IsEnabled = false; break;
-            default: Trace.WriteLine("Nieznana opcja: " + option); break;
-        }*/
+            if (menuItem == clickedMenuItem) continue;
+            menuItem.IsChecked = false;
+        }
     }
 
     private void HeaderMouseDown(object sender, MouseButtonEventArgs e)

@@ -182,6 +182,17 @@ public sealed class SettingsViewModel : BaseViewModel
         SetTreeWithGroupsAndPresets();
     }
 
+    public override void OnEnable()
+    {
+        if (Groups != null) return;
+        SetTreeWithGroupsAndPresets();
+    }
+    public override void OnDisable()
+    {
+        SaveCurrentOpenCommand.Execute(null);
+        SaveGroupTree();
+    }
+
     public void SetTreeWithGroupsAndPresets()
     {
         Groups.Clear();

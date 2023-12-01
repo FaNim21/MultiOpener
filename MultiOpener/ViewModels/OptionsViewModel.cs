@@ -134,6 +134,12 @@ namespace MultiOpener.ViewModels
             Application.Current.MainWindow.Topmost = App.Config.AlwaysOnTop;
         }
 
+        public override void OnEnable() { }
+        public override void OnDisable()
+        {
+            SaveOptions();
+        }
+
         public void SaveOptions()
         {
             JsonSerializerOptions options = new() { WriteIndented = true, };

@@ -141,6 +141,9 @@ public sealed class StartViewModel : BaseViewModel
         UpdatePresetName();
     }
 
+    public override void OnEnable() { }
+    public override void OnDisable() { }
+
     public void LogLine(string text, ConsoleLineOption option = ConsoleLineOption.Normal)
     {
         ConsoleViewModel.ProcessCommandLine(text, option);

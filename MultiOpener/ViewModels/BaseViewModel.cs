@@ -17,8 +17,8 @@ public class BaseViewModel : INotifyPropertyChanged, IDisposable
             Application.Current.Dispatcher.Invoke(delegate { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
     }
 
-    public virtual void Dispose()
-    {
+    public virtual void OnEnable() { }
+    public virtual void OnDisable() { }
 
-    }
+    public virtual void Dispose() { }
 }

@@ -1,45 +1,37 @@
 ﻿using MultiOpener.ViewModels;
-using System;
-using System.Windows.Input;
 
 namespace MultiOpener.Commands
 {
-    class UpdateViewCommand : ICommand
+    class UpdateViewCommand : BaseCommand
     {
         private readonly MainViewModel viewModel;
 
-        public UpdateViewCommand(MainViewModel viewModel)
-        {
-            this.viewModel = viewModel;
-        }
+        public UpdateViewCommand(MainViewModel viewModel) { this.viewModel = viewModel; }
 
-        public event EventHandler? CanExecuteChanged { add { CommandManager.RequerySuggested += value; } remove { CommandManager.RequerySuggested -= value; } }
-
-        public bool CanExecute(object? parameter) => true;
-        public void Execute(object? parameter)
+        public override void Execute(object? parameter)
         {
-            //TODO: 9 definitely need to rework it to make it better with adding new tabs in future etc?
+            if (parameter == null) return;
+
             string result = parameter?.ToString() ?? "";
-            viewModel.MainWindow.EnableDisableChoosenHeadButton(result);
+            result = result.ToLower() + "viewmodel";
 
-            if (viewModel.SelectedViewModel == viewModel.options)
-                viewModel.options.SaveOptions();
-            else if (viewModel.SelectedViewModel == viewModel.settings)
+            if (result.Equals(viewModel.SelectedViewModel?.GetType().Name.ToLower())) return;
+            StartViewModel.Log($"result: {result} --- previous: {viewModel.SelectedViewModel?.GetType().Name.ToLower()}");
+
+            viewModel.SelectedViewModel?.OnDisable();
+
+            for (int i = 0; i < viewModel.baseViewModels.Count; i++)
             {
-                viewModel.settings?.SaveCurrentOpenCommand?.Execute(null);
-                viewModel.settings?.SaveGroupTree();
+                var current = viewModel.baseViewModels[i];
+
+                if (current.GetType().Name.ToLower().Equals(result))
+                {
+                    viewModel.SelectedViewModel = current;
+                    break;
+                }
             }
 
-            if (result.Equals("Start"))
-                viewModel.SelectedViewModel = viewModel.start;
-            else if (result.Equals("Options"))
-                viewModel.SelectedViewModel = viewModel.options;
-            else if (result.Equals("Settings"))
-            {
-                if (viewModel.settings != null && viewModel.settings.Groups == null)
-                    viewModel.settings?.SetTreeWithGroupsAndPresets();
-                viewModel.SelectedViewModel = viewModel.settings;
-            }
+            viewModel.SelectedViewModel?.OnEnable();
         }
     }
 }

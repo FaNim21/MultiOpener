@@ -50,6 +50,8 @@
                         <Style TargetType="MenuItem">
                             <Setter Property="Background"
                                     Value="#73838d" />
+                            <Setter Property="IsCheckable" 
+                                    Value="True"/>
                             <Setter Property="Cursor"
                                     Value="Hand" />
                             <Setter Property="Foreground"
@@ -89,9 +91,10 @@
                                                         Property="Background"
                                                         Value="#859595" />
                                             </Trigger>
-                                            <Trigger Property="IsEnabled"
-                                                     Value="False">
-                                                <Setter Property="Foreground"
+                                            <Trigger Property="IsChecked"
+                                                     Value="true">
+                                                <Setter TargetName="Border"
+                                                        Property="Background"
                                                         Value="#e1fbfc" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
@@ -102,14 +105,17 @@
                     </Menu.Resources>
                     <MenuItem x:Name="StartItem"
                               Header="Start"
+                              Click="MenuItemClick"
                               Command="{Binding UpdateViewCommand}"
                               CommandParameter="Start" />
                     <MenuItem x:Name="PresetsItem"
                               Header="Presets"
+                              Click="MenuItemClick"
                               Command="{Binding UpdateViewCommand}"
                               CommandParameter="Settings" />
                     <MenuItem x:Name="OptionsItem"
                               Header="Options"
+                              Click="MenuItemClick"
                               Command="{Binding UpdateViewCommand}"
                               CommandParameter="Options" />
                 </Menu>
