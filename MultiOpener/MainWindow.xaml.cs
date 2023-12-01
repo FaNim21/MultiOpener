@@ -47,7 +47,7 @@ public partial class MainWindow : Window, IClipboardService
 
     public void EnableDisableChoosenHeadButton(string option)
     {
-        StartButton.IsEnabled = true;
+        /*StartButton.IsEnabled = true;
         SettingsButton.IsEnabled = true;
         OptionsButton.IsEnabled = true;
 
@@ -57,7 +57,7 @@ public partial class MainWindow : Window, IClipboardService
             case "Settings": SettingsButton.IsEnabled = false; break;
             case "Options": OptionsButton.IsEnabled = false; break;
             default: Trace.WriteLine("Nieznana opcja: " + option); break;
-        }
+        }*/
     }
 
     private void HeaderMouseDown(object sender, MouseButtonEventArgs e)
@@ -132,7 +132,7 @@ public partial class MainWindow : Window, IClipboardService
 
     public void ChangePresetTitle(string name)
     {
-        SettingsButton.ContentText = name;
+        PresetsItem.Header = name;
     }
 
     private void HotkeySetup()
