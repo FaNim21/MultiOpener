@@ -208,7 +208,7 @@ public sealed class SettingsViewModel : BaseViewModel
         for (int i = 0; i < folders.Length; i++)
         {
             var folderName = Path.GetFileName(folders[i]);
-            LoadedGroupItem? group = new(folderName);
+            LoadedGroupItem? group = new(folderName, this);
 
             var files = Directory.GetFiles(Path.Combine(_directoryPath, folderName), "*.json", SearchOption.TopDirectoryOnly).AsSpan();
             for (int j = 0; j < files.Length; j++)
@@ -222,7 +222,7 @@ public sealed class SettingsViewModel : BaseViewModel
 
         //Sprawdzanie presetów poza bazową grupą
         var grouplessFiles = Directory.GetFiles(_directoryPath, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
-        LoadedGroupItem? groupless = new("Groupless");
+        LoadedGroupItem? groupless = new("Groupless", this);
         for (int i = 0; i < grouplessFiles.Length; i++)
         {
             var fileName = Path.GetFileNameWithoutExtension(grouplessFiles[i]);
@@ -316,7 +316,7 @@ public sealed class SettingsViewModel : BaseViewModel
     public void RemovePreset(LoadedPresetItem preset)
     {
         var group = preset.ParentGroup!;
-        group.RemovePreset(preset, this);
+        group.RemovePreset(preset);
     }
     public void RemoveGroup(string name, bool recursive = false)
     {
@@ -330,10 +330,11 @@ public sealed class SettingsViewModel : BaseViewModel
                 string path = current.GetPath();
 
                 if (current.Name.Equals("Groupless", StringComparison.OrdinalIgnoreCase)) return;
+                if (recursive) current.RemoveAllPresets();
 
                 try
                 {
-                    Directory.Delete(path, recursive);
+                    Directory.Delete(path);
                 }
                 catch { }
                 return;

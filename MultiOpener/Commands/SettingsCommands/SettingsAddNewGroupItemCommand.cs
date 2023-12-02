@@ -17,7 +17,7 @@ public class SettingsAddNewGroupItemCommand : SettingsCommandBase
         string name = "New Group";
         name = Helper.GetUniqueName(name, name, Settings.IsGroupNameUnique);
 
-        Settings.Groups.Add(new LoadedGroupItem(name));
+        Settings.Groups.Add(new LoadedGroupItem(name, Settings));
         Settings.CreateGroupFolder(name);
     }
 }

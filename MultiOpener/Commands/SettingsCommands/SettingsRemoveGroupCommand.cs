@@ -18,7 +18,7 @@ public class SettingsRemoveGroupCommand : SettingsCommandBase
         if (group.Name.Equals("Groupless", System.StringComparison.OrdinalIgnoreCase))
         {
             if (DialogBox.Show($"Are you sure you want to delete all presets {group.Name}", "Removing Groupless presets", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                group.RemoveAllPresets(Settings);
+                group.RemoveAllPresets();
             return;
         }
 
@@ -36,7 +36,7 @@ public class SettingsRemoveGroupCommand : SettingsCommandBase
                 LoadedGroupItem? groupless = Settings.GetGroupByName("Groupless");
                 if (groupless == null)
                 {
-                    groupless = new LoadedGroupItem("Groupless");
+                    groupless = new LoadedGroupItem("Groupless", Settings);
                     Settings.Groups!.Add(groupless);
                 }
 

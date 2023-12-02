@@ -1,6 +1,5 @@
 ﻿using MultiOpener.Commands;
 using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels;
@@ -13,7 +12,6 @@ public class MainViewModel : BaseViewModel
 
     public readonly SettingsViewModel settings;
     public readonly StartViewModel start;
-    public readonly OptionsViewModel options;
 
 
     private BaseViewModel? _selectedViewModel;
@@ -35,11 +33,10 @@ public class MainViewModel : BaseViewModel
 
         settings = new SettingsViewModel(this);
         start = new StartViewModel(MainWindow);
-        options = new OptionsViewModel();
 
         baseViewModels.Add(start);
-        baseViewModels.Add(options);
         baseViewModels.Add(settings);
+        baseViewModels.Add(new OptionsViewModel());
 
         UpdateViewCommand = new UpdateViewCommand(this);
         UpdateViewCommand.Execute("Start");

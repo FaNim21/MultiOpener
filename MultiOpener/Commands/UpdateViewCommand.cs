@@ -16,7 +16,6 @@ namespace MultiOpener.Commands
             result = result.ToLower() + "viewmodel";
 
             if (result.Equals(viewModel.SelectedViewModel?.GetType().Name.ToLower())) return;
-            StartViewModel.Log($"result: {result} --- previous: {viewModel.SelectedViewModel?.GetType().Name.ToLower()}");
 
             viewModel.SelectedViewModel?.OnDisable();
 

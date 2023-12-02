@@ -4,7 +4,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json.Serialization;
-using System.Windows;
 
 namespace MultiOpener.Entities;
 
@@ -97,18 +96,26 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
     [JsonIgnore]
     public ObservableCollection<LoadedPresetItem> Presets { get; set; } = new();
 
+    [JsonIgnore]
+    private readonly SettingsViewModel? _settings;
 
+
+    [JsonConstructor]
     public LoadedGroupItem(string Name) => this.Name = Name;
+    public LoadedGroupItem(string Name, SettingsViewModel settings) : this(Name) => _settings = settings;
 
     public void AddPreset(LoadedPresetItem preset)
     {
         preset.ParentGroup = this;
         Presets.Add(preset);
     }
-    public void RemovePreset(LoadedPresetItem preset, SettingsViewModel settings)
+    public void RemovePreset(LoadedPresetItem preset)
     {
-        if (preset.Name.Equals(settings.PresetName, StringComparison.OrdinalIgnoreCase))
-            settings.ClearOpenedPreset();
+        if (preset.Name.Equals(_settings!.PresetName, StringComparison.OrdinalIgnoreCase))
+        {
+            _settings.IsCurrentPresetSaved = true;
+            _settings.ClearOpenedPreset();
+        }
 
         Presets.Remove(preset);
 
@@ -118,15 +125,17 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
         }
         catch { }
     }
-    public void RemoveAllPresets(SettingsViewModel settings)
+    public void RemoveAllPresets()
     {
         for (int i = 0; i < Presets.Count; i++)
-            RemovePreset(Presets[i], settings);
+        {
+            RemovePreset(Presets[i]);
+            i--;
+        }
     }
 
     public void ChangeName(string name)
     {
-        var settings = ((MainWindow)Application.Current?.MainWindow!).MainViewModel.settings;
         var path = GetPath();
         var directoryName = Path.GetDirectoryName(path)!;
         var newPath = Path.Combine(directoryName, name);
@@ -134,8 +143,8 @@ public class LoadedGroupItem : BaseViewModel, IRenameItem
         Directory.Move(path, newPath);
         Name = name;
 
-        var preset = GetPreset(settings.PresetName!);
-        if (preset != null) settings.UpdateCurrentLoadedPreset(preset.GetPath());
+        var preset = GetPreset(_settings!.PresetName!);
+        if (preset != null) _settings.UpdateCurrentLoadedPreset(preset.GetPath());
     }
 
     public LoadedPresetItem? GetPreset(string name)

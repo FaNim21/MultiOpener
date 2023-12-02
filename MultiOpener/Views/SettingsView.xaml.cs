@@ -122,7 +122,7 @@ public partial class SettingsView : UserControl
             LoadedGroupItem? groupless = _settings.GetGroupByName("Groupless");
             if (groupless == null)
             {
-                groupless = new LoadedGroupItem("Groupless");
+                groupless = new LoadedGroupItem("Groupless", _settings);
                 _settings.Groups!.Add(groupless);
             }
             targetGroup = groupless;
