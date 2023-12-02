@@ -11,6 +11,8 @@ public class BaseViewModel : INotifyPropertyChanged, IDisposable
 
     protected void OnPropertyChanged(string propertyName)
     {
+        if (Application.Current == null) return;
+
         if (Application.Current.Dispatcher.CheckAccess())
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         else

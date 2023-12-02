@@ -31,9 +31,9 @@ public class StartCloseCommand : StartCommandBase
         MessageBoxResult? result = isForcedToClose ? MessageBoxResult.Yes : DialogBox.Show("Are you sure?", "Closing your app sequence", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (result == MessageBoxResult.Yes)
         {
-            var output = "";
             for (int i = 0; i < Start.Opened.Count; i++)
             {
+                var output = string.Empty;
                 var current = Start.Opened[i];
                 current.Update();
 

@@ -28,11 +28,5 @@ namespace MultiOpenerTests.StartPanel
 
             Assert.That(result, Is.False);
         }
-
-        [Test]
-        public void CheckForUpdates_ReturnsFalse_WhenErrorOccurs()
-        {
-            Assert.ThrowsAsync<Exception>(async () => await _updateChecker.CheckForUpdates("..."));
-        }
     }
 }

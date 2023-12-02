@@ -313,10 +313,10 @@ public sealed class SettingsViewModel : BaseViewModel
         LeftPanelGridVisibility = visibility;
     }
 
-    public static void RemovePreset(LoadedPresetItem preset)
+    public void RemovePreset(LoadedPresetItem preset)
     {
         var group = preset.ParentGroup!;
-        group.RemovePreset(preset);
+        group.RemovePreset(preset, this);
     }
     public void RemoveGroup(string name, bool recursive = false)
     {

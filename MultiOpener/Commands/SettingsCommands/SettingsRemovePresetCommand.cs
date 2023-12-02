@@ -17,6 +17,6 @@ public class SettingsRemovePresetCommand : SettingsCommandBase
 
         var text = File.ReadAllText(preset.GetPath()) ?? string.Empty;
         if (string.IsNullOrEmpty(text) || text.Equals("[]") || DialogBox.Show($"Are you sure that you want to delete {preset.Name!}?\nThe changes will not be able to be restored.", "Deleting preset!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-            SettingsViewModel.RemovePreset(preset);
+            Settings.RemovePreset(preset);
     }
 }

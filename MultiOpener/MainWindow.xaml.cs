@@ -78,11 +78,7 @@ public partial class MainWindow : Window, IClipboardService
                 return;
         }
 
-        if (MainViewModel.SelectedViewModel == MainViewModel.options)
-            MainViewModel.options.SaveOptions();
-
-        if (MainViewModel.SelectedViewModel == MainViewModel.settings)
-            MainViewModel.settings.SaveGroupTree();
+        MainViewModel.SelectedViewModel?.OnDisable();
 
         Close();
     }

@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Commands;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MultiOpener.ViewModels;
@@ -42,5 +43,6 @@ public class MainViewModel : BaseViewModel
 
         UpdateViewCommand = new UpdateViewCommand(this);
         UpdateViewCommand.Execute("Start");
+        MainWindow.StartItem.IsChecked = true;
     }
 }

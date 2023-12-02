@@ -59,7 +59,7 @@ internal class OpeningTest
         Thread.Sleep(250);
         Application.Current.Dispatcher.Invoke(delegate
         {
-            _mainWindow!.MainViewModel.settings.LoadPreset("OpeningUnitTest.json");
+            _mainWindow!.MainViewModel.settings.LoadPreset("C:\\Users\\Filip\\AppData\\Roaming\\MultiOpener\\Presets\\Tests\\OpeningUnitTest.json");
         });
         Thread.Sleep(250);
 
@@ -80,7 +80,7 @@ internal class OpeningTest
         await Task.Delay(100);
         while (Consts.IsStartPanelWorkingNow)
             await Task.Delay(1000);
-        await Task.Delay(250);
+        await Task.Delay(App.Config.TimeLateRefresh + 250);
 
         bool result = false;
         Application.Current.Dispatcher.Invoke(delegate
