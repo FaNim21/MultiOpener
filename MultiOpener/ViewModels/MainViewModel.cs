@@ -38,6 +38,9 @@ public class MainViewModel : BaseViewModel
         baseViewModels.Add(settings);
         baseViewModels.Add(new OptionsViewModel());
 
+        //More sub menu
+        //baseViewModels.Add(new)  //TODO: 0 dodac reset tracker view model do wyswietlania wszystkich statystyk zebranych z procesu wbudowanego reset trackera
+
         UpdateViewCommand = new UpdateViewCommand(this);
         UpdateViewCommand.Execute("Start");
         MainWindow.StartItem.IsChecked = true;

@@ -56,6 +56,17 @@ public partial class MainWindow : Window, IClipboardService
             menuItem.IsChecked = false;
         }
     }
+    private void SubMenuItemClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem clickedMenuItem) return;
+
+        Menu menu = (Menu)((MenuItem)clickedMenuItem.Parent).Parent;
+        foreach (MenuItem menuItem in menu.Items)
+        {
+            if (menuItem == clickedMenuItem) continue;
+            menuItem.IsChecked = false;
+        }
+    }
 
     private void HeaderMouseDown(object sender, MouseButtonEventArgs e)
     {

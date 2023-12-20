@@ -15,6 +15,127 @@
         Title="MultiOpener"
         ResizeMode="NoResize"
         Background="#383A3C">
+    <Window.Resources>
+        <Style x:Key="MenuItem_DropDown"
+               TargetType="MenuItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                        <Border x:Name="border"
+                                Background="#73838d"
+                                BorderThickness="0"
+                                Width="75"
+                                Height="21"
+                                Margin="5 2 0 0">
+                            <Grid>
+                                <ContentPresenter ContentSource="Icon"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Height="20"
+                                                  Width="20"
+                                                  Margin="5 1 0 0" />
+                                <ContentPresenter ContentSource="Header"
+                                                  TextBlock.Foreground="Black"
+                                                  TextBlock.FontWeight="SemiBold"
+                                                  TextBlock.FontSize="12"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Margin="33 -1 0 0" />
+                                <Popup x:Name="PART_Popup"
+                                       AllowsTransparency="True"
+                                       IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Placement="Bottom"
+                                       PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
+
+                                    <Border x:Name="SubMenuBorder"
+                                            Background="#484546"
+                                            BorderBrush="#484546">
+
+                                        <ScrollViewer x:Name="SubMenuScrollViewer"
+                                                      Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer,TypeInTargetAssembly={x:Type FrameworkElement}}}">
+
+                                            <Grid RenderOptions.ClearTypeHint="Enabled">
+
+                                                <Canvas HorizontalAlignment="Left"
+                                                        VerticalAlignment="Top" />
+
+                                                <ItemsPresenter x:Name="ItemsPresenter" />
+
+                                            </Grid>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSuspendingPopupAnimation"
+                                     Value="True">
+                                <Setter Property="PopupAnimation"
+                                        TargetName="PART_Popup"
+                                        Value="None" />
+                            </Trigger>
+                            <Trigger Property="IsHighlighted"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        TargetName="border"
+                                        Value="#859595" />
+                                <Setter Property="BorderBrush"
+                                        TargetName="border"
+                                        Value="#859595" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SubMenuItem"
+               TargetType="MenuItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                        <Border x:Name="border"
+                                Background="#73838d"
+                                BorderThickness="0">
+                            <Grid>
+                                <ContentPresenter ContentSource="Header"
+                                                  TextBlock.Foreground="Black"
+                                                  TextBlock.FontWeight="SemiBold"
+                                                  TextBlock.FontSize="12"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Margin="5 0 0 0" />
+
+                                <Grid x:Name="Highlighter"
+                                      Height="35"
+                                      Width="2"
+                                      Background="#FFFFFF"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Center"
+                                      Visibility="Collapsed" />
+
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        TargetName="border"
+                                        Value="#859595" />
+                                <Setter Property="BorderBrush"
+                                        TargetName="border"
+                                        Value="#859595" />
+                                <Setter Property="Visibility"
+                                        TargetName="Highlighter"
+                                        Value="Visible" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
@@ -41,7 +162,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
-                <Menu Width="240"
+                <Menu Width="325"
                       Background="Transparent"
                       HorizontalAlignment="Left"
                       MouseDown="HeaderMouseDown"
@@ -50,8 +171,8 @@
                         <Style TargetType="MenuItem">
                             <Setter Property="Background"
                                     Value="#73838d" />
-                            <Setter Property="IsCheckable" 
-                                    Value="True"/>
+                            <Setter Property="IsCheckable"
+                                    Value="True" />
                             <Setter Property="Cursor"
                                     Value="Hand" />
                             <Setter Property="Foreground"
@@ -69,21 +190,21 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="MenuItem">
-                                        <Grid>
-                                            <Border Name="Border"
-                                                    Padding="0"
-                                                    Background="{TemplateBinding Background}"
-                                                    BorderThickness="2"
-                                                    BorderBrush="Transparent"
-                                                    Width="{TemplateBinding Width}"
-                                                    Height="{TemplateBinding Height}"
-                                                    Margin="3 0 0 0">
+                                        <Border Name="Border"
+                                                Padding="0"
+                                                Background="{TemplateBinding Background}"
+                                                BorderThickness="2"
+                                                BorderBrush="Transparent"
+                                                Width="{TemplateBinding Width}"
+                                                Height="{TemplateBinding Height}"
+                                                Margin="3 0 0 0">
+                                            <Grid>
                                                 <ContentPresenter VerticalAlignment="Center"
                                                                   HorizontalAlignment="Center"
                                                                   Content="{TemplateBinding Header}"
                                                                   Margin="0 -1 0 0" />
-                                            </Border>
-                                        </Grid>
+                                            </Grid>
+                                        </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsHighlighted"
                                                      Value="True">
@@ -118,6 +239,31 @@
                               Click="MenuItemClick"
                               Command="{Binding UpdateViewCommand}"
                               CommandParameter="Options" />
+                    <MenuItem x:Name="MoreItem"
+                              Header="More"
+                              Style="{StaticResource MenuItem_DropDown}"
+                              Click="MenuItemClick">
+                        <MenuItem.Icon>
+                            <Path Width="15"
+                                  Fill="Black"
+                                  Stretch="Uniform"
+                                  Data="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z" />
+                        </MenuItem.Icon>
+
+                        <MenuItem Header="Reset Tracker"
+                                  Height="20"
+                                  Width="75"
+                                  Click="SubMenuItemClick"
+                                  Command="{Binding UpdateViewCommand}"
+                                  CommandParameter="Settings"
+                                  Style="{StaticResource SubMenuItem}">
+                        </MenuItem>
+                        <MenuItem Header="TBA"
+                                  Height="20"
+                                  Width="75"
+                                  Style="{StaticResource SubMenuItem}">
+                        </MenuItem>
+                    </MenuItem>
                 </Menu>
             </Grid>
 
