@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace MultiOpener;
@@ -50,21 +51,38 @@ public partial class MainWindow : Window, IClipboardService
     {
         if (sender is not MenuItem clickedMenuItem) return;
 
-        foreach (MenuItem menuItem in ((Menu)clickedMenuItem.Parent).Items)
+        MenuItem menuItem = clickedMenuItem;
+        Menu? menu = null;
+        do
         {
-            if (menuItem == clickedMenuItem) continue;
-            menuItem.IsChecked = false;
+            if (menuItem.Parent is Menu menuParent)
+            {
+                menu = menuParent;
+                break;
+            }
+            menuItem = (MenuItem)menuItem.Parent;
+        } while (menu == null);
+
+        CheckMenuItems(menu!, clickedMenuItem);
+    }
+
+    private void CheckMenuItems(Menu menu, MenuItem clickedMenuItem)
+    {
+        foreach (MenuItem item in menu.Items)
+        {
+            if (item == clickedMenuItem) continue;
+            item.IsChecked = false;
+
+            CheckSubMenuItems(item, clickedMenuItem);
         }
     }
-    private void SubMenuItemClick(object sender, RoutedEventArgs e)
+    private void CheckSubMenuItems(MenuItem menuItem, MenuItem clickedMenuItem)
     {
-        if (sender is not MenuItem clickedMenuItem) return;
-
-        Menu menu = (Menu)((MenuItem)clickedMenuItem.Parent).Parent;
-        foreach (MenuItem menuItem in menu.Items)
+        foreach (MenuItem item in menuItem.Items)
         {
-            if (menuItem == clickedMenuItem) continue;
-            menuItem.IsChecked = false;
+            if (item == clickedMenuItem) continue;
+
+            item.IsChecked = false;
         }
     }
 

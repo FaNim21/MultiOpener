@@ -147,11 +147,19 @@ public class OpenInstance : OpenItem
                 {
                     errorCount++;
                     instanceCount = Win32.GetWindowsCountByTitlePattern(mcPatternRegex);
-                    await Task.Delay(TimeSpan.FromMilliseconds(config.Cooldown));
+                    try
+                    {
+                        await Task.Delay(TimeSpan.FromMilliseconds(config.Cooldown), token);
+                    }
+                    catch { break; }
                 } while (instanceCount < openedCount && errorCount < config.ErrorCount);
 
                 instances = Win32.GetWindowsByTitlePattern(mcPatternRegex);
-                await Task.Delay(TimeSpan.FromMilliseconds(1000));
+                try
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(1000), token);
+                }
+                catch { }
             }
 
             for (int i = 0; i < Quantity; i++)

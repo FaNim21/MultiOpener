@@ -92,11 +92,14 @@
 
         <Style x:Key="SubMenuItem"
                TargetType="MenuItem">
+            <Setter Property="IsCheckable"
+                    Value="True" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type MenuItem}">
                         <Border x:Name="border"
                                 Background="#73838d"
+                                BorderBrush="#73838d"
                                 BorderThickness="0">
                             <Grid>
                                 <ContentPresenter ContentSource="Header"
@@ -129,6 +132,15 @@
                                 <Setter Property="Visibility"
                                         TargetName="Highlighter"
                                         Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsChecked"
+                                     Value="true">
+                                <Setter Property="Background"
+                                        TargetName="border"
+                                        Value="#e1fbfc" />
+                                <Setter Property="BorderBrush"
+                                        TargetName="border"
+                                        Value="#e1fbfc" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -253,9 +265,9 @@
                         <MenuItem Header="Reset Tracker"
                                   Height="20"
                                   Width="75"
-                                  Click="SubMenuItemClick"
+                                  Click="MenuItemClick"
                                   Command="{Binding UpdateViewCommand}"
-                                  CommandParameter="Settings"
+                                  CommandParameter="ResetTracker"
                                   Style="{StaticResource SubMenuItem}">
                         </MenuItem>
                         <MenuItem Header="TBA"

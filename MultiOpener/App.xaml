@@ -20,6 +20,9 @@
         <DataTemplate DataType="{x:Type viewModels:OptionsViewModel}">
             <views:OptionsView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ResetTrackerViewModel}">
+            <views:ResetTrackerView/>
+        </DataTemplate>
 
         <DataTemplate DataType="{x:Type settingsViewModels:SettingsOpenNormalModelView}">
             <settingsViews:SettingsOpenNormalView />
