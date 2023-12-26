@@ -403,9 +403,17 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
     public void Setup(string trackerID, bool usingBuiltInTracker)
     {
-        this._trackerId = trackerID;
-        this._usingBuiltInTracker = usingBuiltInTracker;
+        _trackerId = trackerID;
+        _usingBuiltInTracker = usingBuiltInTracker;
         ResetData.UsingBuiltIn = usingBuiltInTracker;
+
+        //TODO: 0 Tymczasowo do statystyk sesji w main resettrackerviewmodel przed zrobieniem zapisywania runow
+        Application.Current?.Dispatcher.Invoke(delegate {
+            MainViewModel mainViewModel = ((MainWindow)Application.Current.MainWindow).MainViewModel;
+            ResetTrackerViewModel? resetTrackerViewModel = mainViewModel.GetViewModel<ResetTrackerViewModel>();
+            if (resetTrackerViewModel != null)
+                resetTrackerViewModel.ResetTracker = this;
+        });
     }
 
     public void ActivateTracker()

@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="MultiOpener.Views.ResetTrackerView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewmodels="clr-namespace:MultiOpener.ViewModels"
              xmlns:converters="clr-namespace:MultiOpener.Converters"
@@ -15,6 +15,210 @@
              d:DesignHeight="450"
              Background="#383A3C">
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="540" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid x:Name="StatsTable"
+                      Width="500"
+                      Height="60"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      Background="LightGray"
+                      Margin="20 20 0 0">
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Margin"
+                                    Value="4 1 0 2" />
+                            <Setter Property="Foreground"
+                                    Value="Black" />
+                            <Setter Property="FontSize"
+                                    Value="12" />
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0">Nether</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="1">Structure 1</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="2">Structure 2</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="3">Nether Exit</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="4">Stronghold</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="5">End</TextBlock>
+
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Text="{Binding ResetTracker.ResetData.NetherEntersCount}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Text="{Binding ResetTracker.ResetData.FirstStructureEntersCount}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="2"
+                               Text="{Binding ResetTracker.ResetData.SecondStructureEntersCount}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="3"
+                               Text="{Binding ResetTracker.ResetData.NetherExitEntersCount}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="4"
+                               Text="{Binding ResetTracker.ResetData.StrongholdEntersCount}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="5"
+                               Text="{Binding ResetTracker.ResetData.EndEntersCount}" />
+
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="0"
+                               Text="{Binding ResetTracker.ResetData.NetherEnterAverageTime}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Text="{Binding ResetTracker.ResetData.FirstStructureEnterAverageTime}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="2"
+                               Text="{Binding ResetTracker.ResetData.SecondStructureEnterAverageTime}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="3"
+                               Text="{Binding ResetTracker.ResetData.NetherExitEnterAverageTime}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="4"
+                               Text="{Binding ResetTracker.ResetData.StrongholdEnterAverageTime}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="5"
+                               Text="{Binding ResetTracker.ResetData.EndEnterAverageTime}" />
+
+                    <Border Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 0 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="1"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 0 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="2"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 0 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="3"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 0 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="4"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 0 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="5"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 1 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="6"
+                            BorderThickness="0,1,0,1"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="2"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="6"
+                            BorderThickness="0 1 0 1"
+                            BorderBrush="Black" />
+                </Grid>
+
+                <Grid Margin="20 90 0 0">
+                    <TextBlock>
+                        <Run Foreground="DarkGray"
+                             Text="Resets: " />
+                        <Run Foreground="White"
+                             Text="{Binding ResetTracker.ResetData.Resets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                    </TextBlock>
+
+                    <Label Content="SOON more info about runs with records etc etc"
+                           FontSize="24"
+                           HorizontalAlignment="Center"
+                           Margin="0 20 0 0" />
+                </Grid>
+            </Grid>
+
+            <Line X1="0"
+                  Y1="0"
+                  X2="540"
+                  Y2="0"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="2"
+                  Stroke="#000D14"
+                  StrokeThickness="2"
+                  Opacity="1" />
+
+            <Grid Grid.Row="1">
+                <Label Content="SOON specific run stats probably here "
+                       FontSize="24"
+                       HorizontalAlignment="Center" />
+            </Grid>
+        </Grid>
+
+        <Line X1="540"
+              Y1="425"
+              X2="540"
+              Y2="0"
+              Grid.Row="1"
+              Grid.ColumnSpan="2"
+              Stroke="#000D14"
+              StrokeThickness="2"
+              Opacity="1" />
+
+        <Grid Grid.Column="1">
+            <StackPanel>
+                <Label Content="NOT WORKING"
+                       FontSize="24"
+                       HorizontalAlignment="Center" />
+
+                <local:ButtonNormal Width="200"
+                                    Height="40"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    Margin="0 20 0 0"
+                                    ContentText="OVERALL"
+                                    ContentMargin="0 0 0 2"
+                                    FontSize="24"
+                                    OnCommand="" />
+
+                <local:ButtonNormal Width="200"
+                                    Height="40"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    Margin="0 20 0 0"
+                                    ContentText="SESSIONS"
+                                    ContentMargin="0 0 0 2"
+                                    FontSize="24"
+                                    OnCommand="" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>
