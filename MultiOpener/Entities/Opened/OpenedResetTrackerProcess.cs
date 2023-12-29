@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.IO;
 using MultiOpener.Entities.Misc;
+using System.Diagnostics;
 
 namespace MultiOpener.Entities.Opened;
 
@@ -408,7 +409,8 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         ResetData.UsingBuiltIn = usingBuiltInTracker;
 
         //TODO: 0 Tymczasowo do statystyk sesji w main resettrackerviewmodel przed zrobieniem zapisywania runow
-        Application.Current?.Dispatcher.Invoke(delegate {
+        Application.Current?.Dispatcher.Invoke(delegate
+        {
             MainViewModel mainViewModel = ((MainWindow)Application.Current.MainWindow).MainViewModel;
             ResetTrackerViewModel? resetTrackerViewModel = mainViewModel.GetViewModel<ResetTrackerViewModel>();
             if (resetTrackerViewModel != null)
@@ -671,7 +673,6 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     }
     private void ClearRecordsFolder()
     {
-        StartViewModel.Log("Clearing records folder for tracking");
         try
         {
             if (Directory.Exists(_recordsFolder))
@@ -685,16 +686,39 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
                 foreach (FileInfo file in files)
                     totalSize += file.Length;
 
-                StartViewModel.Log($"Folder {_recordsFolder} contains {fileCount} files.");
-                StartViewModel.Log($"Total size of files in {_recordsFolder}: {totalSize} bytes.");
+                if (totalSize == 0 || fileCount == 0)
+                    return;
 
-                if (fileCount == 0) return;
+                Stopwatch stopwatch = new();
+                stopwatch.Start();
 
-                foreach (FileInfo file in files)
+                StartViewModel.Log($"Clearing records folder for tracking {_recordsFolder} that contains {fileCount} files.");
+                StartViewModel.Log($"Total size of files in {_recordsFolder}: {Math.Round(totalSize / (1024f * 1024f) * 100) / 100} MB.");
+
+                float percentage = 0.1f;
+                if (fileCount >= 20000) percentage = 0.01f;
+                else if (fileCount >= 10000) percentage = 0.05f;
+
+                int stepSize = (int)Math.Floor(fileCount * percentage);
+                int stepCount = stepSize;
+
+                //TODO: 9 zrobic popup okno z progress barem do takich rzeczy informujac z dokladnym postepem usuwania itp itd
+                for (int i = 0; i < files.Length; i++)
+                {
+                    var file = files[i];
+                    if (i >= stepCount)
+                    {
+                        stepCount += stepSize;
+                        StartViewModel.Log($"Cleared [{i}/{fileCount}] - {Math.Round(((float)i / fileCount) * 100 * 100) / 100}% done");
+                    }
                     file.Delete();
+                }
+                StartViewModel.Log($"Cleared [{fileCount}/{fileCount}] - 100% done");
 
                 directoryInfo.Refresh();
-                StartViewModel.Log($"Cleared folder: {_recordsFolder}");
+                stopwatch.Stop();
+                StartViewModel.Log($"Cleared folder: {_recordsFolder} in {Math.Round(stopwatch.Elapsed.TotalSeconds * 100) / 100} seconds");
+                stopwatch.Reset();
             }
             else
             {
@@ -706,5 +730,15 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         {
             StartViewModel.Log($"Error with clearing {_recordsFolder}", ConsoleLineOption.Error);
         }
+    }
+
+    protected override void OpenOpenedPathFolder()
+    {
+        if (_usingBuiltInTracker)
+        {
+            Process.Start("explorer.exe", _recordsFolder!);
+            return;
+        }
+        base.OpenOpenedPathFolder();
     }
 }
