@@ -18,6 +18,7 @@ public class OpenedProcess : BaseViewModel
     public string? Name { get; protected set; }
     public string? Path { get; protected set; }
     protected ProcessStartInfo? ProcessStartInfo { get; set; }
+    public ProcessStartInfo? ProcessStartInfoView { get { return ProcessStartInfo; } }
 
     private nint _hwnd;
     public nint Hwnd

@@ -5,6 +5,8 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:buttons="clr-namespace:MultiOpener.Components.Buttons"
+        xmlns:opened="clr-namespace:MultiOpener.Entities.Opened"
+        d:DataContext="{d:DesignInstance Type=opened:OpenedProcess}"
         mc:Ignorable="d"
         Title="OpenedInformation"
         Width="700"
@@ -101,19 +103,19 @@
                             <Run Foreground="DarkGray"
                                  Text="FileName: " />
                             <Run Foreground="White"
-                                 Text="{Binding ProcessStartInfo.FileName, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                                 Text="{Binding ProcessStartInfoView.FileName, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
                         </TextBlock>
                         <TextBlock>
                             <Run Foreground="DarkGray"
                                  Text="WorkingDirectory: " />
                             <Run Foreground="White"
-                                 Text="{Binding ProcessStartInfo.WorkingDirectory, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                                 Text="{Binding ProcessStartInfoView.WorkingDirectory, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
                         </TextBlock>
                         <TextBlock>
                             <Run Foreground="DarkGray"
                                  Text="Arguments: " />
                             <Run Foreground="White"
-                                 Text="{Binding ProcessStartInfo.Arguments, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                                 Text="{Binding ProcessStartInfoView.Arguments, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
                         </TextBlock>
 
                         <ContentPresenter Content="{Binding}" />
