@@ -18,6 +18,7 @@
 		<Product>MultiOpener</Product>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<FileVersion>1.0.0</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

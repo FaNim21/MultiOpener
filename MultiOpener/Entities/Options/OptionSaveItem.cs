@@ -31,7 +31,7 @@ public class OptionSaveItem
 
         /* TIMINGS*/
         //Main
-        TimeLateRefresh = 2000;
+        TimeLateRefresh = 500;
         TimeoutOpen = 3750;
 
         //Instance

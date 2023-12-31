@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
              xmlns:viewmodels="clr-namespace:MultiOpener.Entities.Opened"
              d:DataContext="{d:DesignInstance Type=viewmodels:OpenedResetTrackerProcess}"
              mc:Ignorable="d"
@@ -27,7 +28,30 @@
                      Text="Is Tracking: " />
                 <Run Foreground="White"
                      Text="{Binding IsTracking, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                <Run Foreground="DarkGray"
+                     Text="   |  next update in: " />
+                <Run Foreground="White"
+                     Text="{Binding TimeToUpdateStats, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
+
+            <local:ButtonNormal Width="100"
+                                ContentText="Force update"
+                                OnCommand="{Binding ForceUpdateCommand}"
+                                Margin="0 -18 0 0" />
+
+            <TextBlock>
+                <Run Foreground="DarkGray"
+                     Text="Session time: " />
+                <Run Foreground="White"
+                     Text="{Binding ResetData.ElapsedTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+            </TextBlock>
+            <TextBlock>
+                <Run Foreground="DarkGray"
+                    Text="RTA time spend: " />
+                <Run Foreground="White"
+                    Text="{Binding ResetData.TotalRTAPlayTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+            </TextBlock>
+
 
             <Grid x:Name="StatsTable"
                   Width="500"
@@ -51,6 +75,7 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -59,54 +84,62 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0"
-                           Grid.Column="0">Nether</TextBlock>
+                           Grid.Column="0">Iron Pickaxe</TextBlock>
                 <TextBlock Grid.Row="0"
-                           Grid.Column="1">Structure 1</TextBlock>
+                           Grid.Column="1">Nether</TextBlock>
                 <TextBlock Grid.Row="0"
-                           Grid.Column="2">Structure 2</TextBlock>
+                           Grid.Column="2">Structure 1</TextBlock>
                 <TextBlock Grid.Row="0"
-                           Grid.Column="3">Nether Exit</TextBlock>
+                           Grid.Column="3">Structure 2</TextBlock>
                 <TextBlock Grid.Row="0"
-                           Grid.Column="4">Stronghold</TextBlock>
+                           Grid.Column="4">Nether Exit</TextBlock>
                 <TextBlock Grid.Row="0"
-                           Grid.Column="5">End</TextBlock>
+                           Grid.Column="5">Stronghold</TextBlock>
+                <TextBlock Grid.Row="0"
+                           Grid.Column="6">End</TextBlock>
 
                 <TextBlock Grid.Row="1"
-                           Grid.Column="0"
+                           Grid.Column="1"
                            Text="{Binding ResetData.NetherEntersCount}" />
                 <TextBlock Grid.Row="1"
-                           Grid.Column="1"
+                           Grid.Column="2"
                            Text="{Binding ResetData.FirstStructureEntersCount}" />
                 <TextBlock Grid.Row="1"
-                           Grid.Column="2"
+                           Grid.Column="3"
                            Text="{Binding ResetData.SecondStructureEntersCount}" />
                 <TextBlock Grid.Row="1"
-                           Grid.Column="3"
+                           Grid.Column="4"
                            Text="{Binding ResetData.NetherExitEntersCount}" />
                 <TextBlock Grid.Row="1"
-                           Grid.Column="4"
+                           Grid.Column="5"
                            Text="{Binding ResetData.StrongholdEntersCount}" />
                 <TextBlock Grid.Row="1"
-                           Grid.Column="5"
+                           Grid.Column="6"
                            Text="{Binding ResetData.EndEntersCount}" />
 
-                <TextBlock Grid.Row="2"
+                <TextBlock Grid.Row="1"
                            Grid.Column="0"
-                           Text="{Binding ResetData.NetherEnterAverageTime}" />
+                           Grid.RowSpan="2"
+                           FontSize="18"
+                           Text="{Binding ResetData.IronPickaxeCount}"
+                           Margin="2 5 2 0" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="1"
-                           Text="{Binding ResetData.FirstStructureEnterAverageTime}" />
+                           Text="{Binding ResetData.NetherEnterAverageTime}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="2"
-                           Text="{Binding ResetData.SecondStructureEnterAverageTime}" />
+                           Text="{Binding ResetData.FirstStructureEnterAverageTime}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="3"
-                           Text="{Binding ResetData.NetherExitEnterAverageTime}" />
+                           Text="{Binding ResetData.SecondStructureEnterAverageTime}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="4"
-                           Text="{Binding ResetData.StrongholdEnterAverageTime}" />
+                           Text="{Binding ResetData.NetherExitEnterAverageTime}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="5"
+                           Text="{Binding ResetData.StrongholdEnterAverageTime}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="6"
                            Text="{Binding ResetData.EndEnterAverageTime}" />
 
                 <Border Grid.Row="0"
@@ -140,14 +173,24 @@
                         BorderThickness="1 0 1 0"
                         BorderBrush="Black" />
                 <Border Grid.Row="0"
+                        Grid.Column="6"
+                        Grid.RowSpan="3"
+                        BorderThickness="0 0 1 0"
+                        BorderBrush="black" />
+                <Border Grid.Row="0"
                         Grid.Column="0"
-                        Grid.ColumnSpan="6"
+                        Grid.ColumnSpan="7"
                         BorderThickness="0,1,0,1"
                         BorderBrush="Black" />
                 <Border Grid.Row="2"
                         Grid.Column="0"
-                        Grid.ColumnSpan="6"
-                        BorderThickness="0 1 0 1"
+                        Grid.ColumnSpan="7"
+                        BorderThickness="0 0 0 1"
+                        BorderBrush="Black" />
+                <Border Grid.Row="2"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="7"
+                        BorderThickness="0 1 0 0"
                         BorderBrush="Black" />
             </Grid>
 
@@ -160,10 +203,9 @@
 
             <TextBlock>
                 <Run Foreground="DarkGray"
-                    Text="Nethers per enter: " />
+                     Text="NPH: " />
                 <Run Foreground="White"
-                    Text="NO INFORMATIONS" />
-                <!--Text="{Binding ResetData.NetherEnterAverageTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />-->
+                     Text="{Binding ResetData.NetherPerHour, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
 
             <!--

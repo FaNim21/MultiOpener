@@ -1,16 +1,18 @@
-﻿using MultiOpener.Utils;
+﻿using MultiOpener.Commands;
+using MultiOpener.Entities.Misc;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
-using System.Threading.Tasks;
 using System;
-using System.Threading;
-using System.Windows;
-using System.Windows.Media;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Text.Json;
-using System.Collections.Generic;
-using System.IO;
-using MultiOpener.Entities.Misc;
-using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace MultiOpener.Entities.Opened;
 
@@ -24,7 +26,7 @@ namespace MultiOpener.Entities.Opened;
 /// 
 /// Stats Example to do:
 /// - Time in wall
-/// - Time playing
+/// - Time playing (RTA)
 /// - Time needed to enter nether
 /// - Average for all splits
 /// </summary>
@@ -34,6 +36,59 @@ public class ResetStatsViewModel : BaseViewModel
 
     public bool UsingBuiltIn { get; set; }
 
+    #region Times
+    private long _elapsedTimeMiliseconds;
+    public long ElapsedTimeMiliseconds
+    {
+        get => _elapsedTimeMiliseconds;
+        set
+        {
+            _elapsedTimeMiliseconds = value;
+
+            TimeSpan time = TimeSpan.FromMilliseconds(_elapsedTimeMiliseconds);
+            ElapsedTime = string.Format("{0:D2}:{1:D2}.{2:D2}.{3:D1}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 100);
+        }
+    }
+
+    private string? _elapsedTime;
+    public string? ElapsedTime
+    {
+        get => _elapsedTime;
+        set
+        {
+            if (_elapsedTime == value) return;
+
+            _elapsedTime = value;
+            OnPropertyChanged(nameof(ElapsedTime));
+        }
+    }
+
+    private long _totalRTAPlayTimeMiliseconds;
+    public long TotalRTAPlayTimeMiliseconds
+    {
+        get => _totalRTAPlayTimeMiliseconds;
+        set
+        {
+            _totalRTAPlayTimeMiliseconds = value;
+
+            TimeSpan time = TimeSpan.FromMilliseconds(_totalRTAPlayTimeMiliseconds);
+            TotalRTAPlayTime = string.Format("{0:D2}:{1:D2}.{2:D2}.{3:D1}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 100);
+        }
+    }
+
+    private string? _totalRTAPlayTime;
+    public string? TotalRTAPlayTime
+    {
+        get => _totalRTAPlayTime;
+        set
+        {
+            _totalRTAPlayTime = value;
+            OnPropertyChanged(nameof(ElapsedTime));
+        }
+    }
+    #endregion
+
+    #region Resets
     private int _wallResets;
     public int WallResets
     {
@@ -67,8 +122,21 @@ public class ResetStatsViewModel : BaseViewModel
         }
     }
 
-
     public int Resets => WallResets + NoNetherEnterResets + SplitlessResets;
+    #endregion
+
+    #region Splits
+    //IRON PICKAXE
+    private int _ironPickaxeCount;
+    public int IronPickaxeCount
+    {
+        get { return _ironPickaxeCount; }
+        set
+        {
+            _ironPickaxeCount = value;
+            OnPropertyChanged(nameof(IronPickaxeCount));
+        }
+    }
 
 
     //NETHER
@@ -291,49 +359,76 @@ public class ResetStatsViewModel : BaseViewModel
             return formattedTime;
         }
     }
+    #endregion
 
+    #region Basic stats
+    private float _netherPerHour;
+    public float NetherPerHour
+    {
+        get => _netherPerHour;
+        set
+        {
+            _netherPerHour = value;
+            OnPropertyChanged(nameof(NetherPerHour));
+        }
+    }
+
+    #endregion
 
     public void UpdateSplit(string splitName, long time)
     {
-        if (splitName.Equals("enter_nether"))
+        switch (splitName)
         {
-            NetherEntersCount += 1;
-            NetherEntersTime += time;
+            case "enter_nether":
+                NetherEntersCount += 1;
+                NetherEntersTime += time;
+                break;
+            case "enter_bastion":
+                FirstStructureEntersCount += 1;
+                FirstStructureEntersTime += time;
+                break;
+            case "enter_fortress":
+                SecondStructureEntersCount += 1;
+                SecondStructureEntersTime += time;
+                break;
+            case "nether_travel":
+                NetherExitEntersCount += 1;
+                NetherExitEntersTime += time;
+                break;
+            case "enter_stronghold":
+                StrongholdEntersCount += 1;
+                StrongholdEntersTime += time;
+                break;
+            case "enter_end":
+                EndEntersCount += 1;
+                EndEntersTime += time;
+                break;
         }
-        if (splitName.Equals("enter_bastion"))
-        {
-            FirstStructureEntersCount += 1;
-            FirstStructureEntersTime += time;
-        }
-        if (splitName.Equals("enter_fortress"))
-        {
-            SecondStructureEntersCount += 1;
-            SecondStructureEntersTime += time;
-        }
-        if (splitName.Equals("nether_travel"))
-        {
-            NetherExitEntersCount += 1;
-            NetherExitEntersTime += time;
-        }
-        if (splitName.Equals("enter_stronghold"))
-        {
-            StrongholdEntersCount += 1;
-            StrongholdEntersTime += time;
-        }
-        if (splitName.Equals("enter_end"))
-        {
-            EndEntersCount += 1;
-            EndEntersTime += time;
-        }
+    }
+
+    public void UpdatePerHourStats()
+    {
+        //nethers
+        float ratio = NetherEntersCount;
+        if(ElapsedTimeMiliseconds >= 3_600_000)
+            ratio = NetherEntersCount / (ElapsedTimeMiliseconds / 3_600_000f);
+        NetherPerHour = ratio;
+
+
+        //..
     }
 
     public void Clear()
     {
         LastFileDateRead = 0;
 
+        ElapsedTimeMiliseconds = 0;
+        TotalRTAPlayTimeMiliseconds = 0;
+
         NoNetherEnterResets = 0;
         WallResets = 0;
 
+        IronPickaxeCount = 0;
 
         NetherEntersCount = 0;
         NetherEntersTime = 0;
@@ -390,8 +485,26 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         }
     }
 
+    private int _timeToUpdateStats;
+    public int TimeToUpdateStats
+    {
+        get => _timeToUpdateStats;
+        set
+        {
+            _timeToUpdateStats = value;
+            OnPropertyChanged(nameof(TimeToUpdateStats));
+        }
+    }
+
+    public ICommand ForceUpdateCommand { get; set; }
+
     private string _trackerId = string.Empty;
     private bool _usingBuiltInTracker = true;
+    private string? _recordsFolder;
+    private int updateFrequencySize;
+    private long uiUpdateCount = 0;
+
+    private readonly Stopwatch stopwatch = new();
 
     public ResetStatsViewModel ResetData { get; set; } = new();
 
@@ -399,8 +512,11 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
     private CancellationToken _token;
     private Task? _trackerTask;
 
-    private string? _recordsFolder;
 
+    public OpenedResetTrackerProcess()
+    {
+        ForceUpdateCommand = new RelayCommand(ForceUpdateStats);
+    }
 
     public void Setup(string trackerID, bool usingBuiltInTracker)
     {
@@ -437,6 +553,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
         StartViewModel.Log("Activated Tracker");
         _trackerTask = Task.Run(TrackStats, _token);
+        _ = Task.Run(UIUpdate, _token);
     }
     public void DeactivateTracker()
     {
@@ -444,6 +561,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
 
         _source.Cancel();
         IsTracking = false;
+        TimeToUpdateStats = updateFrequencySize;
 
         if (_trackerTask is { IsCompleted: false })
         {
@@ -455,26 +573,55 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         }
 
         _source.Dispose();
+        stopwatch.Stop();
+        UpdateUIStats();
+        stopwatch.Reset();
+        //TODO: 0 saving session before clearing
         ResetStatsData();
         StartViewModel.Log("Deactivated Tracker");
     }
 
     private async Task TrackStats()
     {
+        updateFrequencySize = App.Config.UpdateResetTrackerFrequency / 1000;
+        TimeToUpdateStats = updateFrequencySize;
+
         while (IsTracking)
         {
+            UpdateUIStats();
+
             try
             {
-                await Task.Delay(App.Config.UpdateResetTrackerFrequency, _token);
+                TimeToUpdateStats -= 1;
+                await Task.Delay(TimeSpan.FromSeconds(1), _token);
             }
             catch { break; }
 
-            if (_usingBuiltInTracker)
-                OnBuiltInTracker();
-            else
-                await OnOutsideTracker();
 
-            StartViewModel.Log("Tracking...");
+            if (TimeToUpdateStats == 0)
+            {
+                if (_usingBuiltInTracker)
+                    OnBuiltInTracker();
+                else
+                    await OnOutsideTracker();
+
+                TimeToUpdateStats = updateFrequencySize;
+            }
+        }
+    }
+    private async Task UIUpdate()
+    {
+        stopwatch.Start();
+
+        while (IsTracking)
+        {
+            UpdateUIStats();
+
+            try
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(100), _token);
+            }
+            catch { break; }
         }
     }
 
@@ -483,7 +630,8 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         if (string.IsNullOrEmpty(_recordsFolder)) return;
 
         long lastFileOpenedRead = ResetData.LastFileDateRead;
-        var records = Directory.GetFiles(_recordsFolder!, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
+        var records = Directory.GetFiles(_recordsFolder, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
+        //mozliwe uzycie Parallel z partycjonowaniem, ale czy potrzebne jezeli juz bedzie gotowy
         for (int i = 0; i < records.Length; i++)
         {
             string text = File.ReadAllText(records[i]) ?? string.Empty;
@@ -492,53 +640,13 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
                 if (string.IsNullOrEmpty(text)) continue;
                 RecordData? data = JsonSerializer.Deserialize<RecordData>(text);
 
-                if (data != null)
-                {
-                    if (data.Date <= ResetData.LastFileDateRead) continue;
-                    if (data.Date >= lastFileOpenedRead) lastFileOpenedRead = data.Date;
+                if (data == null) continue;
+                if (data.Date <= ResetData.LastFileDateRead) return;
+                if (data.Date >= lastFileOpenedRead) lastFileOpenedRead = data.Date;
+                if (!data.Type!.Equals("random_seed") || data.DefaultGameMode != 0) return;
+                if (data.OpenLanTime == null && data.IsCheatAllowed) return;
 
-                    if (!data.Type.Equals("random_seed")) continue;
-                    if (data.FinalRTA == 0)
-                    {
-                        ResetData.WallResets += 1;
-                        continue;
-                    }
-
-                    if (data.Timelines == null || data.Timelines.Length == 0)
-                    {
-                        ResetData.NoNetherEnterResets += 1;
-                        continue;
-                    }
-
-                    //TODO: 2 here i need to see if every type of timelines will be sorted properly to splits
-                    for (int j = 0; j < data.Timelines.Length; j++)
-                    {
-                        RecordTimelinesData? prev = j - 1 >= 0 ? data.Timelines[j - 1] : null;
-                        RecordTimelinesData? current = data.Timelines[j];
-                        string name = current.Name!;
-
-                        if (data.OpenLanTime != null)
-                        {
-                            string? lan = data.OpenLanTime.ToString();
-                            if (!string.IsNullOrEmpty(lan))
-                            {
-                                long lanTime = long.Parse(lan);
-                                if (lanTime < current.RTA)
-                                {
-                                    ResetData.SplitlessResets += 1;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (name.Equals("enter_fortress") && prev != null && prev.Name!.Equals("enter_nether"))
-                            name = "enter_bastion";
-                        else if (name.Equals("enter_bastion") && prev != null && prev.Name!.Equals("enter_fortress"))
-                            name = "enter_fortress";
-
-                        ResetData.UpdateSplit(name, current.IGT);
-                    }
-                }
+                FilterResetData(data);
             }
             catch (JsonException ex)
             {
@@ -546,6 +654,75 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
             }
         }
         ResetData.LastFileDateRead = lastFileOpenedRead;
+    }
+
+    private void FilterResetData(RecordData data)
+    {
+        bool foundIronPick = false;
+        if (data.FinalRTA == 0)
+        {
+            ResetData.WallResets += 1;
+            return;
+        }
+
+        //ADVANCEMENTS
+        if (data.Advancements != null && data.Advancements.Count != 0)
+        {
+            //IRON PICK
+            if (data.Advancements.TryGetValue("minecraft:story/iron_tools", out var story) && story.IsCompleted)
+            {
+                ResetData.IronPickaxeCount += 1;
+                foundIronPick = true;
+            }
+        }
+
+        //STATS
+        if (data.Stats != null && data.Stats.Count != 0)
+        {
+            string key = GetFirstKey(data.Stats)!;
+            RecordStatsCategoriesData? statsData = data.Stats[key].StatsData;
+
+            //DIAMOND PICK
+            if (statsData != null && statsData.Crafted != null && statsData.Crafted.TryGetValue("minecraft:diamond_pickaxe", out _) && !foundIronPick)
+            {
+                ResetData.IronPickaxeCount += 1;
+                foundIronPick = true;
+            }
+        }
+
+        //MAIN SPLITS
+        if (data.Timelines == null || data.Timelines.Length == 0)
+        {
+            ResetData.NoNetherEnterResets += 1;
+            return;
+        }
+        for (int j = 0; j < data.Timelines?.Length; j++)
+        {
+            RecordTimelinesData? prev = j - 1 >= 0 ? data.Timelines[j - 1] : null;
+            RecordTimelinesData? current = data.Timelines[j];
+            string name = current.Name!;
+
+            if (data.OpenLanTime != null)
+            {
+                string? lan = data.OpenLanTime.ToString();
+                if (!string.IsNullOrEmpty(lan))
+                {
+                    long lanTime = long.Parse(lan);
+                    if (lanTime < current.RTA)
+                    {
+                        ResetData.SplitlessResets += 1;
+                        break;
+                    }
+                }
+            }
+
+            if (name.Equals("enter_fortress") && prev != null && prev.Name!.Equals("enter_nether"))
+                name = "enter_bastion";
+            else if (name.Equals("enter_bastion") && prev != null && prev.Name!.Equals("enter_fortress"))
+                name = "enter_fortress";
+
+            ResetData.UpdateSplit(name, current.IGT);
+        }
     }
 
     private async Task OnOutsideTracker()
@@ -596,6 +773,18 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         catch
         {
             StartViewModel.Log("Error fetching stats", ConsoleLineOption.Error);
+        }
+    }
+
+    private void UpdateUIStats()
+    {
+        //every 100 miliseconds
+        uiUpdateCount++;
+        ResetData.ElapsedTimeMiliseconds = stopwatch.ElapsedMilliseconds;
+
+        if(uiUpdateCount % 10 == 0) //every second
+        {
+            ResetData.UpdatePerHourStats();
         }
     }
 
@@ -740,5 +929,19 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
             return;
         }
         base.OpenOpenedPathFolder();
+    }
+
+    private void ForceUpdateStats()
+    {
+        if (!IsTracking) return;
+
+        TimeToUpdateStats = 0;
+    }
+
+    private TKey? GetFirstKey<TKey, TValue>(Dictionary<TKey, TValue> dictionary)
+    {
+        foreach (var key in dictionary.Keys)
+            return key;
+        return default;
     }
 }

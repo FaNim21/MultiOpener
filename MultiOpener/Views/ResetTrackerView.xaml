@@ -44,7 +44,9 @@
                                     Value="12" />
                         </Style>
                     </Grid.Resources>
+
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
@@ -59,54 +61,62 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0"
-                               Grid.Column="0">Nether</TextBlock>
+                               Grid.Column="0">Iron Pickaxe</TextBlock>
                     <TextBlock Grid.Row="0"
-                               Grid.Column="1">Structure 1</TextBlock>
+                               Grid.Column="1">Nether</TextBlock>
                     <TextBlock Grid.Row="0"
-                               Grid.Column="2">Structure 2</TextBlock>
+                               Grid.Column="2">Structure 1</TextBlock>
                     <TextBlock Grid.Row="0"
-                               Grid.Column="3">Nether Exit</TextBlock>
+                               Grid.Column="3">Structure 2</TextBlock>
                     <TextBlock Grid.Row="0"
-                               Grid.Column="4">Stronghold</TextBlock>
+                               Grid.Column="4">Nether Exit</TextBlock>
                     <TextBlock Grid.Row="0"
-                               Grid.Column="5">End</TextBlock>
+                               Grid.Column="5">Stronghold</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="6">End</TextBlock>
 
                     <TextBlock Grid.Row="1"
-                               Grid.Column="0"
+                               Grid.Column="1"
                                Text="{Binding ResetTracker.ResetData.NetherEntersCount}" />
                     <TextBlock Grid.Row="1"
-                               Grid.Column="1"
+                               Grid.Column="2"
                                Text="{Binding ResetTracker.ResetData.FirstStructureEntersCount}" />
                     <TextBlock Grid.Row="1"
-                               Grid.Column="2"
+                               Grid.Column="3"
                                Text="{Binding ResetTracker.ResetData.SecondStructureEntersCount}" />
                     <TextBlock Grid.Row="1"
-                               Grid.Column="3"
+                               Grid.Column="4"
                                Text="{Binding ResetTracker.ResetData.NetherExitEntersCount}" />
                     <TextBlock Grid.Row="1"
-                               Grid.Column="4"
+                               Grid.Column="5"
                                Text="{Binding ResetTracker.ResetData.StrongholdEntersCount}" />
                     <TextBlock Grid.Row="1"
-                               Grid.Column="5"
+                               Grid.Column="6"
                                Text="{Binding ResetTracker.ResetData.EndEntersCount}" />
 
-                    <TextBlock Grid.Row="2"
+                    <TextBlock Grid.Row="1"
                                Grid.Column="0"
-                               Text="{Binding ResetTracker.ResetData.NetherEnterAverageTime}" />
+                               Grid.RowSpan="2"
+                               FontSize="18"
+                               Text="{Binding ResetTracker.ResetData.IronPickaxeCount}"
+                               Margin="2 5 2 0" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="1"
-                               Text="{Binding ResetTracker.ResetData.FirstStructureEnterAverageTime}" />
+                               Text="{Binding ResetTracker.ResetData.NetherEnterAverageTime}" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="2"
-                               Text="{Binding ResetTracker.ResetData.SecondStructureEnterAverageTime}" />
+                               Text="{Binding ResetTracker.ResetData.FirstStructureEnterAverageTime}" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="3"
-                               Text="{Binding ResetTracker.ResetData.NetherExitEnterAverageTime}" />
+                               Text="{Binding ResetTracker.ResetData.SecondStructureEnterAverageTime}" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="4"
-                               Text="{Binding ResetTracker.ResetData.StrongholdEnterAverageTime}" />
+                               Text="{Binding ResetTracker.ResetData.NetherExitEnterAverageTime}" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="5"
+                               Text="{Binding ResetTracker.ResetData.StrongholdEnterAverageTime}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="6"
                                Text="{Binding ResetTracker.ResetData.EndEnterAverageTime}" />
 
                     <Border Grid.Row="0"
@@ -140,14 +150,24 @@
                             BorderThickness="1 0 1 0"
                             BorderBrush="Black" />
                     <Border Grid.Row="0"
+                            Grid.Column="6"
+                            Grid.RowSpan="3"
+                            BorderThickness="0 0 1 0"
+                            BorderBrush="black" />
+                    <Border Grid.Row="0"
                             Grid.Column="0"
-                            Grid.ColumnSpan="6"
+                            Grid.ColumnSpan="7"
                             BorderThickness="0,1,0,1"
                             BorderBrush="Black" />
                     <Border Grid.Row="2"
                             Grid.Column="0"
-                            Grid.ColumnSpan="6"
-                            BorderThickness="0 1 0 1"
+                            Grid.ColumnSpan="7"
+                            BorderThickness="0 0 0 1"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="2"
+                            Grid.Column="1"
+                            Grid.ColumnSpan="7"
+                            BorderThickness="0 1 0 0"
                             BorderBrush="Black" />
                 </Grid>
 
