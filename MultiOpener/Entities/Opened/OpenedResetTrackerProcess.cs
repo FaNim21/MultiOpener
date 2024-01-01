@@ -29,6 +29,7 @@ namespace MultiOpener.Entities.Opened;
 /// - Time playing (RTA)
 /// - Time needed to enter nether
 /// - Average for all splits
+/// - time played stats
 /// </summary>
 public class ResetStatsViewModel : BaseViewModel
 {
@@ -409,10 +410,8 @@ public class ResetStatsViewModel : BaseViewModel
     public void UpdatePerHourStats()
     {
         //nethers
-        float ratio = NetherEntersCount;
-        if(ElapsedTimeMiliseconds >= 3_600_000)
-            ratio = NetherEntersCount / (ElapsedTimeMiliseconds / 3_600_000f);
-        NetherPerHour = ratio;
+        float ratio = NetherEntersCount / (ElapsedTimeMiliseconds / 3_600_000f);
+        NetherPerHour = (float)Math.Round(ratio, 2);
 
 
         //..
@@ -782,7 +781,7 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
         uiUpdateCount++;
         ResetData.ElapsedTimeMiliseconds = stopwatch.ElapsedMilliseconds;
 
-        if(uiUpdateCount % 10 == 0) //every second
+        if (uiUpdateCount % 10 == 0) //every second
         {
             ResetData.UpdatePerHourStats();
         }
