@@ -61,38 +61,22 @@ public class RecordStatsCategoriesData
 
 public class RecordData
 {
-    [JsonPropertyName("mc_version")]
-    public string? Version { get; set; }
+    [JsonPropertyName("mc_version")] public string? Version { get; set; }
+    [JsonPropertyName("speedrunigt_version")] public string? SpeedrunIGTVersion { get; set; }
+    [JsonPropertyName("category")] public string? Category { get; set; }
+    [JsonPropertyName("run_type")] public string? Type { get; set; }
 
-    [JsonPropertyName("speedrunigt_version")]
-    public string? SpeedrunIGTVersion { get; set; }
+    [JsonPropertyName("is_cheat_allowed")] public bool IsCheatAllowed { get; set; }
+    [JsonPropertyName("default_gamemode")] public int DefaultGameMode { get; set; }
+    [JsonPropertyName("open_lan")] public object? OpenLanTime { get; set; }
 
-    [JsonPropertyName("run_type")]
-    public string? Type { get; set; }
+    [JsonPropertyName("date")] public long Date {  get; set; }
 
-    [JsonPropertyName("is_cheat_allowed")]
-    public bool IsCheatAllowed { get; set; }
+    [JsonPropertyName("retimed_igt")] public long RetimedIGT { get; set; }
+    [JsonPropertyName("final_igt")] public long FinalIGT { get; set; }
+    [JsonPropertyName("final_rta")] public long FinalRTA { get; set; }
 
-    [JsonPropertyName("default_gamemode")]
-    public int DefaultGameMode { get; set; }
-
-    [JsonPropertyName("date")]
-    public long Date {  get; set; }
-
-    [JsonPropertyName("open_lan")]
-    public object? OpenLanTime { get; set; }
-
-    [JsonPropertyName("retimed_igt")]
-    public long RetimedIGT { get; set; }
-    [JsonPropertyName("final_igt")]
-    public long FinalIGT { get; set; }
-    [JsonPropertyName("final_rta")]
-    public long FinalRTA { get; set; }
-
-    [JsonPropertyName("timelines")]
-    public RecordTimelinesData[]? Timelines { get; set; }
-    [JsonPropertyName("advancements")]
-    public Dictionary<string, RecordAdvancementsData>? Advancements { get; set; }
-    [JsonPropertyName("stats")]
-    public Dictionary<string, RecordStatsData>? Stats { get; set; }
+    [JsonPropertyName("timelines")] public RecordTimelinesData[]? Timelines { get; set; }
+    [JsonPropertyName("advancements")] public Dictionary<string, RecordAdvancementsData>? Advancements { get; set; }
+    [JsonPropertyName("stats")] public Dictionary<string, RecordStatsData>? Stats { get; set; }
 }

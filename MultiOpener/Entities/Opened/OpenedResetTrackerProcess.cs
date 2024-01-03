@@ -1,4 +1,5 @@
-﻿using MultiOpener.Commands;
+﻿using Microsoft.VisualBasic;
+using MultiOpener.Commands;
 using MultiOpener.Entities.Misc;
 using MultiOpener.Utils;
 using MultiOpener.ViewModels;
@@ -640,10 +641,10 @@ public sealed class OpenedResetTrackerProcess : OpenedProcess
                 RecordData? data = JsonSerializer.Deserialize<RecordData>(text);
 
                 if (data == null) continue;
-                if (data.Date <= ResetData.LastFileDateRead) return;
+                if (data.Date <= ResetData.LastFileDateRead) continue;
                 if (data.Date >= lastFileOpenedRead) lastFileOpenedRead = data.Date;
-                if (!data.Type!.Equals("random_seed") || data.DefaultGameMode != 0) return;
-                if (data.OpenLanTime == null && data.IsCheatAllowed) return;
+                if (!data.Type!.Equals("random_seed") || data.DefaultGameMode != 0) continue;
+                if (data.OpenLanTime == null && data.IsCheatAllowed) continue;
 
                 FilterResetData(data);
             }
