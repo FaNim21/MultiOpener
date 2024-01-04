@@ -346,7 +346,8 @@ public partial class Win32
             if (process != null && !process.HasExited)
                 return process.Responding;
         }
-        catch (Exception) { }
+        catch (ArgumentException) { }
+        catch (Exception ex) { StartViewModel.Log(ex.Message); }
 
         return false;
     }

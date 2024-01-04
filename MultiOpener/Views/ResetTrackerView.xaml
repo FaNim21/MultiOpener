@@ -77,47 +77,47 @@
 
                     <TextBlock Grid.Row="1"
                                Grid.Column="1"
-                               Text="{Binding ResetTracker.ResetData.NetherEntersCount}" />
+                               Text="{Binding ResetTracker.SessionData.NetherEntersCount}" />
                     <TextBlock Grid.Row="1"
                                Grid.Column="2"
-                               Text="{Binding ResetTracker.ResetData.FirstStructureEntersCount}" />
+                               Text="{Binding ResetTracker.SessionData.FirstStructureEntersCount}" />
                     <TextBlock Grid.Row="1"
                                Grid.Column="3"
-                               Text="{Binding ResetTracker.ResetData.SecondStructureEntersCount}" />
+                               Text="{Binding ResetTracker.SessionData.SecondStructureEntersCount}" />
                     <TextBlock Grid.Row="1"
                                Grid.Column="4"
-                               Text="{Binding ResetTracker.ResetData.NetherExitEntersCount}" />
+                               Text="{Binding ResetTracker.SessionData.NetherExitEntersCount}" />
                     <TextBlock Grid.Row="1"
                                Grid.Column="5"
-                               Text="{Binding ResetTracker.ResetData.StrongholdEntersCount}" />
+                               Text="{Binding ResetTracker.SessionData.StrongholdEntersCount}" />
                     <TextBlock Grid.Row="1"
                                Grid.Column="6"
-                               Text="{Binding ResetTracker.ResetData.EndEntersCount}" />
+                               Text="{Binding ResetTracker.SessionData.EndEntersCount}" />
 
                     <TextBlock Grid.Row="1"
                                Grid.Column="0"
                                Grid.RowSpan="2"
                                FontSize="18"
-                               Text="{Binding ResetTracker.ResetData.IronPickaxeCount}"
+                               Text="{Binding ResetTracker.SessionData.IronPickaxeCount}"
                                Margin="2 5 2 0" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="1"
-                               Text="{Binding ResetTracker.ResetData.NetherEnterAverageTime}" />
+                               Text="{Binding ResetTracker.SessionData.NetherEnterAverageTime}" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="2"
-                               Text="{Binding ResetTracker.ResetData.FirstStructureEnterAverageTime}" />
+                               Text="{Binding ResetTracker.SessionData.FirstStructureEnterAverageTime}" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="3"
-                               Text="{Binding ResetTracker.ResetData.SecondStructureEnterAverageTime}" />
+                               Text="{Binding ResetTracker.SessionData.SecondStructureEnterAverageTime}" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="4"
-                               Text="{Binding ResetTracker.ResetData.NetherExitEnterAverageTime}" />
+                               Text="{Binding ResetTracker.SessionData.NetherExitEnterAverageTime}" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="5"
-                               Text="{Binding ResetTracker.ResetData.StrongholdEnterAverageTime}" />
+                               Text="{Binding ResetTracker.SessionData.StrongholdEnterAverageTime}" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="6"
-                               Text="{Binding ResetTracker.ResetData.EndEnterAverageTime}" />
+                               Text="{Binding ResetTracker.SessionData.EndEnterAverageTime}" />
 
                     <Border Grid.Row="0"
                             Grid.Column="0"
@@ -176,7 +176,7 @@
                         <Run Foreground="DarkGray"
                              Text="Resets: " />
                         <Run Foreground="White"
-                             Text="{Binding ResetTracker.ResetData.Resets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                             Text="{Binding ResetTracker.SessionData.Resets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
                     </TextBlock>
 
                     <Label Content="SOON more info about runs with records etc etc"

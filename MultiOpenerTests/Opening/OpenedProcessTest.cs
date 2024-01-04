@@ -27,7 +27,7 @@ internal class OpenedProcessTest
             {
                 OpenedProcess opened = new(null);
                 string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
-                opened.Initialize(startInfo, name!, _pathExe, process.Id);
+                opened.Initialize(startInfo, name!, _pathExe, false, process.Id);
 
                 int errors = 0;
                 while (!opened.SetHwnd() && errors < 15)

@@ -21,7 +21,7 @@
                 <Run Foreground="DarkGray"
                      Text="External tracker: " />
                 <Run Foreground="White"
-                     Text="{Binding ResetData.UsingBuiltIn, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}" />
+                     Text="{Binding SessionData.UsingBuiltIn, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}" />
             </TextBlock>
             <TextBlock>
                 <Run Foreground="DarkGray"
@@ -43,13 +43,13 @@
                 <Run Foreground="DarkGray"
                      Text="Session time: " />
                 <Run Foreground="White"
-                     Text="{Binding ResetData.ElapsedTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.ElapsedTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
             <TextBlock>
                 <Run Foreground="DarkGray"
                     Text="RTA time spend: " />
                 <Run Foreground="White"
-                    Text="{Binding ResetData.TotalRTAPlayTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                    Text="{Binding SessionData.TotalRTAPlayTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
 
 
@@ -100,47 +100,47 @@
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="1"
-                           Text="{Binding ResetData.NetherEntersCount}" />
+                           Text="{Binding SessionData.NetherEntersCount}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="2"
-                           Text="{Binding ResetData.FirstStructureEntersCount}" />
+                           Text="{Binding SessionData.FirstStructureEntersCount}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="3"
-                           Text="{Binding ResetData.SecondStructureEntersCount}" />
+                           Text="{Binding SessionData.SecondStructureEntersCount}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="4"
-                           Text="{Binding ResetData.NetherExitEntersCount}" />
+                           Text="{Binding SessionData.NetherExitEntersCount}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="5"
-                           Text="{Binding ResetData.StrongholdEntersCount}" />
+                           Text="{Binding SessionData.StrongholdEntersCount}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="6"
-                           Text="{Binding ResetData.EndEntersCount}" />
+                           Text="{Binding SessionData.EndEntersCount}" />
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="0"
                            Grid.RowSpan="2"
                            FontSize="18"
-                           Text="{Binding ResetData.IronPickaxeCount}"
+                           Text="{Binding SessionData.IronPickaxeCount}"
                            Margin="2 5 2 0" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="1"
-                           Text="{Binding ResetData.NetherEnterAverageTime}" />
+                           Text="{Binding SessionData.NetherEnterAverageTime}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="2"
-                           Text="{Binding ResetData.FirstStructureEnterAverageTime}" />
+                           Text="{Binding SessionData.FirstStructureEnterAverageTime}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="3"
-                           Text="{Binding ResetData.SecondStructureEnterAverageTime}" />
+                           Text="{Binding SessionData.SecondStructureEnterAverageTime}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="4"
-                           Text="{Binding ResetData.NetherExitEnterAverageTime}" />
+                           Text="{Binding SessionData.NetherExitEnterAverageTime}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="5"
-                           Text="{Binding ResetData.StrongholdEnterAverageTime}" />
+                           Text="{Binding SessionData.StrongholdEnterAverageTime}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="6"
-                           Text="{Binding ResetData.EndEnterAverageTime}" />
+                           Text="{Binding SessionData.EndEnterAverageTime}" />
 
                 <Border Grid.Row="0"
                         Grid.Column="0"
@@ -198,14 +198,14 @@
                 <Run Foreground="DarkGray"
                      Text="Resets: " />
                 <Run Foreground="White"
-                     Text="{Binding ResetData.Resets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.Resets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
 
             <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="NPH: " />
                 <Run Foreground="White"
-                     Text="{Binding ResetData.NetherPerHour, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.NetherPerHour, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
 
             <!--

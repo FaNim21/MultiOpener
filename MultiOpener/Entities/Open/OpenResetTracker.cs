@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
+using MultiOpener.Entities.Opened.ResetTracker;
 
 namespace MultiOpener.Entities.Open;
 
@@ -49,14 +50,13 @@ public sealed class OpenResetTracker : OpenItem
 
     public override async Task Open(StartViewModel startModel, CancellationToken token)
     {
-        OpenedResetTrackerProcess opened = new();
+        OpenedResetTrackerProcess? opened = null;
         bool isCancelled = token.IsCancellationRequested;
 
         if (UsingBuiltInTracker)
         {
-            opened.Initialize(null, "Tracker", string.Empty);
-            opened.Setup(TrackerID, UsingBuiltInTracker);
-            opened.isMinimizeOnOpen = MinimizeOnOpen;
+            opened = new ResetTrackerLocal();
+            opened.Initialize(null, "Tracker", string.Empty, MinimizeOnOpen);
             if (!isCancelled)
                 opened.ActivateTracker();
         }
@@ -70,9 +70,8 @@ public sealed class OpenResetTracker : OpenItem
                 string pathDir = Path.GetDirectoryName(PathExe) ?? "";
                 ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
                 string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
-                opened.Initialize(startInfo, name!, PathExe);
-                opened.Setup(TrackerID, UsingBuiltInTracker);
-                opened.isMinimizeOnOpen = MinimizeOnOpen;
+                opened = new ResetTrackerExternalSource(TrackerID);
+                opened.Initialize(startInfo, name!, PathExe, MinimizeOnOpen);
 
                 if (isCancelled) opened.Clear();
                 else
@@ -91,6 +90,7 @@ public sealed class OpenResetTracker : OpenItem
             }
         }
 
+        if (opened == null) return;
         Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Instance?.AddOpened(opened); });
     }
 }

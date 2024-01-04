@@ -117,11 +117,12 @@ public class OpenedProcess : BaseViewModel
         });
     }
 
-    public void Initialize(ProcessStartInfo? processStartInfo, string name, string path, int pid = -1)
+    public void Initialize(ProcessStartInfo? processStartInfo, string name, string path, bool isMinimizeOnOpen = false, int pid = -1)
     {
         ProcessStartInfo = processStartInfo;
         Name = name;
         Path = path;
+        this.isMinimizeOnOpen = isMinimizeOnOpen;
 
         SetPid(pid);
         SetHwnd(nint.Zero);
@@ -419,8 +420,12 @@ public class OpenedProcess : BaseViewModel
         StartViewModel.Log($"Succesfully opened '{Name}' at process ID: {Pid}");
         return true;
     }
+
+    protected virtual void ReleaseResources() { }
     public virtual async Task<bool> Close()
     {
+        ReleaseResources();
+
         if (Pid == -1)
         {
             Clear();
@@ -431,9 +436,7 @@ public class OpenedProcess : BaseViewModel
         {
             bool output = false;
 
-            Process process = Process.GetProcessById(Pid);
-
-            if (!process.Responding)
+            if (!Win32.IsProcessResponding(Pid))
                 output = await Win32.CloseProcessByPid(Pid);
 
             if (!output)

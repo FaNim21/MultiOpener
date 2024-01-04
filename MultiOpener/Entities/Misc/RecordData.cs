@@ -16,26 +16,20 @@ public class RecordTimelinesData
 
 public class RecordAdvancementsData
 {
-    [JsonPropertyName("complete")]
-    public bool IsCompleted { get; set; }
+    [JsonPropertyName("complete")] public bool IsCompleted { get; set; }
 
-    [JsonPropertyName("criteria")]
-    public RecordAdvancementCriteriaData? Criteria { get; set; }
+    [JsonPropertyName("criteria")] public RecordAdvancementCriteriaData? Criteria { get; set; }
 }
 
 public class RecordAdvancementCriteriaData
 {
-    [JsonPropertyName("iron_pickaxe")]
-    public Dictionary<string, object>? IronPickaxe { get; set; }
+    [JsonPropertyName("iron_pickaxe")] public Dictionary<string, object>? IronPickaxe { get; set; }
 }
 
 public class RecordStatsData
 {
-    [JsonPropertyName("stats")]
-    public RecordStatsCategoriesData? StatsData { get; set; }
-
-    [JsonPropertyName("DataVersion")]
-    public int DataVersion { get; set; }
+    [JsonPropertyName("stats")] public RecordStatsCategoriesData? StatsData { get; set; }
+    [JsonPropertyName("DataVersion")] public int DataVersion { get; set; }
 }
 
 public class RecordStatsCategoriesData

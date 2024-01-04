@@ -87,8 +87,7 @@ public class OpenItem : BaseViewModel, IRenameItem
             OpenedProcess opened = new();
             ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
             string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
-            opened.isMinimizeOnOpen = MinimizeOnOpen;
-            opened.Initialize(startInfo, name!, PathExe);
+            opened.Initialize(startInfo, name!, PathExe, MinimizeOnOpen);
 
             if (isCancelled) opened.Clear();
             else
