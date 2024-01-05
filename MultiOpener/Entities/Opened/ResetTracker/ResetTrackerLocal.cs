@@ -1,5 +1,6 @@
 ﻿using MultiOpener.Entities.Misc;
 using MultiOpener.ViewModels;
+using MultiOpener.ViewModels.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,14 +19,34 @@ namespace MultiOpener.Entities.Opened.ResetTracker
     /// - Time needed to enter nether
     /// - Average for all splits
     /// - time played stats
+    /// - wyciaganie seeda z level.dat z folderu swiata
+    /// - resets per nether enter
     /// </summary>
     public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
     {
         private readonly Stopwatch stopwatch = new();
 
-        private string? _recordsFolder;
+        private readonly string _trackerPath;
 
-        public ResetTrackerLocal() : base() { }
+        private string? _recordsFolder;
+        private DateTime _prevDateTime;
+        private const int _breakThreshold = 30;
+
+        private long breakTime;
+        private long wallTime;
+        private long rtaSincePrev;
+
+        //TODO: 0 teraz trzeba zrobic to + teim since previous z stopwatcha i naprawic resetowanie trackera
+        private int wallResetsSincePrevious;
+        private int playedSincePrev;
+
+
+        public ResetTrackerLocal() : base()
+        {
+            _trackerPath = System.IO.Path.Combine(Consts.AppdataPath, "Tracker");
+
+            if (!Directory.Exists(_trackerPath)) Directory.CreateDirectory(_trackerPath);
+        }
 
         public override void ActivateTracker()
         {
@@ -66,7 +87,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             stopwatch.Stop();
             UpdateUIStats();
             stopwatch.Reset();
-            //TODO: 0 saving session before clearing
+            SaveSession();
             SessionData.Clear();
             StartViewModel.Log("Deactivated Tracker");
         }
@@ -102,7 +123,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 
             long lastFileOpenedRead = SessionData.LastFileDateRead;
             var records = Directory.GetFiles(_recordsFolder, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
-            //mozliwe uzycie Parallel z partycjonowaniem, ale czy potrzebne jezeli juz bedzie gotowy
+            //mozliwe uzycie Parallel z partycjonowaniem, ale czy potrzebne jezeli juz bedzie gotowy?
             for (int i = 0; i < records.Length; i++)
             {
                 string text = File.ReadAllText(records[i]) ?? string.Empty;
@@ -126,73 +147,177 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             }
             SessionData.LastFileDateRead = lastFileOpenedRead;
         }
+
         private void FilterResetData(RecordData data)
         {
+            TrackedRunStats trackedRun = new();
+            List<(string name, long IGT)> timeLines = new();
             bool foundIronPick = false;
+            bool hasDoneSomething = false;
+            TimeSpan runDiffer;
+
+            //BREAK TIMES
+            if (_prevDateTime != DateTime.MinValue)
+            {
+                runDiffer = (DateTime.Now - _prevDateTime) - TimeSpan.FromMilliseconds(data.FinalRTA);
+                if (runDiffer < TimeSpan.Zero)
+                {
+                    data.FinalRTA = data.FinalIGT;
+                    runDiffer = (DateTime.Now - _prevDateTime) - TimeSpan.FromMilliseconds(data.FinalRTA);
+                }
+
+                if (runDiffer > TimeSpan.Zero)
+                {
+                    if (runDiffer > TimeSpan.FromSeconds(_breakThreshold))
+                        breakTime += (long)runDiffer.TotalMilliseconds;
+                    else
+                        wallTime += (long)runDiffer.TotalMilliseconds;
+                }
+
+                _prevDateTime = DateTime.Now;
+            }
+            else _prevDateTime = DateTime.Now;
+
+            //wall reset run
             if (data.FinalRTA == 0)
             {
                 SessionData.WallResets += 1;
                 return;
             }
 
+            //stats validation and lanTime setup
+            if (data.Stats == null || data.Stats.Count == 0) return;
+            string? key = GetFirstKey(data.Stats);
+            if (string.IsNullOrEmpty(key)) return;
+
+            data.OpenLanTime ??= int.MaxValue.ToString();
+            long lanTime = long.Parse(data.OpenLanTime.ToString()!);
+
             //ADVANCEMENTS
             if (data.Advancements != null && data.Advancements.Count != 0)
             {
                 //IRON PICK
-                if (data.Advancements.TryGetValue("minecraft:story/iron_tools", out var story) && story.IsCompleted)
+                if (data.Advancements.TryGetValue("minecraft:story/iron_tools", out var story) && story.IsCompleted && story.Criteria != null && story.Criteria.TryGetValue("iron_pickaxe", out var times))
                 {
-                    SessionData.IronPickaxeCount += 1;
-                    foundIronPick = true;
-                }
-            }
-
-            //STATS
-            if (data.Stats != null && data.Stats.Count != 0)
-            {
-                string key = GetFirstKey(data.Stats)!;
-                RecordStatsCategoriesData? statsData = data.Stats[key].StatsData;
-
-                //DIAMOND PICK
-                if (statsData != null && statsData.Crafted != null && statsData.Crafted.TryGetValue("minecraft:diamond_pickaxe", out _) && !foundIronPick)
-                {
-                    SessionData.IronPickaxeCount += 1;
-                    foundIronPick = true;
-                }
-            }
-
-            //MAIN SPLITS
-            if (data.Timelines == null || data.Timelines.Length == 0)
-            {
-                SessionData.NoNetherEnterResets += 1;
-                return;
-            }
-            for (int j = 0; j < data.Timelines?.Length; j++)
-            {
-                RecordTimelinesData? prev = j - 1 >= 0 ? data.Timelines[j - 1] : null;
-                RecordTimelinesData? current = data.Timelines[j];
-                string name = current.Name!;
-
-                if (data.OpenLanTime != null)
-                {
-                    string? lan = data.OpenLanTime.ToString();
-                    if (!string.IsNullOrEmpty(lan))
+                    if (lanTime > times.RTA)
                     {
-                        long lanTime = long.Parse(lan);
-                        if (lanTime < current.RTA)
-                        {
-                            SessionData.SplitlessResets += 1;
-                            break;
-                        }
+                        SessionData.IronPickaxeCount += 1;
+                        foundIronPick = true;
+                        hasDoneSomething = true;
                     }
                 }
 
-                if (name.Equals("enter_fortress") && prev != null && prev.Name!.Equals("enter_nether"))
-                    name = "enter_bastion";
-                else if (name.Equals("enter_bastion") && prev != null && prev.Name!.Equals("enter_fortress"))
-                    name = "enter_fortress";
-
-                SessionData.UpdateSplit(name, current.IGT);
+                //iron smelt for has done something
+                if (data.Advancements.TryGetValue("minecraft:story/smelt_iron", out _)) hasDoneSomething = true;
             }
+
+            //STATS
+            if (data.Stats[key].StatsData != null)
+            {
+                RecordStatsCategoriesData statsData = data.Stats[key].StatsData!;
+                //DIAMOND PICK
+                if (statsData.Crafted != null && statsData.Crafted.TryGetValue("minecraft:diamond_pickaxe", out _) && !foundIronPick)
+                {
+                    if (data.Advancements != null &&
+                        data.Advancements.TryGetValue("minecraft:recipes/misc/gold_nugget_from_smelting", out RecordAdvancementsData? goldNuggetAdvancement) &&
+                        goldNuggetAdvancement.IsCompleted &&
+                        goldNuggetAdvancement.Criteria!.TryGetValue("has_golden_axe", out var goldenAxeTime) &&
+                        lanTime > Convert.ToInt32(goldenAxeTime.RTA))
+                    {
+                        SessionData.IronPickaxeCount += 1;
+                        foundIronPick = true;
+                        hasDoneSomething = true;
+                    }
+                    else if (data.Advancements != null &&
+                             data.Advancements.TryGetValue("minecraft:recipes/misc/iron_nugget_from_smelting", out RecordAdvancementsData? ironNuggetAdvancement) &&
+                             ironNuggetAdvancement.IsCompleted &&
+                             ironNuggetAdvancement.Criteria!.TryGetValue("has_iron_axe", out var ironAxeTime) &&
+                             lanTime > Convert.ToInt32(ironAxeTime.RTA))
+                    {
+                        SessionData.IronPickaxeCount += 1;
+                        foundIronPick = true;
+                        hasDoneSomething = true;
+                    }
+
+                }
+            }
+
+            //TIMELINES
+            if (data.Timelines != null && data.Timelines.Length != 0)
+            {
+                for (int j = 0; j < data.Timelines?.Length; j++)
+                {
+                    RecordTimelinesData? prev = j - 1 >= 0 ? data.Timelines[j - 1] : null;
+                    RecordTimelinesData? current = data.Timelines[j];
+                    string name = current.Name!;
+
+                    if (lanTime < current.RTA) continue;
+                    hasDoneSomething = true;
+
+                    if (name.Equals("enter_fortress") && prev != null && prev.Name!.Equals("enter_nether"))
+                        name = "enter_bastion";
+                    else if (name.Equals("enter_bastion") && prev != null && prev.Name!.Equals("enter_fortress"))
+                        name = "enter_fortress";
+
+                    timeLines.Add((name, current.IGT));
+                }
+            }
+
+            //splitless so no any evidence of run played
+            if (!hasDoneSomething)
+            {
+                SessionData.SplitlessResets++;
+                rtaSincePrev += data.FinalRTA;
+                return;
+            }
+
+            //no nether enter so no split recorded
+            if (timeLines.Count == 0)
+            {
+                SessionData.NoNetherEnterResets++;
+                rtaSincePrev += data.FinalRTA;
+                return;
+            }
+
+            /*PART FOR UPDATING SESSION ETC*/
+            for (int i = 0; i < timeLines.Count; i++)
+            {
+                var (name, IGT) = timeLines[i];
+                SessionData.UpdateSplit(name, IGT);
+            }
+
+            trackedRun.Date = DateTimeOffset.FromUnixTimeMilliseconds(data.Date).ToString("yyyy-MM-dd HH:mm:ss");
+            trackedRun.TimeZone = TimeZoneInfo.Local.Id;
+
+            trackedRun.RTA = GetTimeFormat(data.FinalRTA);
+            trackedRun.IGT = GetTimeFormat(data.FinalIGT);
+            trackedRun.RetimedIGT = GetTimeFormat(data.RetimedIGT);
+
+            //trackedRun.UpdateSplits(timeLines);
+
+            if (data.Stats[key].StatsData!.PickedUp != null && data.Stats[key].StatsData!.PickedUp!.TryGetValue("minecraft:blaze_rod", out int blazeRods))
+                trackedRun.BlazeRods = blazeRods;
+
+            if (data.Stats[key].StatsData!.Killed != null && data.Stats[key].StatsData!.Killed!.TryGetValue("minecraft:blaze", out int killedBlazes))
+                trackedRun.KilledBlazes = killedBlazes;
+
+            trackedRun.BreakTimeSincePrevious = GetTimeFormat(breakTime);
+            trackedRun.WallTimeSincePrevious = GetTimeFormat(wallTime);
+            trackedRun.RTASincePrevious = GetTimeFormat(rtaSincePrev);
+
+            //teraz to
+            SessionData.TotalRTAPlayTimeMiliseconds += wallTime + rtaSincePrev /*+ trackedRun.TimeSincePrevious*/;
+            breakTime = 0;
+            wallTime = 0;
+            rtaSincePrev = 0;
+
+
+            SessionData.WallTimeMiliseconds += wallTime;
+            SessionData.AddNewRun(trackedRun);
+
+            StartViewModel.Log(timeLines[0].name + " - first split");
+            StartViewModel.Log(trackedRun.BreakTimeSincePrevious + " - break time");
+            StartViewModel.Log(trackedRun.WallTimeSincePrevious + " - wall time");
         }
 
         private async Task UIUpdate()
@@ -220,6 +345,15 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             {
                 SessionData.UpdatePerHourStats();
             }
+        }
+
+        private void SaveSession()
+        {
+            DateTime currentDate = DateTime.Now;
+            string formattedDateTime = currentDate.ToString("dd-MM-yyyy_HH.mm.ss");
+            var data = JsonSerializer.Serialize(SessionData);
+            var path = System.IO.Path.Combine(_trackerPath, $"Session[{formattedDateTime}].json");
+            File.WriteAllText(path, data);
         }
 
         private void ClearRecordsFolder()
@@ -312,6 +446,12 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             foreach (var key in dictionary.Keys)
                 return key;
             return default;
+        }
+
+        private string GetTimeFormat(long timeMiliseconds)
+        {
+            TimeSpan timeSpan = TimeSpan.FromMilliseconds(timeMiliseconds);
+            return string.Format("{0:D2}:{1:D2}.{2:D2}.{3:D1}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds / 100);
         }
     }
 }

@@ -1,13 +1,18 @@
-﻿using System;
+﻿using MultiOpener.Entities.Misc;
+using System;
+using System.Collections.Generic;
 
 namespace MultiOpener.ViewModels.Controls
 {
     public class ResetStatsViewModel : BaseViewModel
     {
+        public LinkedList<TrackedRunStats> Runs { get; set; } = new();
+
         public bool UsingBuiltIn { get; set; }
         public long LastFileDateRead { get; set; }
 
         #region Times
+        //OVERALL
         private long _elapsedTimeMiliseconds;
         public long ElapsedTimeMiliseconds
         {
@@ -34,6 +39,7 @@ namespace MultiOpener.ViewModels.Controls
             }
         }
 
+        //RTA
         private long _totalRTAPlayTimeMiliseconds;
         public long TotalRTAPlayTimeMiliseconds
         {
@@ -55,6 +61,31 @@ namespace MultiOpener.ViewModels.Controls
             {
                 _totalRTAPlayTime = value;
                 OnPropertyChanged(nameof(TotalRTAPlayTime));
+            }
+        }
+
+        //WALL
+        private long _wallTimeMiliseconds;
+        public long WallTimeMiliseconds
+        {
+            get => _wallTimeMiliseconds;
+            set
+            {
+                _wallTimeMiliseconds = value;
+
+                TimeSpan time = TimeSpan.FromMilliseconds(_wallTimeMiliseconds);
+                WallTime = string.Format("{0:D2}:{1:D2}.{2:D2}.{3:D1}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 100);
+            }
+        }
+
+        private string? _wallTime;
+        public string? WallTime 
+        {
+            get => _wallTime;
+            set
+            {
+                _wallTime = value;
+                OnPropertyChanged(nameof(WallTime));
             }
         }
         #endregion
@@ -346,6 +377,11 @@ namespace MultiOpener.ViewModels.Controls
 
         #endregion
 
+        public void AddNewRun(TrackedRunStats run)
+        {
+            Runs.AddFirst(run);
+        }
+
         public void UpdateSplit(string splitName, long time)
         {
             switch (splitName)
@@ -389,13 +425,19 @@ namespace MultiOpener.ViewModels.Controls
 
         public void Clear()
         {
+            Runs.Clear();
+
             LastFileDateRead = 0;
 
             ElapsedTimeMiliseconds = 0;
             TotalRTAPlayTimeMiliseconds = 0;
-
+            WallTimeMiliseconds = 0;
+            
             NoNetherEnterResets = 0;
             WallResets = 0;
+            SplitlessResets = 0;
+
+            NetherPerHour = 0;
 
             IronPickaxeCount = 0;
 

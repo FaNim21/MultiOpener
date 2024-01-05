@@ -148,9 +148,9 @@ public sealed class StartViewModel : BaseViewModel
     {
         ConsoleViewModel.ProcessCommandLine(text, option);
     }
-    public static void Log(string text, ConsoleLineOption option = ConsoleLineOption.Normal)
+    public static void Log(object text, ConsoleLineOption option = ConsoleLineOption.Normal)
     {
-        Instance?.ConsoleViewModel.ProcessCommandLine(text, option);
+        Instance?.ConsoleViewModel.ProcessCommandLine(text.ToString()!, option);
     }
 
     public void SetLoadingText(string text)

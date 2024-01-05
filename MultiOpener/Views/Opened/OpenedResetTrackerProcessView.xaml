@@ -47,9 +47,15 @@
             </TextBlock>
             <TextBlock>
                 <Run Foreground="DarkGray"
-                    Text="RTA time spend: " />
+                     Text="RTA time spend: " />
                 <Run Foreground="White"
-                    Text="{Binding SessionData.TotalRTAPlayTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.TotalRTAPlayTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+            </TextBlock>
+            <TextBlock>
+                <Run Foreground="DarkGray"
+                    Text="Wall time: " />
+                <Run Foreground="White"
+                    Text="{Binding SessionData.WallTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
 
 

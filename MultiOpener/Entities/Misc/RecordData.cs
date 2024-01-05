@@ -6,24 +6,21 @@ namespace MultiOpener.Entities.Misc;
 
 public class RecordTimelinesData
 {
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-    [JsonPropertyName("igt")]
-    public long IGT { get; set; }
-    [JsonPropertyName("rta")]
-    public long RTA { get; set; }
+    [JsonPropertyName("name")] public string? Name { get; set; }
+    [JsonPropertyName("igt")] public long IGT { get; set; }
+    [JsonPropertyName("rta")] public long RTA { get; set; }
 }
 
 public class RecordAdvancementsData
 {
     [JsonPropertyName("complete")] public bool IsCompleted { get; set; }
-
-    [JsonPropertyName("criteria")] public RecordAdvancementCriteriaData? Criteria { get; set; }
+    [JsonPropertyName("criteria")] public Dictionary<string, RecordTimesData>? Criteria { get; set; }
 }
 
-public class RecordAdvancementCriteriaData
+public class RecordTimesData
 {
-    [JsonPropertyName("iron_pickaxe")] public Dictionary<string, object>? IronPickaxe { get; set; }
+    [JsonPropertyName("igt")] public long IGT{ get; set; }
+    [JsonPropertyName("rta")] public long RTA { get; set; }
 }
 
 public class RecordStatsData
@@ -34,23 +31,13 @@ public class RecordStatsData
 
 public class RecordStatsCategoriesData
 {
-    [JsonPropertyName("minecraft:dropped")]
-    public Dictionary<string, int>? Dropped { get; set; }
-
-    [JsonPropertyName("minecraft:custom")]
-    public Dictionary<string, int>? Custom { get; set; }
-
-    [JsonPropertyName("minecraft:used")]
-    public Dictionary<string, int>? Used { get; set; }
-
-    [JsonPropertyName("minecraft:mined")]
-    public Dictionary<string, int>? Mined { get; set; }
-
-    [JsonPropertyName("minecraft:picked_up")]
-    public Dictionary<string, int>? PickedUp { get; set; }
-
-    [JsonPropertyName("minecraft:crafted")]
-    public Dictionary<string, int>? Crafted { get; set; }
+    [JsonPropertyName("minecraft:dropped")] public Dictionary<string, int>? Dropped { get; set; }
+    [JsonPropertyName("minecraft:custom")] public Dictionary<string, int>? Custom { get; set; }
+    [JsonPropertyName("minecraft:used")] public Dictionary<string, int>? Used { get; set; }
+    [JsonPropertyName("minecraft:killed")] public Dictionary<string, int>? Killed { get; set; }
+    [JsonPropertyName("minecraft:mined")] public Dictionary<string, int>? Mined { get; set; }
+    [JsonPropertyName("minecraft:picked_up")] public Dictionary<string, int>? PickedUp { get; set; }
+    [JsonPropertyName("minecraft:crafted")] public Dictionary<string, int>? Crafted { get; set; }
 }
 
 public class RecordData
@@ -59,7 +46,9 @@ public class RecordData
     [JsonPropertyName("speedrunigt_version")] public string? SpeedrunIGTVersion { get; set; }
     [JsonPropertyName("category")] public string? Category { get; set; }
     [JsonPropertyName("run_type")] public string? Type { get; set; }
+    [JsonPropertyName("world_name")] public string? WorldName { get; set; }
 
+    [JsonPropertyName("is_completed")] public bool IsCompleted { get; set; }
     [JsonPropertyName("is_cheat_allowed")] public bool IsCheatAllowed { get; set; }
     [JsonPropertyName("default_gamemode")] public int DefaultGameMode { get; set; }
     [JsonPropertyName("open_lan")] public object? OpenLanTime { get; set; }
