@@ -79,13 +79,38 @@ namespace MultiOpener.ViewModels.Controls
         }
 
         private string? _wallTime;
-        public string? WallTime 
+        public string? WallTime
         {
             get => _wallTime;
             set
             {
                 _wallTime = value;
                 OnPropertyChanged(nameof(WallTime));
+            }
+        }
+
+        //BREAKS
+        private long _breakTimeMiliseconds;
+        public long BreakTimeMiliseconds
+        {
+            get => _breakTimeMiliseconds;
+            set
+            {
+                _breakTimeMiliseconds = value;
+
+                TimeSpan time = TimeSpan.FromMilliseconds(_breakTimeMiliseconds);
+                BreakTime = string.Format("{0:D2}:{1:D2}.{2:D2}.{3:D1}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 100);
+            }
+        }
+
+        private string? _breakTime;
+        public string? BreakTime
+        {
+            get => _breakTime;
+            set
+            {
+                _breakTime = value;
+                OnPropertyChanged(nameof(BreakTime));
             }
         }
         #endregion
@@ -99,6 +124,7 @@ namespace MultiOpener.ViewModels.Controls
             {
                 _wallResets = value;
                 OnPropertyChanged(nameof(Resets));
+                OnPropertyChanged(nameof(WallResets));
             }
         }
 
@@ -110,6 +136,7 @@ namespace MultiOpener.ViewModels.Controls
             {
                 _noNetherEnterResets = value;
                 OnPropertyChanged(nameof(Resets));
+                OnPropertyChanged(nameof(NoNetherEnterResets));
             }
         }
 
@@ -121,6 +148,7 @@ namespace MultiOpener.ViewModels.Controls
             {
                 _splitlessResets = value;
                 OnPropertyChanged(nameof(Resets));
+                OnPropertyChanged(nameof(SplitlessResets));
             }
         }
 
@@ -432,7 +460,7 @@ namespace MultiOpener.ViewModels.Controls
             ElapsedTimeMiliseconds = 0;
             TotalRTAPlayTimeMiliseconds = 0;
             WallTimeMiliseconds = 0;
-            
+
             NoNetherEnterResets = 0;
             WallResets = 0;
             SplitlessResets = 0;

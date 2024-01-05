@@ -53,9 +53,15 @@
             </TextBlock>
             <TextBlock>
                 <Run Foreground="DarkGray"
-                    Text="Wall time: " />
+                     Text="Wall time: " />
                 <Run Foreground="White"
-                    Text="{Binding SessionData.WallTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.WallTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+            </TextBlock>
+            <TextBlock>
+                <Run Foreground="DarkGray"
+                     Text="Break time: " />
+                <Run Foreground="White"
+                     Text="{Binding SessionData.BreakTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
 
 
@@ -202,9 +208,30 @@
 
             <TextBlock>
                 <Run Foreground="DarkGray"
-                     Text="Resets: " />
+                     Text="Overall resets: " />
                 <Run Foreground="White"
                      Text="{Binding SessionData.Resets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+            </TextBlock>
+
+            <TextBlock>
+                <Run Foreground="DarkGray"
+                     Text="Wall resets: " />
+                <Run Foreground="White"
+                     Text="{Binding SessionData.WallResets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+            </TextBlock>
+
+            <TextBlock>
+                <Run Foreground="DarkGray"
+                     Text="No Nether or pickaxe resets: " />
+                <Run Foreground="White"
+                     Text="{Binding SessionData.SplitlessResets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+            </TextBlock>
+
+            <TextBlock>
+                <Run Foreground="DarkGray"
+                    Text="Pickaxe, but not nether resets: " />
+                <Run Foreground="White"
+                    Text="{Binding SessionData.NoNetherEnterResets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
             </TextBlock>
 
             <TextBlock>
