@@ -44,7 +44,18 @@ public partial class MainWindow : Window, IClipboardService
 
         MainViewModel.settings.LoadStartupPreset(Settings.Default.LastOpenedPresetName);
 
+        Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+
         Task task = Task.Factory.StartNew(CheckForUpdates);
+    }
+
+    void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    {
+        StartViewModel.Log("Crash error: " + e.Exception.Message, ConsoleLineOption.Error);
+        if (e.Exception.StackTrace != null)
+            StartViewModel.Log("StackTrace: " + e.Exception.StackTrace, ConsoleLineOption.Error);
+
+        MainViewModel.start.ConsoleViewModel.Save();
     }
 
     private void MenuItemClick(object sender, RoutedEventArgs e)

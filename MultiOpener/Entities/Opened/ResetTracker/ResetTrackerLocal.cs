@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -13,20 +14,15 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 {
     /// <summary>
     /// Stats Example to do:
-    /// - Time in wall
-    /// - Time playing (RTA)
     /// - Time needed to enter nether
     /// - Average for all splits
-    /// - time played stats
     /// - wyciaganie seeda z level.dat z folderu swiata
-    /// - resets per nether enter
     /// 
     /// ---- UWZGLEDNIC TO ZEBY NA PIERWSZYM RUNIE SESJI NIE USTAWIALO STATYSTYK JAK since previously ------
     /// </summary>
     public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
     {
         private readonly Stopwatch stopwatch = new();
-
         private readonly string _trackerPath;
 
         private string? _recordsFolder;
@@ -42,7 +38,6 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 
         private long lastNetherEntherTimeSession;
 
-        //TODO: 0 teraz trzeba zrobic to + teim since previous z stopwatcha i naprawic resetowanie trackera
 
         public ResetTrackerLocal() : base()
         {
@@ -111,7 +106,6 @@ namespace MultiOpener.Entities.Opened.ResetTracker
                 }
                 catch { break; }
 
-
                 if (TimeToUpdateStats == 0)
                 {
                     OnTracking();
@@ -128,6 +122,8 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             var records = Directory.GetFiles(_recordsFolder, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
             for (int i = 0; i < records.Length; i++)
             {
+                if (_token.IsCancellationRequested) break;
+
                 string text = File.ReadAllText(records[i]) ?? string.Empty;
                 try
                 {
@@ -301,7 +297,13 @@ namespace MultiOpener.Entities.Opened.ResetTracker
                 return;
             }
             //to zmniejszalo o ilosc netherow bez kilofa
-            if (timeLines.Count != 0 && !foundIronPick) { SessionData.NoNetherEnterResets--; }
+            //TODO: 0 to wszystko naprawic zeby nie odejmowac danych tylko zeby dodawalo wlasciwe
+            if (timeLines.Count != 0 && !foundIronPick)
+            {
+                SessionData.NoNetherEnterResets--;
+                rtaSincePrev -= data.FinalRTA;
+                playedSincePrev -= 1;
+            }
 
 
             /*PART FOR UPDATING SESSION ETC*/
@@ -373,9 +375,9 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 
             SessionData.AddNewRun(trackedRun);
 
-            StartViewModel.Log(timeLines[0].name + " - first split");
+            StartViewModel.Log("==================" + timeLines[0].name + "[{" + GetTimeFormat(timeLines[0].IGT) + "}] - first split ==================");
             StartViewModel.Log(trackedRun.TimeSincePrevious + " - time since last nether enter without breaks");
-            StartViewModel.Log(trackedRun.PlayedSincePrev + " - amount wall resets since last nether");
+            StartViewModel.Log(trackedRun.WallResetsSincePrevious + " - amount wall resets since last nether");
             StartViewModel.Log(trackedRun.PlayedSincePrev + " - amount played since last nether");
             StartViewModel.Log(trackedRun.BreakTimeSincePrevious + " - break time");
             StartViewModel.Log(trackedRun.WallTimeSincePrevious + " - wall time");
@@ -495,6 +497,12 @@ namespace MultiOpener.Entities.Opened.ResetTracker
         {
             if (!string.IsNullOrEmpty(WindowTitle)) return;
             WindowTitle = Name;
+        }
+
+        public override async Task<bool> OpenProcess(CancellationToken token = default)
+        {
+            ActivateTracker();
+            return await Task.FromResult(true);
         }
 
         protected override void OpenOpenedPathFolder()

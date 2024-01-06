@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-
+﻿
 namespace MultiOpener.Entities.Misc
 {
     public class TrackedRunStats
