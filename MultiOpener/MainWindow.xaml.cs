@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -21,6 +22,8 @@ namespace MultiOpener;
 public partial class MainWindow : Window, IClipboardService
 {
     public MainViewModel MainViewModel { get; set; }
+
+    private bool _handledCrash = false;
 
 
     public MainWindow()
@@ -49,8 +52,18 @@ public partial class MainWindow : Window, IClipboardService
         Task task = Task.Factory.StartNew(CheckForUpdates);
     }
 
-    void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    protected override void OnSourceInitialized(EventArgs e)
     {
+        if (PresentationSource.FromVisual(this) is HwndSource hwndSource)
+            hwndSource.CompositionTarget.RenderMode = RenderMode.SoftwareOnly;
+        base.OnSourceInitialized(e);
+    }
+
+    private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    {
+        if (_handledCrash) return;
+        if (!_handledCrash) _handledCrash = true;
+
         StartViewModel.Log("Crash error: " + e.Exception.Message, ConsoleLineOption.Error);
         if (e.Exception.StackTrace != null)
             StartViewModel.Log("StackTrace: " + e.Exception.StackTrace, ConsoleLineOption.Error);

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace MultiOpener.Windows
@@ -67,6 +68,13 @@ namespace MultiOpener.Windows
             Top = windowTopPosition - Height / 2;
 
             ContentCanvas.Content = canvas;
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            if (PresentationSource.FromVisual(this) is HwndSource hwndSource)
+                hwndSource.CompositionTarget.RenderMode = RenderMode.SoftwareOnly;
+            base.OnSourceInitialized(e);
         }
 
         protected override void OnClosed(EventArgs e)

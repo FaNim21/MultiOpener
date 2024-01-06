@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace MultiOpener.Windows;
 
@@ -18,6 +19,13 @@ public partial class InformationOpenedWindow : Window
         {
             Closed -= OnClosed;
         });
+    }
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        if (PresentationSource.FromVisual(this) is HwndSource hwndSource)
+            hwndSource.CompositionTarget.RenderMode = RenderMode.SoftwareOnly;
+        base.OnSourceInitialized(e);
     }
 
     private void OnClosed(object? sender, EventArgs e)

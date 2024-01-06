@@ -3,6 +3,7 @@ using System;
 using System.Media;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace MultiOpener.Windows;
 
@@ -35,6 +36,13 @@ public sealed partial class DialogBoxWindow : Window
         MainWindow mainWindow = ((MainWindow)Application.Current.MainWindow);
         mainWindow.Opacity = 1f;
         mainWindow.Effect = null;
+    }
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        if (PresentationSource.FromVisual(this) is HwndSource hwndSource)
+            hwndSource.CompositionTarget.RenderMode = RenderMode.SoftwareOnly;
+        base.OnSourceInitialized(e);
     }
 
     private void HeaderMouseDown(object sender, MouseButtonEventArgs e)

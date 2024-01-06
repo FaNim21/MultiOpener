@@ -10,9 +10,9 @@ public partial class App : Application
 
     private static Mutex? _mutex;
 
+
     public App()
     {
-        
     }
 
     protected override void OnStartup(StartupEventArgs e)
