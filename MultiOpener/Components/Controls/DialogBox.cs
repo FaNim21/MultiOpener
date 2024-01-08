@@ -31,22 +31,6 @@ public static class DialogBox
         return model.Result;
     }
 
-    [Obsolete]
-    public static string ShowInputField(string text, string caption = "", ValidateInputFieldAccept validate = null!)
-    {
-        InputFieldViewModel model = new(validate)
-        {
-            Text = text,
-            Caption = caption,
-            Result = MessageBoxResult.None,
-        };
-        Create<InputFieldWindow, InputFieldViewModel>(model);
-
-        if (model.Result == MessageBoxResult.OK && !string.IsNullOrEmpty(model.Output))
-            return model.Output;
-        return string.Empty;
-    }
-
     public static void ShowOpenedInformations(OpenedProcess opened)
     {
         Create<InformationOpenedWindow, OpenedProcess>(opened);
@@ -60,20 +44,27 @@ public static class DialogBox
 
     private static void Create<T, TU>(TU model) where T : Window, new() where TU : BaseViewModel
     {
-        T? window;
-        Window? activeWindow;
-
-        Application.Current?.Dispatcher.Invoke(delegate
+        try
         {
-            activeWindow = GetActiveWindow();
-            window = new T()
+            T? window;
+            Window? activeWindow;
+
+            Application.Current?.Dispatcher.Invoke(delegate
             {
-                Owner = activeWindow,
-                DataContext = model,
-            };
-            BlurMainWindow();
-            window.ShowDialog();
-        });
+                activeWindow = GetActiveWindow();
+                window = new T()
+                {
+                    Owner = activeWindow,
+                    DataContext = model,
+                };
+                BlurMainWindow();
+                window.ShowDialog();
+            });
+        }
+        catch (Exception ex)
+        {
+            StartViewModel.Log(ex.Message);
+        }
     }
     private static IEnumerable<DialogBoxButton> CreateButtons(MessageBoxButton buttons, params string?[]? names)
     {

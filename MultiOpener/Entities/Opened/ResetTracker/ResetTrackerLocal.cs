@@ -14,8 +14,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 {
     /// <summary>
     /// Stats Example to do:
-    /// - Time needed to enter nether
-    /// - Average for all splits
+    /// - average time 
     /// - wyciaganie seeda z level.dat z folderu swiata
     /// 
     /// ---- UWZGLEDNIC TO ZEBY NA PIERWSZYM RUNIE SESJI NIE USTAWIALO STATYSTYK JAK since previously ------
@@ -138,7 +137,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
                     if (data == null) continue;
                     if (data.Date <= SessionData.LastFileDateRead) continue;
                     if (data.Date >= lastFileOpenedRead) lastFileOpenedRead = data.Date;
-                    if (!data.Type!.Equals("random_seed") || data.DefaultGameMode != 0) continue;
+                    if (!data.Type!.Equals("random_seed") || data.DefaultGameMode != 0) continue;   //set_seed
                     if (data.OpenLanTime == null && data.IsCheatAllowed) continue;
 
                     FilterResetData(data);
