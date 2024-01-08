@@ -250,11 +250,11 @@ public partial class Win32
         }
         catch (ArgumentException ex)
         {
-            DialogBox.Show("Failed to get process by ID: " + ex.Message, "", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            StartViewModel.Log("Failed to get process by ID: " + ex.Message, Entities.ConsoleLineOption.Error);
         }
         catch (Exception ex)
         {
-            DialogBox.Show("Error: " + ex.Message, "", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            StartViewModel.Log("Error: " + ex.Message, Entities.ConsoleLineOption.Error);
         }
 
         return "";

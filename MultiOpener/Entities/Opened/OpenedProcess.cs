@@ -268,7 +268,7 @@ public class OpenedProcess : BaseViewModel
     }
     private void FindAutoHotkeyProcess()
     {
-        foreach (Process process in Process.GetProcessesByName("AutoHotkey"))
+        foreach (Process process in Process.GetProcessesByName("AutoHotkey").AsSpan())
         {
             string? commandLine = Win32.GetCommandLine(process.Id);
             if (string.IsNullOrEmpty(commandLine)) continue;
@@ -290,7 +290,7 @@ public class OpenedProcess : BaseViewModel
     {
         try
         {
-            foreach (Process process in Process.GetProcessesByName("python"))
+            foreach (Process process in Process.GetProcessesByName("python").AsSpan())
             {
                 string? commandLine = Win32.GetCommandLine(process.Id);
                 if (string.IsNullOrEmpty(commandLine)) continue;
@@ -315,7 +315,7 @@ public class OpenedProcess : BaseViewModel
     }
     private void FindExeProcess()
     {
-        foreach (Process process in Process.GetProcesses())
+        foreach (Process process in Process.GetProcesses().AsSpan())
         {
             try
             {

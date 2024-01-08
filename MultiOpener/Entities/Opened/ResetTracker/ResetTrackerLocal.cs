@@ -24,6 +24,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
     {
         private readonly Stopwatch stopwatch = new();
         private readonly string _trackerPath;
+        private readonly string _trackerPathAPI;
 
         private string? _recordsFolder;
         private DateTime _prevDateTime;
@@ -38,12 +39,16 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 
         private long lastNetherEntherTimeSession;
 
+        //TODO: 0 zle liczy total rta i trzeba naprawic te pickaxy i robienie nonetherenter--;
+
 
         public ResetTrackerLocal() : base()
         {
             _trackerPath = System.IO.Path.Combine(Consts.AppdataPath, "Tracker");
+            _trackerPathAPI = System.IO.Path.Combine(Consts.AppdataPath, "TrackerAPI");
 
             if (!Directory.Exists(_trackerPath)) Directory.CreateDirectory(_trackerPath);
+            if (!Directory.Exists(_trackerPathAPI)) Directory.CreateDirectory(_trackerPathAPI);
         }
 
         public override void ActivateTracker()
@@ -144,6 +149,11 @@ namespace MultiOpener.Entities.Opened.ResetTracker
                 }
             }
             SessionData.LastFileDateRead = lastFileOpenedRead;
+            lock (this)
+            {
+                SessionData.Update();
+                WriteSessionStatsToFile();
+            }
         }
 
         private void FilterResetData(RecordData data)
@@ -402,7 +412,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
         {
             //every 100 miliseconds
             uiUpdateCount++;
-            SessionData.ElapsedTimeMiliseconds = stopwatch.ElapsedMilliseconds;
+            SessionData.UpdateTimes(stopwatch.ElapsedMilliseconds);
 
             if (uiUpdateCount % 10 == 0) //every second
             {
@@ -417,6 +427,30 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             var data = JsonSerializer.Serialize(SessionData);
             var path = System.IO.Path.Combine(_trackerPath, $"Session[{formattedDateTime}].json");
             File.WriteAllText(path, data);
+        }
+
+        private void WriteSessionStatsToFile()
+        {
+            UpdateFileContent("Resets", SessionData.Resets);
+            UpdateFileContent("NPH", SessionData.NetherPerHour);
+
+            UpdateFileContent("NetherEnter_Average", SessionData.NetherEnterAverageTime);
+            UpdateFileContent("NetherEnter_Count", SessionData.NetherEntersCount);
+
+            UpdateFileContent("Structure1_Average", SessionData.FirstStructureEnterAverageTime);
+            UpdateFileContent("Structure1_Count", SessionData.FirstStructureEntersCount);
+
+            UpdateFileContent("Structure2_Average", SessionData.SecondStructureEnterAverageTime);
+            UpdateFileContent("Structure2_Count", SessionData.SecondStructureEntersCount);
+
+            UpdateFileContent("NetherExit_Average", SessionData.NetherExitEnterAverageTime);
+            UpdateFileContent("NetherExit_Count", SessionData.NetherExitEntersCount);
+
+            UpdateFileContent("Stronghold_Average", SessionData.StrongholdEnterAverageTime);
+            UpdateFileContent("Stronghold_Count", SessionData.StrongholdEntersCount);
+
+            UpdateFileContent("EndEnter_Average", SessionData.EndEnterAverageTime);
+            UpdateFileContent("EndEnter_Count", SessionData.EndEntersCount);
         }
 
         private void ClearRecordsFolder()
@@ -499,10 +533,10 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             WindowTitle = Name;
         }
 
-        public override async Task<bool> OpenProcess(CancellationToken token = default)
+        public override Task<bool> OpenProcess(CancellationToken token = default)
         {
             ActivateTracker();
-            return await Task.FromResult(true);
+            return Task.FromResult(true);
         }
 
         protected override void OpenOpenedPathFolder()
@@ -521,6 +555,22 @@ namespace MultiOpener.Entities.Opened.ResetTracker
         {
             TimeSpan timeSpan = TimeSpan.FromMilliseconds(timeMiliseconds);
             return string.Format("{0:D2}:{1:D2}.{2:D2}.{3:D1}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds / 100);
+        }
+
+        private void UpdateFileContent(string fileName, object content)
+        {
+            string path = System.IO.Path.Combine(_trackerPathAPI, fileName + ".txt");
+            if (!File.Exists(path)) File.Create(path);
+
+            try
+            {
+                using StreamWriter writer = new(path);
+                writer.Write(content.ToString());
+            }
+            catch (Exception ex)
+            {
+                StartViewModel.Log($"Error updating file {fileName}: {ex.Message}");
+            }
         }
     }
 }

@@ -129,7 +129,7 @@
                   Background="#1d2226">
                 <buttons:ButtonNormal Width="100"
                                       Height="30"
-                                      ContentText="{Binding InfoButtonOpenName}"
+                                      ContentText="{Binding InfoButtonOpenName, Mode=OneWay}"
                                       VerticalAlignment="Top"
                                       OnCommand="{Binding CloseOpenCommand}"
                                       FontSize="18"

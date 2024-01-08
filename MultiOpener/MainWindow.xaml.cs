@@ -49,7 +49,7 @@ public partial class MainWindow : Window, IClipboardService
 
         Dispatcher.UnhandledException += OnDispatcherUnhandledException;
 
-        Task task = Task.Factory.StartNew(CheckForUpdates);
+        Task.Factory.StartNew(CheckForUpdates);
     }
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -163,7 +163,7 @@ public partial class MainWindow : Window, IClipboardService
         }
         catch (Exception ex)
         {
-            Trace.WriteLine($"Failed to check for updates: {ex.Message}");
+            StartViewModel.Log($"Failed to check for updates: {ex.Message}");
         }
 
         Application.Current.Dispatcher.Invoke(delegate

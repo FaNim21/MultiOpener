@@ -336,7 +336,7 @@ public sealed class SettingsViewModel : BaseViewModel
                 {
                     Directory.Delete(path);
                 }
-                catch { }
+                catch (Exception ex) { StartViewModel.Log($"Error: {ex.Message}", ConsoleLineOption.Warning); }
                 return;
             }
         }

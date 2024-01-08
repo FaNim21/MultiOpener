@@ -18,20 +18,20 @@
             <TextBlock Foreground="#a0e3e3"
                        Text=" -- Minecraft Reset Tracker Analytics-- " />
             <TextBlock>
-                <Run Foreground="DarkGray"
-                     Text="External tracker: " />
-                <Run Foreground="White"
-                     Text="{Binding SessionData.UsingBuiltIn, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}" />
+                    <Run Foreground="DarkGray"
+                         Text="External tracker: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.UsingBuiltIn, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}" />
             </TextBlock>
             <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Is Tracking: " />
                 <Run Foreground="White"
-                     Text="{Binding IsTracking, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding IsTracking, Mode=OneWay}" />
                 <Run Foreground="DarkGray"
                      Text="   |  next update in: " />
                 <Run Foreground="White"
-                     Text="{Binding TimeToUpdateStats, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding TimeToUpdateStats, Mode=OneWay}" />
             </TextBlock>
 
             <local:ButtonNormal Width="100"
@@ -43,27 +43,26 @@
                 <Run Foreground="DarkGray"
                      Text="Session time: " />
                 <Run Foreground="White"
-                     Text="{Binding SessionData.ElapsedTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.ElapsedTime, Mode=OneWay}" />
             </TextBlock>
             <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="RTA time spend: " />
                 <Run Foreground="White"
-                     Text="{Binding SessionData.TotalRTAPlayTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.TotalRTAPlayTime, Mode=OneWay}" />
             </TextBlock>
             <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Wall time: " />
                 <Run Foreground="White"
-                     Text="{Binding SessionData.WallTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.WallTime, Mode=OneWay}" />
             </TextBlock>
             <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Break time: " />
                 <Run Foreground="White"
-                     Text="{Binding SessionData.BreakTime, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.BreakTime, Mode=OneWay}" />
             </TextBlock>
-
 
             <Grid x:Name="StatsTable"
                   Width="500"
@@ -112,47 +111,47 @@
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="1"
-                           Text="{Binding SessionData.NetherEntersCount}" />
+                           Text="{Binding SessionData.NetherEntersCount, Mode=OneWay}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="2"
-                           Text="{Binding SessionData.FirstStructureEntersCount}" />
+                           Text="{Binding SessionData.FirstStructureEntersCount, Mode=OneWay}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="3"
-                           Text="{Binding SessionData.SecondStructureEntersCount}" />
+                           Text="{Binding SessionData.SecondStructureEntersCount, Mode=OneWay}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="4"
-                           Text="{Binding SessionData.NetherExitEntersCount}" />
+                           Text="{Binding SessionData.NetherExitEntersCount, Mode=OneWay}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="5"
-                           Text="{Binding SessionData.StrongholdEntersCount}" />
+                           Text="{Binding SessionData.StrongholdEntersCount, Mode=OneWay}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="6"
-                           Text="{Binding SessionData.EndEntersCount}" />
+                           Text="{Binding SessionData.EndEntersCount, Mode=OneWay}" />
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="0"
                            Grid.RowSpan="2"
                            FontSize="18"
-                           Text="{Binding SessionData.IronPickaxeCount}"
+                           Text="{Binding SessionData.IronPickaxeCount, Mode=OneWay}"
                            Margin="2 5 2 0" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="1"
-                           Text="{Binding SessionData.NetherEnterAverageTime}" />
+                           Text="{Binding SessionData.NetherEnterAverageTime, Mode=OneWay}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="2"
-                           Text="{Binding SessionData.FirstStructureEnterAverageTime}" />
+                           Text="{Binding SessionData.FirstStructureEnterAverageTime, Mode=OneWay}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="3"
-                           Text="{Binding SessionData.SecondStructureEnterAverageTime}" />
+                           Text="{Binding SessionData.SecondStructureEnterAverageTime, Mode=OneWay}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="4"
-                           Text="{Binding SessionData.NetherExitEnterAverageTime}" />
+                           Text="{Binding SessionData.NetherExitEnterAverageTime, Mode=OneWay}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="5"
-                           Text="{Binding SessionData.StrongholdEnterAverageTime}" />
+                           Text="{Binding SessionData.StrongholdEnterAverageTime, Mode=OneWay}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="6"
-                           Text="{Binding SessionData.EndEnterAverageTime}" />
+                           Text="{Binding SessionData.EndEnterAverageTime, Mode=OneWay}" />
 
                 <Border Grid.Row="0"
                         Grid.Column="0"
@@ -210,35 +209,35 @@
                 <Run Foreground="DarkGray"
                      Text="Overall resets: " />
                 <Run Foreground="White"
-                     Text="{Binding SessionData.Resets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.Resets, Mode=OneWay}" />
             </TextBlock>
 
             <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Wall resets: " />
                 <Run Foreground="White"
-                     Text="{Binding SessionData.WallResets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.WallResets, Mode=OneWay}" />
             </TextBlock>
 
             <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="No Nether or pickaxe resets: " />
                 <Run Foreground="White"
-                     Text="{Binding SessionData.SplitlessResets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.SplitlessResets, Mode=OneWay}" />
             </TextBlock>
 
             <TextBlock>
                 <Run Foreground="DarkGray"
-                    Text="Pickaxe, but not nether resets: " />
+                     Text="Pickaxe, but not nether resets: " />
                 <Run Foreground="White"
-                    Text="{Binding SessionData.NoNetherEnterResets, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.NoNetherEnterResets, Mode=OneWay}" />
             </TextBlock>
 
             <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="NPH: " />
                 <Run Foreground="White"
-                     Text="{Binding SessionData.NetherPerHour, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
+                     Text="{Binding SessionData.NetherPerHour, Mode=OneWay}" />
             </TextBlock>
 
             <!--

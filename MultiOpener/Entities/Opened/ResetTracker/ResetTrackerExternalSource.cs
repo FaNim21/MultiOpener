@@ -145,6 +145,10 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             {
                 StartViewModel.Log("Error fetching stats", ConsoleLineOption.Error);
             }
+            lock (this)
+            {
+                SessionData.Update();
+            }
         }
 
         public override async Task<bool> OpenProcess(CancellationToken token = default)

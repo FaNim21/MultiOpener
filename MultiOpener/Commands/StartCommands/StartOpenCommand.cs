@@ -147,7 +147,7 @@ public class StartOpenCommand : StartCommandBase
                     }
                     catch (Exception e)
                     {
-                        DialogBox.Show(e.ToString());
+                        StartViewModel.Log(e.Message);
                     }
                 }
             }
