@@ -8,7 +8,9 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace MultiOpener.Entities.Opened.ResetTracker
 {
@@ -39,6 +41,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
         private long lastNetherEntherTimeSession;
 
         //TODO: 0 zle liczy total rta i trzeba naprawic te pickaxy i robienie nonetherenter--;
+        //TODO: 1 zrobic oddzielna klase dla trackerAPI i zrobic tam liste txt'kow do zapisywania i cala logike pod pierwsze tworzenie tych plikow jak i resetowanie itp itd
 
 
         public ResetTrackerLocal() : base()
@@ -157,10 +160,10 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 
         private void FilterResetData(RecordData data)
         {
-            TrackedRunStats trackedRun = new();
             List<(string name, long IGT)> timeLines = new();
             bool foundIronPick = false;
-            bool hasDoneSomething = false;
+            bool foundEnterNether = false;
+            //bool hasDoneSomething = false;
             TimeSpan runDiffer;
 
             //BREAK TIMES
@@ -197,6 +200,8 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             if (data.Stats == null || data.Stats.Count == 0) return;
             string? key = GetFirstKey(data.Stats);
             if (string.IsNullOrEmpty(key)) return;
+            RecordStatsCategoriesData? statsData = data.Stats[key].StatsData;
+            if (statsData == null) return;
 
             data.OpenLanTime ??= int.MaxValue.ToString();
             long lanTime = long.Parse(data.OpenLanTime.ToString()!);
@@ -211,64 +216,51 @@ namespace MultiOpener.Entities.Opened.ResetTracker
                     {
                         SessionData.IronPickaxeCount += 1;
                         foundIronPick = true;
-                        hasDoneSomething = true;
                     }
                 }
             }
 
             //STATS
-            if (data.Stats[key].StatsData != null)
+            //DIAMOND PICK
+            if (statsData.Crafted != null && statsData.Crafted.TryGetValue("minecraft:diamond_pickaxe", out _) && !foundIronPick)
             {
-                RecordStatsCategoriesData statsData = data.Stats[key].StatsData!;
-                //DIAMOND PICK
-                if (statsData.Crafted != null && statsData.Crafted.TryGetValue("minecraft:diamond_pickaxe", out _) && !foundIronPick)
+                if (data.Advancements != null &&
+                    data.Advancements.TryGetValue("minecraft:recipes/misc/gold_nugget_from_smelting", out RecordAdvancementsData? goldNuggetAdvancement) &&
+                    goldNuggetAdvancement.IsCompleted &&
+                    goldNuggetAdvancement.Criteria!.TryGetValue("has_golden_axe", out var goldenAxeTime) &&
+                    lanTime > goldenAxeTime.RTA)
                 {
-                    if (data.Advancements != null &&
-                        data.Advancements.TryGetValue("minecraft:recipes/misc/gold_nugget_from_smelting", out RecordAdvancementsData? goldNuggetAdvancement) &&
-                        goldNuggetAdvancement.IsCompleted &&
-                        goldNuggetAdvancement.Criteria!.TryGetValue("has_golden_axe", out var goldenAxeTime) &&
-                        lanTime > goldenAxeTime.RTA)
-                    {
-                        SessionData.IronPickaxeCount += 1;
-                        foundIronPick = true;
-                        hasDoneSomething = true;
-                    }
-                    else if (data.Advancements != null &&
-                             data.Advancements.TryGetValue("minecraft:recipes/misc/iron_nugget_from_smelting", out RecordAdvancementsData? ironNuggetAdvancement) &&
-                             ironNuggetAdvancement.IsCompleted &&
-                             ironNuggetAdvancement.Criteria!.TryGetValue("has_iron_axe", out var ironAxeTime) &&
-                             lanTime > ironAxeTime.RTA)
-                    {
-                        SessionData.IronPickaxeCount += 1;
-                        foundIronPick = true;
-                        hasDoneSomething = true;
-                    }
+                    SessionData.IronPickaxeCount += 1;
+                    foundIronPick = true;
+                }
+                else if (data.Advancements != null &&
+                         data.Advancements.TryGetValue("minecraft:recipes/misc/iron_nugget_from_smelting", out RecordAdvancementsData? ironNuggetAdvancement) &&
+                         ironNuggetAdvancement.IsCompleted &&
+                         ironNuggetAdvancement.Criteria!.TryGetValue("has_iron_axe", out var ironAxeTime) &&
+                         lanTime > ironAxeTime.RTA)
+                {
+                    SessionData.IronPickaxeCount += 1;
+                    foundIronPick = true;
                 }
             }
 
             //TIMELINES
             if (data.Timelines != null && data.Timelines.Length != 0)
             {
-                int startIndex = 0;
-                bool foundNether = false;
-
-                if (!data.Timelines[0].Name!.Equals("enter_nether"))
+                int startIndex = -1;
+                for (int i = 0; i < data.Timelines.Length; i++)
                 {
-                    for (int i = 0; i < data.Timelines.Length; i++)
+                    var current = data.Timelines[i];
+                    if (current.Name!.Equals("enter_nether"))
                     {
-                        var current = data.Timelines[i];
-                        if (current.Name!.Equals("enter_nether"))
-                        {
-                            startIndex = i;
-                            foundNether = true;
-                            break;
-                        }
+                        startIndex = i;
+                        break;
                     }
-                    if (!foundNether) startIndex = -1;
                 }
 
                 if (startIndex >= 0)
                 {
+                    foundEnterNether = true;
                     for (int j = startIndex; j < data.Timelines?.Length; j++)
                     {
                         RecordTimelinesData? prev = j - 1 >= 0 ? data.Timelines[j - 1] : null;
@@ -276,7 +268,6 @@ namespace MultiOpener.Entities.Opened.ResetTracker
                         string name = current.Name!;
 
                         if (lanTime < current.RTA) continue;
-                        hasDoneSomething = true;
 
                         if (name.Equals("enter_fortress") && prev != null && prev.Name!.Equals("enter_nether"))
                             name = "enter_bastion";
@@ -289,33 +280,46 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             }
 
             //splitless so no any evidence of run played
-            if (!hasDoneSomething)
+            if (!foundEnterNether)
             {
-                SessionData.SplitlessResets++;
-                rtaSincePrev += data.FinalRTA;
+                if (!foundIronPick)
+                    SessionData.SplitlessResets++;
+                else
+                    SessionData.NoNetherEnterResets++;
+
                 playedSincePrev += 1;
+                rtaSincePrev += data.FinalRTA;
                 return;
             }
 
-            //no nether enter so no split recorded
-            if (timeLines.Count == 0 && foundIronPick)
+            if (!foundIronPick)
             {
-                SessionData.NoNetherEnterResets++;
-                rtaSincePrev += data.FinalRTA;
-                playedSincePrev += 1;
-                return;
+
+            }
+            //no nether enter so no split recorded
+            /*if (!foundEnterNether && foundIronPick)
+            {
+                //SessionData.NoNetherEnterResets++;
+                //rtaSincePrev += data.FinalRTA;
+                //playedSincePrev += 1;
+                //return;
             }
             //to zmniejszalo o ilosc netherow bez kilofa
             //TODO: 0 to wszystko naprawic zeby nie odejmowac danych tylko zeby dodawalo wlasciwe
-            if (timeLines.Count != 0 && !foundIronPick)
+            if (foundEnterNether && !foundIronPick)
             {
-                SessionData.NoNetherEnterResets--;
-                rtaSincePrev -= data.FinalRTA;
-                playedSincePrev -= 1;
-            }
+                //SessionData.NoNetherEnterResets--;
+                //rtaSincePrev -= data.FinalRTA;
+                //playedSincePrev -= 1;
+            }*/
 
+            CreateRunData(data, statsData, timeLines);
+        }
 
-            /*PART FOR UPDATING SESSION ETC*/
+        private void CreateRunData(RecordData data, RecordStatsCategoriesData statsData, List<(string name, long IGT)> timeLines)
+        {
+            TrackedRunStats trackedRun = new();
+
             for (int i = 0; i < timeLines.Count; i++)
             {
                 var (name, IGT) = timeLines[i];
@@ -355,10 +359,9 @@ namespace MultiOpener.Entities.Opened.ResetTracker
                 }
             }
 
-            if (data.Stats[key].StatsData!.PickedUp != null && data.Stats[key].StatsData!.PickedUp!.TryGetValue("minecraft:blaze_rod", out int blazeRods))
+            if (statsData!.PickedUp != null && statsData!.PickedUp!.TryGetValue("minecraft:blaze_rod", out int blazeRods))
                 trackedRun.BlazeRods = blazeRods;
-
-            if (data.Stats[key].StatsData!.Killed != null && data.Stats[key].StatsData!.Killed!.TryGetValue("minecraft:blaze", out int killedBlazes))
+            if (statsData!.Killed != null && statsData!.Killed!.TryGetValue("minecraft:blaze", out int killedBlazes))
                 trackedRun.KilledBlazes = killedBlazes;
 
             trackedRun.TimeSincePrevious = GetTimeFormat(stopwatch.ElapsedMilliseconds - lastNetherEntherTimeSession - breakTime);
