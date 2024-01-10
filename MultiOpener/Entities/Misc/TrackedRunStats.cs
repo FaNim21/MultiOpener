@@ -3,6 +3,8 @@ namespace MultiOpener.Entities.Misc
 {
     public class TrackedRunStats
     {
+        public int Count { get; set; }
+
         public string? Date { get; set; }
         public string? TimeZone { get; set; }
 
@@ -13,7 +15,9 @@ namespace MultiOpener.Entities.Misc
         /* SPLITS */
         public string? NetherTime { get; set; }
         public string? Structure1 { get; set; }
+        public string? Structure1Name { get; set; }
         public string? Structure2 { get; set; }
+        public string? Structure2Name { get; set; }
         public string? NetherExit { get; set; }
         public string? Stronghold { get; set; }
         public string? EndEnter { get; set; }

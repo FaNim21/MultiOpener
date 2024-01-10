@@ -4,13 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 
 namespace MultiOpener.Entities.Opened.ResetTracker
 {
@@ -126,7 +125,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             if (string.IsNullOrEmpty(_recordsFolder)) return;
 
             long lastFileOpenedRead = SessionData.LastFileDateRead;
-            var records = Directory.GetFiles(_recordsFolder, "*.json", SearchOption.TopDirectoryOnly).AsSpan();
+            ReadOnlySpan<string> records = Directory.GetFiles(_recordsFolder, "*.json", SearchOption.TopDirectoryOnly).OrderBy(file => File.GetLastWriteTime(file)).ToArray().AsSpan();
             for (int i = 0; i < records.Length; i++)
             {
                 if (_token.IsCancellationRequested) break;
@@ -292,26 +291,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
                 return;
             }
 
-            if (!foundIronPick)
-            {
-
-            }
-            //no nether enter so no split recorded
-            /*if (!foundEnterNether && foundIronPick)
-            {
-                //SessionData.NoNetherEnterResets++;
-                //rtaSincePrev += data.FinalRTA;
-                //playedSincePrev += 1;
-                //return;
-            }
-            //to zmniejszalo o ilosc netherow bez kilofa
-            //TODO: 0 to wszystko naprawic zeby nie odejmowac danych tylko zeby dodawalo wlasciwe
-            if (foundEnterNether && !foundIronPick)
-            {
-                //SessionData.NoNetherEnterResets--;
-                //rtaSincePrev -= data.FinalRTA;
-                //playedSincePrev -= 1;
-            }*/
+            if (!foundIronPick) SessionData.NetherWithoutPickaxeReset++;
 
             CreateRunData(data, statsData, timeLines);
         }
@@ -329,32 +309,39 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             trackedRun.Date = DateTimeOffset.FromUnixTimeMilliseconds(data.Date).ToString("yyyy-MM-dd HH:mm:ss");
             trackedRun.TimeZone = TimeZoneInfo.Local.Id;
 
-            trackedRun.RTA = GetTimeFormat(data.FinalRTA);
-            trackedRun.IGT = GetTimeFormat(data.FinalIGT);
-            trackedRun.RetimedIGT = GetTimeFormat(data.RetimedIGT);
+            trackedRun.RTA = GetTimeFormatMinutes(data.FinalRTA);
+            trackedRun.IGT = GetTimeFormatMinutes(data.FinalIGT);
+            trackedRun.RetimedIGT = GetTimeFormatMinutes(data.RetimedIGT);
 
             for (int i = 0; i < timeLines.Count; i++)
             {
                 var (name, IGT) = timeLines[i];
+                int index;
                 switch (name)
                 {
                     case "enter_nether":
-                        trackedRun.NetherTime = GetTimeFormat(IGT);
+                        trackedRun.NetherTime = GetTimeFormatMinutes(IGT);
                         break;
                     case "enter_bastion":
-                        trackedRun.Structure1 = GetTimeFormat(IGT);
+                        trackedRun.Structure1 = GetTimeFormatMinutes(IGT);
+                        index = name.IndexOf('_');
+                        if (index >= 0 && index < name.Length - 1)
+                            trackedRun.Structure1Name = name[(index + 1)..];
                         break;
                     case "enter_fortress":
-                        trackedRun.Structure2 = GetTimeFormat(IGT);
+                        trackedRun.Structure2 = GetTimeFormatMinutes(IGT);
+                        index = name.IndexOf('_');
+                        if (index >= 0 && index < name.Length - 1)
+                            trackedRun.Structure2Name = name[(index + 1)..];
                         break;
                     case "nether_travel":
-                        trackedRun.NetherExit = GetTimeFormat(IGT);
+                        trackedRun.NetherExit = GetTimeFormatMinutes(IGT);
                         break;
                     case "enter_stronghold":
-                        trackedRun.Stronghold = GetTimeFormat(IGT);
+                        trackedRun.Stronghold = GetTimeFormatMinutes(IGT);
                         break;
                     case "enter_end":
-                        trackedRun.EndEnter = GetTimeFormat(IGT);
+                        trackedRun.EndEnter = GetTimeFormatMinutes(IGT);
                         break;
                 }
             }
@@ -364,7 +351,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             if (statsData!.Killed != null && statsData!.Killed!.TryGetValue("minecraft:blaze", out int killedBlazes))
                 trackedRun.KilledBlazes = killedBlazes;
 
-            trackedRun.TimeSincePrevious = GetTimeFormat(stopwatch.ElapsedMilliseconds - lastNetherEntherTimeSession - breakTime);
+            trackedRun.TimeSincePrevious = GetTimeFormatHours(stopwatch.ElapsedMilliseconds - lastNetherEntherTimeSession - breakTime);
             lastNetherEntherTimeSession = stopwatch.ElapsedMilliseconds;
 
             trackedRun.WallResetsSincePrevious = wallResetsSincePrev;
@@ -373,9 +360,9 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             SessionData.BreakTimeMiliseconds += breakTime;
             SessionData.WallTimeMiliseconds += wallTime;
 
-            trackedRun.BreakTimeSincePrevious = GetTimeFormat(breakTime);
-            trackedRun.WallTimeSincePrevious = GetTimeFormat(wallTime);
-            trackedRun.RTASincePrevious = GetTimeFormat(rtaSincePrev);
+            trackedRun.BreakTimeSincePrevious = GetTimeFormatHours(breakTime);
+            trackedRun.WallTimeSincePrevious = GetTimeFormatHours(wallTime);
+            trackedRun.RTASincePrevious = GetTimeFormatHours(rtaSincePrev);
 
             SessionData.TotalRTAPlayTimeMiliseconds += wallTime + rtaSincePrev + data.FinalRTA;
 
@@ -387,7 +374,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 
             SessionData.AddNewRun(trackedRun);
 
-            StartViewModel.Log("==================" + timeLines[0].name + "[{" + GetTimeFormat(timeLines[0].IGT) + "}] - first split ==================");
+            StartViewModel.Log("==================" + timeLines[0].name + "[{" + GetTimeFormatMinutes(timeLines[0].IGT) + "}] - first split ==================");
             StartViewModel.Log(trackedRun.TimeSincePrevious + " - time since last nether enter without breaks");
             StartViewModel.Log(trackedRun.WallResetsSincePrevious + " - amount wall resets since last nether");
             StartViewModel.Log(trackedRun.PlayedSincePrev + " - amount played since last nether");
@@ -407,7 +394,11 @@ namespace MultiOpener.Entities.Opened.ResetTracker
                 {
                     await Task.Delay(TimeSpan.FromMilliseconds(100), _token);
                 }
-                catch { break; }
+                catch (Exception ex)
+                {
+                    StartViewModel.Log(ex.Message);
+                    StartViewModel.Log(ex.StackTrace);
+                }
             }
         }
         private void UpdateUIStats()
@@ -553,10 +544,15 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             return default;
         }
 
-        private string GetTimeFormat(long timeMiliseconds)
+        private string GetTimeFormatHours(long timeMiliseconds)
         {
             TimeSpan timeSpan = TimeSpan.FromMilliseconds(timeMiliseconds);
             return string.Format("{0:D2}:{1:D2}.{2:D2}.{3:D1}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds / 100);
+        }
+        private string GetTimeFormatMinutes(long timeMiliseconds)
+        {
+            TimeSpan timeSpan = TimeSpan.FromMilliseconds(timeMiliseconds);
+            return string.Format("{0:D2}:{1:D2}.{2:D1}", (int)timeSpan.TotalMinutes, timeSpan.Seconds, timeSpan.Milliseconds / 100);
         }
 
         private void UpdateFileContent(string fileName, object content)

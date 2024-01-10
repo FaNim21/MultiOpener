@@ -1,12 +1,13 @@
 ﻿using MultiOpener.Entities.Misc;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace MultiOpener.ViewModels.Controls;
 
 public class ResetStatsViewModel : BaseViewModel
 {
-    public LinkedList<TrackedRunStats> Runs { get; set; } = new();
+    public ObservableCollection<TrackedRunStats> Runs { get; set; } = new();
 
     public bool UsingBuiltIn { get; set; }
     public long LastFileDateRead { get; set; }
@@ -132,6 +133,16 @@ public class ResetStatsViewModel : BaseViewModel
         }
     }
 
+    private int _netherWithoutPickaxeReset;
+    public int NetherWithoutPickaxeReset
+    {
+        get { return _netherWithoutPickaxeReset; }
+        set
+        {
+            _netherWithoutPickaxeReset = value;
+        }
+    }
+
     private int _splitlessResets;
     public int SplitlessResets
     {
@@ -143,6 +154,8 @@ public class ResetStatsViewModel : BaseViewModel
     }
 
     public int Resets => WallResets + NoNetherEnterResets + SplitlessResets;
+
+    public int ResetsPerEnter => Resets / Math.Max(NetherEntersCount, 1);
     #endregion
 
     #region Splits
@@ -411,14 +424,20 @@ public class ResetStatsViewModel : BaseViewModel
 
         OnPropertyChanged(nameof(Resets));
         OnPropertyChanged(nameof(NoNetherEnterResets));
+        OnPropertyChanged(nameof(NetherWithoutPickaxeReset));
         OnPropertyChanged(nameof(SplitlessResets));
+        OnPropertyChanged(nameof(ResetsPerEnter));
 
         OnPropertyChanged(nameof(NetherPerHour));
     }
 
     public void AddNewRun(TrackedRunStats run)
     {
-        Runs.AddFirst(run);
+        Application.Current?.Dispatcher.Invoke(delegate
+        {
+            run.Count = Runs.Count + 1;
+            Runs.Insert(0, run);
+        });
     }
 
     public void UpdateTimes(long timeFromStopwatch)
@@ -470,7 +489,10 @@ public class ResetStatsViewModel : BaseViewModel
 
     public void Clear()
     {
-        Runs.Clear();
+        Application.Current?.Dispatcher.Invoke(delegate
+        {
+            Runs.Clear();
+        });
 
         LastFileDateRead = 0;
 

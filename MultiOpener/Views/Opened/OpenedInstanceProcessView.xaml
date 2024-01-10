@@ -6,6 +6,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:viewmodels="clr-namespace:MultiOpener.Entities.Opened"
              xmlns:buttons="clr-namespace:MultiOpener.Components.Buttons"
+             xmlns:main="clr-namespace:MultiOpener.Components"
              d:DataContext="{d:DesignInstance Type=viewmodels:OpenedInstanceProcess}"
              mc:Ignorable="d"
              Width="550"
@@ -18,7 +19,11 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical"
+                    HorizontalAlignment="Left"
+                    Width="540">
+            <main:ProcessInformationsControl DataContext="{Binding}" />
+
             <TextBlock Foreground="#a0e3e3"
                        Text=" -- Instance -- " />
             <TextBlock>

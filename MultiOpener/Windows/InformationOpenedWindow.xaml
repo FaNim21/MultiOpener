@@ -2,7 +2,6 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:buttons="clr-namespace:MultiOpener.Components.Buttons"
         xmlns:opened="clr-namespace:MultiOpener.Entities.Opened"
@@ -44,83 +43,8 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ScrollViewer>
-                    <StackPanel Orientation="Vertical"
-                                HorizontalAlignment="Left"
-                                Width="540"
-                                Margin="5 5 0 0">
-                        <TextBlock Foreground="#a0e3e3"
-                                   Text=" -- Main -- " />
-                        <TextBlock>
-                            <Run Foreground="DarkGray"
-                                 Text="Name: " />
-                            <Run Foreground="White"
-                                 Text="{Binding Name, Mode=OneTime, Converter={StaticResource EmptyStringConverter}}" />
-                        </TextBlock>
-                        <TextBlock>
-                            <Run Foreground="DarkGray"
-                                 Text="Title: " />
-                            <Run Foreground="White"
-                                 Text="{Binding WindowTitle, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
-                        </TextBlock>
-                        <TextBlock>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding CopyTextToClipboardCommand}"
-                                                           CommandParameter="{Binding Text, ElementName=TextPath}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <Run Foreground="DarkGray"
-                                 Text="Path: " />
-                            <Run Foreground="White"
-                                 x:Name="TextPath"
-                                 Text="{Binding Path, Mode=OneWay}" />
-                        </TextBlock>
-                        <TextBlock>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction Command="{Binding CopyTextToClipboardCommand}"
-                                                           CommandParameter="{Binding Text, ElementName=TextID}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <Run Foreground="DarkGray"
-                                 Text="ID: " />
-                            <Run Foreground="White"
-                                 Name="TextID"
-                                 Text="{Binding Pid, Mode=OneWay}" />
-                        </TextBlock>
-                        <TextBlock>
-                            <Run Foreground="DarkGray"
-                                 Text="Hwnd: " />
-                            <Run Foreground="White"
-                                 Text="{Binding Hwnd, Mode=OneWay}" />
-                        </TextBlock>
-
-                        <TextBlock Foreground="#a0e3e3"
-                                   Text=" -- StartInfo -- " />
-                        <TextBlock>
-                            <Run Foreground="DarkGray"
-                                 Text="FileName: " />
-                            <Run Foreground="White"
-                                 Text="{Binding ProcessStartInfoView.FileName, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
-                        </TextBlock>
-                        <TextBlock>
-                            <Run Foreground="DarkGray"
-                                 Text="WorkingDirectory: " />
-                            <Run Foreground="White"
-                                 Text="{Binding ProcessStartInfoView.WorkingDirectory, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
-                        </TextBlock>
-                        <TextBlock>
-                            <Run Foreground="DarkGray"
-                                 Text="Arguments: " />
-                            <Run Foreground="White"
-                                 Text="{Binding ProcessStartInfoView.Arguments, Mode=OneWay, Converter={StaticResource EmptyStringConverter}}" />
-                        </TextBlock>
-
-                        <ContentPresenter Content="{Binding}" />
-                    </StackPanel>
-                </ScrollViewer>
+                  Margin="5 5 0 0">
+                <ContentPresenter Content="{Binding}" />
             </Grid>
             <Grid Width="150"
                   HorizontalAlignment="Right"

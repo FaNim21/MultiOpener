@@ -5,25 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
+             xmlns:main="clr-namespace:MultiOpener.Components"
              xmlns:viewmodels="clr-namespace:MultiOpener.Entities.Opened"
              d:DataContext="{d:DesignInstance Type=viewmodels:OpenedResetTrackerProcess}"
              mc:Ignorable="d"
              Width="550"
              Height="350"
              Background="#383A3C">
-    <Grid>
-        <StackPanel Orientation="Vertical"
-                    HorizontalAlignment="Left"
-                    Width="540">
-            <TextBlock Foreground="#a0e3e3"
-                       Text=" -- Minecraft Reset Tracker Analytics-- " />
-            <TextBlock>
+    <ScrollViewer>
+        <Grid>
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Left"
+                        Width="540">
+
+                <main:ProcessInformationsControl DataContext="{Binding}" />
+
+                <TextBlock Foreground="#a0e3e3"
+                           Text=" -- Minecraft Reset Tracker Analytics-- " />
+                <TextBlock>
                     <Run Foreground="DarkGray"
                          Text="External tracker: " />
                     <Run Foreground="White"
                          Text="{Binding SessionData.UsingBuiltIn, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}" />
-            </TextBlock>
-            <TextBlock>
+                </TextBlock>
+                <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Is Tracking: " />
                 <Run Foreground="White"
@@ -32,215 +37,287 @@
                      Text="   |  next update in: " />
                 <Run Foreground="White"
                      Text="{Binding TimeToUpdateStats, Mode=OneWay}" />
-            </TextBlock>
+                </TextBlock>
 
-            <local:ButtonNormal Width="100"
-                                ContentText="Force update"
-                                OnCommand="{Binding ForceUpdateCommand}"
-                                Margin="0 -18 0 0" />
+                <local:ButtonNormal Width="100"
+                                    ContentText="Force update"
+                                    OnCommand="{Binding ForceUpdateCommand}"
+                                    Margin="0 -18 0 0" />
 
-            <TextBlock>
+                <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Session time: " />
                 <Run Foreground="White"
                      Text="{Binding SessionData.ElapsedTime, Mode=OneWay}" />
-            </TextBlock>
-            <TextBlock>
+                </TextBlock>
+                <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="RTA time spend: " />
                 <Run Foreground="White"
                      Text="{Binding SessionData.TotalRTAPlayTime, Mode=OneWay}" />
-            </TextBlock>
-            <TextBlock>
+                </TextBlock>
+                <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Wall time: " />
                 <Run Foreground="White"
                      Text="{Binding SessionData.WallTime, Mode=OneWay}" />
-            </TextBlock>
-            <TextBlock>
+                </TextBlock>
+                <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Break time: " />
                 <Run Foreground="White"
                      Text="{Binding SessionData.BreakTime, Mode=OneWay}" />
-            </TextBlock>
+                </TextBlock>
 
-            <Grid x:Name="StatsTable"
-                  Width="500"
-                  HorizontalAlignment="Left"
-                  Background="LightGray"
-                  Margin="0 5 0 0">
-                <Grid.Resources>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Margin"
-                                Value="4 1 0 2" />
-                        <Setter Property="Foreground"
-                                Value="Black" />
-                        <Setter Property="FontSize"
-                                Value="12" />
-                    </Style>
-                </Grid.Resources>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+                <Grid x:Name="StatsTable"
+                      Width="500"
+                      HorizontalAlignment="Left"
+                      Background="LightGray"
+                      Margin="0 5 0 0">
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Margin"
+                                    Value="4 1 0 2" />
+                            <Setter Property="Foreground"
+                                    Value="Black" />
+                            <Setter Property="FontSize"
+                                    Value="12" />
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0"
-                           Grid.Column="0">Iron Pickaxe</TextBlock>
-                <TextBlock Grid.Row="0"
-                           Grid.Column="1">Nether</TextBlock>
-                <TextBlock Grid.Row="0"
-                           Grid.Column="2">Structure 1</TextBlock>
-                <TextBlock Grid.Row="0"
-                           Grid.Column="3">Structure 2</TextBlock>
-                <TextBlock Grid.Row="0"
-                           Grid.Column="4">Nether Exit</TextBlock>
-                <TextBlock Grid.Row="0"
-                           Grid.Column="5">Stronghold</TextBlock>
-                <TextBlock Grid.Row="0"
-                           Grid.Column="6">End</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0">Iron Pickaxe</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="1">Nether</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="2">Structure 1</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="3">Structure 2</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="4">Nether Exit</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="5">Stronghold</TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="6">End</TextBlock>
 
-                <TextBlock Grid.Row="1"
-                           Grid.Column="1"
-                           Text="{Binding SessionData.NetherEntersCount, Mode=OneWay}" />
-                <TextBlock Grid.Row="1"
-                           Grid.Column="2"
-                           Text="{Binding SessionData.FirstStructureEntersCount, Mode=OneWay}" />
-                <TextBlock Grid.Row="1"
-                           Grid.Column="3"
-                           Text="{Binding SessionData.SecondStructureEntersCount, Mode=OneWay}" />
-                <TextBlock Grid.Row="1"
-                           Grid.Column="4"
-                           Text="{Binding SessionData.NetherExitEntersCount, Mode=OneWay}" />
-                <TextBlock Grid.Row="1"
-                           Grid.Column="5"
-                           Text="{Binding SessionData.StrongholdEntersCount, Mode=OneWay}" />
-                <TextBlock Grid.Row="1"
-                           Grid.Column="6"
-                           Text="{Binding SessionData.EndEntersCount, Mode=OneWay}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Text="{Binding SessionData.NetherEntersCount, Mode=OneWay}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="2"
+                               Text="{Binding SessionData.FirstStructureEntersCount, Mode=OneWay}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="3"
+                               Text="{Binding SessionData.SecondStructureEntersCount, Mode=OneWay}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="4"
+                               Text="{Binding SessionData.NetherExitEntersCount, Mode=OneWay}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="5"
+                               Text="{Binding SessionData.StrongholdEntersCount, Mode=OneWay}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="6"
+                               Text="{Binding SessionData.EndEntersCount, Mode=OneWay}" />
 
-                <TextBlock Grid.Row="1"
-                           Grid.Column="0"
-                           Grid.RowSpan="2"
-                           FontSize="18"
-                           Text="{Binding SessionData.IronPickaxeCount, Mode=OneWay}"
-                           Margin="2 5 2 0" />
-                <TextBlock Grid.Row="2"
-                           Grid.Column="1"
-                           Text="{Binding SessionData.NetherEnterAverageTime, Mode=OneWay}" />
-                <TextBlock Grid.Row="2"
-                           Grid.Column="2"
-                           Text="{Binding SessionData.FirstStructureEnterAverageTime, Mode=OneWay}" />
-                <TextBlock Grid.Row="2"
-                           Grid.Column="3"
-                           Text="{Binding SessionData.SecondStructureEnterAverageTime, Mode=OneWay}" />
-                <TextBlock Grid.Row="2"
-                           Grid.Column="4"
-                           Text="{Binding SessionData.NetherExitEnterAverageTime, Mode=OneWay}" />
-                <TextBlock Grid.Row="2"
-                           Grid.Column="5"
-                           Text="{Binding SessionData.StrongholdEnterAverageTime, Mode=OneWay}" />
-                <TextBlock Grid.Row="2"
-                           Grid.Column="6"
-                           Text="{Binding SessionData.EndEnterAverageTime, Mode=OneWay}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Grid.RowSpan="2"
+                               FontSize="18"
+                               Text="{Binding SessionData.IronPickaxeCount, Mode=OneWay}"
+                               Margin="2 5 2 0" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Text="{Binding SessionData.NetherEnterAverageTime, Mode=OneWay}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="2"
+                               Text="{Binding SessionData.FirstStructureEnterAverageTime, Mode=OneWay}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="3"
+                               Text="{Binding SessionData.SecondStructureEnterAverageTime, Mode=OneWay}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="4"
+                               Text="{Binding SessionData.NetherExitEnterAverageTime, Mode=OneWay}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="5"
+                               Text="{Binding SessionData.StrongholdEnterAverageTime, Mode=OneWay}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="6"
+                               Text="{Binding SessionData.EndEnterAverageTime, Mode=OneWay}" />
 
-                <Border Grid.Row="0"
-                        Grid.Column="0"
-                        Grid.RowSpan="3"
-                        BorderThickness="1 0 0 0"
-                        BorderBrush="Black" />
-                <Border Grid.Row="0"
-                        Grid.Column="1"
-                        Grid.RowSpan="3"
-                        BorderThickness="1 0 0 0"
-                        BorderBrush="Black" />
-                <Border Grid.Row="0"
-                        Grid.Column="2"
-                        Grid.RowSpan="3"
-                        BorderThickness="1 0 0 0"
-                        BorderBrush="Black" />
-                <Border Grid.Row="0"
-                        Grid.Column="3"
-                        Grid.RowSpan="3"
-                        BorderThickness="1 0 0 0"
-                        BorderBrush="Black" />
-                <Border Grid.Row="0"
-                        Grid.Column="4"
-                        Grid.RowSpan="3"
-                        BorderThickness="1 0 0 0"
-                        BorderBrush="Black" />
-                <Border Grid.Row="0"
-                        Grid.Column="5"
-                        Grid.RowSpan="3"
-                        BorderThickness="1 0 1 0"
-                        BorderBrush="Black" />
-                <Border Grid.Row="0"
-                        Grid.Column="6"
-                        Grid.RowSpan="3"
-                        BorderThickness="0 0 1 0"
-                        BorderBrush="black" />
-                <Border Grid.Row="0"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="7"
-                        BorderThickness="0,1,0,1"
-                        BorderBrush="Black" />
-                <Border Grid.Row="2"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="7"
-                        BorderThickness="0 0 0 1"
-                        BorderBrush="Black" />
-                <Border Grid.Row="2"
-                        Grid.Column="1"
-                        Grid.ColumnSpan="7"
-                        BorderThickness="0 1 0 0"
-                        BorderBrush="Black" />
-            </Grid>
+                    <Border Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 0 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="1"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 0 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="2"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 0 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="3"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 0 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="4"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 0 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="5"
+                            Grid.RowSpan="3"
+                            BorderThickness="1 0 1 0"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="6"
+                            Grid.RowSpan="3"
+                            BorderThickness="0 0 1 0"
+                            BorderBrush="black" />
+                    <Border Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="7"
+                            BorderThickness="0,1,0,1"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="2"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="7"
+                            BorderThickness="0 0 0 1"
+                            BorderBrush="Black" />
+                    <Border Grid.Row="2"
+                            Grid.Column="1"
+                            Grid.ColumnSpan="7"
+                            BorderThickness="0 1 0 0"
+                            BorderBrush="Black" />
+                </Grid>
 
-            <TextBlock>
+                <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Overall resets: " />
                 <Run Foreground="White"
                      Text="{Binding SessionData.Resets, Mode=OneWay}" />
-            </TextBlock>
-
-            <TextBlock>
+                </TextBlock>
+                <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Wall resets: " />
                 <Run Foreground="White"
                      Text="{Binding SessionData.WallResets, Mode=OneWay}" />
-            </TextBlock>
-
-            <TextBlock>
+                </TextBlock>
+                <TextBlock>
                 <Run Foreground="DarkGray"
-                     Text="No Nether or pickaxe resets: " />
+                     Text="Splitless resets: " />
                 <Run Foreground="White"
                      Text="{Binding SessionData.SplitlessResets, Mode=OneWay}" />
-            </TextBlock>
+                </TextBlock>
+                <TextBlock>
+                    <Run Foreground="DarkGray"
+                         Text="Resets per enteer: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.ResetsPerEnter, Mode=OneWay}" />
+                </TextBlock>
 
-            <TextBlock>
+                <TextBlock>
                 <Run Foreground="DarkGray"
-                     Text="Pickaxe, but not nether resets: " />
+                     Text="Pickaxes, but not nether: " />
                 <Run Foreground="White"
                      Text="{Binding SessionData.NoNetherEnterResets, Mode=OneWay}" />
-            </TextBlock>
-
-            <TextBlock>
+                </TextBlock>
+                <TextBlock>
+                <Run Foreground="DarkGray"
+                     Text="Nethers without iron pickaxe " />
+                <Run Foreground="White"
+                     Text="{Binding SessionData.NetherWithoutPickaxeReset, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="NPH: " />
                 <Run Foreground="White"
                      Text="{Binding SessionData.NetherPerHour, Mode=OneWay}" />
-            </TextBlock>
+                </TextBlock>
 
-            <!--
+                <Label Content="Registered runs: "
+                       Foreground="DarkGray"
+                       Margin="-5 0 0 0" />
+
+                <DataGrid ItemsSource="{Binding SessionData.Runs}"
+                          AutoGenerateColumns="False"
+                          SelectionMode="Single"
+                          CanUserResizeRows="False"
+                          CanUserResizeColumns="False"
+                          CanUserReorderColumns="False"
+                          CanUserAddRows="False"
+                          IsReadOnly="True"
+                          GridLinesVisibility="All"
+                          FontSize="9"
+                          HeadersVisibility="Column"
+                          RowHeaderWidth="0"
+                          EnableColumnVirtualization="True"
+                          EnableRowVirtualization="True"
+                          VirtualizingPanel.IsVirtualizing="True"
+                          VirtualizingPanel.VirtualizationMode="Recycling"
+                          MaxColumnWidth="90"
+                          HorizontalAlignment="Left"
+                          Width="455">
+
+                    <DataGrid.Resources>
+                        <!-- Style for the DataGridRow -->
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Setter Property="Background"
+                                    Value="LightGray" />
+                            <Setter Property="BorderThickness"
+                                    Value="0" />
+                        </Style>
+
+                        <!-- Style for the DataGridCell -->
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Setter Property="BorderThickness"
+                                    Value="1" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Count"
+                                            Binding="{Binding Count}" />
+                        <DataGridTextColumn Header="Date"
+                                            Binding="{Binding Date}" />
+                        <DataGridTextColumn Header="IGT"
+                                            Binding="{Binding IGT}" />
+                        <DataGridTextColumn Header="Nether"
+                                            Binding="{Binding NetherTime}" />
+                        <DataGridTextColumn Header="Structure1"
+                                            Binding="{Binding Structure1}" />
+                        <DataGridTextColumn Header="Structure2"
+                                            Binding="{Binding Structure2}" />
+                        <DataGridTextColumn Header="Nether exit"
+                                            Binding="{Binding NetherExit}" />
+                        <DataGridTextColumn Header="Stronghold"
+                                            Binding="{Binding Stronghold}" />
+                        <DataGridTextColumn Header="End enter"
+                                            Binding="{Binding EndEnter}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Label Content="" />
+                <Label Content="" />
+
+                <!--
             <TextBlock>
                 <Run Foreground="DarkGray"
                      Text="Title: " />
@@ -262,6 +339,7 @@
             </TextBlock>
             -->
 
-        </StackPanel>
-    </Grid>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </UserControl>
