@@ -8,17 +8,27 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
 using MultiOpener.Entities.Opened.ResetTracker;
+using System.ComponentModel;
 
 namespace MultiOpener.Entities.Open;
+
+public enum RecordType
+{
+    [Description("RSG")]
+    RSG,
+    [Description("FSG")]
+    FSG
+}
 
 public sealed class OpenResetTracker : OpenItem
 {
     public string TrackerID { get; set; }
     public bool UsingBuiltInTracker { get; set; }
+    public RecordType RecordType { get; set; }  //temp
 
 
     [JsonConstructor]
-    public OpenResetTracker(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = OpenType.ResetTrackerMC, bool MinimizeOnOpen = false, bool UsingBuiltInTracker = true, string TrackerID = "")
+    public OpenResetTracker(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = OpenType.ResetTrackerMC, bool MinimizeOnOpen = false, bool UsingBuiltInTracker = true, string TrackerID = "", RecordType RecordType = RecordType.RSG)
     {
         this.Name = Name;
         this.PathExe = PathExe;
@@ -29,9 +39,11 @@ public sealed class OpenResetTracker : OpenItem
         //...
         this.UsingBuiltInTracker = UsingBuiltInTracker;
         this.TrackerID = TrackerID;
+        //...
+        this.RecordType = RecordType;
     }
     public OpenResetTracker(string Name) : this(Name, "") { }
-    public OpenResetTracker(OpenResetTracker item) : this(item.Name, item.PathExe, item.DelayBefore, item.DelayAfter, item.Type, item.MinimizeOnOpen, item.UsingBuiltInTracker, item.TrackerID) { }
+    public OpenResetTracker(OpenResetTracker item) : this(item.Name, item.PathExe, item.DelayBefore, item.DelayAfter, item.Type, item.MinimizeOnOpen, item.UsingBuiltInTracker, item.TrackerID, item.RecordType) { }
 
     public override string Validate()
     {
@@ -55,7 +67,7 @@ public sealed class OpenResetTracker : OpenItem
 
         if (UsingBuiltInTracker)
         {
-            opened = new ResetTrackerLocal();
+            opened = new ResetTrackerLocal(RecordType);
             opened.Initialize(null, "Tracker", string.Empty, MinimizeOnOpen);
             if (!isCancelled)
                 opened.ActivateTracker();

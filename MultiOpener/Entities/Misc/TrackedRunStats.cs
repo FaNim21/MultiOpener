@@ -23,6 +23,7 @@ namespace MultiOpener.Entities.Misc
         public string? EndEnter { get; set; }
 
         /* STATS */
+        //liczenie smierci
         public int BlazeRods { get; set; }
         public int KilledBlazes { get; set; }
 

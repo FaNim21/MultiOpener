@@ -5,14 +5,121 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:settings="clr-namespace:MultiOpener.ViewModels.Settings"
              xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
+             xmlns:converters="clr-namespace:MultiOpener.Converters"
              d:DataContext="{d:DesignInstance Type=settings:SettingsOpenResetTrackerModelView}"
              mc:Ignorable="d"
              d:DesignHeight="370"
              d:DesignWidth="500"
              Background="#383A3C">
-    <Grid>
-        <WrapPanel Margin="50 0 0 0">
+    <Grid Margin="50 0 0 0">
+        <Grid VerticalAlignment="Top"
+              Margin="150 -35 0 0">
+            <ToggleButton IsChecked="{Binding UsingBuiltInTracker}"
+                          Height="20"
+                          Foreground="White"
+                          Content="Use built in tracker"
+                          VerticalContentAlignment="Center" />
+        </Grid>
 
+        <!--WBUDOWANY-->
+        <WrapPanel Visibility="{Binding UsingBuiltInTracker, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <!--COS TU DAC Z WYBOREM TRACKERA KTORY SIE BEDZIE TWORZYC W ZAKLADCE RESET TRACKER-->
+
+            <Grid>
+                <Label Content="Record type"
+                       Foreground="White"
+                       Width="120"
+                       Height="25"
+                       FontSize="12"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Margin="0 0 0 0" />
+
+                <ComboBox Style="{StaticResource ComboBoxTest2}"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Top"
+                          ItemsSource="{Binding RecordRunType, Converter={converters:EnumToCollectionConverter}, Mode=OneTime}"
+                          SelectedValuePath="Value"
+                          DisplayMemberPath="Description"
+                          SelectedValue="{Binding RecordRunType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Width="120"
+                          Height="20"
+                          Margin="0 25 0 0">
+                </ComboBox>
+            </Grid>
+
+            <!--MIDDLE-->
+            <WrapPanel Orientation="Horizontal" Margin="0 10 0 0">
+                <WrapPanel Orientation="Vertical"
+                           HorizontalAlignment="Left"
+                           Width="200">
+                    <Label Content="Delays (1000 - 1 sec):"
+                           Foreground="White"
+                           Width="200"
+                           Height="31"
+                           FontSize="16"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top" />
+
+                    <WrapPanel Orientation="Horizontal"
+                               Margin="0 0 0 5">
+                        <TextBox TextWrapping="Wrap"
+                                 Width="80"
+                                 Height="20"
+                                 Text="{Binding DelayBeforeTimeField}"
+                                 PreviewTextInput="NumberValidationTextBox"
+                                 Background="#9E9E9E"
+                                 MaxLength="5" />
+                        <Label Content="Before"
+                               Foreground="White"
+                               Height="18"
+                               FontSize="16"
+                               Padding="0"
+                               Margin="5 0 0 3" />
+                    </WrapPanel>
+                    <WrapPanel Orientation="Horizontal"
+                               Margin="0 0 0 5">
+                        <TextBox x:Name="delayAfterTimeField"
+                                 TextWrapping="Wrap"
+                                 Width="80"
+                                 Height="20"
+                                 Text="{Binding DelayAfterTimeField}"
+                                 PreviewTextInput="NumberValidationTextBox"
+                                 Background="#9E9E9E"
+                                 MaxLength="5"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Top" />
+                        <Label Content="After"
+                               Foreground="White"
+                               Height="20"
+                               FontSize="16"
+                               Padding="0"
+                               Margin="5 0 0 3" />
+                    </WrapPanel>
+                </WrapPanel>
+                <WrapPanel Orientation="Vertical"
+                           HorizontalAlignment="Left"
+                           Width="200">
+                    <!--
+        <Label Content="Selections:"
+               Foreground="White"
+               Height="31"
+               FontSize="16"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top" />
+
+        <ToggleButton IsChecked="False"
+                      Height="20"
+                      Foreground="White"
+                      Content="checkbox"
+                      VerticalContentAlignment="Center" />
+        -->
+                </WrapPanel>
+            </WrapPanel>
+        </WrapPanel>
+
+        <!--ZEWNETRZNY-->
+        <WrapPanel Visibility="{Binding UsingBuiltInTracker, Mode=OneWay, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
             <!--GORA-->
             <WrapPanel>
                 <Label Content="Application path:"
@@ -25,7 +132,6 @@
                 <Grid>
                     <TextBox x:Name="AppDirectoryPathField"
                              TextWrapping="NoWrap"
-                             IsEnabled="{Binding UsingBuiltInTracker, Converter={StaticResource BoolReverseConverter}}"
                              Width="350"
                              Height="20"
                              Text="{Binding ApplicationPathField}"
@@ -54,7 +160,6 @@
                        VerticalAlignment="Top" />
                 <TextBox x:Name="TrackerID"
                          TextWrapping="NoWrap"
-                         IsEnabled="{Binding UsingBuiltInTracker, Converter={StaticResource BoolReverseConverter}}"
                          Width="350"
                          Height="20"
                          Text="{Binding TrackerSheetID}"
@@ -95,8 +200,7 @@
                     </WrapPanel>
                     <WrapPanel Orientation="Horizontal"
                                Margin="0 0 0 5">
-                        <TextBox x:Name="delayAfterTimeField"
-                                 TextWrapping="Wrap"
+                        <TextBox TextWrapping="Wrap"
                                  Width="80"
                                  Height="20"
                                  Text="{Binding DelayAfterTimeField}"
@@ -116,6 +220,7 @@
                 <WrapPanel Orientation="Vertical"
                            HorizontalAlignment="Left"
                            Width="200">
+                    <!--
                     <Label Content="Selections:"
                            Foreground="White"
                            Height="31"
@@ -123,11 +228,12 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top" />
 
-                    <ToggleButton IsChecked="{Binding UsingBuiltInTracker}"
+                    <ToggleButton IsChecked="False"
                                   Height="20"
                                   Foreground="White"
-                                  Content="Use built in tracker"
+                                  Content="checkbox"
                                   VerticalContentAlignment="Center" />
+                    -->
                 </WrapPanel>
             </WrapPanel>
         </WrapPanel>

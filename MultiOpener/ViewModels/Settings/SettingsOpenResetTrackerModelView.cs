@@ -32,6 +32,18 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
         }
     }
 
+    private RecordType _recordRunType = RecordType.RSG;
+    public RecordType RecordRunType
+    {
+        get => _recordRunType;
+        set
+        {
+            PresetIsNotSaved();
+            _recordRunType = value;
+            OnPropertyChanged(nameof(RecordRunType));
+        }
+    }
+
 
     public SettingsOpenResetTrackerModelView(SettingsViewModel settingsViewModel) : base(settingsViewModel) { }
 
@@ -41,6 +53,7 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
         {
             TrackerSheetID = openTracker.TrackerID;
             UsingBuiltInTracker = openTracker.UsingBuiltInTracker;
+            RecordRunType = openTracker.RecordType;
         }
 
         base.UpdatePanelField(currentChosen);
@@ -55,6 +68,7 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
         {
             openTracker.TrackerID = TrackerSheetID;
             openTracker.UsingBuiltInTracker = UsingBuiltInTracker;
+            openTracker.RecordType = RecordRunType;
         }
     }
 
@@ -64,6 +78,6 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
 
         TrackerSheetID = string.Empty;
         UsingBuiltInTracker = true;
-
+        RecordRunType = RecordType.RSG;
     }
 }

@@ -93,8 +93,7 @@
                     </WrapPanel>
                     <WrapPanel Orientation="Horizontal"
                                Margin="0 0 0 5">
-                        <TextBox x:Name="delayAfterTimeField"
-                                 TextWrapping="Wrap"
+                        <TextBox TextWrapping="Wrap"
                                  Width="80"
                                  Height="20"
                                  Text="{Binding DelayAfterTimeField}"
