@@ -28,21 +28,34 @@
                     <Run Foreground="White"
                          Text="{Binding SessionData.UsingBuiltIn, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}" />
                 </TextBlock>
-                <TextBlock>
-                <Run Foreground="DarkGray"
-                     Text="Is Tracking: " />
-                <Run Foreground="White"
-                     Text="{Binding IsTracking, Mode=OneWay}" />
-                <Run Foreground="DarkGray"
-                     Text="   |  next update in: " />
-                <Run Foreground="White"
-                     Text="{Binding TimeToUpdateStats, Mode=OneWay}" />
-                </TextBlock>
 
-                <local:ButtonNormal Width="100"
-                                    ContentText="Force update"
-                                    OnCommand="{Binding ForceUpdateCommand}"
-                                    Margin="0 -18 0 0" />
+                <Grid Visibility="{Binding SessionData.UsingBuiltIn, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
+                    <TextBlock>
+                        <Run Foreground="DarkGray"
+                             Text="Is Tracking: " />
+                        <Run Foreground="White"
+                             Text="{Binding IsTracking, Mode=OneWay}" />
+                        <Run Foreground="DarkGray"
+                             Text="   |  next update in: " />
+                        <Run Foreground="White"
+                             Text="{Binding TimeToUpdateStats, Mode=OneWay}" />
+                    </TextBlock>
+                    <local:ButtonNormal Width="100"
+                                        Height="20"
+                                        ContentText="Force update"
+                                        OnCommand="{Binding ForceUpdateCommand}"
+                                        Margin="0 -4 0 0" />
+                </Grid>
+
+                <Grid Visibility="{Binding SessionData.UsingBuiltIn, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0 -16 0 0">
+                    <TextBlock>
+                        <Run Foreground="DarkGray"
+                             Text="Is Tracking: " />
+                        <Run Foreground="White"
+                             Text="{Binding IsTracking, Mode=OneWay}" />
+                    </TextBlock>
+                </Grid>
+
 
                 <TextBlock>
                 <Run Foreground="DarkGray"

@@ -38,13 +38,13 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
     private long breakTime;
     private long wallTime;
 
-    private long rtaSincePrev;
+    private long rtaSincePrev;        //z tym problem i ogolnie z liczeniem RTA
     private int wallResetsSincePrev;
     private int playedSincePrev;
 
     private long lastNetherEntherTimeSession;
 
-    //TODO: 0 zle liczy total rta i trzeba naprawic te pickaxy i robienie nonetherenter--;
+    //TODO: 0 zle liczy total rta
     //TODO: 1 zrobic oddzielna klase dla trackerAPI i zrobic tam liste txt'kow do zapisywania i cala logike pod pierwsze tworzenie tych plikow jak i resetowanie itp itd
 
 
@@ -62,7 +62,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
             Path = _recordsFolder!,
             NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName,
             Filter = "*.json",
-            InternalBufferSize = 8192
+            InternalBufferSize = 16384
         };
         _fileWatcher.Created += OnRecordCreated;
 
@@ -73,41 +73,21 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
     public override void ActivateTracker()
     {
         if (IsTracking) return;
-
-        if (App.Config.DeleteAllRecordOnActivating)
-            ClearRecordsFolder();
-
-        _source = new();
-        _token = _source.Token;
+        if (App.Config.DeleteAllRecordOnActivating) ClearRecordsFolder();
 
         _fileWatcher.EnableRaisingEvents = true;
-
         IsTracking = true;
         UpdateStatus();
 
         StartViewModel.Log("Activated Tracker");
-        //_trackerTask = Task.Run(TrackStats, _token);
-        _ = Task.Run(UIUpdate, _token);
+        Task.Run(UIUpdate, _token);
     }
     public override void DeactivateTracker()
     {
-        if (_token.IsCancellationRequested || !IsTracking) return;
+        if (!IsTracking) return;
         _fileWatcher.EnableRaisingEvents = false;
-
-        _source.Cancel();
         IsTracking = false;
-        TimeToUpdateStats = updateFrequencySize;
 
-        if (_trackerTask is { IsCompleted: false })
-        {
-            try
-            {
-                _trackerTask.Wait(_token);
-            }
-            catch { }
-        }
-
-        _source.Dispose();
         _stopwatch.Stop();
         UpdateUIStats();
         _stopwatch.Reset();
@@ -116,90 +96,28 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
         StartViewModel.Log("Deactivated Tracker");
     }
 
-    /*private async Task TrackStats()
-    {
-        updateFrequencySize = App.Config.UpdateResetTrackerFrequency / 1000;
-        TimeToUpdateStats = updateFrequencySize;
-
-        while (IsTracking)
-        {
-            UpdateUIStats();
-
-            try
-            {
-                TimeToUpdateStats -= 1;
-                await Task.Delay(TimeSpan.FromSeconds(1), _token);
-            }
-            catch { break; }
-
-            if (TimeToUpdateStats == 0)
-            {
-                OnTracking();
-                TimeToUpdateStats = updateFrequencySize;
-            }
-        }
-    }*/
-
     private void OnRecordCreated(object sender, FileSystemEventArgs e)
     {
-        //TODO: 0 do stestowania
-        string path = e.FullPath;
-        string text = File.ReadAllText(path) ?? string.Empty;
-
-        if (string.IsNullOrEmpty(text)) return;
-        try
-        {
-            RecordData? data = JsonSerializer.Deserialize<RecordData>(text);
-            if (data == null) return;
-            if (!data.Type!.Equals(_recordType) || data.DefaultGameMode != 0) return;
-            if (data.OpenLanTime == null && data.IsCheatAllowed) return;
-
-            FilterResetData(data);
-        }
-        catch (JsonException ex)
-        {
-            StartViewModel.Log($"Error deserializing {path}: {ex.Message}", ConsoleLineOption.Error);
-        }
-
         lock (this)
         {
-            SessionData.Update();
-            WriteSessionStatsToFile();
-        }
-    }
+            string path = e.FullPath;
+            string text = ReadAllTextWithRetry(path);
 
-    private void OnTracking()
-    {
-        if (string.IsNullOrEmpty(_recordsFolder)) return;
-
-        long lastFileOpenedRead = SessionData.LastFileDateRead;
-        ReadOnlySpan<string> records = Directory.GetFiles(_recordsFolder, "*.json", SearchOption.TopDirectoryOnly).OrderBy(file => File.GetLastWriteTime(file)).ToArray().AsSpan();
-        for (int i = 0; i < records.Length; i++)
-        {
-            if (_token.IsCancellationRequested) break;
-
-            string text = File.ReadAllText(records[i]) ?? string.Empty;
+            if (string.IsNullOrEmpty(text)) return;
             try
             {
-                if (string.IsNullOrEmpty(text)) continue;
                 RecordData? data = JsonSerializer.Deserialize<RecordData>(text);
-
-                if (data == null) continue;
-                if (data.Date <= SessionData.LastFileDateRead) continue;
-                if (data.Date >= lastFileOpenedRead) lastFileOpenedRead = data.Date;
-                if (!data.Type!.Equals("random_seed") || data.DefaultGameMode != 0) continue;   //set_seed
-                if (data.OpenLanTime == null && data.IsCheatAllowed) continue;
+                if (data == null) return;
+                if (!data.Type!.Equals(_recordType) || data.DefaultGameMode != 0) return;
+                if (data.OpenLanTime == null && data.IsCheatAllowed) return;
 
                 FilterResetData(data);
             }
             catch (JsonException ex)
             {
-                StartViewModel.Log($"Error deserializing {records[i]}: {ex.Message}", ConsoleLineOption.Error);
+                StartViewModel.Log($"Error deserializing {path}: {ex.Message}", ConsoleLineOption.Error);
             }
-        }
-        SessionData.LastFileDateRead = lastFileOpenedRead;
-        lock (this)
-        {
+
             SessionData.Update();
             WriteSessionStatsToFile();
         }
@@ -210,7 +128,6 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
         List<(string name, long IGT)> timeLines = new();
         bool foundIronPick = false;
         bool foundEnterNether = false;
-        //bool hasDoneSomething = false;
         TimeSpan runDiffer;
 
         //BREAK TIMES
@@ -343,7 +260,6 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
         CreateRunData(data, statsData, timeLines);
     }
-
     private void CreateRunData(RecordData data, RecordStatsCategoriesData statsData, List<(string name, long IGT)> timeLines)
     {
         TrackedRunStats trackedRun = new();
@@ -437,24 +353,12 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
         while (IsTracking)
         {
             UpdateUIStats();
-
-            try
-            {
-                await Task.Delay(TimeSpan.FromMilliseconds(100), _token);
-            }
-            catch { }
+            await Task.Delay(TimeSpan.FromMilliseconds(100));
         }
     }
     private void UpdateUIStats()
     {
-        //every 100 miliseconds
-        uiUpdateCount++;
         SessionData.UpdateTimes(_stopwatch.ElapsedMilliseconds);
-
-        if (uiUpdateCount % 10 == 0) //every second
-        {
-            SessionData.UpdatePerHourStats();
-        }
     }
 
     private void SaveSession()
@@ -613,5 +517,27 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
         {
             StartViewModel.Log($"Error updating file {fileName}: {ex.Message}");
         }
+    }
+
+    private string ReadAllTextWithRetry(string path)
+    {
+        int maxRetries = 5;
+        int retries = 0;
+
+        while (retries < maxRetries)
+        {
+            try
+            {
+                return File.ReadAllText(path);
+            }
+            catch
+            {
+                retries++;
+                Task.Delay(100).Wait();
+            }
+        }
+
+        StartViewModel.Log("Error reading file", ConsoleLineOption.Error);
+        return string.Empty;
     }
 }

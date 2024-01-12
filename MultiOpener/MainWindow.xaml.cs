@@ -47,7 +47,7 @@ public partial class MainWindow : Window, IClipboardService
 
         MainViewModel.settings.LoadStartupPreset(Settings.Default.LastOpenedPresetName);
 
-        Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+        Application.Current.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
 
         Task.Factory.StartNew(CheckForUpdates);
     }
@@ -59,7 +59,7 @@ public partial class MainWindow : Window, IClipboardService
         base.OnSourceInitialized(e);
     }
 
-    private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    public void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
     {
         if (_handledCrash) return;
         if (!_handledCrash) _handledCrash = true;

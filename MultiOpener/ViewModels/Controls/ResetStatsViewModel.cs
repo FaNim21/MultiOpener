@@ -429,6 +429,9 @@ public class ResetStatsViewModel : BaseViewModel
         OnPropertyChanged(nameof(ResetsPerEnter));
 
         OnPropertyChanged(nameof(NetherPerHour));
+
+        //...
+        UpdatePerHourStats();
     }
 
     public void AddNewRun(TrackedRunStats run)

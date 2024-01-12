@@ -32,6 +32,8 @@ public abstract class OpenedResetTrackerProcess : OpenedProcess
         }
     }
 
+
+
     public ICommand ForceUpdateCommand { get; set; }
 
     public ResetStatsViewModel SessionData { get; set; } = new();
