@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media.Effects;
 using MultiOpener.ViewModels;
 
 namespace MultiOpener.Components.Controls;
@@ -57,7 +56,6 @@ public static class DialogBox
                     Owner = activeWindow,
                     DataContext = model,
                 };
-                BlurMainWindow();
                 window.ShowDialog();
             });
         }
@@ -101,15 +99,6 @@ public static class DialogBox
             },
             _ => Enumerable.Empty<DialogBoxButton>()
         };
-    }
-
-    private static void BlurMainWindow()
-    {
-        if (Application.Current?.MainWindow is MainWindow mainWindow)
-        {
-            mainWindow.Opacity = 0.75f;
-            mainWindow.Effect = new BlurEffect();
-        }
     }
 
     private static Window? GetActiveWindow()

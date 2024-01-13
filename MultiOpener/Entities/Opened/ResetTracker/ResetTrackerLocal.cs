@@ -16,10 +16,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker;
 
 /// <summary>
 /// Stats Example to do:
-/// - average time 
 /// - wyciaganie seeda z level.dat z folderu swiata
-/// 
-/// ---- UWZGLEDNIC TO ZEBY NA PIERWSZYM RUNIE SESJI NIE USTAWIALO STATYSTYK JAK since previously ------
 /// </summary>
 public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 {
@@ -37,7 +34,6 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
     private long breakTime;
     private long wallTime;
-
     private long rtaSincePrev;        //z tym problem i ogolnie z liczeniem RTA
     private int wallResetsSincePrev;
     private int playedSincePrev;
@@ -75,6 +71,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
         if (IsTracking) return;
         if (App.Config.DeleteAllRecordOnActivating) ClearRecordsFolder();
 
+        //OnTracking();
         _fileWatcher.EnableRaisingEvents = true;
         IsTracking = true;
         UpdateStatus();
@@ -118,6 +115,37 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
                 StartViewModel.Log($"Error deserializing {path}: {ex.Message}", ConsoleLineOption.Error);
             }
 
+            SessionData.Update();
+            WriteSessionStatsToFile();
+        }
+    }
+
+    private void OnTracking()
+    {
+        if (string.IsNullOrEmpty(_recordsFolder)) return;
+
+        ReadOnlySpan<string> records = Directory.GetFiles(_recordsFolder, "*.json", SearchOption.TopDirectoryOnly).OrderBy(file => File.GetLastWriteTime(file)).ToArray().AsSpan();
+        for (int i = 0; i < records.Length; i++)
+        {
+            string text = File.ReadAllText(records[i]) ?? string.Empty;
+            try
+            {
+                if (string.IsNullOrEmpty(text)) continue;
+                RecordData? data = JsonSerializer.Deserialize<RecordData>(text);
+
+                if (data == null) continue;
+                if (!data.Type!.Equals(_recordType) || data.DefaultGameMode != 0) continue;
+                if (data.OpenLanTime == null && data.IsCheatAllowed) continue;
+
+                FilterResetData(data);
+            }
+            catch (JsonException ex)
+            {
+                StartViewModel.Log($"Error deserializing {records[i]}: {ex.Message}", ConsoleLineOption.Error);
+            }
+        }
+        lock (this)
+        {
             SessionData.Update();
             WriteSessionStatsToFile();
         }
@@ -253,6 +281,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
             playedSincePrev += 1;
             rtaSincePrev += data.FinalRTA;
+            StartViewModel.Log($"RTA no nether: {data.FinalRTA} -- sum of RTA since prev: {rtaSincePrev}", ConsoleLineOption.Error);
             return;
         }
 
@@ -310,10 +339,28 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
             }
         }
 
-        if (statsData!.PickedUp != null && statsData!.PickedUp!.TryGetValue("minecraft:blaze_rod", out int blazeRods))
-            trackedRun.BlazeRods = blazeRods;
-        if (statsData!.Killed != null && statsData!.Killed!.TryGetValue("minecraft:blaze", out int killedBlazes))
-            trackedRun.KilledBlazes = killedBlazes;
+        if (statsData.PickedUp != null)
+        {
+            if (statsData.PickedUp.TryGetValue("minecraft:blaze_rod", out int blazeRods))
+                trackedRun.BlazeRods = blazeRods;
+        }
+        if (statsData.Killed != null)
+        {
+            if (statsData.Killed.TryGetValue("minecraft:blaze", out int killedBlazes))
+                trackedRun.KilledBlazes = killedBlazes;
+        }
+        if (statsData.Custom != null)
+        {
+            if (statsData.Custom.TryGetValue("minecraft:deaths", out int deaths))
+                trackedRun.Deaths = deaths;
+        }
+        if (statsData.Used != null)
+        {
+            if (statsData.Used.TryGetValue("minecraft:obsidian", out int obsidian))
+                trackedRun.ObsidianPlaced = obsidian;
+            if (statsData.Used.TryGetValue("minecraft:ender_eye", out int enderEye))
+                trackedRun.EnderEyeUsed = enderEye;
+        }
 
         trackedRun.TimeSincePrevious = GetTimeFormatHours(_stopwatch.ElapsedMilliseconds - lastNetherEntherTimeSession - breakTime);
         lastNetherEntherTimeSession = _stopwatch.ElapsedMilliseconds;
@@ -338,12 +385,13 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
         SessionData.AddNewRun(trackedRun);
 
-        StartViewModel.Log("==================" + timeLines[0].name + "[{" + GetTimeFormatMinutes(timeLines[0].IGT) + "}] - first split ==================");
+        StartViewModel.Log("==================" + timeLines[0].name + "[{" + GetTimeFormatMinutes(timeLines[0].IGT) + "}] - first split ==================", ConsoleLineOption.Warning);
         StartViewModel.Log(trackedRun.TimeSincePrevious + " - time since last nether enter without breaks");
-        StartViewModel.Log(trackedRun.WallResetsSincePrevious + " - amount wall resets since last nether");
         StartViewModel.Log(trackedRun.PlayedSincePrev + " - amount played since last nether");
-        StartViewModel.Log(trackedRun.BreakTimeSincePrevious + " - break time");
+        StartViewModel.Log(trackedRun.RTASincePrevious + " - RTA time since last nether");
+        StartViewModel.Log(trackedRun.WallResetsSincePrevious + " - amount wall resets since last nether");
         StartViewModel.Log(trackedRun.WallTimeSincePrevious + " - wall time");
+        StartViewModel.Log(trackedRun.BreakTimeSincePrevious + " - break time");
     }
 
     private async Task UIUpdate()

@@ -23,16 +23,20 @@ namespace MultiOpener.Entities.Misc
         public string? EndEnter { get; set; }
 
         /* STATS */
-        //liczenie smierci
+        public int Deaths { get; set; }
         public int BlazeRods { get; set; }
         public int KilledBlazes { get; set; }
-
-        public int WallResetsSincePrevious { get; set; }
-        public int PlayedSincePrev { get; set; }
+        public int ObsidianPlaced { get; set; }
+        public int EnderEyeUsed { get; set; }
 
         public string? TimeSincePrevious { get; set; }
+
+        public int PlayedSincePrev { get; set; }
         public string? RTASincePrevious { get; set; }
-        public string? BreakTimeSincePrevious { get; set; }
+
+        public int WallResetsSincePrevious { get; set; }
         public string? WallTimeSincePrevious { get; set; }
+
+        public string? BreakTimeSincePrevious { get; set; }
     }
 }

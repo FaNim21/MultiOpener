@@ -1,6 +1,5 @@
 ﻿using MultiOpener.ViewModels.DialogBox;
 using System.Media;
-using System;
 using System.Windows;
 using System.Windows.Input;
 
@@ -13,7 +12,6 @@ public partial class InputFieldWindow : Window
         InitializeComponent();
 
         Loaded += OnLoaded;
-        Closed += OnClosed;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -21,13 +19,6 @@ public partial class InputFieldWindow : Window
         PlayOpeningSound();
 
         inputField.Focus();
-    }
-
-    private void OnClosed(object? sender, EventArgs e)
-    {
-        MainWindow mainWindow = ((MainWindow)Application.Current.MainWindow);
-        mainWindow.Opacity = 1f;
-        mainWindow.Effect = null;
     }
 
     private void HeaderMouseDown(object sender, MouseButtonEventArgs e)

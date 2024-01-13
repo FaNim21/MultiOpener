@@ -14,14 +14,12 @@ public sealed partial class DialogBoxWindow : Window
         InitializeComponent();
 
         Loaded += OnLoaded;
-        Closed += OnClosed;
     }
     ~DialogBoxWindow()
     {
         Application.Current.Dispatcher.Invoke(delegate
         {
             Loaded -= OnLoaded;
-            Closed -= OnClosed;
         });
     }
 
@@ -29,13 +27,6 @@ public sealed partial class DialogBoxWindow : Window
     {
         SetupTextWidth();
         PlayOpeningSound();
-    }
-
-    private void OnClosed(object? sender, EventArgs e)
-    {
-        MainWindow mainWindow = ((MainWindow)Application.Current.MainWindow);
-        mainWindow.Opacity = 1f;
-        mainWindow.Effect = null;
     }
 
     protected override void OnSourceInitialized(EventArgs e)
