@@ -35,12 +35,12 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
     private int wallResetsSincePrev;
     private long wallTimeSincePrev;
     private int playedSincePrev;
-    private long rtaSincePrev;        //z tym problem i ogolnie z liczeniem RTA
+    private long rtaSincePrev;
     private long breakTimeSincePrev;
 
     private long lastNetherEntherTimeSession;
+    private bool sessionStarted;
 
-    //TODO: 0 zle liczy total rta
     //TODO: 1 zrobic oddzielna klase dla trackerAPI i zrobic tam liste txt'kow do zapisywania i cala logike pod pierwsze tworzenie tych plikow jak i resetowanie itp itd
 
 
@@ -77,13 +77,13 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
         UpdateStatus();
 
         StartViewModel.Log("Activated Tracker");
-        Task.Run(UIUpdate, _token);
     }
     public override void DeactivateTracker()
     {
         if (!IsTracking) return;
         IsTracking = false;
         _fileWatcher.EnableRaisingEvents = false;
+        sessionStarted = false;
 
         _stopwatch.Stop();
         UpdateUIStats();
@@ -108,6 +108,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
                 if (!data.Type!.Equals(_recordType) || data.DefaultGameMode != 0) return;
                 if (data.OpenLanTime == null && data.IsCheatAllowed) return;
 
+                if (!sessionStarted) StartSession();
                 FilterResetData(data);
             }
             catch (JsonException ex)
@@ -118,6 +119,13 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
             SessionData.Update();
             WriteSessionStatsToFile();
         }
+    }
+
+    private void StartSession()
+    {
+        sessionStarted = true;
+        Task.Run(UIUpdate, _token);
+        StartViewModel.Log("Activated Session");
     }
 
     private void OnTracking()
