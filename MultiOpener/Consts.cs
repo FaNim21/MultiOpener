@@ -5,7 +5,7 @@ namespace MultiOpener;
 
 public static class Consts
 {
-    public const string Version = "v1.0.0-PREVIEW41";
+    public const string Version = "v1.0.0-PREVIEW42";
 
     public static bool IsStartPanelWorkingNow { get; set; } = true;
     public static bool IsSwitchingBetweenOpensInSettings { get; set; } = false;

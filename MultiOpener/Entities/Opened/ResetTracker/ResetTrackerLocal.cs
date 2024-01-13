@@ -32,11 +32,11 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
     private DateTime _prevDateTime;
     private const int _breakThreshold = 30;
 
-    private long breakTime;
-    private long wallTime;
-    private long rtaSincePrev;        //z tym problem i ogolnie z liczeniem RTA
     private int wallResetsSincePrev;
+    private long wallTimeSincePrev;
     private int playedSincePrev;
+    private long rtaSincePrev;        //z tym problem i ogolnie z liczeniem RTA
+    private long breakTimeSincePrev;
 
     private long lastNetherEntherTimeSession;
 
@@ -82,8 +82,8 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
     public override void DeactivateTracker()
     {
         if (!IsTracking) return;
-        _fileWatcher.EnableRaisingEvents = false;
         IsTracking = false;
+        _fileWatcher.EnableRaisingEvents = false;
 
         _stopwatch.Stop();
         UpdateUIStats();
@@ -171,11 +171,16 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
             if (runDiffer > TimeSpan.Zero)
             {
                 if (runDiffer > TimeSpan.FromSeconds(_breakThreshold))
-                    breakTime += (long)runDiffer.TotalMilliseconds;
+                {
+                    breakTimeSincePrev += (long)runDiffer.TotalMilliseconds;
+                    SessionData.BreakTimeMiliseconds += (long)runDiffer.TotalMilliseconds;
+                }
                 else
-                    wallTime += (long)runDiffer.TotalMilliseconds;
+                {
+                    wallTimeSincePrev += (long)runDiffer.TotalMilliseconds;
+                    SessionData.WallTimeMiliseconds += (long)runDiffer.TotalMilliseconds;
+                }
             }
-
             _prevDateTime = DateTime.Now;
         }
         else _prevDateTime = DateTime.Now;
@@ -280,8 +285,9 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
                 SessionData.NoNetherEnterResets++;
 
             playedSincePrev += 1;
+            StartViewModel.Log($"RTA no nether: {GetTimeFormatHours(data.FinalRTA)} -- sum of RTA since prev: {GetTimeFormatHours(rtaSincePrev)}", ConsoleLineOption.Error);
             rtaSincePrev += data.FinalRTA;
-            StartViewModel.Log($"RTA no nether: {data.FinalRTA} -- sum of RTA since prev: {rtaSincePrev}", ConsoleLineOption.Error);
+            SessionData.TotalRTAPlayTimeMiliseconds += data.FinalRTA;
             return;
         }
 
@@ -362,23 +368,20 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
                 trackedRun.EnderEyeUsed = enderEye;
         }
 
-        trackedRun.TimeSincePrevious = GetTimeFormatHours(_stopwatch.ElapsedMilliseconds - lastNetherEntherTimeSession - breakTime);
+        trackedRun.TimeSincePrevious = GetTimeFormatHours(_stopwatch.ElapsedMilliseconds - lastNetherEntherTimeSession - breakTimeSincePrev);
         lastNetherEntherTimeSession = _stopwatch.ElapsedMilliseconds;
 
         trackedRun.WallResetsSincePrevious = wallResetsSincePrev;
         trackedRun.PlayedSincePrev = playedSincePrev;
 
-        SessionData.BreakTimeMiliseconds += breakTime;
-        SessionData.WallTimeMiliseconds += wallTime;
-
-        trackedRun.BreakTimeSincePrevious = GetTimeFormatHours(breakTime);
-        trackedRun.WallTimeSincePrevious = GetTimeFormatHours(wallTime);
+        trackedRun.BreakTimeSincePrevious = GetTimeFormatHours(breakTimeSincePrev);
+        trackedRun.WallTimeSincePrevious = GetTimeFormatHours(wallTimeSincePrev);
         trackedRun.RTASincePrevious = GetTimeFormatHours(rtaSincePrev);
 
-        SessionData.TotalRTAPlayTimeMiliseconds += wallTime + rtaSincePrev + data.FinalRTA;
+        SessionData.TotalRTAPlayTimeMiliseconds += data.FinalRTA;
 
-        breakTime = 0;
-        wallTime = 0;
+        breakTimeSincePrev = 0;
+        wallTimeSincePrev = 0;
         rtaSincePrev = 0;
         wallResetsSincePrev = 0;
         playedSincePrev = 0;
