@@ -53,7 +53,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             UpdateStatus();
 
             StartViewModel.Log("Activated Tracker");
-            _trackerTask = Task.Run(TrackStats, _token);
+            //_trackerTask = Task.Run(TrackStats, _token);
         }
         public override void DeactivateTracker()
         {
@@ -62,14 +62,14 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             _source.Cancel();
             IsTracking = false;
 
-            if (_trackerTask is { IsCompleted: false })
+            /*if (_trackerTask is { IsCompleted: false })
             {
                 try
                 {
                     _trackerTask.Wait(_token);
                 }
                 catch { }
-            }
+            }*/
 
             _source.Dispose();
             SessionData.Clear();
@@ -93,17 +93,18 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 
                 if (TimeToUpdateStats == 0)
                 {
-                    await OnTracking();
+                    OnTracking();
                     TimeToUpdateStats = updateFrequencySize;
                 }
             }
         }
 
-        private async Task OnTracking()
+        private Task OnTracking()
         {
-            string apiUrl = $"https://jojoe-stats.vercel.app/api/sheet/{_trackerId}";
+            return Task.CompletedTask;
+            //string apiUrl = $"https://jojoe-stats.vercel.app/api/sheet/{_trackerId}";
 
-            try
+            /*try
             {
                 using var httpClient = new HttpClient();
                 HttpResponseMessage response = await httpClient.GetAsync(apiUrl, _token);
@@ -150,7 +151,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             lock (this)
             {
                 SessionData.Update();
-            }
+            }*/
         }
 
         public override async Task<bool> OpenProcess(CancellationToken token = default)

@@ -49,7 +49,7 @@ public class UpdateChecker
         return false;
     }
 
-    private bool IsUpToDate(string latestTag, string currentTag)
+    public static bool IsUpToDate(string latestTag, string currentTag)
     {
         NuGetVersion latest = new(latestTag);
         NuGetVersion current = new(currentTag);

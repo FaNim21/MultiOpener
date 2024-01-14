@@ -277,7 +277,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
         for (int i = 0; i < timeLines.Count; i++)
         {
-            var (name, IGT) = timeLines[i];
+            var (name, IGT, _) = timeLines[i];
             SessionData.UpdateSplit(name, IGT);
         }
 
