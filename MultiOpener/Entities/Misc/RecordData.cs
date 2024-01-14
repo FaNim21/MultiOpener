@@ -19,7 +19,7 @@ public class RecordAdvancementsData
 
 public class RecordTimesData
 {
-    [JsonPropertyName("igt")] public long IGT{ get; set; }
+    [JsonPropertyName("igt")] public long IGT { get; set; }
     [JsonPropertyName("rta")] public long RTA { get; set; }
 }
 
@@ -53,7 +53,7 @@ public class RecordData
     [JsonPropertyName("default_gamemode")] public int DefaultGameMode { get; set; }
     [JsonPropertyName("open_lan")] public object? OpenLanTime { get; set; }
 
-    [JsonPropertyName("date")] public long Date {  get; set; }
+    [JsonPropertyName("date")] public long Date { get; set; }
 
     [JsonPropertyName("retimed_igt")] public long RetimedIGT { get; set; }
     [JsonPropertyName("final_igt")] public long FinalIGT { get; set; }

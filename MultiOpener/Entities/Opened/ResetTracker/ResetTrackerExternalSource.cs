@@ -27,6 +27,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             public int rc { get; init; }
             public float fnph { get; init; }
             public long tp { get; init; }
+            public long wt { get; init; }
         }
         private readonly struct Tl
         {
@@ -35,7 +36,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
         }
 
 
-        public ResetTrackerExternalSource(string trackerID) : base() 
+        public ResetTrackerExternalSource(string trackerID) : base()
         {
             SessionData.UsingBuiltIn = false;
             _trackerId = trackerID;
@@ -116,8 +117,9 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 
                 Ops ops = apiResponse.session[0].ops;
                 SessionData.WallResets = ops.rc;
-                SessionData.NetherPerHour = ops.fnph;
+                SessionData.RealNetherPerHour = ops.fnph;
                 SessionData.TotalRTAPlayTimeMiliseconds = ops.tp;
+                SessionData.WallTimeMiliseconds = ops.wt;
 
                 Tl[] tl = ops.tl;
 

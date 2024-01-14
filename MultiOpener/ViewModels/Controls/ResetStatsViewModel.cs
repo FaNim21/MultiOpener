@@ -382,15 +382,27 @@ public class ResetStatsViewModel : BaseViewModel
     #endregion
 
     #region Basic stats
-    private float _netherPerHour;
-    public float NetherPerHour
+    private float _realNetherPerHour;
+    public float RealNetherPerHour
     {
-        get => _netherPerHour;
+        get => _realNetherPerHour;
         set
         {
-            _netherPerHour = value;
+            _realNetherPerHour = value;
         }
     }
+
+    private float _legacyNetherPerHour;
+    public float LegacyNetherPerHour
+    {
+        get => _legacyNetherPerHour;
+        set
+        {
+            _legacyNetherPerHour = value;
+        }
+    }
+
+    public long PostNetherTimeMiliseconds { get; set; }
 
     #endregion
 
@@ -428,10 +440,8 @@ public class ResetStatsViewModel : BaseViewModel
         OnPropertyChanged(nameof(SplitlessResets));
         OnPropertyChanged(nameof(ResetsPerEnter));
 
-        OnPropertyChanged(nameof(NetherPerHour));
-
-        //...
         UpdatePerHourStats();
+        //...
     }
 
     public void AddNewRun(TrackedRunStats run)
@@ -482,9 +492,13 @@ public class ResetStatsViewModel : BaseViewModel
     public void UpdatePerHourStats()
     {
         //nethers
-        float ratio = NetherEntersCount / (ElapsedTimeMiliseconds / 3_600_000f);
-        NetherPerHour = (float)Math.Round(ratio, 2);
-        OnPropertyChanged(nameof(NetherPerHour));
+        float ratio = NetherEntersCount / ((ElapsedTimeMiliseconds - BreakTimeMiliseconds) / 3_600_000f);
+        RealNetherPerHour = (float)Math.Round(ratio, 2);
+        OnPropertyChanged(nameof(RealNetherPerHour));
+
+        ratio = NetherEntersCount / ((ElapsedTimeMiliseconds - PostNetherTimeMiliseconds - BreakTimeMiliseconds) / 3_600_000f);
+        LegacyNetherPerHour = (float)Math.Round(ratio, 2);
+        OnPropertyChanged(nameof(LegacyNetherPerHour));
 
 
         //..
@@ -507,7 +521,7 @@ public class ResetStatsViewModel : BaseViewModel
         WallResets = 0;
         SplitlessResets = 0;
 
-        NetherPerHour = 0;
+        RealNetherPerHour = 0;
 
         IronPickaxeCount = 0;
 

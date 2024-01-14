@@ -47,7 +47,8 @@
                                         Margin="0 -4 0 0" />
                 </Grid>
 
-                <Grid Visibility="{Binding SessionData.UsingBuiltIn, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0 -16 0 0">
+                <Grid Visibility="{Binding SessionData.UsingBuiltIn, Converter={StaticResource BoolToVisibilityConverter}}"
+                      Margin="0 -16 0 0">
                     <TextBlock>
                         <Run Foreground="DarkGray"
                              Text="Is Tracking: " />
@@ -261,10 +262,16 @@
                      Text="{Binding SessionData.NetherWithoutPickaxeReset, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock>
-                <Run Foreground="DarkGray"
-                     Text="NPH: " />
-                <Run Foreground="White"
-                     Text="{Binding SessionData.NetherPerHour, Mode=OneWay}" />
+                    <Run Foreground="DarkGray"
+                         Text="RNPH: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.RealNetherPerHour, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock>
+                    <Run Foreground="DarkGray"
+                         Text="LNPH: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.LegacyNetherPerHour, Mode=OneWay}" />
                 </TextBlock>
 
                 <Label Content="Registered runs: "

@@ -128,40 +128,9 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
         StartViewModel.Log("Activated Session");
     }
 
-    private void OnTracking()
-    {
-        if (string.IsNullOrEmpty(_recordsFolder)) return;
-
-        ReadOnlySpan<string> records = Directory.GetFiles(_recordsFolder, "*.json", SearchOption.TopDirectoryOnly).OrderBy(file => File.GetLastWriteTime(file)).ToArray().AsSpan();
-        for (int i = 0; i < records.Length; i++)
-        {
-            string text = File.ReadAllText(records[i]) ?? string.Empty;
-            try
-            {
-                if (string.IsNullOrEmpty(text)) continue;
-                RecordData? data = JsonSerializer.Deserialize<RecordData>(text);
-
-                if (data == null) continue;
-                if (!data.Type!.Equals(_recordType) || data.DefaultGameMode != 0) continue;
-                if (data.OpenLanTime == null && data.IsCheatAllowed) continue;
-
-                FilterResetData(data);
-            }
-            catch (JsonException ex)
-            {
-                StartViewModel.Log($"Error deserializing {records[i]}: {ex.Message}", ConsoleLineOption.Error);
-            }
-        }
-        lock (this)
-        {
-            SessionData.Update();
-            WriteSessionStatsToFile();
-        }
-    }
-
     private void FilterResetData(RecordData data)
     {
-        List<(string name, long IGT)> timeLines = new();
+        List<(string name, long IGT, long RTA)> timeLines = new();
         bool foundIronPick = false;
         bool foundEnterNether = false;
         TimeSpan runDiffer;
@@ -279,7 +248,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
                     else if (name.Equals("enter_bastion") && prev != null && prev.Name!.Equals("enter_fortress"))
                         name = "enter_fortress";
 
-                    timeLines.Add((name, current.IGT));
+                    timeLines.Add((name, current.IGT, current.RTA));
                 }
             }
         }
@@ -293,7 +262,6 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
                 SessionData.NoNetherEnterResets++;
 
             playedSincePrev += 1;
-            StartViewModel.Log($"RTA no nether: {GetTimeFormatHours(data.FinalRTA)} -- sum of RTA since prev: {GetTimeFormatHours(rtaSincePrev)}", ConsoleLineOption.Error);
             rtaSincePrev += data.FinalRTA;
             SessionData.TotalRTAPlayTimeMiliseconds += data.FinalRTA;
             return;
@@ -303,7 +271,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
         CreateRunData(data, statsData, timeLines);
     }
-    private void CreateRunData(RecordData data, RecordStatsCategoriesData statsData, List<(string name, long IGT)> timeLines)
+    private void CreateRunData(RecordData data, RecordStatsCategoriesData statsData, List<(string name, long IGT, long RTA)> timeLines)
     {
         TrackedRunStats trackedRun = new();
 
@@ -322,7 +290,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
         for (int i = 0; i < timeLines.Count; i++)
         {
-            var (name, IGT) = timeLines[i];
+            var (name, IGT, _) = timeLines[i];
             int index;
             switch (name)
             {
@@ -387,6 +355,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
         trackedRun.RTASincePrevious = GetTimeFormatHours(rtaSincePrev);
 
         SessionData.TotalRTAPlayTimeMiliseconds += data.FinalRTA;
+        SessionData.PostNetherTimeMiliseconds += data.FinalRTA - timeLines[0].RTA;
 
         breakTimeSincePrev = 0;
         wallTimeSincePrev = 0;
@@ -432,7 +401,8 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
     private void WriteSessionStatsToFile()
     {
         UpdateFileContent("Resets", SessionData.Resets);
-        UpdateFileContent("NPH", SessionData.NetherPerHour);
+        UpdateFileContent("RNPH", SessionData.RealNetherPerHour);
+        UpdateFileContent("LNPH", SessionData.RealNetherPerHour);
 
         UpdateFileContent("NetherEnter_Average", SessionData.NetherEnterAverageTime);
         UpdateFileContent("NetherEnter_Count", SessionData.NetherEntersCount);
