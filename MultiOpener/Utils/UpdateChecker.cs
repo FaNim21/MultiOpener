@@ -41,7 +41,7 @@ public class UpdateChecker
             }
             else
             {
-                StartViewModel.Log("Error while searching for update: " + response.StatusCode);
+                throw new System.Exception($"{response.StatusCode}");
             }
         }
 

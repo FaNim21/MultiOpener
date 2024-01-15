@@ -52,7 +52,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
             IsTracking = true;
             UpdateStatus();
 
-            StartViewModel.Log("Activated Tracker");
+            //StartViewModel.Log("Activated Tracker");
             //_trackerTask = Task.Run(TrackStats, _token);
         }
         public override void DeactivateTracker()
@@ -73,7 +73,7 @@ namespace MultiOpener.Entities.Opened.ResetTracker
 
             _source.Dispose();
             SessionData.Clear();
-            StartViewModel.Log("Deactivated Tracker");
+            //StartViewModel.Log("Deactivated Tracker");
         }
 
         private async Task TrackStats()

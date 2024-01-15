@@ -40,11 +40,6 @@
                         <Run Foreground="White"
                              Text="{Binding TimeToUpdateStats, Mode=OneWay}" />
                     </TextBlock>
-                    <local:ButtonNormal Width="100"
-                                        Height="20"
-                                        ContentText="Force update"
-                                        OnCommand="{Binding ForceUpdateCommand}"
-                                        Margin="0 -4 0 0" />
                 </Grid>
 
                 <Grid Visibility="{Binding SessionData.UsingBuiltIn, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -56,7 +51,6 @@
                              Text="{Binding IsTracking, Mode=OneWay}" />
                     </TextBlock>
                 </Grid>
-
 
                 <TextBlock>
                 <Run Foreground="DarkGray"
@@ -244,7 +238,7 @@
                 </TextBlock>
                 <TextBlock>
                     <Run Foreground="DarkGray"
-                         Text="Resets per enteer: " />
+                         Text="Resets per enter: " />
                     <Run Foreground="White"
                          Text="{Binding SessionData.ResetsPerEnter, Mode=OneWay}" />
                 </TextBlock>

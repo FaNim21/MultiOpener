@@ -402,7 +402,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
     {
         UpdateFileContent("Resets", SessionData.Resets);
         UpdateFileContent("RNPH", SessionData.RealNetherPerHour);
-        UpdateFileContent("LNPH", SessionData.RealNetherPerHour);
+        UpdateFileContent("LNPH", SessionData.LegacyNetherPerHour);
 
         UpdateFileContent("NetherEnter_Average", SessionData.NetherEnterAverageTime);
         UpdateFileContent("NetherEnter_Count", SessionData.NetherEntersCount);

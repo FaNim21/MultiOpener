@@ -6,6 +6,7 @@ using MultiOpener.Properties;
 using MultiOpener.Utils;
 using MultiOpener.Utils.Interfaces;
 using MultiOpener.ViewModels;
+using MultiOpener.Windows;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -163,7 +164,7 @@ public partial class MainWindow : Window, IClipboardService
         }
         catch (Exception ex)
         {
-            StartViewModel.Log($"Failed to check for updates: {ex.Message}");
+            StartViewModel.Log($"Failed to check for updates: {ex.Message}", ConsoleLineOption.Error);
         }
 
         Application.Current.Dispatcher.Invoke(delegate
@@ -173,7 +174,8 @@ public partial class MainWindow : Window, IClipboardService
     }
     private void UpdateButtonClick(object sender, RoutedEventArgs e)
     {
-        Process.Start(new ProcessStartInfo("https://github.com/FaNim21/MultiOpener/releases/latest") { UseShellExecute = true });
+        UpdateDownloadWindow window = new() { Owner = this };
+        window.ShowDialog();
     }
 
     public void ChangePresetTitle(string name)
