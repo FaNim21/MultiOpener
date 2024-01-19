@@ -59,15 +59,15 @@ public class ConsoleViewModel : BaseViewModel
         OnPropertyChanged(nameof(ConsoleLines));
     }
 
-    public void Save()
+    public void Save(string logName = "log")
     {
         string date = DateTime.Now.ToString("yyyy-MM-dd_HH.mm");
-        string fileName = $"{date}.txt";
+        string fileName = $"{logName} {date}.txt";
 
         int count = 1;
         while (File.Exists(_logPath + "\\" + fileName))
         {
-            fileName = $"{date} [{count}].txt";
+            fileName = $"{logName} {date} [{count}].txt";
             count++;
         }
 

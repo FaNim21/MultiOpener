@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -98,11 +97,11 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
         lock (this)
         {
             string path = e.FullPath;
-            string text = ReadAllTextWithRetry(path);
-
-            if (string.IsNullOrEmpty(text)) return;
             try
             {
+                string text = ReadAllTextWithRetry(path);
+
+                if (string.IsNullOrEmpty(text)) return;
                 RecordData? data = JsonSerializer.Deserialize<RecordData>(text);
                 if (data == null) return;
                 if (!data.Type!.Equals(_recordType) || data.DefaultGameMode != 0) return;
@@ -110,14 +109,19 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
                 if (!sessionStarted) StartSession();
                 FilterResetData(data);
+
+                SessionData.Update();
+                WriteSessionStatsToFile();
             }
             catch (JsonException ex)
             {
                 StartViewModel.Log($"Error deserializing {path}: {ex.Message}", ConsoleLineOption.Error);
             }
-
-            SessionData.Update();
-            WriteSessionStatsToFile();
+            catch (Exception ex)
+            {
+                StartViewModel.Log($"Error: {ex.Message}", ConsoleLineOption.Error);
+                StartViewModel.Log($"StackTrace: {ex.StackTrace}", ConsoleLineOption.Error);
+            }
         }
     }
 
@@ -391,8 +395,9 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
     private void SaveSession()
     {
-        DateTime currentDate = DateTime.Now;
-        string formattedDateTime = currentDate.ToString("dd-MM-yyyy_HH.mm.ss");
+        if (SessionData.IsSessionEmpty()) return;
+
+        string formattedDateTime = DateTime.Now.ToString("dd-MM-yyyy_HH.mm.ss");
         var data = JsonSerializer.Serialize(SessionData);
         var path = System.IO.Path.Combine(_trackerPath, $"Session[{formattedDateTime}].json");
         File.WriteAllText(path, data);

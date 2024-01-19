@@ -382,7 +382,7 @@ public class ResetStatsViewModel : BaseViewModel
     #endregion
 
     #region Basic stats
-    private float _realNetherPerHour;
+    private float _realNetherPerHour = 0;
     public float RealNetherPerHour
     {
         get => _realNetherPerHour;
@@ -392,7 +392,7 @@ public class ResetStatsViewModel : BaseViewModel
         }
     }
 
-    private float _legacyNetherPerHour;
+    private float _legacyNetherPerHour = 0;
     public float LegacyNetherPerHour
     {
         get => _legacyNetherPerHour;
@@ -441,7 +441,6 @@ public class ResetStatsViewModel : BaseViewModel
         OnPropertyChanged(nameof(ResetsPerEnter));
 
         UpdatePerHourStats();
-        //...
     }
 
     public void AddNewRun(TrackedRunStats run)
@@ -493,15 +492,22 @@ public class ResetStatsViewModel : BaseViewModel
     {
         //nethers
         float ratio = NetherEntersCount / ((ElapsedTimeMiliseconds - BreakTimeMiliseconds) / 3_600_000f);
+        if (float.IsNaN(ratio)) ratio = 0;
         RealNetherPerHour = (float)Math.Round(ratio, 2);
         OnPropertyChanged(nameof(RealNetherPerHour));
 
         ratio = NetherEntersCount / ((ElapsedTimeMiliseconds - PostNetherTimeMiliseconds - BreakTimeMiliseconds) / 3_600_000f);
+        if (float.IsNaN(ratio)) ratio = 0;
         LegacyNetherPerHour = (float)Math.Round(ratio, 2);
         OnPropertyChanged(nameof(LegacyNetherPerHour));
 
 
         //..
+    }
+
+    public bool IsSessionEmpty()
+    {
+        return ElapsedTimeMiliseconds < 60000;
     }
 
     public void Clear()

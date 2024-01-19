@@ -69,7 +69,7 @@ public partial class MainWindow : Window, IClipboardService
         if (e.Exception.StackTrace != null)
             StartViewModel.Log("StackTrace: " + e.Exception.StackTrace, ConsoleLineOption.Error);
 
-        MainViewModel.start.ConsoleViewModel.Save();
+        MainViewModel.start.ConsoleViewModel.Save("Crash log");
     }
 
     private void MenuItemClick(object sender, RoutedEventArgs e)
