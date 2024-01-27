@@ -63,6 +63,29 @@ public class ResetStatsViewModel : BaseViewModel
         }
     }
 
+    private long _postNetherTimeMiliseconds;
+    public long PostNetherTimeMiliseconds
+    {
+        get => _postNetherTimeMiliseconds;
+        set
+        {
+            _postNetherTimeMiliseconds = value;
+
+            TimeSpan time = TimeSpan.FromMilliseconds(_postNetherTimeMiliseconds);
+            PostNetherTime = string.Format("{0:D2}:{1:D2}.{2:D2}.{3:D1}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 100);
+        }
+    }
+
+    private string? _postNetherTime = "00:00:00.0";
+    public string? PostNetherTime
+    {
+        get => _postNetherTime;
+        set
+        {
+            _postNetherTime = value;
+        }
+    }
+
     //WALL
     private long _wallTimeMiliseconds;
     public long WallTimeMiliseconds
@@ -153,9 +176,10 @@ public class ResetStatsViewModel : BaseViewModel
         }
     }
 
+    public int ResetsPerEnter => Resets / Math.Max(NetherEntersCount, 1);
+
     public int Resets => WallResets + NoNetherEnterResets + SplitlessResets;
 
-    public int ResetsPerEnter => Resets / Math.Max(NetherEntersCount, 1);
     #endregion
 
     #region Splits
@@ -402,8 +426,6 @@ public class ResetStatsViewModel : BaseViewModel
         }
     }
 
-    public long PostNetherTimeMiliseconds { get; set; }
-
     #endregion
 
 
@@ -431,6 +453,7 @@ public class ResetStatsViewModel : BaseViewModel
 
         OnPropertyChanged(nameof(ElapsedTime));
         OnPropertyChanged(nameof(TotalRTAPlayTime));
+        OnPropertyChanged(nameof(PostNetherTime));
         OnPropertyChanged(nameof(WallTime));
         OnPropertyChanged(nameof(BreakTime));
 
@@ -528,6 +551,7 @@ public class ResetStatsViewModel : BaseViewModel
         SplitlessResets = 0;
 
         RealNetherPerHour = 0;
+        LegacyNetherPerHour = 0;
 
         IronPickaxeCount = 0;
 

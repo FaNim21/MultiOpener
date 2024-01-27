@@ -134,7 +134,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
     private void FilterResetData(RecordData data)
     {
-        List<(string name, long IGT, long RTA)> timeLines = new();
+        List<(string name, long IGT, long RTA, string realName)> timeLines = new();
         bool foundIronPick = false;
         bool foundEnterNether = false;
         TimeSpan runDiffer;
@@ -247,12 +247,13 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
                     if (lanTime < current.RTA) continue;
 
+                    string realName = name;
                     if (name.Equals("enter_fortress") && prev != null && prev.Name!.Equals("enter_nether"))
                         name = "enter_bastion";
                     else if (name.Equals("enter_bastion") && prev != null && prev.Name!.Equals("enter_fortress"))
                         name = "enter_fortress";
 
-                    timeLines.Add((name, current.IGT, current.RTA));
+                    timeLines.Add((name, current.IGT, current.RTA, realName));
                 }
             }
         }
@@ -275,13 +276,13 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
         CreateRunData(data, statsData, timeLines);
     }
-    private void CreateRunData(RecordData data, RecordStatsCategoriesData statsData, List<(string name, long IGT, long RTA)> timeLines)
+    private void CreateRunData(RecordData data, RecordStatsCategoriesData statsData, List<(string name, long IGT, long RTA, string realName)> timeLines)
     {
         TrackedRunStats trackedRun = new();
 
         for (int i = 0; i < timeLines.Count; i++)
         {
-            var (name, IGT, _) = timeLines[i];
+            var (name, IGT, _, _) = timeLines[i];
             SessionData.UpdateSplit(name, IGT);
         }
 
@@ -294,8 +295,7 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
 
         for (int i = 0; i < timeLines.Count; i++)
         {
-            var (name, IGT, _) = timeLines[i];
-            int index;
+            var (name, IGT, _, realName) = timeLines[i];
             switch (name)
             {
                 case "enter_nether":
@@ -303,15 +303,11 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
                     break;
                 case "enter_bastion":
                     trackedRun.Structure1 = GetTimeFormatMinutes(IGT);
-                    index = name.IndexOf('_');
-                    if (index >= 0 && index < name.Length - 1)
-                        trackedRun.Structure1Name = name[(index + 1)..];
+                    trackedRun.Structure1Name = realName[6..];
                     break;
                 case "enter_fortress":
                     trackedRun.Structure2 = GetTimeFormatMinutes(IGT);
-                    index = name.IndexOf('_');
-                    if (index >= 0 && index < name.Length - 1)
-                        trackedRun.Structure2Name = name[(index + 1)..];
+                    trackedRun.Structure2Name = realName[6..];
                     break;
                 case "nether_travel":
                     trackedRun.NetherExit = GetTimeFormatMinutes(IGT);

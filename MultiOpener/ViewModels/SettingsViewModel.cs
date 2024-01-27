@@ -3,6 +3,7 @@ using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.Entities;
 using MultiOpener.Entities.Open;
 using MultiOpener.Utils;
+using MultiOpener.Properties;
 using MultiOpener.ViewModels.Settings;
 using System;
 using System.Collections.ObjectModel;
@@ -289,6 +290,9 @@ public sealed class SettingsViewModel : BaseViewModel
         UpdateLeftPanelVisibility(false);
 
         OnPropertyChanged(nameof(Opens));
+
+        Properties.Settings.Default.LastOpenedPresetName = MainViewModel.settings.CurrentLoadedChosenPath;
+        Properties.Settings.Default.Save();
 
         StartViewModel.Log($"Loaded {presetPath}");
     }

@@ -9,13 +9,11 @@ using MultiOpener.ViewModels;
 using MultiOpener.Windows;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace MultiOpener;
@@ -147,7 +145,6 @@ public partial class MainWindow : Window, IClipboardService
     {
         Settings.Default.MainWindowLeft = Left;
         Settings.Default.MainWindowTop = Top;
-        Settings.Default.LastOpenedPresetName = MainViewModel.settings.CurrentLoadedChosenPath;
 
         Settings.Default.Save();
         Application.Current.Shutdown();

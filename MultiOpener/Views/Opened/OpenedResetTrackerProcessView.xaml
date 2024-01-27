@@ -59,10 +59,16 @@
                      Text="{Binding SessionData.ElapsedTime, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock>
-                <Run Foreground="DarkGray"
-                     Text="RTA time spend: " />
-                <Run Foreground="White"
-                     Text="{Binding SessionData.TotalRTAPlayTime, Mode=OneWay}" />
+                    <Run Foreground="DarkGray"
+                         Text="RTA time spend: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.TotalRTAPlayTime, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock>
+                    <Run Foreground="DarkGray"
+                         Text="RTA Post nether enter time spend: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.PostNetherTime, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock>
                 <Run Foreground="DarkGray"
@@ -219,22 +225,22 @@
                 </Grid>
 
                 <TextBlock>
-                <Run Foreground="DarkGray"
-                     Text="Overall resets: " />
-                <Run Foreground="White"
-                     Text="{Binding SessionData.Resets, Mode=OneWay}" />
+                    <Run Foreground="DarkGray"
+                         Text="Overall resets: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.Resets, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock>
-                <Run Foreground="DarkGray"
-                     Text="Wall resets: " />
-                <Run Foreground="White"
-                     Text="{Binding SessionData.WallResets, Mode=OneWay}" />
+                    <Run Foreground="DarkGray"
+                         Text="Wall resets: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.WallResets, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock>
-                <Run Foreground="DarkGray"
-                     Text="Splitless resets: " />
-                <Run Foreground="White"
-                     Text="{Binding SessionData.SplitlessResets, Mode=OneWay}" />
+                    <Run Foreground="DarkGray"
+                         Text="Splitless resets: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.SplitlessResets, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock>
                     <Run Foreground="DarkGray"
@@ -244,16 +250,16 @@
                 </TextBlock>
 
                 <TextBlock>
-                <Run Foreground="DarkGray"
-                     Text="Pickaxes, but not nether: " />
-                <Run Foreground="White"
-                     Text="{Binding SessionData.NoNetherEnterResets, Mode=OneWay}" />
+                    <Run Foreground="DarkGray"
+                         Text="Pickaxes, but not nether: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.NoNetherEnterResets, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock>
-                <Run Foreground="DarkGray"
-                     Text="Nethers without iron pickaxe " />
-                <Run Foreground="White"
-                     Text="{Binding SessionData.NetherWithoutPickaxeReset, Mode=OneWay}" />
+                    <Run Foreground="DarkGray"
+                         Text="Nethers without iron pickaxe " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.NetherWithoutPickaxeReset, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock>
                     <Run Foreground="DarkGray"
