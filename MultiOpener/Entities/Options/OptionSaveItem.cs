@@ -20,7 +20,8 @@ public class OptionSaveItem
 
     //Reset Tracker
     public int UpdateResetTrackerFrequency { get; set; }
-    public bool DeleteAllRecordOnActivating { get; set; }
+    public bool DeleteAllRecordOnActivating { get; set; } = true;
+    public bool BackUpFilesBeforeDeleting { get; set; } = true;
 
 
     public void ResetToDefault()
@@ -42,6 +43,7 @@ public class OptionSaveItem
         //Reset Tracker
         UpdateResetTrackerFrequency = 30000;
         DeleteAllRecordOnActivating = true;
+        BackUpFilesBeforeDeleting = true;
     }
 
     public void UpdateUIFromConfig(OptionsViewModel viewModel)
@@ -58,5 +60,6 @@ public class OptionSaveItem
 
         viewModel.UpdateResetTrackerFrequency = UpdateResetTrackerFrequency;
         viewModel.DeleteAllRecordOnActivating = DeleteAllRecordOnActivating;
+        viewModel.BackUpFilesBeforeDeleting = BackUpFilesBeforeDeleting;
     }
 }

@@ -83,6 +83,18 @@ namespace MultiOpener.ViewModels
             }
         }
 
+        private bool _backUpFilesBeforeDeleting;
+        public bool BackUpFilesBeforeDeleting
+        {
+            get => _backUpFilesBeforeDeleting;
+            set
+            {
+                _backUpFilesBeforeDeleting = value;
+                App.Config.BackUpFilesBeforeDeleting = value;
+                OnPropertyChanged(nameof(BackUpFilesBeforeDeleting));
+            }
+        }
+
         private bool _deleteAllRecordOnActivating;
         public bool DeleteAllRecordOnActivating
         {

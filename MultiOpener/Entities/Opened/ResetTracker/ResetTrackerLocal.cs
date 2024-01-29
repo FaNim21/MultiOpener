@@ -1,10 +1,13 @@
-﻿using MultiOpener.Entities.Misc;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.Entities.Misc;
 using MultiOpener.Entities.Open;
 using MultiOpener.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -442,20 +445,25 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
                 if (totalSize == 0 || fileCount == 0)
                     return;
 
+                double totalSizeInMB = Math.Round(totalSize / (1024f * 1024f) * 100) / 100;
+                float percentage = 0.1f;
+                if (fileCount >= 20000) percentage = 0.01f;
+                else if (fileCount >= 10000) percentage = 0.05f;
+                int stepSize = (int)Math.Floor(fileCount * percentage);
+
+                if (App.Config.BackUpFilesBeforeDeleting)
+                {
+                    if (!ZipFiles(_recordsFolder, System.IO.Path.GetDirectoryName(_recordsFolder)!, stepSize, fileCount)) return;
+                }
+
                 Stopwatch stopwatch = new();
                 stopwatch.Start();
 
                 StartViewModel.Log($"Clearing records folder for tracking {_recordsFolder} that contains {fileCount} files.");
                 StartViewModel.Log($"Total size of files in {_recordsFolder}: {Math.Round(totalSize / (1024f * 1024f) * 100) / 100} MB.");
 
-                float percentage = 0.1f;
-                if (fileCount >= 20000) percentage = 0.01f;
-                else if (fileCount >= 10000) percentage = 0.05f;
-
-                int stepSize = (int)Math.Floor(fileCount * percentage);
                 int stepCount = stepSize;
-
-                //TODO: 9 zrobic popup okno z progress barem do takich rzeczy informujac z dokladnym postepem usuwania itp itd
+                //TODO: 9 zrobic popup okno z progress barem do takich rzeczy informujac z dokladnym postepem usuwania itp itd?
                 for (int i = 0; i < files.Length; i++)
                 {
                     var file = files[i];
@@ -482,6 +490,40 @@ public sealed class ResetTrackerLocal : OpenedResetTrackerProcess
         catch (Exception)
         {
             StartViewModel.Log($"Error with clearing {_recordsFolder}", ConsoleLineOption.Error);
+        }
+    }
+
+    private bool ZipFiles(string sourceFolderPath, string destinationFilePath, int stepSize, int fileCount)
+    {
+        int stepCount = stepSize;
+        try
+        {
+            string zipFileName = $"Backup_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.zip";
+            string zipFilePath = System.IO.Path.Combine(destinationFilePath, zipFileName);
+            using (ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+            {
+                var files = Directory.GetFiles(sourceFolderPath).AsSpan();
+
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (i >= stepCount)
+                    {
+                        stepCount += stepSize;
+                        StartViewModel.Log($"Backup progress [{i}/{fileCount}] - {Math.Round(((float)i / fileCount) * 100 * 100) / 100}% done");
+                    }
+                    string entryName = System.IO.Path.GetFileName(files[i]);
+                    archive.CreateEntryFromFile(files[i], entryName);
+                }
+            }
+
+            StartViewModel.Log("Files zipped successfully.", ConsoleLineOption.Warning);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            StartViewModel.Log($"Error: {ex.Message}", ConsoleLineOption.Error);
+            StartViewModel.Log($"StackTrace: {ex.StackTrace}", ConsoleLineOption.Error);
+            return false;
         }
     }
 

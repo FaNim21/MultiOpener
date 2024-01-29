@@ -193,14 +193,25 @@
                                        Margin="80 0 0 0" />
                             </Grid>
                         </WrapPanel>
+                    </WrapPanel>
 
+                    <!--RESET TRACKER-->
+                    <WrapPanel Orientation="Vertical">
                         <!--Reset Tracker-->
-                        <Label Foreground="White"
-                               FontSize="22"
+                        <Label Foreground="#a0e3e3"
+                               FontWeight="SemiBold"
+                               FontSize="32"
                                Content="Reset Tracker"
-                               Margin="0 20 0 0" />
+                               Padding="0" />
                         <WrapPanel Orientation="Vertical"
-                                   Margin="7 0 0 0">
+                                   Margin="7 0 0 15">
+                            <Grid ToolTip="On checked it backup all files in speedrunIGT records folder before deleting them from that folder. This process is much slower that deleting all files so on more than 50k files it is recommend to do it manually">
+                                <ToggleButton IsChecked="{Binding BackUpFilesBeforeDeleting}"
+                                              Height="20"
+                                              Foreground="White"
+                                              Content="Backup all record files before deleting"
+                                              VerticalContentAlignment="Center" />
+                            </Grid>
                             <Grid ToolTip="On checked it deletes all runs files in igt records folder when activating tracker">
                                 <ToggleButton IsChecked="{Binding DeleteAllRecordOnActivating}"
                                               Height="20"
@@ -208,6 +219,7 @@
                                               Content="Delete all record files on activating"
                                               VerticalContentAlignment="Center" />
                             </Grid>
+                            <!--
                             <Grid ToolTip="The time that takes to update your runs into reset tracker(min. 10000ms)">
                                 <TextBox TextWrapping="Wrap"
                                          Text="{Binding UpdateResetTrackerFrequency}"
@@ -223,6 +235,7 @@
                                        FontSize="16"
                                        Margin="80 0 0 0" />
                             </Grid>
+                            -->
                         </WrapPanel>
                     </WrapPanel>
                 </WrapPanel>
