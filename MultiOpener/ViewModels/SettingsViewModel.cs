@@ -271,7 +271,7 @@ public sealed class SettingsViewModel : BaseViewModel
         else
         {
             if (!string.IsNullOrEmpty(loadedPresetPath))
-                StartViewModel.Log($"Could not load previously opened: {loadedPresetPath}");
+                StartViewModel.Log($"Could not load previously opened: {Path.GetRelativePath(_directoryPath, loadedPresetPath)}");
             PresetName = string.Empty;
         }
     }
@@ -294,7 +294,7 @@ public sealed class SettingsViewModel : BaseViewModel
         Properties.Settings.Default.LastOpenedPresetName = MainViewModel.settings.CurrentLoadedChosenPath;
         Properties.Settings.Default.Save();
 
-        StartViewModel.Log($"Loaded {presetPath}");
+        StartViewModel.Log($"Loaded {Path.GetRelativePath(_directoryPath, presetPath)}");
     }
 
     public void UpdateCurrentLoadedPreset(string presetPath)

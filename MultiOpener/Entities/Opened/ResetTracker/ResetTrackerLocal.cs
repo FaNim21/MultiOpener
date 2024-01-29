@@ -1,10 +1,8 @@
-﻿using MultiOpener.Components.Controls;
-using MultiOpener.Entities.Misc;
+﻿using MultiOpener.Entities.Misc;
 using MultiOpener.Entities.Open;
 using MultiOpener.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
