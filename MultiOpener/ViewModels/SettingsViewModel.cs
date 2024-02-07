@@ -16,7 +16,7 @@ namespace MultiOpener.ViewModels;
 
 /// <summary>
 /// TODO: 10 Problemy z dodawaniem nowych typow procesu:
-/// - Robienie oddzielnie: open, opened, modelView, opeView, openedView
+/// - Robienie oddzielnie: open, opened, modelView, openView, openedView
 /// - Dodawanie kazdego view oddzielnie za kazdym razem w App.xaml na zasadzie podlaczania viewModelu do view
 /// - Uzupelnianie ChooseTypeBox switch case w SettingsViewModel
 /// - 5 roznych plikow na jeden OpenType
@@ -88,6 +88,7 @@ public sealed class SettingsViewModel : BaseViewModel
                     case OpenType.Normal: SelectedOpenTypeViewModel = new SettingsOpenNormalModelView(this); break;
                     case OpenType.InstancesMultiMC: SelectedOpenTypeViewModel = new SettingsOpenInstancesModelView(this); break;
                     case OpenType.ResetTrackerMC: SelectedOpenTypeViewModel = new SettingsOpenResetTrackerModelView(this); break;
+                    case OpenType.OBS: SelectedOpenTypeViewModel = new SettingsOpenOBSModelView(this); break;
                 }
                 _chooseTypeBox = value;
                 Consts.IsSwitchingBetweenOpensInSettings = false;

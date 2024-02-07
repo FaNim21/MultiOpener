@@ -330,7 +330,7 @@ public class OpenedProcess : BaseViewModel
         }
     }
 
-    private void UpdateUIPanel()
+    public void UpdateUIPanel()
     {
         UpdateTitle();
         UpdateStatus();
@@ -378,9 +378,10 @@ public class OpenedProcess : BaseViewModel
         {
             process = Process.Start(ProcessStartInfo);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            StartViewModel.Log($"An error occurred while opening '{Name}'. Something went wrong using process start info", ConsoleLineOption.Error);
+            StartViewModel.Log($"{Name}': {ex.Message}", ConsoleLineOption.Error);
+            StartViewModel.Log($"StackTrace: {ex.StackTrace}", ConsoleLineOption.Error);
             return false;
         }
 

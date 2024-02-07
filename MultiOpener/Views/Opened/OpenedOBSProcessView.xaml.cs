@@ -2,11 +2,11 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace MultiOpener.Views.SettingsOpens;
+namespace MultiOpener.Views.Opened;
 
-public partial class SettingsOpenNormalView : UserControl
+public partial class OpenedOBSProcessView : UserControl
 {
-    public SettingsOpenNormalView()
+    public OpenedOBSProcessView()
     {
         InitializeComponent();
     }

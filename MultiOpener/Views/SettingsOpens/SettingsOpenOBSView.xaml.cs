@@ -4,9 +4,9 @@ using System.Windows.Input;
 
 namespace MultiOpener.Views.SettingsOpens;
 
-public partial class SettingsOpenNormalView : UserControl
+public partial class SettingsOpenOBSView : UserControl
 {
-    public SettingsOpenNormalView()
+    public SettingsOpenOBSView()
     {
         InitializeComponent();
     }

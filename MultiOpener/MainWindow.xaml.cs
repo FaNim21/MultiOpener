@@ -28,6 +28,7 @@ public partial class MainWindow : Window, IClipboardService
     public MainWindow()
     {
         InitializeComponent();
+
         InputController.Instance.Initialize();
         labelVersion.Content = Consts.Version;
         HotkeySetup();

@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="MultiOpener.Views.Opened.OpenedOBSProcessView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
+             xmlns:main="clr-namespace:MultiOpener.Components"
+             xmlns:viewmodels="clr-namespace:MultiOpener.Entities.Opened"
+             d:DataContext="{d:DesignInstance Type=viewmodels:OpenedOBS}"
+             mc:Ignorable="d"
+             Width="550"
+             Height="350"
+             Background="#383A3C">
+    <ScrollViewer>
+        <Grid>
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Left"
+                        Width="540">
+
+                <main:ProcessInformationsControl DataContext="{Binding}" />
+
+                <TextBlock Foreground="#a0e3e3"
+                           Text=" -- OBS -- " />
+
+                <TextBlock>
+                    <Run Foreground="DarkGray"
+                         Text="Connected to WebSocket: " />
+                    <Run Foreground="White"
+                         Text="{Binding IsConnectedToWebSocket, Mode=OneWay}" />
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

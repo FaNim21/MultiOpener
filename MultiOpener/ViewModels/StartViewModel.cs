@@ -155,10 +155,14 @@ public sealed class StartViewModel : BaseViewModel
 
     public void SetLoadingText(string text)
     {
+        if (!LoadingPanelVisibility) return;
+
         LoadingInfoText = text;
     }
     public void SetDetailedLoadingText(string text)
     {
+        if (!LoadingPanelVisibility) return;
+
         LoadingDetailedInfoText = text;
     }
 
