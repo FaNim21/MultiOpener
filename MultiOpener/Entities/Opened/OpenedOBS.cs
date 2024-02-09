@@ -9,8 +9,45 @@ using MultiOpener.Entities.Open;
 using OBSStudioClient;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using System.Windows.Media;
+using System.Collections.ObjectModel;
 
 namespace MultiOpener.Entities.Opened;
+
+public class OpenedProjector : BaseViewModel
+{
+    private nint _hwnd;
+    public nint Hwnd
+    {
+        get => _hwnd;
+        set
+        {
+            _hwnd = value;
+            OnPropertyChanged(nameof(IsOpened));
+        }
+    }
+
+    private string? _name;
+    public string? Name
+    {
+        get => _name;
+        set
+        {
+            _name = value;
+            OnPropertyChanged(nameof(Name));
+        }
+    }
+
+    public bool IsOpened { get => Hwnd != nint.Zero; }
+
+
+    public OpenedProjector(string Name, nint Hwnd)
+    {
+        this.Name = Name;
+        this.Hwnd = Hwnd;
+    }
+}
 
 public partial class OpenedOBS : OpenedProcess
 {
@@ -21,7 +58,7 @@ public partial class OpenedOBS : OpenedProcess
     public ObsClient? client;
     public OpenOBS OpenOBS { get; set; }
 
-    public List<nint> openedProjectors = new();
+    public ObservableCollection<OpenedProjector> OpenedProjectors { get; set; } = new();
 
     private bool _isConnectedToWebSocket;
     public bool IsConnectedToWebSocket
@@ -40,9 +77,40 @@ public partial class OpenedOBS : OpenedProcess
         OpenOBS = openObs;
     }
 
+    public override void Update(bool lookForWindow = false)
+    {
+        foreach (var projector in OpenedProjectors)
+        {
+            if (!Win32.WindowExist(projector.Hwnd))
+            {
+                nint foundHwnd = Win32.GetWindowByTitlePattern(projector.Name!);
+                projector.Hwnd = foundHwnd;
+            }
+        }
+
+        base.Update(lookForWindow);
+    }
+
+    public override void UpdateStatus()
+    {
+        if (Pid != -1 && IsConnectedToWebSocket)
+        {
+            Application.Current?.Dispatcher.Invoke(delegate { StatusLabelColor = new SolidColorBrush(Color.FromRgb(51, 204, 51)); });
+            Status = "OPENED";
+        }
+        else
+        {
+            Application.Current?.Dispatcher.Invoke(delegate { StatusLabelColor = new SolidColorBrush(Color.FromRgb(125, 38, 37)); });
+            Status = "CLOSED";
+        }
+    }
+
     public override async Task<bool> OpenProcess(CancellationToken token = default)
     {
         if (ProcessStartInfo == null) return false;
+
+        if (Pid == -1)
+            FindProcess();
 
         if (Pid != -1)
         {
@@ -136,28 +204,97 @@ public partial class OpenedOBS : OpenedProcess
 
         return true;
     }
+    public override async Task<bool> Close()
+    {
+        Update();
+
+        bool currentlyStreaming = true;
+
+        if (client != null && client.ConnectionState == OBSStudioClient.Enums.ConnectionState.Connected)
+        {
+            if (OpenOBS.StopRecordingOnClose)
+            {
+                string recordingName = string.Empty;
+                try
+                {
+                    recordingName = await client.StopRecord();
+                }
+                catch { }
+                if (!string.IsNullOrEmpty(recordingName)) StartViewModel.Log($"Save recording: {recordingName}");
+            }
+
+            var streamStatus = await client.GetStreamStatus()!;
+            currentlyStreaming = streamStatus.OutputActive;
+
+            client.Disconnect();
+            client.Dispose();
+        }
+
+        foreach (var projector in OpenedProjectors)
+            await Win32.CloseProcessByHwnd(projector.Hwnd);
+        Application.Current?.Dispatcher.Invoke(delegate
+        {
+            OpenedProjectors.Clear();
+        });
+
+        if (OpenOBS.CloseOBSOnCloseMOProcess && !currentlyStreaming)
+            return await base.Close();
+        return true;
+    }
 
     public async Task ConnectToWebSocket()
     {
+        if (!OpenOBS.ConnectWebSocket) return;
+
         client = new();
         bool isConnected = await client.ConnectAsync(true, OpenOBS.Password, "localhost", OpenOBS.Port);
-        client.ConnectionClosed += (x, args) => { StartViewModel.Log("Lost connection"); };
+        client.ConnectionClosed += (x, args) => { StartViewModel.Log("Lost connection"); IsConnectedToWebSocket = false; UpdateStatus(); };
         if (isConnected)
         {
+            IsConnectedToWebSocket = true;
             try
             {
                 await Task.Delay(500);
-                await client.SetCurrentSceneCollection("JultiWall speedruns");
-                await client.OpenSourceProjectorOnMonitor("Walling", 0);
-                await client.OpenSourceProjectorWindow("magnifier", "-");
-                await Task.Delay(500);
+                UpdateStatus();
+                await client.SetCurrentSceneCollection(OpenOBS.SceneCollection);
+                if (OpenOBS.StartRecordingOnOpen)
+                {
+                    try
+                    {
+                        await client.StartRecord();
+                    }
+                    catch { }
+                }
 
-                string[] projectorName = { "Walling", "magnifier" };
-                string variableNamesPattern = string.Join("|", projectorName.Select(Regex.Escape));
+                for (int i = 0; i < OpenOBS.Projectors.Count; i++)
+                {
+                    var current = OpenOBS.Projectors[i];
+
+                    if (current.AsFullscreen)
+                        await client.OpenSourceProjectorOnMonitor(current.ProjectorName!, current.MonitorIndex);
+                    else
+                        await client.OpenSourceProjectorWindow(current.ProjectorName!, "-");
+                }
+
+                List<string> projectorNames = new();
+                foreach (var projector in OpenOBS.Projectors)
+                    projectorNames.Add(projector.ProjectorName!);
+
+                string variableNamesPattern = string.Join("|", projectorNames.Select(Regex.Escape));
                 string pattern = $@"^(Fullscreen|Windowed) Projector \(Source\) - ({variableNamesPattern})$";
                 Regex regex = new(pattern);
 
-                openedProjectors = Win32.GetWindowsByTitlePattern(regex);
+                var projectorsHwnd = Win32.GetWindowsByTitlePattern(regex);
+                foreach (var hwnd in projectorsHwnd)
+                {
+                    string currentTitle = Win32.GetWindowTitle(hwnd);
+                    currentTitle = currentTitle.Replace("(Source)", "(Scene)");
+                    Application.Current?.Dispatcher.Invoke(delegate
+                    {
+                        OpenedProjectors.Add(new(currentTitle, hwnd));
+                    });
+                    Win32.SetWindowTitle(hwnd, currentTitle);
+                }
             }
             catch (Exception ex)
             {
@@ -166,23 +303,5 @@ public partial class OpenedOBS : OpenedProcess
                 client.Dispose();
             }
         }
-
-        //TODO: 0 teraz zdecydowac jak zamykac websocket? czy bedzie potrzebny guzik ktory bedzie wywolywal funkcje do websocketu? itp itd, bo tak to juz wszystko pieknie dziala LETS GO
-    }
-
-    public override async Task<bool> Close()
-    {
-        client?.Disconnect();
-        client?.Dispose();
-
-        foreach (var projector in openedProjectors)
-            await Win32.CloseProcessByHwnd(projector);
-
-        bool output = true;
-        return output;
-
-        //TODO: 0 Czy tez prosciej bedzie wylaczac wszystko otwarte preview?
-        //TODO: 1 Dac opcje ewentualnego wyboru czy na wylaczaniu uzytkownik chce zeby zatrzymywalo sie nagrywanie czy nie
-        //return base.Close();
     }
 }

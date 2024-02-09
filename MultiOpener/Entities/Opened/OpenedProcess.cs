@@ -13,6 +13,12 @@ using System.Windows.Media;
 
 namespace MultiOpener.Entities.Opened;
 
+public enum OpenedStatus
+{
+    OPENED,
+    CLOSED
+}
+
 public class OpenedProcess : BaseViewModel
 {
     public string? Name { get; protected set; }

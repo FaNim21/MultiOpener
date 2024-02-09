@@ -7,9 +7,5 @@ public class SettingsOpenNormalModelView : OpenTypeViewModelBase
 {
     public override Type ItemType { get; set; } = typeof(OpenItem);
 
-    public SettingsOpenNormalModelView(SettingsViewModel settingsViewModel) : base(settingsViewModel)
-    {
-
-    }
-
+    public SettingsOpenNormalModelView(SettingsViewModel settingsViewModel) : base(settingsViewModel) { }
 }

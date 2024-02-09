@@ -3,7 +3,6 @@ using MultiOpener.Commands.SettingsCommands;
 using MultiOpener.Entities;
 using MultiOpener.Entities.Open;
 using MultiOpener.Utils;
-using MultiOpener.Properties;
 using MultiOpener.ViewModels.Settings;
 using System;
 using System.Collections.ObjectModel;
@@ -11,16 +10,14 @@ using System.IO;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
+using MultiOpener.Utils.Attributes;
 
 namespace MultiOpener.ViewModels;
 
 /// <summary>
 /// TODO: 10 Problemy z dodawaniem nowych typow procesu:
-/// - Robienie oddzielnie: open, opened, modelView, openView, openedView
+/// - Robienie oddzielnie: open, opened, modelView, openView, openedView wiec jest 5 roznych plikow na jeden OpenType
 /// - Dodawanie kazdego view oddzielnie za kazdym razem w App.xaml na zasadzie podlaczania viewModelu do view
-/// - Uzupelnianie ChooseTypeBox switch case w SettingsViewModel
-/// - 5 roznych plikow na jeden OpenType
-/// - Kolejnym problemem jest fakt ze kazdy Open ma metode Open ktora musi tworzyc instancje tego open zeby pozniej panel viewOpened byl oparty o rzeczywisty typ jak w OpenInstance
 /// </summary>
 public sealed class SettingsViewModel : BaseViewModel
 {
@@ -68,28 +65,25 @@ public sealed class SettingsViewModel : BaseViewModel
         {
             if (CurrentChosen != null || SelectedOpenTypeViewModel == null)
             {
-                //Blocking to make more than one OpenInstance
-                //TODO: 0 improve this
-                if (value == OpenType.InstancesMultiMC)
+                var attribute = value.GetAttribute<OpenTypeAttribute>();
+                if (attribute == null) return;
+
+                if (!attribute.AllowMultiple)
                 {
                     for (int i = 0; i < Opens.Count; i++)
                     {
                         var current = Opens[i];
-                        if (current.GetType() == typeof(OpenInstance) && CurrentChosen != current)
-                            return;
+                        if (current.GetType() == attribute.OpenType && CurrentChosen != current) return;
                     }
                 }
 
                 if (SelectedOpenTypeViewModel != null && !Consts.IsSwitchingBetweenOpensInSettings)
                     SetPresetAsNotSaved();
 
-                switch (value)
-                {
-                    case OpenType.Normal: SelectedOpenTypeViewModel = new SettingsOpenNormalModelView(this); break;
-                    case OpenType.InstancesMultiMC: SelectedOpenTypeViewModel = new SettingsOpenInstancesModelView(this); break;
-                    case OpenType.ResetTrackerMC: SelectedOpenTypeViewModel = new SettingsOpenResetTrackerModelView(this); break;
-                    case OpenType.OBS: SelectedOpenTypeViewModel = new SettingsOpenOBSModelView(this); break;
-                }
+                var viewModelType = attribute.OpenTypeViewModel;
+                var viewModelInstance = Activator.CreateInstance(viewModelType!, this) as OpenTypeViewModelBase;
+                SelectedOpenTypeViewModel = viewModelInstance;
+
                 _chooseTypeBox = value;
                 Consts.IsSwitchingBetweenOpensInSettings = false;
                 OnPropertyChanged(nameof(ChooseTypeBox));

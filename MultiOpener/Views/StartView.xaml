@@ -16,13 +16,13 @@
         <ContextMenu x:Key="ContextMenuOpened"
                      d:DataContext="{d:DesignInstance Type=opened:OpenedProcess}">
             <MenuItem Header="Info"
-                      Command="{Binding ViewInformationsCommand}"/>
+                      Command="{Binding ViewInformationsCommand}" />
             <MenuItem Header="Focus"
-                      Command="{Binding FocusCommand}"/>
+                      Command="{Binding FocusCommand}" />
             <MenuItem Header="Restart"
-                      Command="{Binding ResetCommand}"/>
+                      Command="{Binding ResetCommand}" />
             <MenuItem Header="Close/Open"
-                      Command="{Binding CloseOpenCommand}"/>
+                      Command="{Binding CloseOpenCommand}" />
         </ContextMenu>
 
         <DataTemplate x:Key="itemsTemplate">
@@ -41,29 +41,29 @@
                         <MouseBinding Gesture="LeftDoubleClick"
                                       Command="{Binding ViewInformationsCommand}" />
                     </Grid.InputBindings>
-                            <WrapPanel Orientation="Horizontal"
-                                       HorizontalAlignment="Center">
-                                <Label Content="{Binding WindowTitle}"
-                                       Height="25"
-                                       FontWeight="SemiBold"
-                                       Foreground="#c6d5e3"
-                                       Margin="0 0 0 0" />
-                            </WrapPanel>
-                            <WrapPanel Orientation="Horizontal">
-                                <Label Height="25"
-                                       Foreground="#121212"
-                                       Width="76"
-                                       HorizontalAlignment="left"
-                                       HorizontalContentAlignment="Right"
-                                       Content="STATUS: "
-                                       Margin="0 25"
-                                       Padding="0 4" />
-                                <Label Height="25"
-                                       Foreground="{Binding StatusLabelColor}"
-                                       Content="{Binding Status}"
-                                       Margin="0 25"
-                                       Padding="0 4" />
-                            </WrapPanel>
+                    <WrapPanel Orientation="Horizontal"
+                               HorizontalAlignment="Center">
+                        <Label Content="{Binding WindowTitle}"
+                               Height="25"
+                               FontWeight="SemiBold"
+                               Foreground="#c6d5e3"
+                               Margin="0 0 0 0" />
+                    </WrapPanel>
+                    <WrapPanel Orientation="Horizontal">
+                        <Label Height="25"
+                               Foreground="#121212"
+                               Width="76"
+                               HorizontalAlignment="left"
+                               HorizontalContentAlignment="Right"
+                               Content="STATUS: "
+                               Margin="0 25"
+                               Padding="0 4" />
+                        <Label Height="25"
+                               Foreground="{Binding StatusLabelColor}"
+                               Content="{Binding Status}"
+                               Margin="0 25"
+                               Padding="0 4" />
+                    </WrapPanel>
                 </Grid>
             </Border>
         </DataTemplate>

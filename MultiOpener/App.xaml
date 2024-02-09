@@ -143,6 +143,7 @@
                                               FalseValue="Visible" />
         <converters:BoolReverseConverter x:Key="BoolReverseConverter" />
         <converters:EmptyStringConverter x:Key="EmptyStringConverter" />
+        <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
 
         <Style TargetType="{x:Type ContextMenu}">
             <Setter Property="SnapsToDevicePixels"

@@ -1,6 +1,8 @@
 ﻿using MultiOpener.Entities.Interfaces;
 using MultiOpener.Entities.Opened;
+using MultiOpener.Utils.Attributes;
 using MultiOpener.ViewModels;
+using MultiOpener.ViewModels.Settings;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -14,13 +16,13 @@ namespace MultiOpener.Entities.Open;
 
 public enum OpenType
 {
-    [Description("Normal")]
+    [Description("Normal"), OpenType(OpenTypeViewModel = typeof(SettingsOpenNormalModelView), AllowMultiple = true, OpenType = typeof(OpenItem))]
     Normal,
-    [Description("Instances(MultiMC)")]
+    [Description("Instances(MultiMC)"), OpenType(OpenTypeViewModel = typeof(SettingsOpenInstancesModelView), AllowMultiple = false, OpenType = typeof(OpenInstance))]
     InstancesMultiMC,
-    [Description("Reset Tracker(MC)")]
+    [Description("Reset Tracker(MC)"), OpenType(OpenTypeViewModel = typeof(SettingsOpenResetTrackerModelView), AllowMultiple = false, OpenType = typeof(OpenResetTracker))]
     ResetTrackerMC,
-    [Description("OBS")]
+    [Description("OBS"), OpenType(OpenTypeViewModel = typeof(SettingsOpenOBSModelView), AllowMultiple = false, OpenType = typeof(OpenOBS))]
     OBS,
 }
 

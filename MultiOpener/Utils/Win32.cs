@@ -19,12 +19,15 @@ public partial class Win32
     private static partial bool EnumWindows(EnumWindowsProc enumProc, nint lParam);
     private delegate bool EnumWindowsProc(nint hWnd, nint lParam);
 
-    [DllImport("user32.dll")]
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool EnumChildWindows(IntPtr hWndParent, EnumWindowsProc lpEnumFunc, IntPtr lParam);
+    public static extern bool SetWindowText(IntPtr hWnd, string lpString);
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern int GetWindowText(nint hWnd, StringBuilder lpString, int nMaxCount);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern int GetWindowTextLength(IntPtr hWnd);
 
     [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
     public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
@@ -73,11 +76,16 @@ public partial class Win32
         keybd_event((byte)key, 0, 2, UIntPtr.Zero);
     }
 
+    public static void SetWindowTitle(nint hwnd, string newTitle)
+    {
+        SetWindowText(hwnd, newTitle);
+    }
     public static string GetWindowTitle(nint hwnd)
     {
-        StringBuilder sb = new(256);
-        int length = GetWindowText(hwnd, sb, sb.Capacity);
-        return length > 0 ? sb.ToString() : "";
+        int length = GetWindowTextLength(hwnd);
+        StringBuilder sb = new(length + 1);
+        _ = GetWindowText(hwnd, sb, sb.Capacity);
+        return sb.ToString();
     }
 
     public static int GetPidFromHwnd(nint hwnd)
@@ -208,32 +216,33 @@ public partial class Win32
 
         return output;
     }
-
-    public static List<nint> GetChildWindows(nint parent)
+    public static nint GetWindowByTitlePattern(string title)
     {
-        List<IntPtr> result = new();
-        EnumChildWindows(parent, (hwnd, lParam) =>
+        nint output = nint.Zero;
+        EnumWindows((hWnd, lParam) =>
         {
-            StringBuilder className = new(256);
-            _ = GetClassName(hwnd, className, className.Capacity);
-
-            StartViewModel.Log(className);
-
-            //if (className.Equals("Qt5QWindowIcon"))
-            //{
-            result.Add(hwnd);
-            //}
+            StringBuilder sb = new(256);
+            _ = GetWindowText(hWnd, sb, sb.Capacity);
+            try
+            {
+                if (title.Equals(sb.ToString(), StringComparison.OrdinalIgnoreCase))
+                {
+                    output = hWnd;
+                    return false;
+                }
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                StartViewModel.Log("Error timeout while looking for window title match", Entities.ConsoleLineOption.Error);
+            }
+            catch (Exception ex)
+            {
+                StartViewModel.Log(ex.ToString(), Entities.ConsoleLineOption.Error);
+            }
             return true;
-        }, IntPtr.Zero);
+        }, nint.Zero);
 
-        return result;
-    }
-
-    public static nint GetProjectorHwnd(Regex regex)
-    {
-        IntPtr mainWindowHandle = FindWindow("Qt5QWindowIcon", "Windowed Projector (Source) - magnifier");
-
-        return mainWindowHandle;
+        return output;
     }
 
     public static async Task<bool> CloseProcessByHwnd(nint hwnd)

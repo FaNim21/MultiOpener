@@ -29,6 +29,35 @@
                     <Run Foreground="White"
                          Text="{Binding IsConnectedToWebSocket, Mode=OneWay}" />
                 </TextBlock>
+
+                <TextBlock Text="Projectors: "
+                           FontSize="20"
+                           Foreground="DarkGray"
+                           Margin="0 5 0 0" />
+
+                <ItemsControl ItemsSource="{Binding OpenedProjectors}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0 4 0 0">
+                                <TextBlock FontSize="15"
+                                           Margin="5 0 0 0">
+                                    <Run Foreground="DarkGray"
+                                         Text="Is opened:" />
+                                    <Run Foreground="White"
+                                         Text="{Binding IsOpened, Mode=OneWay}" />
+                                </TextBlock>
+                                <TextBlock FontSize="15"
+                                           Margin="10 0 0 0">
+                                    <Run Foreground="DarkGray"
+                                         Text="Name:" />
+                                    <Run Foreground="White"
+                                         Text="{Binding Name, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </StackPanel>
         </Grid>
     </ScrollViewer>
