@@ -22,41 +22,18 @@
 
                 <TextBlock Foreground="#a0e3e3"
                            Text=" -- Minecraft Reset Tracker Analytics-- " />
+                
                 <TextBlock>
                     <Run Foreground="DarkGray"
-                         Text="External tracker: " />
+                         Text="Is Tracking: " />
                     <Run Foreground="White"
-                         Text="{Binding SessionData.UsingBuiltIn, Mode=OneWay, Converter={StaticResource BoolReverseConverter}}" />
+                         Text="{Binding IsTracking, Mode=OneWay}" />
                 </TextBlock>
-
-                <Grid Visibility="{Binding SessionData.UsingBuiltIn, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
-                    <TextBlock>
-                        <Run Foreground="DarkGray"
-                             Text="Is Tracking: " />
-                        <Run Foreground="White"
-                             Text="{Binding IsTracking, Mode=OneWay}" />
-                        <Run Foreground="DarkGray"
-                             Text="   |  next update in: " />
-                        <Run Foreground="White"
-                             Text="{Binding TimeToUpdateStats, Mode=OneWay}" />
-                    </TextBlock>
-                </Grid>
-
-                <Grid Visibility="{Binding SessionData.UsingBuiltIn, Converter={StaticResource BoolToVisibilityConverter}}"
-                      Margin="0 -16 0 0">
-                    <TextBlock>
-                        <Run Foreground="DarkGray"
-                             Text="Is Tracking: " />
-                        <Run Foreground="White"
-                             Text="{Binding IsTracking, Mode=OneWay}" />
-                    </TextBlock>
-                </Grid>
-
                 <TextBlock>
-                <Run Foreground="DarkGray"
-                     Text="Session time: " />
-                <Run Foreground="White"
-                     Text="{Binding SessionData.ElapsedTime, Mode=OneWay}" />
+                    <Run Foreground="DarkGray"
+                         Text="Session time: " />
+                    <Run Foreground="White"
+                         Text="{Binding SessionData.ElapsedTime, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock>
                     <Run Foreground="DarkGray"

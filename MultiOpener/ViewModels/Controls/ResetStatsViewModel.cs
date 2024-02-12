@@ -9,9 +9,6 @@ public class ResetStatsViewModel : BaseViewModel
 {
     public ObservableCollection<TrackedRunStats> Runs { get; set; } = new();
 
-    public bool UsingBuiltIn { get; set; }
-    public long LastFileDateRead { get; set; }
-
     #region Times
     //OVERALL
     private long _elapsedTimeMiliseconds;
@@ -57,12 +54,10 @@ public class ResetStatsViewModel : BaseViewModel
     public string? TotalRTAPlayTime
     {
         get => _totalRTAPlayTime;
-        set
-        {
-            _totalRTAPlayTime = value;
-        }
+        set { _totalRTAPlayTime = value; }
     }
 
+    //POST NETHER
     private long _postNetherTimeMiliseconds;
     public long PostNetherTimeMiliseconds
     {
@@ -80,10 +75,7 @@ public class ResetStatsViewModel : BaseViewModel
     public string? PostNetherTime
     {
         get => _postNetherTime;
-        set
-        {
-            _postNetherTime = value;
-        }
+        set { _postNetherTime = value; }
     }
 
     //WALL
@@ -104,10 +96,7 @@ public class ResetStatsViewModel : BaseViewModel
     public string? WallTime
     {
         get => _wallTime;
-        set
-        {
-            _wallTime = value;
-        }
+        set { _wallTime = value; }
     }
 
     //BREAKS
@@ -128,10 +117,7 @@ public class ResetStatsViewModel : BaseViewModel
     public string? BreakTime
     {
         get => _breakTime;
-        set
-        {
-            _breakTime = value;
-        }
+        set { _breakTime = value; }
     }
     #endregion
 
@@ -139,45 +125,32 @@ public class ResetStatsViewModel : BaseViewModel
     private int _wallResets;
     public int WallResets
     {
-        get { return _wallResets; }
-        set
-        {
-            _wallResets = value;
-        }
+        get => _wallResets;
+        set { _wallResets = value; }
     }
 
     private int _noNetherEnterResets;
     public int NoNetherEnterResets
     {
-        get { return _noNetherEnterResets; }
-        set
-        {
-            _noNetherEnterResets = value;
-        }
+        get => _noNetherEnterResets;
+        set { _noNetherEnterResets = value; }
     }
 
     private int _netherWithoutPickaxeReset;
     public int NetherWithoutPickaxeReset
     {
-        get { return _netherWithoutPickaxeReset; }
-        set
-        {
-            _netherWithoutPickaxeReset = value;
-        }
+        get => _netherWithoutPickaxeReset;
+        set { _netherWithoutPickaxeReset = value; }
     }
 
     private int _splitlessResets;
     public int SplitlessResets
     {
-        get { return _splitlessResets; }
-        set
-        {
-            _splitlessResets = value;
-        }
+        get => _splitlessResets;
+        set { _splitlessResets = value; }
     }
 
     public int ResetsPerEnter => Resets / Math.Max(NetherEntersCount, 1);
-
     public int Resets => WallResets + NoNetherEnterResets + SplitlessResets;
 
     #endregion
@@ -187,11 +160,8 @@ public class ResetStatsViewModel : BaseViewModel
     private int _ironPickaxeCount;
     public int IronPickaxeCount
     {
-        get { return _ironPickaxeCount; }
-        set
-        {
-            _ironPickaxeCount = value;
-        }
+        get => _ironPickaxeCount;
+        set { _ironPickaxeCount = value; }
     }
 
 
@@ -199,30 +169,22 @@ public class ResetStatsViewModel : BaseViewModel
     private int _netherEntersCount;
     public int NetherEntersCount
     {
-        get { return _netherEntersCount; }
-        set
-        {
-            _netherEntersCount = value;
-        }
+        get => _netherEntersCount;
+        set { _netherEntersCount = value; }
     }
 
     private long _netherEntersTime;
     public long NetherEntersTime
     {
-        get { return _netherEntersTime; }
-        set
-        {
-            _netherEntersTime = value;
-        }
+        get => _netherEntersTime;
+        set { _netherEntersTime = value; }
     }
 
     public string NetherEnterAverageTime
     {
         get
         {
-            float miliseconds;
-            if (UsingBuiltIn) miliseconds = NetherEntersCount == 0 ? 0 : NetherEntersTime / NetherEntersCount;
-            else miliseconds = NetherEntersTime;
+            float miliseconds = NetherEntersCount == 0 ? 0 : NetherEntersTime / (float)NetherEntersCount;
             TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
             string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
             return formattedTime;
@@ -234,30 +196,22 @@ public class ResetStatsViewModel : BaseViewModel
     private int _firstStructureEntersCount;
     public int FirstStructureEntersCount
     {
-        get { return _firstStructureEntersCount; }
-        set
-        {
-            _firstStructureEntersCount = value;
-        }
+        get => _firstStructureEntersCount;
+        set { _firstStructureEntersCount = value; }
     }
 
     private long _firstStructureEntersTime;
     public long FirstStructureEntersTime
     {
-        get { return _firstStructureEntersTime; }
-        set
-        {
-            _firstStructureEntersTime = value;
-        }
+        get => _firstStructureEntersTime;
+        set { _firstStructureEntersTime = value; }
     }
 
     public string FirstStructureEnterAverageTime
     {
         get
         {
-            float miliseconds;
-            if (UsingBuiltIn) miliseconds = FirstStructureEntersCount == 0 ? 0 : FirstStructureEntersTime / FirstStructureEntersCount;
-            else miliseconds = FirstStructureEntersTime;
+            float miliseconds = FirstStructureEntersCount == 0 ? 0 : FirstStructureEntersTime / (float)FirstStructureEntersCount;
             TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
             string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
             return formattedTime;
@@ -269,30 +223,22 @@ public class ResetStatsViewModel : BaseViewModel
     private int _secondStructureEntersCount;
     public int SecondStructureEntersCount
     {
-        get { return _secondStructureEntersCount; }
-        set
-        {
-            _secondStructureEntersCount = value;
-        }
+        get => _secondStructureEntersCount;
+        set { _secondStructureEntersCount = value; }
     }
 
     private long _secondStructureEntersTime;
     public long SecondStructureEntersTime
     {
-        get { return _secondStructureEntersTime; }
-        set
-        {
-            _secondStructureEntersTime = value;
-        }
+        get => _secondStructureEntersTime;
+        set { _secondStructureEntersTime = value; }
     }
 
     public string SecondStructureEnterAverageTime
     {
         get
         {
-            float miliseconds;
-            if (UsingBuiltIn) miliseconds = SecondStructureEntersCount == 0 ? 0 : SecondStructureEntersTime / SecondStructureEntersCount;
-            else miliseconds = SecondStructureEntersTime;
+            float miliseconds = SecondStructureEntersCount == 0 ? 0 : SecondStructureEntersTime / (float)SecondStructureEntersCount;
             TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
             string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
             return formattedTime;
@@ -304,30 +250,22 @@ public class ResetStatsViewModel : BaseViewModel
     private int _netherExitEntersCount;
     public int NetherExitEntersCount
     {
-        get { return _netherExitEntersCount; }
-        set
-        {
-            _netherExitEntersCount = value;
-        }
+        get => _netherExitEntersCount;
+        set { _netherExitEntersCount = value; }
     }
 
     private long _netherExitEntersTime;
     public long NetherExitEntersTime
     {
-        get { return _netherExitEntersTime; }
-        set
-        {
-            _netherExitEntersTime = value;
-        }
+        get => _netherExitEntersTime;
+        set { _netherExitEntersTime = value; }
     }
 
     public string NetherExitEnterAverageTime
     {
         get
         {
-            float miliseconds;
-            if (UsingBuiltIn) miliseconds = NetherExitEntersCount == 0 ? 0 : NetherExitEntersTime / NetherExitEntersCount;
-            else miliseconds = NetherExitEntersTime;
+            float miliseconds = NetherExitEntersCount == 0 ? 0 : NetherExitEntersTime / NetherExitEntersCount;
             TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
             string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
             return formattedTime;
@@ -339,30 +277,22 @@ public class ResetStatsViewModel : BaseViewModel
     private int _strongholdEntersCount;
     public int StrongholdEntersCount
     {
-        get { return _strongholdEntersCount; }
-        set
-        {
-            _strongholdEntersCount = value;
-        }
+        get => _strongholdEntersCount;
+        set { _strongholdEntersCount = value; }
     }
 
     private long _strongholdEntersTime;
     public long StrongholdEntersTime
     {
-        get { return _strongholdEntersTime; }
-        set
-        {
-            _strongholdEntersTime = value;
-        }
+        get => _strongholdEntersTime;
+        set { _strongholdEntersTime = value; }
     }
 
     public string StrongholdEnterAverageTime
     {
         get
         {
-            float miliseconds;
-            if (UsingBuiltIn) miliseconds = StrongholdEntersCount == 0 ? 0 : StrongholdEntersTime / StrongholdEntersCount;
-            else miliseconds = StrongholdEntersTime;
+            float miliseconds = StrongholdEntersCount == 0 ? 0 : StrongholdEntersTime / StrongholdEntersCount;
             TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
             string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
             return formattedTime;
@@ -374,30 +304,22 @@ public class ResetStatsViewModel : BaseViewModel
     private int _endEntersCount;
     public int EndEntersCount
     {
-        get { return _endEntersCount; }
-        set
-        {
-            _endEntersCount = value;
-        }
+        get => _endEntersCount;
+        set { _endEntersCount = value; }
     }
 
     private long _endEntersTime;
     public long EndEntersTime
     {
-        get { return _endEntersTime; }
-        set
-        {
-            _endEntersTime = value;
-        }
+        get => _endEntersTime;
+        set { _endEntersTime = value; }
     }
 
     public string EndEnterAverageTime
     {
         get
         {
-            float miliseconds;
-            if (UsingBuiltIn) miliseconds = EndEntersCount == 0 ? 0 : EndEntersTime / EndEntersCount;
-            else miliseconds = EndEntersTime;
+            float miliseconds = EndEntersCount == 0 ? 0 : EndEntersTime / EndEntersCount;
             TimeSpan time = TimeSpan.FromMilliseconds(miliseconds);
             string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D1}", time.Minutes, time.Seconds, time.Milliseconds / 100);
             return formattedTime;
@@ -410,22 +332,15 @@ public class ResetStatsViewModel : BaseViewModel
     public float RealNetherPerHour
     {
         get => _realNetherPerHour;
-        set
-        {
-            _realNetherPerHour = value;
-        }
+        set { _realNetherPerHour = value; }
     }
 
     private float _legacyNetherPerHour = 0;
     public float LegacyNetherPerHour
     {
         get => _legacyNetherPerHour;
-        set
-        {
-            _legacyNetherPerHour = value;
-        }
+        set { _legacyNetherPerHour = value; }
     }
-
     #endregion
 
 
@@ -535,18 +450,16 @@ public class ResetStatsViewModel : BaseViewModel
 
     public void Clear()
     {
-        Application.Current?.Dispatcher.Invoke(delegate
-        {
-            Runs.Clear();
-        });
-
-        LastFileDateRead = 0;
+        Application.Current?.Dispatcher.Invoke(delegate { Runs.Clear(); });
 
         ElapsedTimeMiliseconds = 0;
         TotalRTAPlayTimeMiliseconds = 0;
+        PostNetherTimeMiliseconds = 0;
         WallTimeMiliseconds = 0;
+        BreakTimeMiliseconds = 0;
 
         NoNetherEnterResets = 0;
+        NetherWithoutPickaxeReset = 0;
         WallResets = 0;
         SplitlessResets = 0;
 

@@ -20,18 +20,6 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
         }
     }
 
-    private bool _usingBuiltInTracker = true;
-    public bool UsingBuiltInTracker
-    {
-        get => _usingBuiltInTracker;
-        set
-        {
-            PresetIsNotSaved();
-            _usingBuiltInTracker = value;
-            OnPropertyChanged(nameof(UsingBuiltInTracker));
-        }
-    }
-
     private RecordType _recordRunType = RecordType.RSG;
     public RecordType RecordRunType
     {
@@ -52,7 +40,6 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
         if (currentChosen is OpenResetTracker openTracker)
         {
             TrackerSheetID = openTracker.TrackerID;
-            UsingBuiltInTracker = openTracker.UsingBuiltInTracker;
             RecordRunType = openTracker.RecordType;
         }
 
@@ -67,7 +54,6 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
         if (open is OpenResetTracker openTracker)
         {
             openTracker.TrackerID = TrackerSheetID;
-            openTracker.UsingBuiltInTracker = UsingBuiltInTracker;
             openTracker.RecordType = RecordRunType;
         }
     }
@@ -77,7 +63,6 @@ public class SettingsOpenResetTrackerModelView : OpenTypeViewModelBase
         base.Clear();
 
         TrackerSheetID = string.Empty;
-        UsingBuiltInTracker = true;
         RecordRunType = RecordType.RSG;
     }
 }

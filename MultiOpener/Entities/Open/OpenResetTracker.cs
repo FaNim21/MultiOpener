@@ -1,13 +1,9 @@
 ﻿using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels;
-using System.Diagnostics;
-using System;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.IO;
 using System.Windows;
-using MultiOpener.Entities.Opened.ResetTracker;
 using System.ComponentModel;
 
 namespace MultiOpener.Entities.Open;
@@ -23,12 +19,11 @@ public enum RecordType
 public sealed class OpenResetTracker : OpenItem
 {
     public string TrackerID { get; set; }
-    public bool UsingBuiltInTracker { get; set; }
     public RecordType RecordType { get; set; }  //temp
 
 
     [JsonConstructor]
-    public OpenResetTracker(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = OpenType.ResetTrackerMC, bool MinimizeOnOpen = false, bool UsingBuiltInTracker = true, string TrackerID = "", RecordType RecordType = RecordType.RSG)
+    public OpenResetTracker(string Name = "", string PathExe = "", int DelayBefore = 0, int DelayAfter = 0, OpenType Type = OpenType.ResetTrackerMC, bool MinimizeOnOpen = false, string TrackerID = "", RecordType RecordType = RecordType.RSG)
     {
         this.Name = Name;
         this.PathExe = PathExe;
@@ -37,72 +32,31 @@ public sealed class OpenResetTracker : OpenItem
         this.Type = Type;
         this.MinimizeOnOpen = MinimizeOnOpen;
         //...
-        this.UsingBuiltInTracker = UsingBuiltInTracker;
         this.TrackerID = TrackerID;
         //...
         this.RecordType = RecordType;
     }
     public OpenResetTracker(string Name) : this(Name, "") { }
-    public OpenResetTracker(OpenResetTracker item) : this(item.Name, item.PathExe, item.DelayBefore, item.DelayAfter, item.Type, item.MinimizeOnOpen, item.UsingBuiltInTracker, item.TrackerID, item.RecordType) { }
+    public OpenResetTracker(OpenResetTracker item) : this(item.Name, item.PathExe, item.DelayBefore, item.DelayAfter, item.Type, item.MinimizeOnOpen, item.TrackerID, item.RecordType) { }
 
     public override string Validate()
     {
-        if (UsingBuiltInTracker)
-        {
-            if (DelayAfter < 0 || DelayBefore < 0)
-                return $"You set delay lower than 0 in {Name}";
+        if (DelayAfter < 0 || DelayBefore < 0)
+            return $"You set delay lower than 0 in {Name}";
 
-            if (DelayAfter > 999999 || DelayBefore > 99999)
-                return $"Your delay can't be higher than 99999 in {Name}";
-            return string.Empty;
-        }
-
-        return base.Validate();
+        if (DelayAfter > 999999 || DelayBefore > 99999)
+            return $"Your delay can't be higher than 99999 in {Name}";
+        return "";
     }
 
     public override async Task Open(StartViewModel startModel, CancellationToken token)
     {
-        OpenedResetTrackerProcess? opened = null;
         bool isCancelled = token.IsCancellationRequested;
 
-        if (UsingBuiltInTracker)
-        {
-            opened = new ResetTrackerLocal(RecordType);
-            opened.Initialize(null, "Tracker", string.Empty, MinimizeOnOpen);
-            if (!isCancelled)
-                opened.ActivateTracker();
-        }
-        else
-        {
-            try
-            {
-                if (!isCancelled) await Task.Delay(DelayBefore);
+        OpenedResetTrackerProcess? opened = new(RecordType);
+        opened.Initialize(null, "Tracker", string.Empty, MinimizeOnOpen);
+        if (!isCancelled) opened.ActivateTracker();
 
-                string executable = Path.GetFileName(PathExe);
-                string pathDir = Path.GetDirectoryName(PathExe) ?? "";
-                ProcessStartInfo startInfo = new() { WorkingDirectory = pathDir, FileName = executable, UseShellExecute = true };
-                string? name = Path.GetFileNameWithoutExtension(startInfo?.FileName);
-                opened = new ResetTrackerExternalSource(TrackerID);
-                opened.Initialize(startInfo, name!, PathExe, MinimizeOnOpen);
-
-                if (isCancelled) opened.Clear();
-                else
-                {
-                    opened.FindProcess();
-
-                    if (!opened.IsOpenedFromStatus())
-                        await opened.OpenProcess(token);
-                }
-
-                if (!isCancelled) await Task.Delay(DelayAfter);
-            }
-            catch (Exception e)
-            {
-                StartViewModel.Log(e.ToString(), ConsoleLineOption.Error);
-            }
-        }
-
-        if (opened == null) return;
         Application.Current?.Dispatcher.Invoke(delegate { StartViewModel.Instance?.AddOpened(opened); });
     }
 }

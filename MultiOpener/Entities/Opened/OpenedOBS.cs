@@ -254,7 +254,7 @@ public partial class OpenedOBS : OpenedProcess
             IsConnectedToWebSocket = true;
             try
             {
-                await Task.Delay(500);
+                await Task.Delay(1500);
                 UpdateStatus();
                 await client.SetCurrentSceneCollection(OpenOBS.SceneCollection);
                 if (OpenOBS.StartRecordingOnOpen)
