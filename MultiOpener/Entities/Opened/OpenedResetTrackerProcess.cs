@@ -324,6 +324,12 @@ public class OpenedResetTrackerProcess : OpenedProcess
     }
     private void CreateRunData(RecordData data, RecordStatsCategoriesData statsData, List<(string name, long IGT, long RTA, string realName)> timeLines)
     {
+        if (timeLines == null || timeLines.Count == 0)
+        {
+            SessionData.NoNetherEnterResets++;
+            return;
+        }
+
         TrackedRunStats trackedRun = new();
 
         for (int i = 0; i < timeLines.Count; i++)

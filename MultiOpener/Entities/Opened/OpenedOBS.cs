@@ -12,6 +12,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Collections.ObjectModel;
+using OBSStudioClient.Enums;
 
 namespace MultiOpener.Entities.Opened;
 
@@ -70,6 +71,9 @@ public partial class OpenedOBS : OpenedProcess
             OnPropertyChanged(nameof(IsConnectedToWebSocket));
         }
     }
+
+    private int timeoutCount = 0;
+    private int timeoutChecks = 35;
 
 
     public OpenedOBS(OpenOBS openObs)
@@ -226,8 +230,7 @@ public partial class OpenedOBS : OpenedProcess
             var streamStatus = await client.GetStreamStatus()!;
             currentlyStreaming = streamStatus.OutputActive;
 
-            client.Disconnect();
-            client.Dispose();
+            await Disconnect();
         }
 
         foreach (var projector in OpenedProjectors)
@@ -247,14 +250,21 @@ public partial class OpenedOBS : OpenedProcess
         if (!OpenOBS.ConnectWebSocket) return;
 
         client = new();
+        timeoutCount = 0;
         bool isConnected = await client.ConnectAsync(true, OpenOBS.Password, "localhost", OpenOBS.Port);
         client.ConnectionClosed += (x, args) => { StartViewModel.Log("Lost connection"); IsConnectedToWebSocket = false; UpdateStatus(); };
         if (isConnected)
         {
-            IsConnectedToWebSocket = true;
             try
             {
-                await Task.Delay(1500);
+                while (client.ConnectionState != ConnectionState.Connected && timeoutCount <= timeoutChecks)
+                {
+                    await Task.Delay(250);
+                    timeoutCount++;
+                }
+                if (timeoutCount > timeoutChecks && client.ConnectionState != ConnectionState.Connected) return;
+
+                IsConnectedToWebSocket = true;
                 UpdateStatus();
                 await client.SetCurrentSceneCollection(OpenOBS.SceneCollection);
                 if (OpenOBS.StartRecordingOnOpen)
@@ -299,9 +309,27 @@ public partial class OpenedOBS : OpenedProcess
             catch (Exception ex)
             {
                 StartViewModel.Log($"Error: {ex.Message} - {ex.StackTrace}", ConsoleLineOption.Error);
-                client.Disconnect();
-                client.Dispose();
+                await Disconnect();
             }
         }
+    }
+
+    public async Task Disconnect()
+    {
+        if (client == null) return;
+
+        client.Disconnect();
+        client.Dispose();
+
+        while (client.ConnectionState != ConnectionState.Disconnected)
+            await Task.Delay(100);
+
+        client.ConnectionClosed -= OnConnectionClosed;
+    }
+
+    public void OnConnectionClosed(object? parametr, EventArgs args)
+    {
+        MessageBox.Show("Lost connection");
+        IsConnectedToWebSocket = false;
     }
 }
