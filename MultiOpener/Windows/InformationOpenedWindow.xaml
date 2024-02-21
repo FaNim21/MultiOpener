@@ -17,6 +17,7 @@
         BorderBrush="#00090e"
         WindowStartupLocation="CenterOwner"
         Background="#383A3C"
+        LocationChanged="WindowLocationChanged"
         PreviewKeyDown="WindowKeyDown">
     <Grid>
         <Grid.RowDefinitions>
@@ -25,6 +26,7 @@
         </Grid.RowDefinitions>
 
         <Grid Background="#000D14"
+              MouseDown="HeaderMouseDown"
               Grid.Row="0">
             <buttons:ButtonTaskbar x:Name="ExitButton"
                                    Width="25"
