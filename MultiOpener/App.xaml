@@ -50,6 +50,16 @@
             <views2:OpenedOBSProcessView />
         </DataTemplate>
 
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
+                                              TrueValue="Visible"
+                                              FalseValue="Hidden" />
+        <converters:BoolToVisibilityConverter x:Key="ReverseBoolToVisibilityConverter"
+                                              TrueValue="Hidden"
+                                              FalseValue="Visible" />
+        <converters:BoolReverseConverter x:Key="BoolReverseConverter" />
+        <converters:EmptyStringConverter x:Key="EmptyStringConverter" />
+        <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
+        
         <Style x:Key="ComboBoxTest2"
                TargetType="{x:Type ComboBox}">
             <Setter Property="Template">
@@ -134,16 +144,6 @@
             <Style.Triggers>
             </Style.Triggers>
         </Style>
-
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
-                                              TrueValue="Visible"
-                                              FalseValue="Hidden" />
-        <converters:BoolToVisibilityConverter x:Key="ReverseBoolToVisibilityConverter"
-                                              TrueValue="Hidden"
-                                              FalseValue="Visible" />
-        <converters:BoolReverseConverter x:Key="BoolReverseConverter" />
-        <converters:EmptyStringConverter x:Key="EmptyStringConverter" />
-        <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
 
         <Style TargetType="{x:Type ContextMenu}">
             <Setter Property="SnapsToDevicePixels"

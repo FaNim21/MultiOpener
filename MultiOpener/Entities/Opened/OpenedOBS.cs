@@ -249,8 +249,7 @@ public partial class OpenedOBS : OpenedProcess
     {
         if (!OpenOBS.ConnectWebSocket) return;
 
-        client = new();
-        client.RequestTimeout = 2000;
+        client = new() { RequestTimeout = 5000 };
         bool isConnected = await client.ConnectAsync(true, OpenOBS.Password, "localhost", OpenOBS.Port);
         client.ConnectionClosed += (x, args) => { StartViewModel.Log("Lost connection"); IsConnectedToWebSocket = false; UpdateStatus(); };
         if (isConnected)
