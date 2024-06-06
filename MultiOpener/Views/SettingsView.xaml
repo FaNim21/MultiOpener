@@ -3,99 +3,149 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
              xmlns:viewmodels="clr-namespace:MultiOpener.ViewModels"
              xmlns:converters="clr-namespace:MultiOpener.Converters"
+             xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
+             xmlns:local2="clr-namespace:MultiOpener.Components"
+             xmlns:types="clr-namespace:MultiOpener.Entities"
              d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
+             x:Name="settingsView"
              mc:Ignorable="d"
-             d:DesignHeight="450"
              d:DesignWidth="800"
+             d:DesignHeight="450"
              Background="#383A3C">
     <UserControl.Resources>
-        <Style x:Key="ComboBoxTest2"
-               TargetType="{x:Type ComboBox}">
+        <Style x:Key="{x:Type ScrollBar}"
+               TargetType="{x:Type ScrollBar}">
+            <Setter Property="Stylus.IsFlicksEnabled"
+                    Value="False" />
+            <Setter Property="Foreground"
+                    Value="#1b1d1f" />
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="Width"
+                    Value="10" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <ToggleButton Grid.Column="2"
-                                          Focusable="false"
-                                          IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}">
-                                <ToggleButton.Template>
-                                    <ControlTemplate>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="5*" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Border x:Name="Border"
-                                                    Grid.ColumnSpan="2"
-                                                    CornerRadius="0"
-                                                    Background="#9E9E9E"
-                                                    BorderBrush="Black"
-                                                    BorderThickness="1" />
-                                            <Border Grid.Column="0"
-                                                    Margin="1"
-                                                    Background="#9E9E9E"
-                                                    BorderBrush="Black"
-                                                    BorderThickness="0,0,1,0" />
-                                            <Path x:Name="Arrow"
-                                                  Grid.Column="1"
-                                                  Fill="Black"
-                                                  HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center"
-                                                  Data="M 0 0 L 4 4 L 8 0 Z" />
-                                        </Grid>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="ToggleButton.IsMouseOver"
-                                                     Value="true">
-                                                <Setter TargetName="Border"
-                                                        Property="Background"
-                                                        Value="#5e5e5e" />
-                                            </Trigger>
-                                            <Trigger Property="ToggleButton.IsChecked"
-                                                     Value="true">
-                                                <Setter TargetName="Border"
-                                                        Property="Background"
-                                                        Value="#5e5e5e" />
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </ToggleButton.Template>
-                            </ToggleButton>
-                            <ContentPresenter Name="ContentSite"
-                                              IsHitTestVisible="False"
-                                              Content="{TemplateBinding SelectionBoxItem}"
-                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                              Margin="3,3,22,3" />
-                            <TextBox x:Name="PART_EditableTextBox"
-                                     Visibility="Hidden"
-                                     IsReadOnly="{TemplateBinding IsReadOnly}"/>
-                            <Popup Name="Popup"
-                                   Placement="Bottom"
-                                   IsOpen="{TemplateBinding IsDropDownOpen}"
-                                   AllowsTransparency="True"
-                                   Focusable="False"
-                                   PopupAnimation="Slide">
-                                <Grid  Name="DropDown"
-                                       SnapsToDevicePixels="True"
-                                       MinWidth="{TemplateBinding ActualWidth}"
-                                       MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                                    <Border x:Name="DropDownBorder"
-                                            Background="#9E9E9E" />
-                                    <ScrollViewer SnapsToDevicePixels="True">
-                                        <StackPanel IsItemsHost="True" />
-                                    </ScrollViewer>
-                                </Grid>
-                            </Popup>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid x:Name="GridRoot"
+                              Width="12"
+                              Background="{x:Null}"
+                              Margin="0 5">
+                            <Grid.RenderTransform>
+                                <TranslateTransform X="-3" />
+                            </Grid.RenderTransform>
+                            <Track x:Name="PART_Track"
+                                   Grid.Row="0"
+                                   IsDirectionReversed="true"
+                                   Focusable="False">
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb"
+                                           Background="{TemplateBinding Foreground}"
+                                           Style="{DynamicResource ScrollThumbs}"
+                                           Margin="4 0 -1 0" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton x:Name="PageUp"
+                                                  Command="ScrollBar.PageDownCommand"
+                                                  Opacity="0"
+                                                  Focusable="False" />
+                                </Track.IncreaseRepeatButton>
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton x:Name="PageDown"
+                                                  Command="ScrollBar.PageUpCommand"
+                                                  Opacity="0"
+                                                  Focusable="False" />
+                                </Track.DecreaseRepeatButton>
+                            </Track>
                         </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="Thumb"
+                                     Property="IsMouseOver"
+                                     Value="true">
+                                <Setter Value="{DynamicResource ButtonSelectBrush}"
+                                        TargetName="Thumb"
+                                        Property="Background" />
+                            </Trigger>
+                            <Trigger SourceName="Thumb"
+                                     Property="IsDragging"
+                                     Value="true">
+                                <Setter Value="{DynamicResource DarkBrush}"
+                                        TargetName="Thumb"
+                                        Property="Background" />
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled"
+                                     Value="false">
+                                <Setter TargetName="Thumb"
+                                        Property="Visibility"
+                                        Value="Collapsed" />
+                            </Trigger>
+                            <Trigger Property="Orientation"
+                                     Value="Horizontal">
+                                <Setter TargetName="GridRoot"
+                                        Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="PART_Track"
+                                        Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Width"
+                                        Value="Auto" />
+                                <Setter Property="Height"
+                                        Value="12" />
+                                <Setter TargetName="Thumb"
+                                        Property="Tag"
+                                        Value="Horizontal" />
+                                <Setter TargetName="PageDown"
+                                        Property="Command"
+                                        Value="ScrollBar.PageLeftCommand" />
+                                <Setter TargetName="PageUp"
+                                        Property="Command"
+                                        Value="ScrollBar.PageRightCommand" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-            </Style.Triggers>
         </Style>
+
+        <ContextMenu x:Key="ListViewContextMenu">
+            <MenuItem Header="Clear"
+                      Command="{Binding ClearCurrentOpenCommand}" />
+            <MenuItem Header="Rename"
+                      Command="{Binding RenameItemCommand}" />
+            <MenuItem Header="Delete"
+                      Command="{Binding RemoveCurrentOpenCommand}" />
+        </ContextMenu>
+
+        <ContextMenu x:Key="PresetContextMenu">
+            <MenuItem Header="Load Preset"
+                      Command="{Binding LoadChosenPresetCommand}" />
+            <MenuItem Header="Rename Preset"
+                      Command="{Binding RenameItemCommand}" />
+            <MenuItem Header="Duplicate Preset"
+                      Command="{Binding DuplicatePresetCommand}" />
+            <MenuItem Header="Delete Preset"
+                      Command="{Binding RemovePresetCommand}" />
+        </ContextMenu>
+
+        <ContextMenu x:Key="GroupContextMenu">
+            <MenuItem Header="Create New Preset"
+                      Command="{Binding CreateNewPresetCommand}" />
+            <MenuItem Header="Open Group Folder"
+                      Command="{Binding OpenPresetsFolderCommand}" />
+            <MenuItem Header="Rename Group"
+                      Command="{Binding RenameItemCommand}" />
+            <MenuItem Header="Delete Group"
+                      Command="{Binding RemoveGroupCommand}" />
+        </ContextMenu>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -111,10 +161,10 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
                 <RowDefinition />
-                <RowDefinition Height="70" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0"
+                  Margin="50 0 0 0">
                 <Label Content="Type:"
                        Foreground="White"
                        Width="120"
@@ -122,7 +172,7 @@
                        FontSize="12"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"
-                       Margin="75 20 0 0" />
+                       Margin="0 20 0 0" />
 
                 <ComboBox x:Name="typeOptionComboBox"
                           Style="{StaticResource ComboBoxTest2}"
@@ -134,12 +184,12 @@
                           SelectedValue="{Binding Path=ChooseTypeBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Width="120"
                           Height="20"
-                          Margin="75 45 0 0">
+                          Margin="0 45 0 0">
                 </ComboBox>
 
                 <Label x:Name="NameLabel"
-                       Content="{Binding OpenNameLabel}"
-                       Foreground="Black"
+                       Content=""
+                       Foreground="LightGray"
                        Width="275"
                        Height="50"
                        FontSize="30"
@@ -147,45 +197,12 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Top"
                        HorizontalContentAlignment="Center"
-                       Margin="200 15 0 0" />
+                       Margin="120 15 0 0" />
             </Grid>
 
             <ContentControl Grid.Row="1"
                             Content="{Binding SelectedOpenTypeViewModel}" />
-
-            <Grid Grid.Row="2">
-                <local:ButtonNormal x:Name="ClearCurrentOpenButton"
-                                    Width="125"
-                                    Height="25"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Bottom"
-                                    FontSize="16"
-                                    Grid.Column="3"
-                                    Margin="0 0 200 20"
-                                    ContentText="Clear Open"
-                                    OnCommand="{Binding ClearCurrentOpenCommand}" />
-
-                <local:ButtonNormal x:Name="RemoveCurrentOpenButton"
-                                    Width="125"
-                                    Height="25"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Bottom"
-                                    FontSize="16"
-                                    Grid.Column="3"
-                                    Margin="200 0 0 20"
-                                    ContentText="Remove Open"
-                                    OnCommand="{Binding RemoveCurrentOpenCommand}" />
-            </Grid>
         </Grid>
-
-        <Line X1="500"
-              Y1="425"
-              X2="500"
-              Y2="0"
-              Grid.Row="1"
-              Grid.ColumnSpan="2"
-              Stroke="#000D14"
-              StrokeThickness="3" />
 
         <!--PRAWA-->
         <Grid Grid.Row="1"
@@ -195,171 +212,200 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0">
-                <ListView x:Name="itemList"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          Background="#424242"
-                          BorderThickness="0"
-                          AllowDrop="True"
-                          ItemsSource="{Binding Opens}"
-                          SelectedItem="{Binding CurrentChosen}">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Background"
-                                    Value="#313131" />
-                            <EventSetter Event="MouseMove"
-                                         Handler="TextBlockMouseMove" />
-                            <EventSetter Event="DragOver"
-                                         Handler="TextBlockDragOver" />
-                            <EventSetter Event="PreviewMouseLeftButtonDown"
-                                         Handler="OnItemListClick" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Width="120"
-                                  Height="20"
-                                  HorizontalAlignment="Center">
-                                <TextBlock HorizontalAlignment="Center"
-                                           Text="{Binding Name}" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
-
-            <!--PANEL BOCZNY-->
-            <Grid Grid.Column="1">
+            <!--PROCESY-->
+            <Grid Grid.Column="0"
+                  Background="#21272B">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="130"/>
-                    <RowDefinition/>
+                    <RowDefinition Height="40" />
+                    <RowDefinition />
+                    <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
-                    <Label Content="Open option name:"
-                           Foreground="White"
-                           Width="120"
-                           Height="25"
-                           FontSize="12"
-                           VerticalAlignment="Top"
+                <Grid Grid.Row="0"
+                      Height="40"
+                      VerticalAlignment="Bottom"
+                      Background="#14171a">
+                    <Label Content="{Binding PresetName}"
+                           Foreground="LightGray"
                            HorizontalAlignment="Center"
-                           Margin="0 20 0 0" />
-                    <TextBox Name="AddNameField"
-                             TextWrapping="NoWrap"
-                             MaxLength="15"
-                             Text="{Binding AddNameField}"
-                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                             Width="120"
-                             Height="20"
-                             Background="#9E9E9E"
-                             VerticalAlignment="Top"
-                             Margin="0 45 0 0" />
-
-                    <local:ButtonNormal x:Name="AddItemTolistViewButton"
-                                        Width="120"
-                                        Height="25"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Top"
-                                        FontSize="16"
-                                        Margin="0 75 0 0"
-                                        ContentText="Add"
-                                        OnCommand="{Binding AddNewOpenItemCommand}" />
+                           VerticalAlignment="Center"
+                           FontSize="15"
+                           FontWeight="bold" />
                 </Grid>
 
-                <Line X1="180"
-                      Grid.Row="1"
-                      Stroke="#000D14"
-                      StrokeThickness="2" />
-
                 <Grid Grid.Row="1">
-                    <local:ButtonNormal x:Name="CreateNewPreset"
-                                        Width="120"
-                                        Height="25"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Top"
-                                        FontSize="16"
-                                        Grid.Column="3"
-                                        Margin="0 10 0 0"
-                                        ContentText="Create New"
-                                        OnCommand="{Binding CreateNewPresetCommand}" />
-                    
-                    <local:ButtonNormal x:Name="DeleteCurrentOpenPreset"
-                                        Width="120"
-                                        Height="25"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Top"
-                                        FontSize="16"
-                                        Grid.Column="3"
-                                        Margin="0 50 0 0"
-                                        ContentText="Delete Preset"
-                                        OnCommand="{Binding RemovePresetCommand}" />
-                    
-                    <local:ButtonNormal x:Name="OpenPresetFolerButton"
-                                        Width="120"
-                                        Height="25"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Top"
-                                        FontSize="16"
-                                        Grid.Column="3"
-                                        Margin="0 90 0 0"
-                                        ContentText="Open Folder"
-                                        OnCommand="{Binding OpenPresetsFolderCommand}" />
+                    <ListView x:Name="itemList"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              SelectionMode="Single"
+                              AllowDrop="True"
+                              PreviewMouseRightButtonDown="ListView_PreviewMouseRightButtonDown"
+                              ItemsSource="{Binding Opens}"
+                              SelectedItem="{Binding CurrentChosen}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Background"
+                                        Value="#404447" />
+                                <Setter Property="Foreground"
+                                        Value="#bcbcbc" />
+                                <EventSetter Event="MouseMove"
+                                             Handler="TextBlockMouseMove" />
+                                <EventSetter Event="DragOver"
+                                             Handler="TextBlockDragOver" />
+                                <EventSetter Event="PreviewMouseLeftButtonDown"
+                                             Handler="OnItemListClick" />
+                                <EventSetter Event="PreviewMouseRightButtonDown"
+                                             Handler="OnItemListClick" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
 
-                    <ComboBox x:Name="ChoosenPresetToLoad"
-                              Style="{StaticResource ComboBoxTest2}"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Center"
-                              ItemsSource="{Binding Presets}"
-                              SelectedItem="{Binding CurrentLoadedChosen}"
-                              DisplayMemberPath="Name"
-                              Width="120"
-                              Height="20"
-                              Margin="0 0 0 15">
-                    </ComboBox>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Width="120"
+                                      Height="20"
+                                      HorizontalAlignment="Center">
+                                    <local2:EditableTextBlock Text="{Binding Name}"
+                                                              HorizontalAlignment="Center"
+                                                              Margin="0 -2 0 0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
 
-                    <local:ButtonNormal x:Name="LoadButton"
-                                        Width="120"
-                                        Height="25"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        FontSize="16"
-                                        Grid.Column="3"
-                                        Margin="0 50 0 0"
-                                        ContentText="Load"
-                                        OnCommand ="{Binding LoadChosenPresetCommand}" />
+                <Grid Grid.Row="2"
+                      Height="40"
+                      VerticalAlignment="Bottom"
+                      Background="#000D14">
+                    <local:ButtonPresets HorizontalAlignment="Left"
+                                         ButtonText="+"
+                                         OnConsoleCommand="{Binding AddNewOpenItemCommand}"
+                                         Margin="5 0 0 0">
+                    </local:ButtonPresets>
 
-                    <Label Content="Save name:"
-                           Foreground="White"
-                           Width="120"
-                           Height="25"
-                           FontSize="12"
-                           VerticalAlignment="Bottom"
-                           HorizontalContentAlignment="Center"
-                           Margin="0 0 0 75" />
-                    <TextBox Name="SaveNameField"
-                             TextWrapping="NoWrap"
-                             MaxLength="25"
-                             Text="{Binding SaveNameField}"
-                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                             Width="120"
-                             Height="20"
-                             Background="#9E9E9E"
-                             VerticalAlignment="Bottom"
-                             Margin="0 0 0 55" />
-
-                    <local:ButtonNormal x:Name="UpdateButton"
-                                        Width="120"
-                                        Height="25"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        FontSize="16"
-                                        Grid.Column="3"
-                                        Margin="0 0 0 20"
-                                        ContentText="Save"
+                    <local:ButtonNormal Width="60"
+                                        Height="30"
+                                        HorizontalAlignment="Right"
+                                        Margin="0 0 5 0"
+                                        ContentText="SAVE"
+                                        ContentMargin="0 0 0 2"
+                                        FontSize="19"
                                         OnCommand="{Binding SaveJsonCommand}" />
                 </Grid>
             </Grid>
+
+            <!--GROUPY I PRESESTY-->
+            <Grid Grid.Column="1"
+                  Background="#1D2226"
+                  Width="180">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <TreeView Name="treeView"
+                              ItemsSource="{Binding Groups}"
+                              Background="Transparent"
+                              AllowDrop="True"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              PreviewMouseRightButtonDown="TreeView_PreviewMouseRightButtonDown"
+                              BorderThickness="0">
+                        <TreeView.Resources>
+                            <Style TargetType="TreeViewItem"
+                                   x:Key="CustomTreeViewItemStyle">
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                                                     Color="#0078d7"
+                                                     Opacity="0.5" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
+                                                     Color="Black" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                                                     Color="#0078d7" />
+                                </Style.Resources>
+                                <Setter Property="Padding"
+                                        Value="0" />
+                                <Setter Property="IsExpanded"
+                                        Value="{Binding IsExpanded, Mode=TwoWay}" />
+                            </Style>
+
+                            <Style TargetType="TreeViewItem"
+                                   BasedOn="{StaticResource CustomTreeViewItemStyle}" />
+
+                            <!--GROUPS-->
+                            <HierarchicalDataTemplate DataType="{x:Type types:LoadedGroupItem}"
+                                                      ItemsSource="{Binding Presets}">
+                                <Grid Width="150"
+                                      Height="20"
+                                      Background="Transparent"
+                                      ContextMenu="{StaticResource GroupContextMenu}">
+                                    <local2:EditableTextBlock Text="{Binding Name}"
+                                                              Foreground="White"
+                                                              Margin="0 -2 0 0" />
+                                </Grid>
+                            </HierarchicalDataTemplate>
+
+                            <!--PRESETS-->
+                            <HierarchicalDataTemplate DataType="{x:Type types:LoadedPresetItem}">
+                                <Grid Width="129"
+                                      Height="20"
+                                      ContextMenu="{StaticResource PresetContextMenu}"
+                                      Margin="2 0 0 0">
+                                    <Grid.Background>
+                                        <SolidColorBrush Color="#000d14"
+                                                         Opacity="0.45" />
+                                    </Grid.Background>
+                                    <local2:EditableTextBlock Text="{Binding Name}"
+                                                              Foreground="White"
+                                                              Margin="5 -2 0 0" />
+                                </Grid>
+                            </HierarchicalDataTemplate>
+                        </TreeView.Resources>
+                    </TreeView>
+                </Grid>
+
+                <Grid Grid.Row="1"
+                      Height="40"
+                      VerticalAlignment="Bottom"
+                      Background="#000D14">
+                    <local:ButtonPresets HorizontalAlignment="Left"
+                                         ButtonText="+"
+                                         OnConsoleCommand="{Binding AddNewGroupItemCommand}"
+                                         Margin="5 0 0 0">
+                    </local:ButtonPresets>
+
+                    <local:ButtonNormal Width="40"
+                                        Height="30"
+                                        HorizontalAlignment="Right"
+                                        Margin="0 0 5 0"
+                                        ContentText="↻"
+                                        ContentMargin="0 -10 0 0"
+                                        FontSize="32"
+                                        ToolTip="Refresh for whole tree of groups and presets"
+                                        OnCommand="{Binding RefreshTreeViewCommand}">
+                    </local:ButtonNormal>
+                </Grid>
+            </Grid>
         </Grid>
+
+        <Line X1="499"
+              Y1="425"
+              X2="499"
+              Y2="0"
+              Grid.Row="1"
+              Grid.ColumnSpan="2"
+              Stroke="#000D14"
+              StrokeThickness="3"
+              Opacity="1" />
+        <Line X1="621"
+              Y1="425"
+              X2="621"
+              Y2="0"
+              Grid.Row="1"
+              Grid.ColumnSpan="2"
+              Stroke="#000D14"
+              StrokeThickness="3"
+              Opacity="1" />
     </Grid>
 </UserControl>

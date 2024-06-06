@@ -1,45 +1,59 @@
-﻿using NuGet.Versioning;
-using Octokit;
-using System;
-using System.Linq;
+﻿using MultiOpener.ViewModels;
+using NuGet.Versioning;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace MultiOpener.Utils
+namespace MultiOpener.Utils;
+
+public class Release
 {
-    public class UpdateChecker
+    public string tag_name { get; set; }
+}
+
+public class UpdateChecker
+{
+    private const string OWNER = "FaNim21";
+    private const string REPO = "MultiOpener";
+
+    public async Task<bool> CheckForUpdates(string? version = null)
     {
-        private const string OWNER = "FaNim21";
-        private const string REPO = "MultiOpener";
+        if (string.IsNullOrEmpty(version))
+            version = Consts.Version[1..];
 
-        public async Task<bool> CheckForUpdates(string? version = null)
+        const string apiUrl = "https://api.github.com/repos/FaNim21/MultiOpener/releases";
+        using (var httpClient = new HttpClient())
         {
-            if (string.IsNullOrEmpty(version))
-                version = Consts.Version[1..];
+            httpClient.DefaultRequestHeaders.Add("User-Agent", REPO);
+            var response = await httpClient.GetAsync(apiUrl);
 
-            try
+            if (response.IsSuccessStatusCode)
             {
-                var gitHubClient = new GitHubClient(new ProductHeaderValue("MultiOpener"));
-                var releases = await gitHubClient.Repository.Release.GetAll(OWNER, REPO);
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var releases = JsonSerializer.Deserialize<Release[]>(responseBody);
+                var latestRelease = releases![0];
 
-                var latestRelease = releases.OrderByDescending(r => r.PublishedAt).FirstOrDefault();
-
-                if (latestRelease != null && !IsUpToDate(latestRelease.TagName, version))
+                if (latestRelease != null && !IsUpToDate(latestRelease.tag_name, version))
+                {
+                    StartViewModel.Log($"Found new update - {latestRelease.tag_name}", Entities.ConsoleLineOption.Warning);
                     return true;
+                }
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception(ex.Message);
+                throw new System.Exception($"{response.StatusCode}");
             }
-
-            return false;
         }
 
-        private bool IsUpToDate(string latestTag, string currentTag)
-        {
-            NuGetVersion latest = new(latestTag);
-            NuGetVersion current = new(currentTag);
+        StartViewModel.Log($"You are up to date - {version}");
+        return false;
+    }
 
-            return latest <= current;
-        }
+    public static bool IsUpToDate(string latestTag, string currentTag)
+    {
+        NuGetVersion latest = new(latestTag);
+        NuGetVersion current = new(currentTag);
+
+        return latest <= current;
     }
 }

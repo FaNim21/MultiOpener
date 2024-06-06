@@ -1,5 +1,5 @@
 ﻿using MultiOpener.Commands.StartCommands;
-using MultiOpener.Items;
+using MultiOpener.Entities.Opened;
 using MultiOpener.ViewModels;
 using System.Threading.Tasks;
 
@@ -19,6 +19,8 @@ namespace MultiOpener.Commands.OpenedCommands
             if (openedProcess == null || Consts.IsStartPanelWorkingNow) return;
 
             openedProcess.Update();
+            if (!openedProcess.IsOpenedFromStatus()) return;
+
             Task task = Task.Run(ResetOpened);
         }
 
@@ -26,24 +28,25 @@ namespace MultiOpener.Commands.OpenedCommands
         {
             Consts.IsStartPanelWorkingNow = true;
 
-            Start?.UpdateText($"Reseting {openedProcess.Name}");
-            if (openedProcess.IsOpened())
+            if (openedProcess.IsOpenedFromStatus())
             {
-
                 bool result = await openedProcess.Close();
 
                 if (result)
                 {
-                    openedProcess.Clear();
-                    openedProcess.UpdateStatus();
-
                     await Task.Delay(1000);
-                    await openedProcess.QuickOpen();
+                    await openedProcess.OpenProcess();
+
+                    if (openedProcess.IsOpenedFromStatus())
+                        Start?.LogLine($"Finished resetting {openedProcess.Name}");
+                    else
+                        Start?.LogLine($"Could not open {openedProcess.Name} when resetting", Entities.ConsoleLineOption.Warning);
                 }
+                else
+                    Start?.LogLine($"Could not close {openedProcess.Name}", Entities.ConsoleLineOption.Warning);
             }
 
             Consts.IsStartPanelWorkingNow = false;
-            Start?.UpdateText($"");
         }
     }
 }

@@ -1,6 +1,10 @@
-﻿using System.Diagnostics;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.Utils;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MultiOpener.Views
 {
@@ -9,13 +13,11 @@ namespace MultiOpener.Views
         public OptionsView()
         {
             InitializeComponent();
-
-            versionLabel.Content = Consts.Version;
         }
 
-        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        private void OpenVersionsSite(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            if (MessageBox.Show($"Do you want to open MultiOpener site to check for new updates or patch notes?", $"Opening Github Release site For MultiOpener", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (DialogBox.Show($"Do you want to open MultiOpener site to check for new updates or patch notes?", $"Opening Github Release site For MultiOpener", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
                 var processStart = new ProcessStartInfo(e.Uri.ToString())
                 {
@@ -24,6 +26,25 @@ namespace MultiOpener.Views
                 };
                 Process.Start(processStart);
             }
+        }
+
+        private void OpenFeedbackSite(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            if (DialogBox.Show($"Do you want to open MultiOpener site for enter discussions?", $"Opening Github Discussions For MultiOpener", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+            {
+                var processStart = new ProcessStartInfo(e.Uri.ToString())
+                {
+                    UseShellExecute = true,
+                    Verb = "open"
+                };
+                Process.Start(processStart);
+            }
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = RegexPatterns.NumbersPattern();
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

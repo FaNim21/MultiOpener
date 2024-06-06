@@ -59,7 +59,7 @@ internal class OpeningTest
         Thread.Sleep(250);
         Application.Current.Dispatcher.Invoke(delegate
         {
-            _mainWindow!.MainViewModel.settings.LoadOpenList("OpeningUnitTest.json");
+            _mainWindow!.MainViewModel.settings.LoadPreset("C:\\Users\\Filip\\AppData\\Roaming\\MultiOpener\\Presets\\Tests\\OpeningUnitTest.json");
         });
         Thread.Sleep(250);
 
@@ -79,13 +79,13 @@ internal class OpeningTest
 
         await Task.Delay(100);
         while (Consts.IsStartPanelWorkingNow)
-            await Task.Delay(500);
-        await Task.Delay(250);
+            await Task.Delay(1000);
+        await Task.Delay(App.Config.TimeLateRefresh + 250);
 
         bool result = false;
         Application.Current.Dispatcher.Invoke(delegate
         {
-            if (_mainWindow!.MainViewModel.start.Opened.Count == 7)
+            if (_mainWindow!.MainViewModel.start.Opened.Count == 6)
             {
                 bool isScriptClosed = false;
                 bool isRestOpened = false;
@@ -94,10 +94,13 @@ internal class OpeningTest
                 {
                     var current = _mainWindow!.MainViewModel.start.Opened[i];
                     if (i == 2)
-                        isScriptClosed = !current.IsOpened();
+                    {
+                        current.UpdateStatus();
+                        isScriptClosed = !current.IsOpenedFromStatus();
+                    }
                     else
                     {
-                        isRestOpened = current.IsOpened();
+                        isRestOpened = current.IsOpenedFromStatus();
                         if (!isRestOpened)
                             break;
                     }

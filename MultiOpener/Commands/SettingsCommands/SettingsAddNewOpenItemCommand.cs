@@ -1,29 +1,22 @@
-﻿using MultiOpener.ListView;
+﻿using MultiOpener.Entities.Open;
+using MultiOpener.Utils;
 using MultiOpener.ViewModels;
 
-namespace MultiOpener.Commands.SettingsCommands
+namespace MultiOpener.Commands.SettingsCommands;
+
+public class SettingsAddNewOpenItemCommand : SettingsCommandBase
 {
-    public class SettingsAddNewOpenItemCommand : SettingsCommandBase
+    public SettingsAddNewOpenItemCommand(SettingsViewModel Settings) : base(Settings) { }
+
+    public override void Execute(object? parameter)
     {
-        public SettingsAddNewOpenItemCommand(SettingsViewModel Settings) : base(Settings) { }
+        if (Settings == null || string.IsNullOrEmpty(Settings.CurrentLoadedChosenPath)) return;
 
-        public override void Execute(object? parameter)
-        {
-            if (Settings == null) return;
-            if (string.IsNullOrEmpty(Settings.AddNameField))
-                return;
+        string name = "New Open";
+        name = Helper.GetUniqueName(name, name, Settings.IsOpenNameUnique);
 
-            for (int i = 0; i < Settings.Opens.Count; i++)
-            {
-                var item = Settings.Opens[i];
-                if (item.Name == Settings.AddNameField)
-                    return;
-            }
-
-            var newOpen = new OpenItem(Settings.AddNameField);
-
-            Settings.AddItem(newOpen);
-            Settings.AddNameField = "";
-        }
+        var newOpen = new OpenItem(name);
+        Settings.AddItem(newOpen);
+        Settings.SetPresetAsNotSaved();
     }
 }

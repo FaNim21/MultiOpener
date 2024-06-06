@@ -1,5 +1,5 @@
-﻿using MultiOpener.Items;
-using System.Windows;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.Entities.Opened;
 
 namespace MultiOpener.Commands.OpenedCommands
 {
@@ -14,9 +14,10 @@ namespace MultiOpener.Commands.OpenedCommands
 
         public override void Execute(object? parameter)
         {
-            //TODO: 9 Panel/Okno z wyswietlanymi informacjami jak id i zeby byl w tym panelu guzik do odpalania folderu zrodla tego programu
             openedProcess.Update();
-            MessageBox.Show(openedProcess.ToString());
+            openedProcess.InfoButtonOpenName = openedProcess.IsOpenedFromStatus() ? "Close" : "Open";
+
+            DialogBox.ShowOpenedInformations(openedProcess);
         }
     }
 }

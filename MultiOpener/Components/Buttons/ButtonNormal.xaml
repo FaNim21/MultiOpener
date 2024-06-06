@@ -12,7 +12,8 @@
             FontWeight="Medium"
             Foreground="White"
             Content="{Binding ContentText, ElementName=NormalButton}"
-            Command="{Binding OnCommand, ElementName=NormalButton}">
+            Command="{Binding OnCommand, ElementName=NormalButton}"
+            CommandParameter="{Binding OnCommandParameter, ElementName=NormalButton}">
         <Button.Style>
             <Style TargetType="Button">
                 <Setter Property="Background"
@@ -47,7 +48,7 @@
                         CornerRadius="2">
                     <ContentPresenter VerticalAlignment="Center"
                                       HorizontalAlignment="Center"
-                                      Margin="0 0 0 2"/>
+                                      Margin="{Binding ContentMargin, ElementName=NormalButton}" />
                 </Border>
             </ControlTemplate>
         </Button.Template>

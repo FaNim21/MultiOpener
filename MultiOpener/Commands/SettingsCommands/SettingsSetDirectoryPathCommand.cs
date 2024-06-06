@@ -1,6 +1,5 @@
-﻿using MultiOpener.ViewModels.Settings;
-using Ookii.Dialogs.Wpf;
-using System.Windows;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.ViewModels.Settings;
 
 namespace MultiOpener.Commands.SettingsCommands
 {
@@ -15,12 +14,9 @@ namespace MultiOpener.Commands.SettingsCommands
 
         public override void Execute(object? parameter)
         {
-            var dialog = new VistaOpenFileDialog();
-            if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
-            {
-                if (dialog.CheckFileExists && !dialog.Multiselect)
-                    OpenTypeViewModel.ApplicationPathField = dialog.FileName;
-            }
+            string output = DialogBox.ShowOpenFile();
+            if (!string.IsNullOrEmpty(output))
+                OpenTypeViewModel.ApplicationPathField = output;
         }
     }
 }

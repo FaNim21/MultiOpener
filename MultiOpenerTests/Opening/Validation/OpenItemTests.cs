@@ -1,5 +1,4 @@
-﻿using MultiOpener.ListView;
-using System.Xml.Linq;
+﻿using MultiOpener.Entities.Open;
 
 namespace MultiOpenerTests.Opening.Validation;
 

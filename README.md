@@ -16,7 +16,7 @@ Here are the main features of MultiOpener:
 
 Please note that when opening MultiOpener, some users may see a Microsoft Defender SmartScreen popup warning them that the app is unrecognized. We would like to assure you that this is not a virus and that MultiOpener is a safe and legitimate application. If you encounter this warning, simply click on 'More info' and then 'Run anyway' to proceed with opening MultiOpener.
 
-MultiOpener is made using .NET C# 7.0, which means that in order to use the application, you will need to download the .NET Desktop Runtime once. It will popup after first open or you can download the required runtime from the official Microsoft website.
+MultiOpener is made using .NET 7.0, which means that in order to use the application, you will need to download the .NET Desktop Runtime once. It will popup after first open or you can download the required runtime from the official Microsoft website.
 
 Additionally, MultiOpener includes a feature to open and close multiple running applications. Please note that this feature is provided as-is and is to be used at your own risk. MultiOpener does not guarantee compatibility or stability with all running applications, and we are not responsible for any problems that may arise from the use of this feature.
 
@@ -40,11 +40,11 @@ Finally, MultiOpener uses various file manipulation methods, such as the create 
 
 If you find an issue or you think that something could work better, different, or the program could use something entirely new for benefiting the user experience, please feel free to submit an issue using the issues tab above or catch me on discord FaNim#3794 or on my server https://discord.gg/JuZ3XsfFwY
 
-## Known issues (Work in progress)
-
-- None
-
 ## Features planned to future!
 
 * Option settings with keybinds and customizations etc
 * And more
+
+## Credits
+
+* Hinxer - thanks for helping with visual design and tutorial

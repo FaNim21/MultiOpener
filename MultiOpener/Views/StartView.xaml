@@ -5,7 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:MultiOpener.Components.Buttons"
              xmlns:viewmodels="clr-namespace:MultiOpener.ViewModels"
-             xmlns:items="clr-namespace:MultiOpener.Items"
+             xmlns:controls="clr-namespace:MultiOpener.Components"
+             xmlns:opened="clr-namespace:MultiOpener.Entities.Opened"
              d:DataContext="{d:DesignInstance Type=viewmodels:StartViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -13,16 +14,15 @@
              Background="#383A3C">
     <UserControl.Resources>
         <ContextMenu x:Key="ContextMenuOpened"
-                     d:DataContext="{d:DesignInstance Type=items:OpenedProcess}">
+                     d:DataContext="{d:DesignInstance Type=opened:OpenedProcess}">
             <MenuItem Header="Info"
-                      Command="{Binding ViewInformationsCommand}"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                      Command="{Binding ViewInformationsCommand}" />
+            <MenuItem Header="Focus"
+                      Command="{Binding FocusCommand}" />
             <MenuItem Header="Restart"
-                      Command="{Binding ResetCommand}"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                      Command="{Binding ResetCommand}" />
             <MenuItem Header="Close/Open"
-                      Command="{Binding CloseOpenCommand}"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                      Command="{Binding CloseOpenCommand}" />
         </ContextMenu>
 
         <DataTemplate x:Key="itemsTemplate">
@@ -31,19 +31,27 @@
                     CornerRadius="3 3 3 3"
                     Margin="5 5 0 0"
                     Padding="4 4 4 4"
-                    Background="#5b5e62"
+                    Background="#54565A"
                     ContextMenu="{StaticResource ContextMenuOpened}">
                 <Grid Width="150"
                       Height="75"
-                      Margin="-5 -5 0 0">
+                      Margin="-5 -5 0 0"
+                      Background="#5b5e62">
+                    <Grid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick"
+                                      Command="{Binding ViewInformationsCommand}" />
+                    </Grid.InputBindings>
                     <WrapPanel Orientation="Horizontal"
                                HorizontalAlignment="Center">
                         <Label Content="{Binding WindowTitle}"
                                Height="25"
+                               FontWeight="SemiBold"
+                               Foreground="#c6d5e3"
                                Margin="0 0 0 0" />
                     </WrapPanel>
                     <WrapPanel Orientation="Horizontal">
                         <Label Height="25"
+                               Foreground="#121212"
                                Width="76"
                                HorizontalAlignment="left"
                                HorizontalContentAlignment="Right"
@@ -51,7 +59,7 @@
                                Margin="0 25"
                                Padding="0 4" />
                         <Label Height="25"
-                               Foreground="{Binding Path=StatusLabelColor}"
+                               Foreground="{Binding StatusLabelColor}"
                                Content="{Binding Status}"
                                Margin="0 25"
                                Padding="0 4" />
@@ -60,144 +68,11 @@
             </Border>
         </DataTemplate>
 
-        <Style x:Key="ScrollThumbs"
-               TargetType="{x:Type Thumb}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Grid x:Name="Grid">
-                            <Rectangle HorizontalAlignment="Stretch"
-                                       VerticalAlignment="Stretch"
-                                       Width="Auto"
-                                       Height="Auto"
-                                       Fill="Transparent" />
-                            <Border x:Name="Rectangle1"
-                                    CornerRadius="5 5 5 5"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    Width="Auto"
-                                    Height="Auto"
-                                    Background="{TemplateBinding Background}" />
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="Tag"
-                                     Value="Horizontal">
-                                <Setter TargetName="Rectangle1"
-                                        Property="Width"
-                                        Value="Auto" />
-                                <Setter TargetName="Rectangle1"
-                                        Property="Height"
-                                        Value="7" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="{x:Type ScrollBar}"
-               TargetType="{x:Type ScrollBar}">
-            <Setter Property="Stylus.IsFlicksEnabled"
-                    Value="False" />
-            <Setter Property="Foreground"
-                    Value="#1b1d1f" />
-            <Setter Property="Background"
-                    Value="Transparent" />
-            <Setter Property="Width"
-                    Value="10" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollBar}">
-                        <Grid x:Name="GridRoot"
-                              Width="12"
-                              Background="{x:Null}"
-                              Margin="0 5">
-                            <Grid.RenderTransform>
-                                <TranslateTransform X="-3" />
-                            </Grid.RenderTransform>
-                            <Track x:Name="PART_Track"
-                                   Grid.Row="0"
-                                   IsDirectionReversed="true"
-                                   Focusable="False">
-                                <Track.Thumb>
-                                    <Thumb x:Name="Thumb"
-                                           Background="{TemplateBinding Foreground}"
-                                           Style="{DynamicResource ScrollThumbs}" />
-                                </Track.Thumb>
-                                <Track.IncreaseRepeatButton>
-                                    <RepeatButton x:Name="PageUp"
-                                                  Command="ScrollBar.PageDownCommand"
-                                                  Opacity="0"
-                                                  Focusable="False" />
-                                </Track.IncreaseRepeatButton>
-                                <Track.DecreaseRepeatButton>
-                                    <RepeatButton x:Name="PageDown"
-                                                  Command="ScrollBar.PageUpCommand"
-                                                  Opacity="0"
-                                                  Focusable="False" />
-                                </Track.DecreaseRepeatButton>
-                            </Track>
-                        </Grid>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger SourceName="Thumb"
-                                     Property="IsMouseOver"
-                                     Value="true">
-                                <Setter Value="{DynamicResource ButtonSelectBrush}"
-                                        TargetName="Thumb"
-                                        Property="Background" />
-                            </Trigger>
-                            <Trigger SourceName="Thumb"
-                                     Property="IsDragging"
-                                     Value="true">
-                                <Setter Value="{DynamicResource DarkBrush}"
-                                        TargetName="Thumb"
-                                        Property="Background" />
-                            </Trigger>
-
-                            <Trigger Property="IsEnabled"
-                                     Value="false">
-                                <Setter TargetName="Thumb"
-                                        Property="Visibility"
-                                        Value="Collapsed" />
-                            </Trigger>
-                            <Trigger Property="Orientation"
-                                     Value="Horizontal">
-                                <Setter TargetName="GridRoot"
-                                        Property="LayoutTransform">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="-90" />
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter TargetName="PART_Track"
-                                        Property="LayoutTransform">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="-90" />
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Width"
-                                        Value="Auto" />
-                                <Setter Property="Height"
-                                        Value="12" />
-                                <Setter TargetName="Thumb"
-                                        Property="Tag"
-                                        Value="Horizontal" />
-                                <Setter TargetName="PageDown"
-                                        Property="Command"
-                                        Value="ScrollBar.PageLeftCommand" />
-                                <Setter TargetName="PageUp"
-                                        Property="Command"
-                                        Value="ScrollBar.PageRightCommand" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="130" />
+            <RowDefinition Height="200" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -208,35 +83,66 @@
                    FontSize="18"
                    Height="40"
                    VerticalAlignment="top"
-                   HorizontalContentAlignment="Center" />
-
-            <Label Height="30"
-                   Content="{Binding PanelInteractionText}"
-                   VerticalAlignment="Bottom"
-                   Margin="5 -10"
-                   Padding="0" />
+                   HorizontalContentAlignment="Center"
+                   Margin="150 0 150 0" />
 
             <local:ButtonNormal x:Name="OpenButton"
                                 Width="100"
                                 Height="35"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
-                                Margin="50 50 0 0"
+                                Margin="20 10 0 0"
                                 ContentText="{Binding OpenButtonName}"
+                                ContentMargin="0 0 0 2"
                                 IsEnabled="{Binding OpenButtonEnabled}"
                                 OnCommand="{Binding OpenCommand}"
                                 FontSize="20" />
-
             <local:ButtonNormal x:Name="RefreshTitlesbutton"
                                 Width="100"
                                 Height="25"
                                 FontSize="17"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom"
-                                ContentText="Refresh"
+                                HorizontalAlignment="left"
+                                VerticalAlignment="Top"
+                                ContentText="{Binding RefreshButtonName}"
+                                ContentMargin="0 0 0 2"
                                 OnCommand="{Binding RefreshOpenedCommand}"
-                                Margin="0 0 10 10" />
+                                Margin="20 45 0 0" />
+
+            <local:ButtonConsole x:Name="SaveConsole"
+                                 Width="60"
+                                 Height="20"
+                                 FontSize="12"
+                                 HorizontalAlignment="Right"
+                                 VerticalAlignment="Top"
+                                 ButtonText="SAVE"
+                                 Padding="0"
+                                 OnConsoleCommand="{Binding SaveConsoleCommand}"
+                                 Margin="0 55 70 0" />
+
+            <local:ButtonConsole x:Name="ClearConsole"
+                                 Width="60"
+                                 Height="25"
+                                 FontSize="12"
+                                 HorizontalAlignment="Right"
+                                 VerticalAlignment="Top"
+                                 ButtonText="CLEAR"
+                                 Padding="0"
+                                 OnConsoleCommand="{Binding ClearConsoleCommand}"
+                                 Margin="0 55 5 0" />
+
+            <controls:ConsoleLineOutputControl DataContext="{Binding ConsoleViewModel}"
+                                               Height="120"
+                                               VerticalAlignment="Bottom"
+                                               Margin="0 5" />
         </Grid>
+
+        <Line X1="0"
+              Y1="197"
+              X2="800"
+              Y2="197"
+              Stroke="#a0e3e3"
+              StrokeThickness="3"
+              Opacity="1" />
 
         <Grid Grid.Row="1"
               Background="#4a4b4d"
@@ -252,6 +158,47 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </ScrollViewer>
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Visibility="{Binding LoadingPanelVisibility, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}"
+              Background="#4a4b4d">
+            <TextBlock Text="{Binding LoadingInfoText}"
+                       Foreground="#76bbf4"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       LineStackingStrategy="BlockLineHeight"
+                       LineHeight="27"
+                       Height="40"
+                       TextWrapping="Wrap"
+                       FontWeight="Medium"
+                       FontFamily="Dubai"
+                       FontSize="25"
+                       Padding="10"
+                       Margin="0 0 0 90" />
+            <ProgressBar x:Name="progress"
+                         Width="775"
+                         Height="30"
+                         Value="{Binding LoadingBarPercentage}"
+                         VerticalAlignment="Center"
+                         Background="#7d8187"
+                         Foreground="#FF387944"
+                         BorderThickness="0"
+                         Minimum="1"
+                         Maximum="100" />
+            <TextBlock Text="{Binding LoadingDetailedInfoText}"
+                       Foreground="#76bbf4"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       LineStackingStrategy="BlockLineHeight"
+                       LineHeight="27"
+                       Height="30"
+                       TextWrapping="Wrap"
+                       FontWeight="Medium"
+                       FontFamily="Dubai"
+                       FontSize="22"
+                       Padding="4"
+                       Margin="0 80 0 0" />
         </Grid>
     </Grid>
 </UserControl>

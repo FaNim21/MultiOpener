@@ -1,34 +1,29 @@
-﻿using MultiOpener.ViewModels;
-using System.Linq;
+﻿using MultiOpener.Components.Controls;
+using MultiOpener.Entities;
+using MultiOpener.ViewModels;
 using System.Windows;
 
-namespace MultiOpener.Commands.SettingsCommands
+namespace MultiOpener.Commands.SettingsCommands;
+
+public class SettingsLoadChosenPresetCommand : SettingsCommandBase
 {
-    class SettingsLoadChosenPresetCommand : SettingsCommandBase
+    public SettingsLoadChosenPresetCommand(SettingsViewModel Settings) : base(Settings) { }
+
+    public override void Execute(object? parameter)
     {
-        public SettingsLoadChosenPresetCommand(SettingsViewModel Settings) : base(Settings)
+        if (Settings == null) return;
+        if (!Settings.IsCurrentPresetSaved) return;
+
+        if (!StartViewModel.Instance!.OpenedIsEmpty()) return;
+        if (parameter is not LoadedPresetItem presetItem) return;
+
+        string path = presetItem.GetPath();
+        if (string.IsNullOrEmpty(Settings.PresetName))
+            Settings.LoadPreset(path);
+        else
         {
-        }
-
-        public override void Execute(object? parameter)
-        {
-            if (Settings == null) return;
-
-            if (((MainWindow)Application.Current.MainWindow).MainViewModel.start.Opened.Any())
-                return;
-
-            if (Settings.CurrentLoadedChosen != null && !string.IsNullOrEmpty(Settings.CurrentLoadedChosen.Name))
-            {
-                if (string.IsNullOrEmpty(Settings.PresetName))
-                    Settings.LoadOpenList(Settings.CurrentLoadedChosen.Name);
-                else
-                {
-                    if (MessageBox.Show($"Are you sure you want to that load preset?\nYou might not saved previous!", "Loading Preset", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                    {
-                        Settings.LoadOpenList(Settings.CurrentLoadedChosen.Name);
-                    }
-                }
-            }
+            if (Settings.IsCurrentPresetSaved || DialogBox.Show($"Are you sure you want to load this preset?\nYou didn't save the previous one!", "Loading Preset", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                Settings.LoadPreset(path);
         }
     }
 }

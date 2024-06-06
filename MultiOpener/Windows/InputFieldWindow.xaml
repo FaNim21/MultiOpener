@@ -1,0 +1,92 @@
+﻿<Window x:Class="MultiOpener.Windows.InputFieldWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MultiOpener.Windows"
+        xmlns:buttons="clr-namespace:MultiOpener.Components.Buttons"
+        xmlns:viewmodels="clr-namespace:MultiOpener.ViewModels.DialogBox"
+        xmlns:converters="clr-namespace:MultiOpener.Converters"
+        d:DataContext="{d:DesignInstance Type=viewmodels:InputFieldViewModel}"
+        mc:Ignorable="d"
+        Title="InputFieldWindow"
+        Width="325"
+        Height="150"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        ShowInTaskbar="False"
+        BorderThickness="1"
+        BorderBrush="#00090e"
+        WindowStartupLocation="CenterOwner"
+        Background="#383A3C">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+
+        <Grid Background="#000D14"
+              Grid.Row="0">
+            <buttons:ButtonTaskbar x:Name="ExitButton"
+                                   Width="18"
+                                   FontSize="12"
+                                   HorizontalAlignment="Right"
+                                   ContentText="X"
+                                   Click="ExitButtonClick" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <TextBox Text="{Binding Text}"
+                     Height="45"
+                     TextWrapping="Wrap"
+                     FontSize="12"
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Center"
+                     HorizontalContentAlignment="Center"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     IsReadOnly="True"
+                     Foreground="White"
+                     Padding="0 5 0 0" />
+
+            <TextBox x:Name="inputField"
+                Text="{Binding Output}"
+                     Width="200"
+                     Height="25"
+                     MaxLength="40"
+                     Background="#9E9E9E"
+                     VerticalAlignment="Bottom"
+                     VerticalContentAlignment="Center"
+                     HorizontalAlignment="Left"
+                     Margin="10 0 0 10" />
+
+            <buttons:ButtonNormal ContentText="OK"
+                                  Height="25"
+                                  Width="93"
+                                  OnCommand="{Binding DataContext.ButtonPress, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                  OnCommandParameter="{Binding ButtonResult}" 
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Bottom"
+                                  FontSize="17"
+                                  Margin="0 0 10 10"/>
+        </Grid>
+
+
+        <Grid Grid.Row="2"
+              Background="#5b5e62">
+            <TextBox Text="{Binding ErrorMessage}"
+                     Height="40"
+                     TextWrapping="Wrap"
+                     FontSize="10"
+                     FontWeight="SemiBold"
+                     VerticalAlignment="Top"
+                     HorizontalContentAlignment="Center"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     IsReadOnly="True"
+                     Foreground="PaleVioletRed"
+                     Padding="0 5 0 0" />
+        </Grid>
+    </Grid>
+</Window>

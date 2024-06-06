@@ -10,73 +10,236 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              Background="#383A3C">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+    <UserControl.Resources>
 
-        <Label x:Name="versionLabel"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Bottom"
-               Margin="0 16" />
-        <Label Content="Made by FaNim"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Bottom" />
+    </UserControl.Resources>
+    <Grid ScrollViewer.VerticalScrollBarVisibility="Visible">
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical">
+                <WrapPanel Orientation="Vertical"
+                           Margin="10 0 0 0">
 
-        <TextBlock HorizontalAlignment="Right"
-                   VerticalAlignment="Bottom"
-                   Grid.Column="1"
-                   Margin="3">
-                    <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/releases"
-                               RequestNavigate="Hyperlink_RequestNavigate">
-                        All releases here
-                    </Hyperlink>
-        </TextBlock>
+                    <!--GENERAL-->
+                    <WrapPanel Orientation="Horizontal"
+                               Width="790">
+                        <WrapPanel Orientation="Vertical"
+                                   Margin="0 0 0 15">
+                            <Label Foreground="#a0e3e3"
+                                   FontWeight="SemiBold"
+                                   FontSize="32"
+                                   Content="General" />
+                            <WrapPanel Orientation="Vertical"
+                                       Margin="7 0 0 0"
+                                       Width="640">
+                                <ToggleButton IsChecked="{Binding AlwaysOnTop}"
+                                              Height="20"
+                                              Foreground="White"
+                                              Content="Always On Top"
+                                              VerticalContentAlignment="Center" />
 
-        <Grid Grid.Column="0">
-            <Label Content="Options for open"
-                   FontSize="24"
-                   Foreground="White"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   Height="40"/>
+                                <ToggleButton IsChecked="{Binding IsMinimizedAfterOpen}"
+                                              Height="20"
+                                              Foreground="White"
+                                              Content="Is Minimized after opening preset"
+                                              VerticalContentAlignment="Center" />
+                            </WrapPanel>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Vertical"
+                                   HorizontalAlignment="Right"
+                                   Margin="0 5 0 0">
+                            <local:ButtonNormal Width="120"
+                                                Height="30"
+                                                ContentText="Reset to default"
+                                                VerticalAlignment="Top"
+                                                HorizontalAlignment="Right"
+                                                FontSize="15"
+                                                OnCommand="{Binding ResetToDefaultCommand}" />
+                            <Label Content="Made by FaNim"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   Foreground="LightGray"
+                                   Padding="0"
+                                   Margin="0 5 0 0" />
+                            <TextBlock VerticalAlignment="Top"
+                                       HorizontalAlignment="Center"
+                                       Grid.Column="1">
+                            <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/releases"
+                                       RequestNavigate="OpenVersionsSite">
+                                 <Hyperlink.Style>
+                                    <Style TargetType="Hyperlink"
+                                           BasedOn="{StaticResource {x:Type Hyperlink}}">
+                                        <Setter Property="Foreground"
+                                                Value="LightSkyBlue" />
+                                        </Style>
+                                </Hyperlink.Style>
+                                All releases here
+                            </Hyperlink>
+                            </TextBlock>
+                            <TextBlock VerticalAlignment="Top"
+                                       HorizontalAlignment="Center"
+                                       Grid.Column="1">
+                            <Hyperlink NavigateUri="https://github.com/FaNim21/MultiOpener/discussions"
+                                       RequestNavigate="OpenFeedbackSite">
+                                 <Hyperlink.Style>
+                                    <Style TargetType="Hyperlink"
+                                           BasedOn="{StaticResource {x:Type Hyperlink}}">
+                                        <Setter Property="Foreground"
+                                                Value="LightSkyBlue" />
+                                        </Style>
+                                </Hyperlink.Style>
+                                Give feedback here
+                            </Hyperlink>
+                            </TextBlock>
+                        </WrapPanel>
+                    </WrapPanel>
 
-            <TextBox x:Name="delayBeforeTimeField"
-                     TextWrapping="Wrap"
-                     Width="80"
-                     Height="20"
-                     Background="#9E9E9E"
-                     MaxLength="5"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Top"
-                     Margin="0 90 270 0" />
-            <Label Content="Before"
-                   Foreground="White"
-                   Height="30"
-                   FontSize="16"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   Margin="0 84 132 0" />
-        </Grid>
+                    <!--TIMINGS-->
+                    <WrapPanel Orientation="Vertical"
+                               Margin="0 0 0 15">
+                        <Label Foreground="#a0e3e3"
+                               FontWeight="SemiBold"
+                               FontSize="32"
+                               Content="Timings (1000 = 1 sec)"
+                               Padding="0" />
 
-        <Line X1="400"
-              Y1="450"
-              X2="400"
-              Y2="0"
-              Grid.Row="1"
-              Grid.ColumnSpan="2"
-              Stroke="#000D14"
-              StrokeThickness="3" />
+                        <!--Main-->
+                        <Label Foreground="White"
+                               FontSize="22"
+                               Content="Main" />
+                        <WrapPanel Orientation="Vertical"
+                                   Margin="7 0 0 0">
+                            <Grid ToolTip="Time to auto-refresh after preset open">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeLateRefresh}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         PreviewTextInput="NumberValidationTextBox"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="Time for late refresh"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                            <Grid ToolTip="The time to stop looking for a window of the opening process after it cannot be found. It applies when opening either the entire preset or selecting a quick opening.">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeoutOpen}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         HorizontalAlignment="Left"
+                                         PreviewTextInput="NumberValidationTextBox"
+                                         MaxLength="5" />
+                                <Label Content="Opening timeout on default 'Open'"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                        </WrapPanel>
 
-        <Grid Grid.Column="1">
-            <Label Content="Hotkeys"
-                   FontSize="24"
-                   Foreground="White"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   Height="40" />
-            
-        </Grid>
+                        <!--Instance-->
+                        <Label Foreground="White"
+                               FontSize="22"
+                               Content="Instances(MultiMC)"
+                               Margin="0 20 0 0" />
+                        <WrapPanel Orientation="Vertical"
+                                   Margin="7 0 0 0">
+                            <Grid ToolTip="The time to stop looking for all MC instances windows after it cannot be found. It is applied when opening whole preset">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeoutLookingForInstancesData}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         PreviewTextInput="NumberValidationTextBox"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="Looking for instances data timeout"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                            <Grid ToolTip="Safety time to give for instances after opening">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeoutInstanceFinalizingData}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         PreviewTextInput="NumberValidationTextBox"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="instance finalizing data time"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                            <Grid ToolTip="The time to stop looking for MC instance window after it cannot be found. It is applied when opening chosen 'open' in start panel">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding TimeoutWaitingForSingleInstanceToOpen}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         PreviewTextInput="NumberValidationTextBox"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="Single opening instance timeout"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                        </WrapPanel>
+                    </WrapPanel>
+
+                    <!--RESET TRACKER-->
+                    <WrapPanel Orientation="Vertical">
+                        <!--Reset Tracker-->
+                        <Label Foreground="#a0e3e3"
+                               FontWeight="SemiBold"
+                               FontSize="32"
+                               Content="Reset Tracker"
+                               Padding="0" />
+                        <WrapPanel Orientation="Vertical"
+                                   Margin="7 0 0 15">
+                            <Grid ToolTip="On checked it backup all files in speedrunIGT records folder before deleting them from that folder. This process is much slower that deleting all files so on more than 50k files it is recommend to do it manually">
+                                <ToggleButton IsChecked="{Binding BackUpFilesBeforeDeleting}"
+                                              Height="20"
+                                              Foreground="White"
+                                              Content="Backup all record files before deleting"
+                                              VerticalContentAlignment="Center" />
+                            </Grid>
+                            <Grid ToolTip="On checked it deletes all runs files in igt records folder when activating tracker">
+                                <ToggleButton IsChecked="{Binding DeleteAllRecordOnActivating}"
+                                              Height="20"
+                                              Foreground="White"
+                                              Content="Delete all record files on activating"
+                                              VerticalContentAlignment="Center" />
+                            </Grid>
+                            <!--
+                            <Grid ToolTip="The time that takes to update your runs into reset tracker(min. 10000ms)">
+                                <TextBox TextWrapping="Wrap"
+                                         Text="{Binding UpdateResetTrackerFrequency}"
+                                         Width="80"
+                                         Height="20"
+                                         Background="#9E9E9E"
+                                         PreviewTextInput="NumberValidationTextBox"
+                                         HorizontalAlignment="Left"
+                                         MaxLength="5" />
+                                <Label Content="Reset Tracker update rate"
+                                       Foreground="White"
+                                       Height="32"
+                                       FontSize="16"
+                                       Margin="80 0 0 0" />
+                            </Grid>
+                            -->
+                        </WrapPanel>
+                    </WrapPanel>
+                </WrapPanel>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

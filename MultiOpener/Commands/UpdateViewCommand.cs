@@ -1,41 +1,36 @@
 ﻿using MultiOpener.ViewModels;
-using System;
-using System.Windows.Input;
 
 namespace MultiOpener.Commands
 {
-    class UpdateViewCommand : ICommand
+    class UpdateViewCommand : BaseCommand
     {
         private readonly MainViewModel viewModel;
 
-        public UpdateViewCommand(MainViewModel viewModel)
-        {
-            this.viewModel = viewModel;
-        }
+        public UpdateViewCommand(MainViewModel viewModel) { this.viewModel = viewModel; }
 
-        public event EventHandler? CanExecuteChanged;
-
-        public bool CanExecute(object? parameter) => true;
-        public void Execute(object? parameter)
+        public override void Execute(object? parameter)
         {
+            if (parameter == null) return;
+
             string result = parameter?.ToString() ?? "";
-            viewModel.MainWindow.EnableDisableChoosenHeadButton(result);
+            result = result.ToLower() + "viewmodel";
 
-            if (result.Equals("Start"))
+            if (result.Equals(viewModel.SelectedViewModel?.GetType().Name.ToLower())) return;
+
+            viewModel.SelectedViewModel?.OnDisable();
+
+            for (int i = 0; i < viewModel.baseViewModels.Count; i++)
             {
-                viewModel.settings?.SaveCurrentOpenCommand?.Execute(null);
-                viewModel.SelectedViewModel = viewModel.start;
+                var current = viewModel.baseViewModels[i];
+
+                if (current.GetType().Name.ToLower().Equals(result))
+                {
+                    viewModel.SelectedViewModel = current;
+                    break;
+                }
             }
-            else if (result.Equals("Settings"))
-            {
-                viewModel.settings?.UpdatePresetsComboBox();
-                viewModel.SelectedViewModel = viewModel.settings;
-            }
-            else if (result.Equals("Options"))
-            {
-                viewModel.settings?.SaveCurrentOpenCommand?.Execute(null);
-                viewModel.SelectedViewModel = viewModel.options;
-            }
+
+            viewModel.SelectedViewModel?.OnEnable();
         }
     }
 }

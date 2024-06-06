@@ -30,9 +30,51 @@ namespace MultiOpenerTests.StartPanel
         }
 
         [Test]
-        public void CheckForUpdates_ReturnsFalse_WhenErrorOccurs()
+        public void CheckForUpdates_ReturnsTrue_WithPreviewTag_WhenUpToDate()
         {
-            Assert.ThrowsAsync<Exception>(async () => await _updateChecker.CheckForUpdates("..."));
+            bool result = UpdateChecker.IsUpToDate("1.0.0-PREVIEW43", "1.0.0-PREVIEW44");
+
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void CheckForUpdates_ReturnsFalse_WithPreviewTag_WhenNotUpToDate() 
+        {
+            bool result = UpdateChecker.IsUpToDate("1.0.0-PREVIEW50", "1.0.0-PREVIEW44");
+
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void CheckForUpdates_ReturnsFalse_WithPreviewTagAndNormal_WhenNotUpToDate() 
+        {
+            bool result = UpdateChecker.IsUpToDate("1.0.1", "1.0.0-PREVIEW44");
+
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void CheckForUpdates_ReturnsFalse_WithPreviewTagAndNormal_WhenNotUpToDate2()
+        {
+            bool result = UpdateChecker.IsUpToDate("1.0.0", "1.0.0-PREVIEW44");
+
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void CheckForUpdates_ReturnsTrue_WithPreviewTagAndNormal_WhenUpToDate()
+        {
+            bool result = UpdateChecker.IsUpToDate("1.0.0-PREVIEW44", "1.0.0");
+
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void CheckForUpdates_ReturnsFalse_WithPreviewTagAndNormal_WhenUpNotToDate() 
+        {
+            bool result = UpdateChecker.IsUpToDate("1.0.0-PREVIEW44", "0.4.0");
+
+            Assert.That(result, Is.False);
         }
     }
 }
