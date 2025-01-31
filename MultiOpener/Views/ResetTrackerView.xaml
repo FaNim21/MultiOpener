@@ -226,8 +226,7 @@
                                     Margin="0 20 0 0"
                                     ContentText="OVERALL"
                                     ContentMargin="0 0 0 2"
-                                    FontSize="24"
-                                    OnCommand="" />
+                                    FontSize="24" />
 
                 <local:ButtonNormal Width="200"
                                     Height="40"
@@ -236,8 +235,7 @@
                                     Margin="0 20 0 0"
                                     ContentText="SESSIONS"
                                     ContentMargin="0 0 0 2"
-                                    FontSize="24"
-                                    OnCommand="" />
+                                    FontSize="24" />
             </StackPanel>
         </Grid>
     </Grid>
